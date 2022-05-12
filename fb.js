@@ -7,9 +7,24 @@ const firebaseConfig = {
   appId: "1:669494520220:web:134d91d840aa725e630059"
 };
 
+let date = moment(buytimestamp).format('MM/DD/YYYY HH:mm:ss')
+const thnd = new Date();
+let thn = 
+  thnd.toLocaleString('en-US', {
+    timeZone: 'America/New_York',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  })
+
+
 const userName = document.querySelector("#userName");
 const email = document.querySelector("#email");
 const signOutButton = document.querySelector("#signOutButton");
+let timestamp = moment(thn).format('MM/DD/YYYY HH:mm:ss')
 
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
@@ -31,6 +46,7 @@ const authChanged = firebase.auth().onAuthStateChanged((user) => {
         let email = data["Email"];
         let profileuid = curUser.uid;
       
+          firebase.firestore().doc("users/" + firebase.auth().currentUser.uid).set({ Timestamp: timestamp }, { merge: true });
 
        if (!!email) {
           $("#email").html(email);
