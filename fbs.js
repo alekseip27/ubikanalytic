@@ -7,7 +7,6 @@ const firebaseConfig = {
   appId: "1:669494520220:web:134d91d840aa725e630059"
 };
 
-let date = moment(buytimestamp).format('MM/DD/YYYY HH:mm:ss')
 const thnd = new Date();
 let thn = 
   thnd.toLocaleString('en-US', {
