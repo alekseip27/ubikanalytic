@@ -44,8 +44,41 @@ const authChanged = firebase.auth().onAuthStateChanged((user) => {
         let name = data["Name"];
         let email = data["Email"];
         let profileuid = curUser.uid;
-      
+        let admin = data["admin"];
+        let buyer = data["buyer"];
+        let entry = data["entry"];
+
           firebase.firestore().doc("users/" + firebase.auth().currentUser.uid).set({ Timestamp: timestamp }, { merge: true });
+
+if(!!admin) {
+$('#events').show()
+$('#buying').show()
+$('#history').show()
+$('#addevent').show()
+}
+
+if(!!buyer) {
+$('#buying').show()
+$('#history').show()
+$('#addevent').show()
+}
+
+if(!!entry) {
+$('#history').show()
+$('#addevent').show()
+}
+
+if(!!entry && (window.location.href.includes('/events' || window.location.href.includes('/buy-queue' ) {
+auth.signOut();
+location.href = '/login'
+}
+
+if(!!buyer && (window.location.href.includes('/events') {
+auth.signOut();
+location.href = '/login'
+}
+
+
 
        if (!!email) {
           $("#email").html(email);
