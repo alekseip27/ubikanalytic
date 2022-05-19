@@ -63,19 +63,17 @@ $('#history').css('display','inline-block');
 $('#addevent').css('display','inline-block');
 }
 
+if(!!buyer && window.location.href.includes('/events')) {
+location.href = '/buy-queue'
+}
+
 if(!!entry) {
 $('#history').css('display','inline-block');
 $('#addevent').css('display','inline-block');
 }
 
 if(!!entry && (window.location.href.includes('/events') || window.location.href.includes('/buy-queue'))) {
-auth.signOut();
-location.href = '/login'
-}
-
-if(!!buyer && window.location.href.includes('/events')) {
-auth.signOut();
-location.href = '/login'
+location.href = '/order-history'
 }
 
 
