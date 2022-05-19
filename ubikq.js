@@ -68,12 +68,12 @@ $('#history').css('display','inline-block');
 $('#addevent').css('display','inline-block');
 }
 
-if(!!entry && (!!window.location.href.includes('/events' || !!window.location.href.includes('/buy-queue' ) {
+if(!!entry && (!!window.location.href.includes('/events' || !!window.location.href.includes('/buy-queue' )) {
 auth.signOut();
 location.href = '/login'
 }
 
-if(!!buyer && (!!window.location.href.includes('/events') {
+if(!!buyer && (!!window.location.href.includes('/events')) {
 auth.signOut();
 location.href = '/login'
 }
