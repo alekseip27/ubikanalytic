@@ -51,17 +51,22 @@ const authChanged = firebase.auth().onAuthStateChanged((user) => {
           firebase.firestore().doc("users/" + firebase.auth().currentUser.uid).set({ Timestamp: timestamp }, { merge: true });
 
 if(!!admin) {
-$('#events').css('display','inline-block');
-$('#stats').css('display','flex');
 $('#eventsdropdown').css('display','flex');
+$('#events').css('display','flex');
+$('#addevent').css('display','flex');
+ 
 $('#buying').css('display','flex');
 $('#queue').css('display','flex');
 $('#history').css('display','flex');
+
+$('#stats').css('display','flex');
 
 }
 
 if(!!buyer) {
 $('#eventsdropdown').css('display','flex');
+$('#addevent').css('display','flex');
+ 
 $('#buying').css('display','flex');
 $('#queue').css('display','flex');
 $('#history').css('display','flex');
@@ -73,9 +78,10 @@ location.href = '/buy-queue'
 
 if(!!entry) {
 $('#eventsdropdown').css('display','flex');
+$('#addevent').css('display','flex');
+
 $('#buying').css('display','flex');
 $('#history').css('display','flex');
-
 }
 
 if(!!entry && (window.location.href.includes('/events') || window.location.href.includes('/buy-queue'))) {
