@@ -54,14 +54,14 @@ if(!!admin) {
 $('#events').css('display','inline-block');
 $('#buying').css('display','inline-block');
 $('#history').css('display','inline-block');
-$('#addevent').css('display','inline-block');
 $('#stats').css('display','flex');
+$('#eventsdropdown').css('display','flex');
 }
 
 if(!!buyer) {
+$('#eventsdropdown').css('display','flex');
 $('#buying').css('display','inline-block');
 $('#history').css('display','inline-block');
-$('#addevent').css('display','inline-block');
 }
 
 if(!!buyer && window.location.href.includes('/events')) {
@@ -69,8 +69,8 @@ location.href = '/buy-queue'
 }
 
 if(!!entry) {
+$('#eventsdropdown').css('display','flex');
 $('#history').css('display','inline-block');
-$('#addevent').css('display','inline-block');
 }
 
 if(!!entry && (window.location.href.includes('/events') || window.location.href.includes('/buy-queue'))) {
