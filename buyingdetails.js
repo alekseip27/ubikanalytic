@@ -153,10 +153,10 @@ myFS.doc("stats/" + bm).set({[src] : i+1}, { merge: true })
 }}
 
 accountstats = async function() {
-let acm = document.querySelector('#purchaseacc').value
+let acm = document.querySelector('#purchaseacc').textContent
 let src = document.querySelector('#purchasesource').textContent
 let myFS = firebase.firestore()
-let docSnap = await myFS.doc("accountstats/"+ bm).get();
+let docSnap = await myFS.doc("accountstats/"+ acm).get();
 let data = docSnap.data()
 let i = data[src]
 if(Number(data[src]) == 0 || isNaN(i)) {
@@ -167,7 +167,7 @@ myFS.doc("accountstats/" + acm).set({[src] : i+1}, { merge: true })
 
 document.querySelector('#buybtn').addEventListener("click", () => {
 let bm = document.querySelector('#purchaseemail').value
-let acm = document.querySelector('#purchaseacc').value
+let acm = document.querySelector('#purchaseacc').textContent
 let myFS = firebase.firestore()
 myFS.doc("stats/" + bm).set({}, {merge:true})
 myFS.doc("accountstats/" + acm).set({}, {merge:true})
