@@ -52,16 +52,19 @@ const authChanged = firebase.auth().onAuthStateChanged((user) => {
 
 if(!!admin) {
 $('#events').css('display','inline-block');
-$('#buying').css('display','inline-block');
-$('#history').css('display','inline-block');
 $('#stats').css('display','flex');
 $('#eventsdropdown').css('display','flex');
+$('#buying').css('display','flex');
+$('#queue').css('display','flex');
+$('#history').css('display','flex');
+
 }
 
 if(!!buyer) {
 $('#eventsdropdown').css('display','flex');
-$('#buying').css('display','inline-block');
-$('#history').css('display','inline-block');
+$('#buying').css('display','flex');
+$('#queue').css('display','flex');
+$('#history').css('display','flex');
 }
 
 if(!!buyer && window.location.href.includes('/events')) {
@@ -70,7 +73,9 @@ location.href = '/buy-queue'
 
 if(!!entry) {
 $('#eventsdropdown').css('display','flex');
-$('#history').css('display','inline-block');
+$('#buying').css('display','flex');
+$('#history').css('display','flex');
+
 }
 
 if(!!entry && (window.location.href.includes('/events') || window.location.href.includes('/buy-queue'))) {
