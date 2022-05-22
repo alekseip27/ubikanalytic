@@ -55,6 +55,7 @@ $('#events').css('display','inline-block');
 $('#buying').css('display','inline-block');
 $('#history').css('display','inline-block');
 $('#addevent').css('display','inline-block');
+$('#stats').css('display','flex');
 }
 
 if(!!buyer) {
