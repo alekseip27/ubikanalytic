@@ -167,8 +167,8 @@ myFS.doc("accountstats/" + acm).set({[src] : i+1}, { merge: true })
 
 document.querySelector('#buybtn').addEventListener("click", () => {
 let bm = document.querySelector('#purchaseemail').value
-let detailsmatch = document.querySelector('#detailsmatch').value
-let willcall = document.querySelector('#willcall').value
+let detailsmatch = !!document.querySelector('#detailsmatch').checked
+let willcall = !!document.querySelector('#willcall').checked
 let deliveryselected = document.querySelector('#deliveryselected').value
 
 let acm = document.querySelector('#purchaseacc').textContent
