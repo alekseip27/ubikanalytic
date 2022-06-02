@@ -167,6 +167,10 @@ myFS.doc("accountstats/" + acm).set({[src] : i+1}, { merge: true })
 
 document.querySelector('#buybtn').addEventListener("click", () => {
 let bm = document.querySelector('#purchaseemail').value
+let detailsmatch = document.querySelector('#detailsmatch').value
+let willcall = document.querySelector('#willcall').value
+let deliveryselected = document.querySelector('#deliveryselected').value
+
 let acm = document.querySelector('#purchaseacc').textContent
 let myFS = firebase.firestore()
 myFS.doc("stats/" + bm).set({}, {merge:true})
@@ -188,7 +192,10 @@ var params = JSON.stringify(
 {
 "search-key": eventid,
 "Bought_Amnt": combined,
-"Event_Other_Master_Buy_Status": "Completed"
+"Event_Other_Master_Buy_Status": "Completed",
+"Details_Match": detailsmatch,
+"No_Will_Call": willcall,
+"Delivery_Method_Selected": deliveryselected
 })
 http.open("PUT", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
