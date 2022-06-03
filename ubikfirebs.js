@@ -59,6 +59,8 @@ $('#addevent').css('display','flex');
 $('#buying').css('display','flex');
 $('#queue').css('display','flex');
 $('#history').css('display','flex');
+$('#errorlog').css('display','flex');
+
 
 $('#stats').css('display','flex');
 
@@ -72,6 +74,7 @@ $('#addevent').css('display','flex');
 $('#buying').css('display','flex');
 $('#queue').css('display','flex');
 $('#history').css('display','flex');
+$('#errorlog').css('display','flex');
 }
 
 if(!!buyer && window.location.href.includes('/events')) {
