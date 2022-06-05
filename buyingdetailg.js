@@ -32,6 +32,8 @@ document.querySelector('#purchasefreq').textContent =  data[0].Event_Other_Maste
 document.querySelector('#purchaseacc').textContent = data[0].Event_Other_Master_User_Purch_Account
 document.querySelector('#purchaseemail').value = data[0].Event_Other_Master_Purchase_Email
 document.querySelector('#purchasesource').textContent = data[0].Event_Other_Master_Source_Formula
+document.querySelector('#eventid').textContent = data[0].Other_Master_Site_Event_Id
+
 
     
 let urgency = data[0].Event_Other_Master_User_Buy_Urgency
