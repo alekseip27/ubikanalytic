@@ -276,3 +276,56 @@ window.location.href = "/buy-queue";
 http.send(params);
 })
 }
+
+{
+document.querySelector('#buybtn2').addEventListener("click", () => {
+let eventid = document.querySelector('#eventid').textContent
+let femail = document.querySelector('#failedemail').value
+let acm = document.querySelector('#purchaseacc').textContent
+let filledby = document.querySelector('#username').textContent
+let multattempt = document.querySelector('#unabletofulfill').checked
+let mults = 'false'
+if(!!multattempt) {
+let mults = 'true'
+} else {
+let mults = 'false'
+}
+let errormsg = document.querySelector('#failedmsg').value
+
+const date = new Date();
+let purchasedate = 
+date.toLocaleString('en-US', {
+timeZone: 'America/New_York',
+year: 'numeric',
+month: '2-digit',
+day: '2-digit',
+hour: '2-digit',
+minute: '2-digit',
+})
+
+var http = new XMLHttpRequest();
+var url = "https://x8ki-letl-twmt.n7.xano.io/api:Bwn2D4w5/add_errorlog";
+var params = JSON.stringify(
+
+{
+"Site_Event_Id": eventid,
+"Email_Used": femail,
+"Error_Message": errormsg,
+"Multiple_Attempts": mults,
+"Timestamp": purchasedate,
+"FilledBy": filledby
+})
+http.open("POST", url, true);
+http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+http.onreadystatechange = function() {
+if(http.readyState == 4 && http.status == 200) {
+document.querySelector('#loading').style.display = "flex";
+document.querySelector('#Item-Container').style.display = "none";
+setTimeout(() => {
+window.location.href = "/buy-queue";
+}, 2000);
+}
+}
+http.send(params);
+})
+}
