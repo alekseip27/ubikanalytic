@@ -13,8 +13,10 @@ var data = JSON.parse(this.response)
 if (request.status >= 200 && request.status < 400) {
 const itemContainer = document.getElementById("Item-Container")
 const item = document.getElementById('samplestyle')
-let dates = data[0].Other_Master_Event_Date.split('T')
-document.querySelector('#date').textContent = dates[0].replaceAll("-","/")
+  
+var tdate = data[0].Other_Master_Event_Date.slice(0, 10).replaceAll("-","/")
+tdate = [tdate.slice(5), tdate.slice(0,4)].join('/');
+document.querySelector('#date').textContent = tdate
 document.querySelector('#event').textContent =  data[0].Other_Master_Event_Name
 document.querySelector('#venue').textContent =  data[0].Venue_Master_Venue
 document.querySelector('#time').textContent =  data[0].Other_Master_Event_Time
