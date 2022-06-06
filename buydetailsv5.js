@@ -350,3 +350,9 @@ window.location.href = "/buy-queue";
 http.send(params);
 })
 }
+
+
+if(!!$('#purchaseacc').text() == false) {
+$('#purchaseacc').text('noaccount')
+$('#purchaseacc').css('opacity', '0');
+}
