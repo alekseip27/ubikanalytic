@@ -156,6 +156,11 @@ myFS.doc("stats/" + bm).set({[src] : i+1}, { merge: true })
 
 accountstats = async function() {
 let acm = document.querySelector('#purchaseacc').textContent
+
+if(!!acm = false) {
+acm = 'no account'
+}
+
 let src = document.querySelector('#purchasesource').textContent
 let myFS = firebase.firestore()
 let docSnap = await myFS.doc("accountstats/"+ acm).get();
