@@ -223,6 +223,9 @@ var params = JSON.stringify(
 "search-key": eventid,
 "Bought_Amnt": combined,
 "Event_Other_Master_Buy_Status": "Added"
+"Details_Match": dmatch,
+"No_Will_Call": wcall,
+"Delivery_Method_Selected": deliveryselected
 })
 http.open("PUT", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
