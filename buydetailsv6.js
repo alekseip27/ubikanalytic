@@ -351,8 +351,9 @@ http.send(params);
 })
 }
 
-
+setTimeout(() => {
 if(!!$('#purchaseacc').text() == false) {
 $('#purchaseacc').text('noaccount')
 $('#purchaseacc').css('opacity', '0');
 }
+}, 1000);
