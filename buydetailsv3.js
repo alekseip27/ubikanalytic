@@ -158,7 +158,7 @@ accountstats = async function() {
 let acm = document.querySelector('#purchaseacc').textContent
 
 if(!!acm = false) {
-acm = 'no account'
+let acm = 'no account'
 }
 
 let src = document.querySelector('#purchasesource').textContent
