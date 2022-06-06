@@ -29,7 +29,6 @@ document.querySelector('#amountbought1').textContent = data[0].Event_Other_Maste
 else { document.querySelector('#amountbought1').textContent = "0" }
 document.querySelector('#amountbought2').textContent =  data[0].Event_Other_Master_User_Purch_Amnt 
 document.querySelector('#section').textContent =  data[0].Event_Other_Master_User_Section
-document.querySelector('#deliverymethod').textContent =  data[0].Event_Other_Master_Delivery_Method 
 document.querySelector('#purchasefreq').textContent =  data[0].Event_Other_Master_User_Purch_Frequency
 document.querySelector('#purchaseacc').textContent = data[0].Event_Other_Master_User_Purch_Account
 document.querySelector('#purchaseemail').value = data[0].Event_Other_Master_Purchase_Email
