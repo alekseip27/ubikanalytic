@@ -171,6 +171,21 @@ document.querySelector('#buybtn').addEventListener("click", () => {
 let bm = document.querySelector('#purchaseemail').value
 let detailsmatch = !!document.querySelector('#detailsmatch').checked
 let willcall = !!document.querySelector('#willcall').checked
+
+let dmatch = 'false'
+if(!!detailsmatch) {
+let dmatch = 'true'
+} else {
+let dmatch = 'false'
+}
+
+let wcall = 'false'
+if(!!willcall) {
+let wcall = 'true'
+} else {
+let wcall = 'false'
+}
+
 let deliveryselected = document.querySelector('#deliveryselected').value
 
 let acm = document.querySelector('#purchaseacc').textContent
@@ -195,8 +210,8 @@ var params = JSON.stringify(
 "search-key": eventid,
 "Bought_Amnt": combined,
 "Event_Other_Master_Buy_Status": "Completed",
-"Details_Match": detailsmatch,
-"No_Will_Call": willcall,
+"Details_Match": dmatch,
+"No_Will_Call": wcall,
 "Delivery_Method_Selected": deliveryselected
 })
 http.open("PUT", url, true);
