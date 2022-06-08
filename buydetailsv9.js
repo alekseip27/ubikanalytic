@@ -303,6 +303,7 @@ http.send(params);
 document.querySelector('#buybtn2').addEventListener("click", () => {
 let eventid = document.querySelector('#eventid').textContent
 let femail = document.querySelector('#failedemail').value
+let bused = document.querySelector('#browserused').value
 let acm = document.querySelector('#purchaseacc').textContent
 let filledby = document.querySelector('#username').textContent
 let multattempt = document.querySelector('#unabletofulfill').checked
@@ -332,6 +333,7 @@ var params = JSON.stringify(
 {
 "Site_Event_Id": eventid,
 "Email_Used": femail,
+"Browser_Used": bused,
 "Error_Message": errormsg,
 "Multiple_Attempts": mults,
 "Timestamp": purchasedate,
