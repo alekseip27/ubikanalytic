@@ -36,9 +36,10 @@ document.querySelector('#purchasesource').textContent = data[0].Event_Other_Mast
 document.querySelector('#eventid').textContent = data[0].Other_Master_Site_Event_Id
 document.querySelector('#purchasealltime').textContent = data[0].Purchased_Amount_Alltime
 
-  
-
-
+let pt = document.querySelector('#purchasealltime').textContent
+if(pt.length == 0) {
+document.querySelector('#purchasealltime').textContent = '0'
+}
     
 let urgency = data[0].Event_Other_Master_User_Buy_Urgency
 let buytimestamp = data[0].Other_Buy_Request_Date
@@ -208,6 +209,7 @@ let bought = Number(document.querySelector('#amountbought1').textContent)
 let cpr = Number(document.querySelector('#purchasequantity').value)
 let combined = bought+cpr
 let alltime = Number(document.querySelector('#purchasealltime').textContent)
+let allt = bought+cpr+alltime
 let limit = Number(document.querySelector('#amountbought2').textContent)
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
@@ -216,7 +218,7 @@ if(combined>=limit) {
 var params = JSON.stringify(
 {
 "search-key": eventid,
-"Purchased_Amount_Alltime": combined+alltime,
+"Purchased_Amount_Alltime": allt,
 "Event_Other_Master_Buy_Status": "Completed",
 "Details_Match": dmatch,
 "No_Will_Call": wcall,
@@ -363,11 +365,6 @@ if(!!$('#purchaseacc').text() == false) {
 $('#purchaseacc').text('noaccount')
 $('#purchaseacc').css('opacity', '0');
 }
-let pt = document.querySelector('#purchasealltime').textContent
-if(pt.length == 0) {
-document.querySelector('#purchasealltime').textContent = '0'
-}
-
 }, 1000);
 
 
