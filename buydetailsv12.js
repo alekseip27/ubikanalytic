@@ -207,7 +207,7 @@ accountstats()
 let bought = Number(document.querySelector('#amountbought1').textContent)
 let cpr = Number(document.querySelector('#purchasequantity').value)
 let combined = bought+cpr
-let alltime = Number(document.querySelector('#purchasetotal').value)
+let alltime = Number(document.querySelector('#purchasealltime').value)
 let limit = Number(document.querySelector('#amountbought2').textContent)
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
@@ -363,4 +363,11 @@ if(!!$('#purchaseacc').text() == false) {
 $('#purchaseacc').text('noaccount')
 $('#purchaseacc').css('opacity', '0');
 }
+let pt = document.querySelector('#purchasealltime').textContent
+if(pt.length == 0) {
+document.querySelector('#purchasealltime').textContent = '0'
+}
+
 }, 1000);
+
+
