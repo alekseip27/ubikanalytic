@@ -210,7 +210,6 @@ let cpr = Number(document.querySelector('#purchasequantity').value)
 let combined = bought+cpr
 let alltime = Number(document.querySelector('#purchasealltime').textContent)
 let allt = bought+cpr+alltime
-console.log(allt)
 let limit = Number(document.querySelector('#amountbought2').textContent)
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
@@ -219,6 +218,7 @@ if(combined>=limit) {
 var params = JSON.stringify(
 {
 "search-key": eventid,
+"Event_Other_Master_Bought_Amnt": combined,
 "Purchased_Amount_Alltime": allt,
 "Event_Other_Master_Buy_Status": "Completed",
 "Details_Match": dmatch,
