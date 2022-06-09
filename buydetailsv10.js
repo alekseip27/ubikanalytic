@@ -34,6 +34,9 @@ document.querySelector('#purchaseacc').textContent = data[0].Event_Other_Master_
 document.querySelector('#purchaseemail').value = data[0].Event_Other_Master_Purchase_Email
 document.querySelector('#purchasesource').textContent = data[0].Event_Other_Master_Source_Formula
 document.querySelector('#eventid').textContent = data[0].Other_Master_Site_Event_Id
+document.querySelector('#purchasealltime').textContent = data[0].Purchased_Amount_Alltime
+
+  
 
 
     
@@ -204,6 +207,7 @@ accountstats()
 let bought = Number(document.querySelector('#amountbought1').textContent)
 let cpr = Number(document.querySelector('#purchasequantity').value)
 let combined = bought+cpr
+let alltime = Number(document.querySelector('#purchasetotal').value)
 let limit = Number(document.querySelector('#amountbought2').textContent)
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
@@ -212,7 +216,7 @@ if(combined>=limit) {
 var params = JSON.stringify(
 {
 "search-key": eventid,
-"Bought_Amnt": combined,
+"purchasealltime": combined+alltime,
 "Event_Other_Master_Buy_Status": "Completed",
 "Details_Match": dmatch,
 "No_Will_Call": wcall,
