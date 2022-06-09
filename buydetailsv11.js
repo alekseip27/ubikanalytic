@@ -216,7 +216,7 @@ if(combined>=limit) {
 var params = JSON.stringify(
 {
 "search-key": eventid,
-"purchasealltime": combined+alltime,
+"Purchased_Amount_Alltime": combined+alltime,
 "Event_Other_Master_Buy_Status": "Completed",
 "Details_Match": dmatch,
 "No_Will_Call": wcall,
