@@ -207,7 +207,7 @@ accountstats()
 let bought = Number(document.querySelector('#amountbought1').textContent)
 let cpr = Number(document.querySelector('#purchasequantity').value)
 let combined = bought+cpr
-let alltime = Number(document.querySelector('#purchasealltime').value)
+let alltime = Number(document.querySelector('#purchasealltime').textContent)
 let limit = Number(document.querySelector('#amountbought2').textContent)
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
