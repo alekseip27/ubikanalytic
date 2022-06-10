@@ -60,6 +60,12 @@ $('#buying').css('display','flex');
 $('#queue').css('display','flex');
 $('#history').css('display','flex');
 $('#errorlog').css('display','flex');
+ 
+$('.main-confirm-button').css('display','flex');
+$('.main-delete-button-confirm').css('display','flex');
+ 
+$('#normalplaceholder').css('display','none');
+$('#adminplaceholder').css('display','block');
 
 
 $('#stats').css('display','flex');
