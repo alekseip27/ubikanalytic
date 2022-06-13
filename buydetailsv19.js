@@ -160,7 +160,7 @@ myFS.doc("stats/" + bm).set({[src] : i+1}, { merge: true })
 }}
 
 accountstats = async function() {
-let acm = document.querySelector('#purchaseacc').textContent
+let acm = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase();
 
  
 
@@ -196,7 +196,7 @@ let wcall = 'false'
 
 let deliveryselected = document.querySelector('#deliveryselected').value
 
-let acm = document.querySelector('#purchaseacc').textContent
+let acm = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase();
 let myFS = firebase.firestore()
 myFS.doc("stats/" + bm).set({}, {merge:true})
 myFS.doc("accountstats/" + acm).set({}, {merge:true})
@@ -311,7 +311,7 @@ document.querySelector('#buybtn2').addEventListener("click", () => {
 let eventid = document.querySelector('#eventid').textContent
 let femail = document.querySelector('#failedemail').value
 let bused = document.querySelector('#browserused').value
-let acm = document.querySelector('#purchaseacc').textContent
+let acm = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase();
 let filledby = document.querySelector('#username').textContent
 let multattempt = document.querySelector('#unabletofulfill').checked
 let mults = 'false'
