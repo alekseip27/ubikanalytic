@@ -261,7 +261,7 @@ minute: '2-digit',
 })
 
 let pq = document.querySelector('#purchasequantity').value
-let pa = document.querySelector('#purchaseacc').textContent
+let pa = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase();
 let pc = document.querySelector('#purchaseconfirmation').value
 let pem = document.querySelector('#purchaseemail').value
 let purchasedby = document.querySelector('#username').textContent
@@ -360,6 +360,7 @@ window.location.href = "/buy-queue";
 http.send(params);
 })
 }
+
 
 setTimeout(() => {
 if(!!$('#purchaseacc').text() == false) {
