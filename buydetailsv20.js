@@ -35,7 +35,9 @@ document.querySelector('#purchaseemail').value = data[0].Event_Other_Master_Purc
 document.querySelector('#purchasesource').textContent = data[0].Event_Other_Master_Source_Formula
 document.querySelector('#eventid').textContent = data[0].Other_Master_Site_Event_Id
 document.querySelector('#purchasealltime').textContent = data[0].Purchased_Amount_Alltime
+document.querySelector('#presalecode').textContent = data[0].Event_Other_Master_Presale_Code
 
+ 
 let pt = document.querySelector('#purchasealltime').textContent
 if(pt.length == 0) {
 document.querySelector('#purchasealltime').textContent = '0'
