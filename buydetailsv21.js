@@ -36,6 +36,7 @@ document.querySelector('#purchasesource').textContent = data[0].Event_Other_Mast
 document.querySelector('#eventid').textContent = data[0].Other_Master_Site_Event_Id
 document.querySelector('#purchasealltime').textContent = data[0].Purchased_Amount_Alltime
 document.querySelector('#presalecode').textContent = data[0].Event_Other_Master_Presale_Code
+document.querySelector('#notes').textContent = data[0].Event_Other_Master_Notes
 
  
 let pt = document.querySelector('#purchasealltime').textContent
