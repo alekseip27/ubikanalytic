@@ -69,7 +69,7 @@ $('#adminplaceholder').css('display','block');
 
 $('#stats').css('display','flex');
 
-$('#emailsdropdown').css('display','flex');
+$('#emaildropdown').css('display','flex');
 $('#manage-emails').css('display','flex');
 
 }
@@ -80,6 +80,7 @@ $('#eventsdropdown').css('display','flex');
 $('#addevent').css('display','flex');
  
 $('#buying').css('display','flex');
+$('#emaildropdown').css('display','flex');
 $('#queue').css('display','flex');
 $('#history').css('display','flex');
 $('#errorlog').css('display','flex');
@@ -93,7 +94,7 @@ if(!!entry) {
 $('#entrylogo').show()
 $('#eventsdropdown').css('display','flex');
 $('#addevent').css('display','flex');
-
+$('#emaildropdown').css('display','flex');
 $('#buying').css('display','flex');
 $('#history').css('display','flex');
 }
