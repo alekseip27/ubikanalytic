@@ -69,6 +69,9 @@ $('#adminplaceholder').css('display','block');
 
 $('#stats').css('display','flex');
 
+$('#emailsdropdown').css('display','flex');
+$('#manage-emails').css('display','flex');
+
 }
 
 if(!!buyer) {
