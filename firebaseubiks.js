@@ -70,7 +70,9 @@ $('#adminplaceholder').css('display','block');
 $('#stats').css('display','flex');
 
 $('#emaildropdown').css('display','flex');
+$('#create-emails').css('display','flex');
 $('#manage-emails').css('display','flex');
+
 
 }
 
