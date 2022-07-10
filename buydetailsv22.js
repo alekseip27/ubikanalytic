@@ -3,7 +3,7 @@ $("#purchasequantity").attr({"min" : 0});
 var pkid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 
 var request = new XMLHttpRequest()
-let xanoUrl = new URL('https://x8ki-letl-twmt.n7.xano.io/api:Bwn2D4w5/getevent?search-key=' + pkid);
+let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent?search-key=' + pkid);
 
 console.log(xanoUrl.toString())
 request.open('GET', xanoUrl.toString(), true)
@@ -216,7 +216,7 @@ let allt = bought+cpr+alltime
 let limit = Number(document.querySelector('#amountbought2').textContent)
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
-var url = "https://x8ki-letl-twmt.n7.xano.io/api:Bwn2D4w5/update_event_second";
+var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/update_event_second";
 if(combined>=limit) {
 var params = JSON.stringify(
 {
@@ -275,7 +275,7 @@ let combined = bought+cpur
 
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
-var url = "https://x8ki-letl-twmt.n7.xano.io/api:Bwn2D4w5/buy_event";
+var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/buy_event";
 var params = JSON.stringify(
 
 {
@@ -337,7 +337,7 @@ minute: '2-digit',
 })
 
 var http = new XMLHttpRequest();
-var url = "https://x8ki-letl-twmt.n7.xano.io/api:Bwn2D4w5/add_errorlog";
+var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/add_errorlog";
 var params = JSON.stringify(
 
 {
