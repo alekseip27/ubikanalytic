@@ -277,9 +277,9 @@ hour: '2-digit',
 minute: '2-digit',
 second: '2-digit'
 })
-
-let now = moment("07/30/2022 20:45:45","MM/DD/YYYY HH:mm:ss")
-let then = moment(date2,"DD/MM/YYYY HH:mm:ss")
+let purchrequest = document.querySelector('#purchaserequest').textContent
+let then = moment(purchrequest,"MM/DD/YYYY HH:mm:ss")
+let now = moment(date2,"DD/MM/YYYY HH:mm:ss")
 
 var mss = moment(now).diff(moment(then));
 var dd = moment.duration(mss);
@@ -296,7 +296,7 @@ let cpur = Number(document.querySelector('#purchasequantity').value)
 let combined = bought+cpur
 
 let purchurgency = document.querySelector('#purchasefrequency').textContent
-let purchrequest = document.querySelector('#purchaserequest').textContent
+
 
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
