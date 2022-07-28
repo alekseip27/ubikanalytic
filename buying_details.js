@@ -38,7 +38,11 @@ document.querySelector('#purchasealltime').textContent = data[0].Purchased_Amoun
 document.querySelector('#presalecode').textContent = data[0].Event_Other_Master_Presale_Code
 document.querySelector('#notes').textContent = data[0].Event_Other_Master_Notes
 
- 
+  
+document.querySelector('#purchasefrequency').textContent = data[0].Event_Other_Master_User_Buy_Urgency
+
+document.querySelector('#purchaserequest').textContent = data[0].Other_Buy_Request_Date
+  
 let pt = document.querySelector('#purchasealltime').textContent
 if(pt.length == 0) {
 document.querySelector('#purchasealltime').textContent = '0'
@@ -263,6 +267,13 @@ hour: '2-digit',
 minute: '2-digit',
 })
 
+let now = moment("07/30/2022 20:45:45","MM/DD/YYYY HH:mm:ss")
+let then = moment(purchasedate,"DD/MM/YYYY HH:mm:ss")
+
+var mss = moment(now).diff(moment(then));
+var dd = moment.duration(mss);
+var pdifference = Math.floor(dd.asHours()) + moment.utc(mss).format(":mm:ss");
+
 let pq = document.querySelector('#purchasequantity').value
 let pa = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase();
 let pc = document.querySelector('#purchaseconfirmation').value
@@ -272,6 +283,9 @@ let psrc = document.querySelector('#purchasesource').textContent
 let bought = Number(document.querySelector('#amountbought1').textContent)
 let cpur = Number(document.querySelector('#purchasequantity').value)
 let combined = bought+cpur
+
+let purchurgency = document.querySelector('#purchasefrequency').textContent
+let purchrequest = document.querySelector('#purchaserequest').textContent
 
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
@@ -292,7 +306,10 @@ var params = JSON.stringify(
 "Purchase_Account": pa,
 "Confirmation": pc,
 "Purchase_Email": pem,
-"Purchased_By": purchasedby
+"Purchased_By": purchasedby,
+"Purchase_Requested": purchrequest,
+"Purchase_Urgency": purchurgency,
+"Purchase_Difference":pdifference
 })
 http.open("POST", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
