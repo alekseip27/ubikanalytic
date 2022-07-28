@@ -267,8 +267,19 @@ hour: '2-digit',
 minute: '2-digit',
 })
 
+let date2 = 
+date.toLocaleString('en-GB', {
+timeZone: 'America/New_York',
+year: 'numeric',
+month: '2-digit',
+day: '2-digit',
+hour: '2-digit',
+minute: '2-digit',
+second: '2-digit'
+})
+
 let now = moment("07/30/2022 20:45:45","MM/DD/YYYY HH:mm:ss")
-let then = moment(purchasedate,"DD/MM/YYYY HH:mm:ss")
+let then = moment(date2,"DD/MM/YYYY HH:mm:ss")
 
 var mss = moment(now).diff(moment(then));
 var dd = moment.duration(mss);
