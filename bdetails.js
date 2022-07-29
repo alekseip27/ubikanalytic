@@ -278,7 +278,7 @@ minute: '2-digit',
 second: '2-digit'
 })
 let purchrequest = document.querySelector('#purchaserequest').textContent
-let then = moment(purchrequest,"MM/DD/YYYY hh:mm:ss a")
+let then = moment(purchrequest,"MM/DD/YYYY HH:mm:ss")
 let now = moment(date2,"DD/MM/YYYY HH:mm:ss")
 
 var mss = moment(now).diff(moment(then));
