@@ -168,11 +168,7 @@ $('#shub').css('cursor', 'default');
 }
 }, 100);
 }
-{
-$(document).ready(function() {
-document.getElementById("search-button").click();
-})
-}
+
 {
 $('#vseats').click(function () {
 let url = document.querySelector('#vseats').getAttribute('url');
