@@ -200,23 +200,6 @@ boxes[i].remove()
 }, 100);
 }
 
-{
-$(document).ready(function() {
-setTimeout(() => {
-document.getElementById("search-button").click();
-{
-let now = new Date()
-let date1 = moment(now).format('YYYY/MM/DD')
-$(function() {
-$('.event-box').sort(function(a, b) {
-if (date1 > $(b).attr('date')) {return 1;}
-else {return -1;}
-}).appendTo('#Cards-Container');
-});
-}
-}, 2500);
-})
-}
 $('#fetchbutton').click(function () {
 let stid = document.querySelector('#selectedevent').getAttribute('stubhub-id');
 if(stid !== 'null') {
