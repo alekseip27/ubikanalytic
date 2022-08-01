@@ -137,7 +137,16 @@ const lastupdated = card.getElementsByClassName('main-text-updated')[0]
 cardContainer.appendChild(card);
 })}}
 request.send();
-
+{
+let now = new Date()
+let date1 = moment(now).format('YYYY/MM/DD')
+$(function() {
+$('.event-box').sort(function(a, b) {
+if (date1 > $(b).attr('date')) {return 1;}
+else {return -1;}
+}).appendTo('#Cards-Container');
+});
+}
 }
 
 });
