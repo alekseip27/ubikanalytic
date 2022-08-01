@@ -148,7 +148,6 @@ else {return -1;}
 }).appendTo('#Cards-Container');
 });
 }
-}
 }, 2000);
 });
   
