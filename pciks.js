@@ -137,6 +137,7 @@ const lastupdated = card.getElementsByClassName('main-text-updated')[0]
 cardContainer.appendChild(card);
 })}}
 request.send();
+setTimeout(() => {
 {
 let now = new Date()
 let date1 = moment(now).format('YYYY/MM/DD')
@@ -148,7 +149,7 @@ else {return -1;}
 });
 }
 }
-
+}, 2000);
 });
   
 
