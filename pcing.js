@@ -18,10 +18,13 @@ document.querySelector('#eventtime').textContent = ''
 document.querySelector('#eventlocation').textContent = ''
 document.querySelector('#shub').setAttribute('url', '');
 document.querySelector('#vseats').setAttribute('url', '');
+document.querySelector('#eventlastfetchedtime').textContent = ''
 document.querySelector('#fwicon1').textContent = ''
 document.querySelector('#fwicon2').textContent = ''
 document.querySelector('#fwicon3').textContent = ''
 document.querySelector('#fwicon4').textContent = ''
+document.querySelector('#fwicon5').textContent = ''
+
 $(".platform-icon").hide()
 $('.event-box').hide()
 $('.event-box-2').hide()
