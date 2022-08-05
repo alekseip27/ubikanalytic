@@ -71,7 +71,6 @@ eventquant.textContent = events.quantity
 const eventcost = card.getElementsByClassName('main-text-cost')[0]
 eventcost.textContent = '$' + events.cost
 card.addEventListener('click', function() {
-document.querySelector("#refreshstub").click()
 {
 let eventids = document.querySelector('#selectedevent').getAttribute('stubhub-id');
 if(eventids !== '0') {
@@ -87,6 +86,7 @@ if(data !== 404){
 document.querySelector('#selectedevent').setAttribute('lastfetched', data)
 document.querySelector('#eventlastfetchedtime').textContent = data
 document.querySelector('#fwicon5').textContent = ''
+document.querySelector("#refreshstub").click()
 }}}
 
 document.querySelector('#eventlastfetchedtime').textContent = ''
