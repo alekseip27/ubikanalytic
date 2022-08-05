@@ -71,7 +71,8 @@ eventquant.textContent = events.quantity
 const eventcost = card.getElementsByClassName('main-text-cost')[0]
 eventcost.textContent = '$' + events.cost
 card.addEventListener('click', function() {
-
+document.querySelector('#eventlastfetchedtime').textContent = ''
+document.querySelector('#fwicon5').textContent = ''
 $('.event-box-4').hide()
 $('#samplestyle4').show()
 $(".event-box").removeClass("selected");
