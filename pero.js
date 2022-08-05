@@ -74,7 +74,7 @@ eventcost.textContent = '$' + events.cost
 card.addEventListener('click', function() {
 {
 let eventids = document.querySelector('#selectedevent').getAttribute('stubhub-id');
-if(eventids !== '0' && eventids.length>4) {
+if(eventids !== '0' && (eventids !== 'null')) {
 var http = new XMLHttpRequest();
 var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/lastfetched_get?stubhub-id=" + eventids
 }
