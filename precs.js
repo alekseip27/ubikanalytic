@@ -72,45 +72,6 @@ const eventcost = card.getElementsByClassName('main-text-cost')[0]
 eventcost.textContent = '$' + events.cost
 card.addEventListener('click', function() {
 
-{
-let eventids = document.querySelector('#selectedevent').getAttribute('stubhub-id');
-if(eventids !== '0') {
-
-const thnd = new Date();
-let thn = 
-thnd.toLocaleString('en-US', {
-timeZone: 'America/New_York',
-year: 'numeric',
-month: '2-digit',
-day: '2-digit',
-hour: '2-digit',
-minute: '2-digit',
-second: '2-digit',
-})
-let now = moment(thn).format('MM/DD/YYYY HH:mm:ss')
-var eventid = document.querySelector('#selectedevent').getAttribute('stubhub-id');
-var http = new XMLHttpRequest();
-var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/lastfetched?stubhub-id=" + eventids
-var params = JSON.stringify({
-"stubhub-id": eventids,
-"last-fetched-date": now
-})
-http.open("POST", url, true);
-http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-http.send(params);
-
-
-
-http.onload = function() {
-if(http.status<400){
-let data = JSON.parse(this.response)
-document.querySelector('#selectedevent').setAttribute('lastfetched', data)
-document.querySelector('#eventlastfetchedtime').textContent = now
-document.querySelector('#fwicon5').textContent = ''
-
-}}}}
-    
-    
 $('.event-box-4').hide()
 $('#samplestyle4').show()
 $(".event-box").removeClass("selected");
