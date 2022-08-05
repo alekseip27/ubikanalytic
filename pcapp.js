@@ -71,6 +71,23 @@ eventquant.textContent = events.quantity
 const eventcost = card.getElementsByClassName('main-text-cost')[0]
 eventcost.textContent = '$' + events.cost
 card.addEventListener('click', function() {
+{
+let eventids = document.querySelector('#selectedevent').getAttribute('stubhub-id');
+if(eventids !== '0') {
+var http = new XMLHttpRequest();
+var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/lastfetched_get?stubhub-id=" + eventids
+}
+http.open("GET", url, true);
+http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+http.send();
+http.onload = function() {
+let data = JSON.parse(this.response)
+if(data !== 404){
+document.querySelector('#selectedevent').setAttribute('lastfetched', data)
+document.querySelector('#eventlastfetchedtime').textContent = data
+document.querySelector('#fwicon5').textContent = ''
+}}}
+
 document.querySelector('#eventlastfetchedtime').textContent = ''
 document.querySelector('#fwicon5').textContent = ''
 $('.event-box-4').hide()
