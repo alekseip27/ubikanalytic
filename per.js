@@ -70,10 +70,11 @@ const eventquant = card.getElementsByClassName('main-text-quant')[0]
 eventquant.textContent = events.quantity
 const eventcost = card.getElementsByClassName('main-text-cost')[0]
 eventcost.textContent = '$' + events.cost
+
 card.addEventListener('click', function() {
 {
 let eventids = document.querySelector('#selectedevent').getAttribute('stubhub-id');
-if(eventids !== '0') {
+if(eventids !== '0' && eventids.length>4) {
 var http = new XMLHttpRequest();
 var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/lastfetched_get?stubhub-id=" + eventids
 }
