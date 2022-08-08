@@ -78,10 +78,12 @@ $('#samplestyle4').show()
 $(".event-box").removeClass("selected");
 card.classList.add("selected");
 setTimeout(() => {
+if (events.stubhubEventUrl !== 'null') {
 let stubhubid = events.stubhubEventUrl.slice(-10,-1)
 if(stubhubid.length === 9) {
 document.querySelector("#refreshstub").click()
-}}, 500);
+}}}, 500);
+
 document.querySelector('#selectedevent').textContent = events.name.slice(0,15) 
 document.querySelector('#eventdate').textContent = events.date.slice(0,10)
 document.querySelector('#eventtime').textContent = events.date.slice(11, 16)
