@@ -30,9 +30,7 @@ document.querySelector('#fwicon5').textContent = ''
     
 $(".platform-icon").hide()
 $('.event-box').hide()
-$('.event-box-2').hide()
 $('#samplestyle').show()
-$('#samplestyle3').show()
 const dt = new Date();
 let stimestamp2 = moment(dt).format('YYYY-MM-DD')
 let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_events?searchkey=');
