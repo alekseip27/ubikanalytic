@@ -213,10 +213,10 @@ boxes[i].remove()
 }
 
 $('#fetchbutton').click(function () {
-let stid = document.querySelector('#selectedevent').getAttribute('stubhub-id');
+let stid = document.querySelector('#shub').getAttribute('url').slice(-10,-1)
 if(stid !== 'null') {
 {
-let eventid = document.querySelector('#selectedevent').getAttribute('stubhub-id');
+let eventid = document.querySelector('#shub').getAttribute('url').slice(-10,-1)
 $('.event-box-2').hide()
 $('#samplestyle3').show()
 let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=');
