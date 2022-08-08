@@ -86,8 +86,8 @@ document.querySelector('#selectedevent').textContent = events.name.slice(0,15)
 document.querySelector('#eventdate').textContent = events.date.slice(0,10)
 document.querySelector('#eventtime').textContent = events.date.slice(11, 16)
 document.querySelector('#eventlocation').textContent = events.venue.city + ", " + events.venue.state
-document.querySelector('#selectedevent').setAttribute('eventid', events.id);
-document.querySelector('#selectedevent').setAttribute('stubhub-id', events.stubhubEventId);
+document.querySelector('#selectedevent').setAttribute('eventid', events.id)
+document.querySelector('#selectedevent').setAttribute('stubhub-id', events.stubhubEventUrl.slice(-10,-1))
 document.querySelector('#shub').setAttribute('url', events.stubhubEventUrl);
 document.querySelector('#vseats').setAttribute('url', events.vividSeatsEventUrl);
 $(".platform-icon").css('display', 'flex');
