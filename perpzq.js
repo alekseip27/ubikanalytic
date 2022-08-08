@@ -81,7 +81,7 @@ setTimeout(() => {
 let stubhubid = document.querySelector('#selectedevent').getAttribute('stubhub-id');
 if(stubhubid !== '0') {
 document.querySelector("#refreshstub").click()
-}}, 1500);
+}}, 500);
 document.querySelector('#selectedevent').textContent = events.name.slice(0,15) 
 document.querySelector('#eventdate').textContent = events.date.slice(0,10)
 document.querySelector('#eventtime').textContent = events.date.slice(11, 16)
