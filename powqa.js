@@ -78,7 +78,7 @@ $('#samplestyle4').show()
 $(".event-box").removeClass("selected");
 card.classList.add("selected");
 setTimeout(() => {
-let stubhubid = events.stubhubEventUrl.slice(-10,-1))
+let stubhubid = events.stubhubEventUrl.slice(-10,-1)
 if(stubhubid.length === 9) {
 document.querySelector("#refreshstub").click()
 }}, 500);
