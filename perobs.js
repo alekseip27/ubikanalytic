@@ -217,11 +217,19 @@ let stid = document.querySelector('#shub').getAttribute('url').slice(-10,-1)
 if(stid !== 'null') {
 {
 let eventid = document.querySelector('#shub').getAttribute('url').slice(-10,-1)
+let eventurl = document.querySelector('#shub').getAttribute('url')
 $('.event-box-2').hide()
 $('#samplestyle3').show()
 let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=');
 let request = new XMLHttpRequest();
 let url = xanoUrl.toString() + eventid
+var params = JSON.stringify(
+
+{
+  "Event_Url": eventurl,
+  "Event_Id": eventid
+})
+
 request.open('GET', url, true)
 request.onload = function() {
 let data = JSON.parse(this.response)
@@ -248,5 +256,5 @@ const eventdate = card.getElementsByClassName('main-text-date3')[0]
 eventdate.textContent = moment.unix(events.timestamp).format("MM/DD/YYYY hh:mm");
 cardContainer.appendChild(card);
 })}}
-request.send();
+request.send(params);
 }}})
