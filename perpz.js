@@ -71,7 +71,6 @@ const eventcost = card.getElementsByClassName('main-text-cost')[0]
 eventcost.textContent = '$' + events.cost
 
 card.addEventListener('click', function() {
-document.querySelector("#refreshstub").click()
 document.querySelector('#eventlastfetchedtime').textContent = ''
 document.querySelector('#fwicon5').textContent = ''
 $('.event-box-4').hide()
@@ -81,6 +80,7 @@ card.classList.add("selected");
 setTimeout(() => {
 let stubhubid = document.querySelector('#selectedevent').getAttribute('stubhub-id');
 if(stubhubid !== '0') {
+document.querySelector("#refreshstub").click()
 }}, 1500);
 document.querySelector('#selectedevent').textContent = events.name.slice(0,15) 
 document.querySelector('#eventdate').textContent = events.date.slice(0,10)
