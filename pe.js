@@ -126,8 +126,8 @@ Webflow.push(function() {
     const eventqty = card.getElementsByClassName('main-text-qty')[0]
     eventqty.textContent = events.quantity
     
-    const eventprice = card.getElementsByClassName('main-text-priced')[0]
-    eventprice.textContent = '$' + events.listPrice
+    const eventprice = card.getElementsByClassName('main-field-price')[0]
+    eventprice.value = '$' + events.listPrice
     
     const eventcst = card.getElementsByClassName('main-text-cst')[0]
     eventcst.textContent = '$' + events.cost
