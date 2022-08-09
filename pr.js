@@ -79,10 +79,10 @@ Webflow.push(function() {
     card.classList.add("selected");
     setTimeout(() => {
     if (events.stubhubEventUrl !== null) {
-    let stubhubid = events.stubhubEventUrl.slice(-10,-1)
+    let stubhubid = events.stubhubEventUrl.split('/event/')[1].slice(0, -1);
     if(stubhubid.length === 9) {
     document.querySelector("#refreshstub").click()
-    document.querySelector('#selectedevent').setAttribute('stubhub-id', events.stubhubEventUrl.slice(-10,-1))
+    document.querySelector('#selectedevent').setAttribute('stubhub-id', events.stubhubEventUrl.split('/event/')[1].slice(0, -1);
     }}}, 500);
     
     document.querySelector('#selectedevent').textContent = events.name.slice(0,15) 
