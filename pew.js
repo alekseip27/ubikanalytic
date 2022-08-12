@@ -52,6 +52,7 @@ Webflow.push(function() {
     if((request.status === 429) || (request.status === 500)){
     alert('API request rate limit reached, please try again later.')
     } else if (request.status >= 200 && request.status < 400) {
+     document.querySelector(".locked-content").style.display = 'none'
     const cardContainer = document.getElementById("Cards-Container")
     let quantityseatdata = 0
     data.forEach(events => {
@@ -242,7 +243,6 @@ Webflow.push(function() {
     if((request.status === 429) || (request.status === 500)){
     alert('API request rate limit reached, please try again later.')
     } else if (request.status >= 200 && request.status < 400) {
-    document.querySelector(".locked-content").style.display = 'none'
     const cardContainer = document.getElementById("Cards-Container3")
     data.forEach(events => {
     const style = document.getElementById('samplestyle3')
