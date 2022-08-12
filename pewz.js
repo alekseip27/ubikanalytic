@@ -1,8 +1,4 @@
-let curUser = firebase.auth().currentUser;
-let myFS = firebase.firestore();
-let docRef = myFS.doc("users/" + curUser.uid);
-docRef.get().then((docSnap) => {
-let data = docSnap.data();
+document.addEventListener("DOMContentLoaded", function(event) {
 
 Webflow.push(function() {
     $('form').submit(function() {
@@ -34,6 +30,11 @@ Webflow.push(function() {
     document.querySelector('#selectedevent').setAttribute('lastfetched','')
     document.querySelector('#eventlastfetchedtime').textContent = ''
     document.querySelector('#fwicon5').textContent = ''
+let curUser = firebase.auth().currentUser;
+let myFS = firebase.firestore();
+let docRef = myFS.doc("users/" + curUser.uid);
+docRef.get().then((docSnap) => {
+let data = docSnap.data();
 
     $(".platform-icon").hide()
     $('.event-box').hide()
@@ -265,3 +266,4 @@ Webflow.push(function() {
     })}}
     request.send();
     }}})})
+});
