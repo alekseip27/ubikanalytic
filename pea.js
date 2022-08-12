@@ -1,3 +1,9 @@
+let curUser = firebase.auth().currentUser;
+let myFS = firebase.firestore();
+let docRef = myFS.doc("users/" + curUser.uid);
+docRef.get().then((docSnap) => {
+let data = docSnap.data();
+
 Webflow.push(function() {
     $('form').submit(function() {
     return false;
@@ -7,6 +13,7 @@ Webflow.push(function() {
     input.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
     event.preventDefault();
+
     document.getElementById("search-button").click();
     }
     });
@@ -27,7 +34,7 @@ Webflow.push(function() {
     document.querySelector('#selectedevent').setAttribute('lastfetched','')
     document.querySelector('#eventlastfetchedtime').textContent = ''
     document.querySelector('#fwicon5').textContent = ''
-        
+
     $(".platform-icon").hide()
     $('.event-box').hide()
     $('#samplestyle').show()
@@ -37,6 +44,9 @@ Webflow.push(function() {
     let request = new XMLHttpRequest();
     let url = xanoUrl.toString() +  encodeURIComponent(keywords1).replace(/%20/g, "%") + '&curdate=' + stimestamp2
     request.open('GET', url, true)
+    let pa = data["pyeo"];
+    request.setRequestHeader("Authorization", pa);
+    
     request.onload = function() {
     let data = JSON.parse(this.response)
     if((request.status === 429) || (request.status === 500)){
@@ -106,6 +116,8 @@ Webflow.push(function() {
     let request = new XMLHttpRequest();
     let url = xanoUrl.toString() + eventid
     request.open('GET', url, true)
+    let pa = data["pyeo"];
+    request.setRequestHeader("Authorization", pa);
     request.onload = function() {
     let data = JSON.parse(this.response)
     if((request.status === 429) || (request.status === 500)){
@@ -230,6 +242,7 @@ Webflow.push(function() {
     if((request.status === 429) || (request.status === 500)){
     alert('API request rate limit reached, please try again later.')
     } else if (request.status >= 200 && request.status < 400) {
+    document.querySelector(".locked-content").style.display = 'none'
     const cardContainer = document.getElementById("Cards-Container3")
     data.forEach(events => {
     const style = document.getElementById('samplestyle3')
@@ -251,5 +264,4 @@ Webflow.push(function() {
     cardContainer.appendChild(card);
     })}}
     request.send();
-    }}})
-    
+    }}})})
