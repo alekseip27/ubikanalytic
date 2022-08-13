@@ -160,8 +160,6 @@ Webflow.push(function() {
     cardContainer.appendChild(card);
     })}}
     
-    request.send();
-    
 let now = new Date()
 let date1 = moment(now).format('YYYY/MM/DD')
 $(function() {
@@ -170,6 +168,7 @@ if (date1 > $(b).attr('date')) {return 1;}
 else {return -1;}
 }).appendTo('#Cards-Container');
 });
+    request.send();
         
     }
     
