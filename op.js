@@ -411,3 +411,105 @@ let data = docSnap.data();
     request.send();
     }}})})
 });
+
+
+if(location.href.indexOf("?access-granted=true") > -1) {
+var mgw = location.href.split("https://www.ubikanalytic.com/pricing-tool?access-granted=true?")[1]
+var http = new XMLHttpRequest();
+var url = "https://x828-xess-evjx.n7.xano.io/api:x4ocgg3f/auth/magic-login?magic_token=" + mgw
+http.open("POST", url, true);
+http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+http.send()   
+http.onload = function() {
+var data = JSON.parse(this.response)
+firebase.firestore().doc("users/" + firebase.auth().currentUser.uid).set({ pyeo: data }, { merge: true });
+}
+} else {
+function logSubmit(event) {
+event.preventDefault();
+var emailz = document.querySelector("#emailconfirmation").value
+var http = new XMLHttpRequest();
+var url = "https://x828-xess-evjx.n7.xano.io/api:x4ocgg3f/auth/magic-link?email=" + emailz
+http.open("GET", url, true);
+http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+http.send()
+http.onload = function() {
+var data = JSON.parse(this.response)
+document.querySelector('#loadingform').style.display = 'flex'
+document.querySelector('#signform').style.display = 'none'
+
+setTimeout(() => {
+if(data.message.message === 'magic link sent') {
+document.querySelector('#succmsg').style.display = 'block'
+document.querySelector('#loadingform').style.display = 'none'
+} else {
+document.querySelector('#failmsg').style.display = 'block'
+document.querySelector('#loadingform').style.display = 'none'
+}
+}, 5000);
+
+}}}
+
+const form = document.getElementById('signform');
+form.addEventListener('submit', logSubmit);
+
+
+{
+$(document).ready(function() {
+document.getElementById("search-button").click();
+setTimeout(() => {
+document.querySelector('#loadanimation').style.display = "none";
+document.querySelector('#maincontent').style.display = "block";
+{
+let now = new Date()
+let date1 = moment(now).format('YYYY/MM/DD')
+$(function() {
+$('.event-box').sort(function(a, b) {
+if (date1 > $(b).attr('date')) {return 1;}
+else {return -1;}
+}).appendTo('#Cards-Container');
+});
+}
+}, 5000);
+})
+}
+
+$('#fetchbutton').click(function () {
+{
+let eventids = document.querySelector('#selectedevent').getAttribute('stubhub-id');
+if(eventids !== '0') {
+
+const thnd = new Date();
+let thn = 
+thnd.toLocaleString('en-US', {
+timeZone: 'America/New_York',
+year: 'numeric',
+month: '2-digit',
+day: '2-digit',
+hour: '2-digit',
+minute: '2-digit',
+second: '2-digit',
+})
+let now = moment(thn).format('MM/DD/YYYY HH:mm:ss')
+let eventid = document.querySelector('#shub').getAttribute('url').split('/event/')[1].slice(0, -1);
+var http = new XMLHttpRequest();
+var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/lastfetched?stubhub-id=" + eventids
+var params = JSON.stringify({
+"stubhub-id": eventids,
+"last-fetched-date": now
+})
+http.open("POST", url, true);
+http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+http.send(params);
+
+
+
+http.onload = function() {
+if(http.status<400){
+let data = JSON.parse(this.response)
+document.querySelector('#selectedevent').setAttribute('lastfetched', data)
+document.querySelector('#eventlastfetchedtime').textContent = now
+document.querySelector('#fwicon5').textContent = ''
+
+}}}}
+})
