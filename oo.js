@@ -139,7 +139,8 @@ const firebaseConfig = {
       } else {
       auth.signOut();
   location.href = '/login'
-      }})})
+      }
+
   
   
   document.addEventListener("DOMContentLoaded", function(event) {
@@ -507,4 +508,4 @@ const firebaseConfig = {
   
   }}}}
   })
-  
+  })})
