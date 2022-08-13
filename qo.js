@@ -28,6 +28,11 @@ Webflow.push(function() {
     document.querySelector('#selectedevent').setAttribute('lastfetched','')
     document.querySelector('#eventlastfetchedtime').textContent = ''
     document.querySelector('#fwicon5').textContent = ''
+    let curUser = firebase.auth().currentUser;
+    let myFS = firebase.firestore();
+    let docRef = myFS.doc("users/" + curUser.uid);
+    docRef.get().then((docSnap) => {
+    let datas = docSnap.data();
 
     $(".platform-icon").hide()
     $('.event-box').hide()
@@ -37,24 +42,16 @@ Webflow.push(function() {
     let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_events?searchkey=');
     let request = new XMLHttpRequest();
     let url = xanoUrl.toString() +  encodeURIComponent(keywords1).replace(/%20/g, "%") + '&curdate=' + stimestamp2
-
-    let curUser = firebase.auth().currentUser;
-    let myFS = firebase.firestore();
-    let docRef = myFS.doc("users/" + curUser.uid);
-    docRef.get().then((docSnap) => {
-    let data = docSnap.data();
-    
-
+    let pa = datas['pyeo']
     request.open('GET', url, true)
-    let pa = data["pyeo"];
     request.setRequestHeader("Authorization", pa);
-    })
     request.onload = function() {
     let data = JSON.parse(this.response)
     if((request.status === 429) || (request.status === 500)){
     alert('API request rate limit reached, please try again later.')
     } else if (request.status >= 200 && request.status < 400) {
      document.querySelector(".locked-content").style.display = 'none'
+     document.querySelector(".pageloading").style.display = 'none'
     const cardContainer = document.getElementById("Cards-Container")
     let quantityseatdata = 0
     data.forEach(events => {
@@ -118,16 +115,9 @@ Webflow.push(function() {
     let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_inventory?searchkey=');
     let request = new XMLHttpRequest();
     let url = xanoUrl.toString() + eventid
-
-    let curUser = firebase.auth().currentUser;
-    let myFS = firebase.firestore();
-    let docRef = myFS.doc("users/" + curUser.uid);
-    docRef.get().then((docSnap) => {
-    let data = docSnap.data();
+    let pa = datas['pyeo']
     request.open('GET', url, true)
-    let pa = data["pyeo"];
     request.setRequestHeader("Authorization", pa);
-    })
     request.onload = function() {
     let data = JSON.parse(this.response)
     if((request.status === 429) || (request.status === 500)){
@@ -274,3 +264,4 @@ Webflow.push(function() {
     })}}
     request.send();
     }}})
+    })
