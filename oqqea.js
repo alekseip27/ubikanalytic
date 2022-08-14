@@ -128,7 +128,7 @@ Webflow.push(function() {
     data.forEach(events => {
     const style = document.getElementById('samplestyle2')
     const card = style.cloneNode(true)
-    card.setAttribute('id', 'pricing'+events.id);
+    card.setAttribute('id', events.id);
     const eventid = card.getElementsByClassName('main-text-id')[0]
     eventid.textContent = events.id
     const eventsection = card.getElementsByClassName('main-text-section')[0]
