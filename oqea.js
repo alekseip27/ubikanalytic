@@ -110,6 +110,7 @@ Webflow.push(function() {
     {
     let eventid = document.querySelector('#selectedevent').getAttribute('eventid');
     $('.event-box-pricing').hide()
+    
     $('.event-box-2').hide()
     $('#samplestyle2').show()
     let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_inventory?searchkey=');
@@ -127,7 +128,7 @@ Webflow.push(function() {
     data.forEach(events => {
     const style = document.getElementById('samplestyle2')
     const card = style.cloneNode(true)
-    card.setAttribute('id', '');
+    card.setAttribute('id', 'pricing'+events.id);
     const eventid = card.getElementsByClassName('main-text-id')[0]
     eventid.textContent = events.id
     const eventsection = card.getElementsByClassName('main-text-section')[0]
