@@ -47,6 +47,7 @@ const authChanged = firebase.auth().onAuthStateChanged((user) => {
         let admin = data["admin"];
         let buyer = data["buyer"];
         let entry = data["entry"];
+        let orderh = data["orderhistory"]
 
           firebase.firestore().doc("users/" + firebase.auth().currentUser.uid).set({ Timestamp: timestamp }, { merge: true });
 
@@ -101,9 +102,20 @@ $('#buying').css('display','flex');
 $('#history').css('display','flex');
 }
 
+
+if(!!orderh){
+$('#buying').css('display','flex');
+$('#history').css('display','flex');
+}
+        
 if(!!entry && (window.location.href.includes('/events') || window.location.href.includes('/buy-queue'))) {
 location.href = '/order-history'
 }
+
+if(!!orderh && (window.location.href.includes('/events') || window.location.href.includes('/buy-queue'))) {
+location.href = '/order-history'
+}
+
 
 
 
