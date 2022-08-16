@@ -81,11 +81,23 @@ Webflow.push(function() {
     eventcost.textContent = '$' + events.cost
     
     card.addEventListener('click', function() {
+document.getElementById("samplestyle2").style.display = "flex";
+document.querySelector(".event-box-pricing").style.opacity = "100";
+setTimeout(() => {
+document.getElementById("samplestyle2").style.opacity = "0";
+document.getElementById("samplestyle2").style.display = "none";
+
+}, 750);
+})
+
     document.querySelector('#eventlastfetchedtime').textContent = ''
     document.querySelector('#fwicon5').textContent = ''
     $('.event-box-4').hide()
     $('#samplestyle4').show()
     $(".event-box").removeClass("selected");
+    
+document.querySelector(".event-box-pricing").style.opacity = "100";
+document.getElementById("samplestyle2").style.opacity = "0";
     card.classList.add("selected");
     setTimeout(() => {
     if (events.stubhubEventUrl !== null) {
