@@ -81,13 +81,6 @@ Webflow.push(function() {
   eventcost.textContent = '$' + events.cost
   
   card.addEventListener('click', function() {
-document.getElementById("samplestyle2").style.display = "flex";
-document.querySelector(".event-box-pricing").style.opacity = "100";
-setTimeout(() => {
-document.getElementById("samplestyle2").style.opacity = "0";
-document.getElementById("samplestyle2").style.display = "none";
-
-}, 1250);
 
 
   document.querySelector('#eventlastfetchedtime').textContent = ''
@@ -205,6 +198,13 @@ else {return -1;}
   request.send();
 
   }
+  document.getElementById("samplestyle2").style.display = "flex";
+  document.querySelector(".event-box-pricing").style.opacity = "100";
+  setTimeout(() => {
+  document.getElementById("samplestyle2").style.opacity = "0";
+  document.getElementById("samplestyle2").style.display = "none";
+  
+  }, 750);
 
   });
   cardContainer.appendChild(card);
