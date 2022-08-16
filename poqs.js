@@ -146,7 +146,7 @@ Webflow.push(function() {
 const savepricebutton = card.getElementsByClassName('save-price-button')[0]   
 savepricebutton.addEventListener('click', function() {
 let activeticket = ($(this).closest(".event-box-pricing").attr('id'));
-let price = Number(($(this).closest(".main-field-price").val()))
+let price = ($(this).closest(".main-field-price").val())
 var http = new XMLHttpRequest();
 var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/update-price?ticket-id=" + activeticket + "&price=" + price;
 let pa = datas['pyeo']
