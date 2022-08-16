@@ -87,7 +87,7 @@ setTimeout(() => {
 document.getElementById("samplestyle2").style.opacity = "0";
 document.getElementById("samplestyle2").style.display = "none";
 
-}, 750);
+}, 1250);
 
 
   document.querySelector('#eventlastfetchedtime').textContent = ''
