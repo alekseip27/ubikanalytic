@@ -141,6 +141,28 @@ Webflow.push(function() {
     
     const eventprice = card.getElementsByClassName('main-field-price')[0]
     eventprice.value = '$' + events.listPrice
+        
+        
+const savepricebutton = card.getElementsByClassName('save-price-button')[0]   
+savepricebutton.addEventListener('click', function() {
+let activeticket = ($(this).closest(".event-box-pricing").attr('id'));
+let price = Number(($(this).closest(".main-field-price").val()))
+var http = new XMLHttpRequest();
+var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/update-price?ticket-id=" + activeticket + "&price=999" 
+let pa = datas['pyeo']
+http.open("PUT", url, true);
+
+http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+http.setRequestHeader("Authorization", pa);
+
+http.send();
+
+
+console.table(http)
+
+})    
+        
+    
     
     const eventcst = card.getElementsByClassName('main-text-cst')[0]
     eventcst.textContent = '$' + events.cost
