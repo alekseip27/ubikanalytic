@@ -188,9 +188,7 @@ http.send();
   
   cardContainer.appendChild(card);
   })}}
-setTimeout(() => {
-document.getElementById("datefilters").click();
-}, 2500);
+
   request.send();
 
   }
