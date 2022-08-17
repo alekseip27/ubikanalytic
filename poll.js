@@ -187,12 +187,11 @@ Webflow.push(function() {
     const lastupdated = card.getElementsByClassName('main-text-updated')[0]
     
     cardContainer.appendChild(card);
-  console.log('1')
     })}}
-  console.log('2')
+
   
     request.send();
-  console.log('3')
+
   
     }
     document.getElementById("samplestyle2").style.display = "flex";
@@ -205,9 +204,8 @@ Webflow.push(function() {
 
     });
     cardContainer.appendChild(card);
-    console.log('5')
+
     })}}
-    console.log('6')
     request.send();
 let datear = function(){
 setTimeout(() => {
@@ -217,10 +215,9 @@ $('.event-box').sort(function(a, b) {
 if (date1 > $(b).attr('date')) {return 1;}
 else {return -1;}
 }).appendTo('#Cards-Container');
-}, 1250)}
+}, 2500)}
 datear()
     })
-    console.log('8')
   
   
     {
