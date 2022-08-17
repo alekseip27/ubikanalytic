@@ -162,10 +162,10 @@ http.open("PUT", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
 http.setRequestHeader("Authorization", pa);
 
+
 http.send();
 
 
-console.table(http)
 
 })    
       
@@ -188,7 +188,9 @@ console.table(http)
   
   cardContainer.appendChild(card);
   })}}
-
+setTimeout(() => {
+document.getElementById("datefilters").click();
+}, 2500);
   request.send();
 
   }
