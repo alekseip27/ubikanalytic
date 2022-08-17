@@ -59,6 +59,7 @@ Webflow.push(function() {
   const style = document.getElementById('samplestyle')
   const card = style.cloneNode(true)
   card.setAttribute('id', '');
+  card.setAttribute('date', events.date.slice(0,10))
   const eventname = card.getElementsByClassName('main-text-event')[0]
   eventname.textContent = events.name
   if(eventname.textContent.length>15) {
@@ -66,6 +67,7 @@ Webflow.push(function() {
   }
   const eventdate = card.getElementsByClassName('main-text-date')[0]
   eventdate.textContent = events.date.slice(0, 10)
+
   const eventtime = card.getElementsByClassName('main-text-time')[0]
   eventtime.textContent = events.date.slice(11, 16)
   const eventvenue = card.getElementsByClassName('main-text-venue')[0]
@@ -102,8 +104,6 @@ document.getElementById("samplestyle2").style.opacity = "0";
   
   document.querySelector('#selectedevent').textContent = events.name.slice(0,15) 
   document.querySelector('#eventdate').textContent = events.date.slice(0,10)
-  card.setAttribute('date', events.date.slice(0,10))
-
   document.querySelector('#eventtime').textContent = events.date.slice(11, 16)
   document.querySelector('#eventlocation').textContent = events.venue.city + ", " + events.venue.state
   document.querySelector('#selectedevent').setAttribute('eventid', events.id)
