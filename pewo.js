@@ -62,8 +62,8 @@ Webflow.push(function() {
   card.setAttribute('date', events.date.slice(0,10))
   const eventname = card.getElementsByClassName('main-text-event')[0]
   eventname.textContent = events.name
-  if(eventname.textContent.length>15) {
-  eventname.textContent = events.name.slice(0, 15)+'...'
+  if(eventname.textContent.length>10) {
+  eventname.textContent = events.name.slice(0, 10)+'...'
   }
   const eventdate = card.getElementsByClassName('main-text-date')[0]
   eventdate.textContent = events.date.slice(0, 10)
@@ -203,16 +203,6 @@ console.table(http)
   });
   cardContainer.appendChild(card);
   })}}
-let datear = function(){
-setTimeout(() => {
-let now = new Date()
-let date1 = moment(now).format('YYYY/MM/DD')
-$('.event-box').sort(function(a, b) {
-if (date1 > $(b).attr('date')) {return 1;}
-else {return -1;}
-}).appendTo('#Cards-Container');
-}, 1500)}
-datear()
   request.send();
   
   })
