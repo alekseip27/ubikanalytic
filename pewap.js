@@ -187,9 +187,12 @@ http.send();
   const lastupdated = card.getElementsByClassName('main-text-updated')[0]
   
   cardContainer.appendChild(card);
+console.log('1')
   })}}
+console.log('2')
 
   request.send();
+console.log('3')
 
   }
   document.getElementById("samplestyle2").style.display = "flex";
@@ -199,6 +202,7 @@ http.send();
   document.getElementById("samplestyle2").style.display = "none";
   
   }, 750);
+console.log('4')
 
   });
   cardContainer.appendChild(card);
