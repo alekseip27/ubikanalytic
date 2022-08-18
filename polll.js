@@ -207,16 +207,9 @@ Webflow.push(function() {
 
     })}}
     request.send();
-let datear = function(){
 setTimeout(() => {
-let now = new Date()
-let date1 = moment(now).format('YYYY/MM/DD')
-$('.event-box').sort(function(a, b) {
-if (date1 > $(b).attr('date')) {return 1;}
-else {return -1;}
-}).appendTo('#Cards-Container');
+document.getElementById("datefilters").click();
 }, 2500)}
-datear()
     })
   
   
