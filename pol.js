@@ -209,7 +209,7 @@ Webflow.push(function() {
     request.send();
 setTimeout(() => {
 document.getElementById("datefilters").click();
-}, 2500)}
+}, 2500)
     })
   
   
@@ -306,4 +306,3 @@ document.getElementById("datefilters").click();
     request.send();
     }}})
     })
-  
