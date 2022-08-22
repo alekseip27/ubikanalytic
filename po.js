@@ -152,10 +152,18 @@ Webflow.push(function() {
         
   const savepricebutton = card.getElementsByClassName('save-price-button')[0]   
   savepricebutton.addEventListener('click', function() {
+  $(this).closest('div').find(".main-field-price").prop("readonly", true);
+  $(this).hide()
+  $(this).closest('div').find(".notbt").css("display", "flex");
+document.querySelector(".confirmation-pricing").style.display = 'flex'
+let nmb = Number(document.querySelector("#eventsamount").textContent)
+nmb++
+document.querySelector("#eventsamount").textContent = nmb
   let activeticket = ($(this).closest(".event-box-pricing").attr('id'));
   let prc = eventprice.value
+  let usr = datas['Email']
   var http = new XMLHttpRequest();
-  var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/update-price?ticket-id=" + activeticket + "&price=" + prc;
+  var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_add_to_queue?ticket-id=" + activeticket + "&price=" + prc + "&user=" + usr;
   let pa = datas['pyeo']
   http.open("PUT", url, true);
   
