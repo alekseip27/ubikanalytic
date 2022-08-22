@@ -215,6 +215,7 @@ http.send();
  card.getElementsByClassName('save-price-button')[0].style.display = 'none';
  card.getElementsByClassName('notbt')[0].style.display = 'flex';
  document.querySelector(".confirmation-pricing").style.display = 'flex'
+
  }}
 
   cardContainer.appendChild(card);
@@ -259,6 +260,25 @@ http.send();
     
       
     })    
+
+
+
+    let uszz = datas['Email']
+    var http2 = new XMLHttpRequest();
+    var urlll = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_count?user=" + uszz;
+    http2.open("GET", urlll, true);
+    http2.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    http2.setRequestHeader("Authorization", pa);
+  
+   http2.send();
+   http2.onload = function() {
+    console.log(http2)
+   let resp = http2.response
+   if(resp>=1 ) {
+   document.querySelector(".confirmation-pricing").style.display = 'flex'
+   document.querySelector("#eventsamount").textContent = resp
+   }}
+
 
 })
 
