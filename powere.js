@@ -14,7 +14,7 @@ Webflow.push(function() {
   document.querySelector('#search-button').addEventListener("click", () => {
   let keywords1 = document.getElementById('searchbar1').value
   document.querySelector('#selectedevent').textContent = ''
-  document.querySelector('#eventdate').textContent = ''
+  document. querySelector('#eventdate').textContent = ''
   document.querySelector('#eventtime').textContent = ''
   document.querySelector('#eventlocation').textContent = ''
   document.querySelector('#shub').setAttribute('url', '');
@@ -148,8 +148,7 @@ document.getElementById("samplestyle2").style.opacity = "0";
   
   const eventprice = card.getElementsByClassName('main-field-price')[0]
   eventprice.value = events.listPrice
-  
-      
+
 const savepricebutton = card.getElementsByClassName('save-price-button')[0]   
 savepricebutton.addEventListener('click', function() {
 $(this).closest('div').find(".main-field-price").prop("readonly", true);
@@ -198,6 +197,26 @@ http.send();
 
   const lastupdated = card.getElementsByClassName('main-text-updated')[0]
   
+
+  let tixid = events.id
+  let usz = datas['Email']
+  var http = new XMLHttpRequest();
+  var urll = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_check_item?ticket_id=" + tixid;
+  let pa = datas['pyeo']
+  http.open("GET", urll, true);
+  http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+  http.setRequestHeader("Authorization", pa);
+     
+ http.send();
+ http.onload = function() {
+ let resp = http.response
+ if(resp === 'true' ) {
+ card.getElementsByClassName('main-field-price')[0].readOnly = true;
+ card.getElementsByClassName('save-price-button')[0].style.display = 'none';
+ card.getElementsByClassName('notbt')[0].style.display = 'flex';
+ document.querySelector(".confirmation-pricing").style.display = 'flex'
+ }}
+
   cardContainer.appendChild(card);
   })}}
 
