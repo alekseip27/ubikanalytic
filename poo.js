@@ -216,8 +216,28 @@ document.querySelector("#eventsamount").textContent = nmb
     })}}
     request.send();
     })
+
+document.querySelector("#pricecancel").addEventListener('click', function() {
+    
+ let usz = datas['Email']
+ var http = new XMLHttpRequest();
+ var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_remove_queue?user=" + usz
+ let pa = datas['pyeo']
+ http.open("GET", url, true);
   
-  
+ http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+ http.setRequestHeader("Authorization", pa);
+    
+ http.send();
+
+document.querySelector(".confirmation-pricing").style.display = 'none'
+document.querySelector("#eventsamount").textContent = '0'
+document.querySelector(".notbt").style.display = 'none'
+$(".main-field-price").prop("readonly", false)
+
+    
+ })  
+
     {
     $('#shub').click(function () {
     let url = document.querySelector('#shub').getAttribute('url');
