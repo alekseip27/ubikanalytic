@@ -231,7 +231,8 @@ http.send();
     http.setRequestHeader("Authorization", pa);
       
     http.send();
-    
+    let selected = document.getElementsByClassName("event-box pricing selected")
+    selected[0].click()
     document.querySelector(".confirmation-pricing").style.display = 'none'
     document.querySelector("#eventsamount").textContent = '0'
     document.querySelector(".notbt").style.display = 'none'
