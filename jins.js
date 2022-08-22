@@ -279,6 +279,24 @@ http.send();
    document.querySelector("#eventsamount").textContent = resp
    }}
 
+   document.querySelector('#priceconfirm').addEventListener("click", () => {
+    let uszz = datas['Email']
+    var http = new XMLHttpRequest();
+    var urll = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_confirm?user=" + uszz;
+    let pa = datas['pyeo']
+    http.open("PUT", urll, true);
+    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    http.setRequestHeader("Authorization", pa);
+        
+    http.send();
+    document.querySelector(".confirmation-pricing").style.display = 'none'
+    document.querySelector("#eventsamount").textContent = '0'
+    let selected = document.getElementsByClassName("event-box pricing selected")
+    selected[0].click()
+  
+  })
+  
+
 
 })
 
