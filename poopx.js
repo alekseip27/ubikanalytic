@@ -158,6 +158,10 @@ $(this).closest('div').find(".notbt").css("display", "flex");
 document.querySelector(".confirmation-pricing").style.display = 'flex'
 let nmb = Number(document.querySelector("#eventsamount").textContent)
 nmb++
+if(nmb===1) {
+document.querySelector("#eventtext").textContent = "event"
+} else {
+document.querySelector("#eventtext").textContent = "events"}
 document.querySelector("#eventsamount").textContent = nmb
 let activeticket = ($(this).closest(".event-box-pricing").attr('id'));
 let prc = eventprice.value
