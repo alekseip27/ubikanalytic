@@ -301,7 +301,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   
   }
 
-  window.addEventListener('DOMContentLoaded', (event) => {
+  setTimeout(() => {
 
   function play() {
     var audio = new Audio('https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3');
@@ -311,7 +311,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let nowcount = document.querySelectorAll(".event-box").length
   
   let timer = setInterval(function () {
+
   getEvents()
+  
   let newcount = document.querySelectorAll(".event-box").length
   if(newcount>nowcount){
   play()
@@ -319,7 +321,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let newcount = 0
   }
   }, 1000);
-});
+
+  }, 3500);
+
 
   (function() {
   getEvents();
