@@ -316,6 +316,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   
   let newcount = document.querySelectorAll(".event-box").length
   if(newcount>nowcount){
+  document.querySelector('#samplestyle').style.display = "flex";
   play()
   let nowcount = 0
   let newcount = 0
@@ -331,7 +332,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   
   
   setTimeout(() => {
-  $("#samplestyle").remove();
+  $("#samplestyle").hide()
   document.querySelector('#loading').style.display = "none";
   document.querySelector('#flexbox').style.display = "flex";
   }, 3500);
