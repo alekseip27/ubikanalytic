@@ -320,7 +320,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let nowcount = 0
   let newcount = 0
   }
-  }, 1000);
+  }, 10000);
 
   }, 3500);
 
