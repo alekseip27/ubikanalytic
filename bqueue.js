@@ -1,11 +1,3 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script><script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.6.3/firebase-auth.js"></script>
-<script src= https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.2.1/js.cookie.min.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/alekseip27/ubikanalytic/firebaseubiks.js"></script>
-
-
-<script>
 window.addEventListener('DOMContentLoaded', (event) => {
 
  let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getdata_buylist');
@@ -333,5 +325,3 @@ return +a.getAttribute("timeleft") - +b.getAttribute("timeleft")
 }, 2500);
 
 })
- 
-</script>
