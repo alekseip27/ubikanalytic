@@ -90,10 +90,10 @@ Webflow.push(function() {
   document.querySelector('#fwicon5').textContent = ''
   $('.event-box-4').hide()
   $('#samplestyle4').show()
+  $('.event-box-pricing').hide()
+  $('#samplestyle2').show()
   $(".event-box").removeClass("selected");
   
-document.querySelector(".event-box-pricing").style.opacity = "100";
-document.getElementById("samplestyle2").style.opacity = "100";
   card.classList.add("selected");
   setTimeout(() => {
   if (events.stubhubEventUrl !== null) {
@@ -117,8 +117,10 @@ document.getElementById("samplestyle2").style.opacity = "100";
   document.querySelector('#fwicon4').textContent = ''
   {
   let eventid = document.querySelector('#selectedevent').getAttribute('eventid');
-    
+  
   $('.event-box-2').hide()
+
+
   let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_inventory?searchkey=');
   
   let request = new XMLHttpRequest();
@@ -131,6 +133,8 @@ document.getElementById("samplestyle2").style.opacity = "100";
   if((request.status === 429) || (request.status === 500)){
   alert('API request rate limit reached, please try again later.')
   } else if (request.status >= 200 && request.status < 400) {
+    setTimeout(() => {
+
   const cardContainer = document.getElementById("Cards-Container2")
   data.forEach(events => {
   const style = document.getElementById('samplestyle2')
@@ -217,10 +221,13 @@ http.send();
  }}
 
   cardContainer.appendChild(card);
-  })}
+}, 1500);
+  })
+}
   setTimeout(() => {
   $('#mainpricing').css("display", "block");
   $('#loadingpricing').css("display", "none");
+  $('#samplestyle2').hide()
 }, 750);
 }
 
@@ -229,13 +236,6 @@ http.send();
 
 
   }
-  document.getElementById("samplestyle2").style.display = "flex";
-  document.querySelector(".event-box-pricing").style.opacity = "100";
-  setTimeout(() => {
-  document.getElementById("samplestyle2").style.opacity = "100";
-  document.getElementById("samplestyle2").style.display = "none";
-  
-  }, 750);
 
   });
   cardContainer.appendChild(card);
