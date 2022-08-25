@@ -83,7 +83,8 @@ Webflow.push(function() {
   eventcost.textContent = '$' + events.cost
   
   card.addEventListener('click', function() {
-
+    $('#mainpricing').hide()
+    $('#loadingpricing').css("display", "flex");
 
   document.querySelector('#eventlastfetchedtime').textContent = ''
   document.querySelector('#fwicon5').textContent = ''
@@ -117,10 +118,11 @@ document.getElementById("samplestyle2").style.opacity = "0";
   {
   let eventid = document.querySelector('#selectedevent').getAttribute('eventid');
   $('.event-box-pricing').hide()
-  
+    
   $('.event-box-2').hide()
   $('#samplestyle2').show()
   let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_inventory?searchkey=');
+  
   let request = new XMLHttpRequest();
   let url = xanoUrl.toString() + eventid
   let pa = datas['pyeo']
@@ -176,8 +178,6 @@ http.setRequestHeader("Authorization", pa);
 
 http.send();
 
-
-
 })    
       
   
@@ -219,7 +219,12 @@ http.send();
  }}
 
   cardContainer.appendChild(card);
-  })}}
+  })}
+  setTimeout(() => {
+  $('#mainpricing').css("display", "block");
+  $('#loadingpricing').css("display", "none");
+}, 750);
+}
 
 
   request.send();
@@ -240,7 +245,8 @@ http.send();
   })}}
   request.send();
   document.querySelector("#pricecancel").addEventListener('click', function() {
-  
+      $('#mainpricing').css("display", "none");
+      $('#loadingpricing').css("display", "flex");
     let usz = datas['Email']
     var http = new XMLHttpRequest();
     var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_remove_queue?user=" + usz
@@ -253,9 +259,11 @@ http.send();
     http.send();
     let selected = document.getElementsByClassName("event-box pricing selected")
     if(selected.length>0){
-  setTimeout(() => {
-    selected[0].click()
-  }, 1500);
+      selected[0].click()
+      setTimeout(() => {
+        $('#mainpricing').css("display", "block");
+        $('#loadingpricing').css("display", "none");
+      }, 1500);
     }
     document.querySelector(".confirmation-pricing").style.display = 'none'
     document.querySelector("#eventsamount").textContent = '0'
@@ -297,9 +305,11 @@ http.send();
     document.querySelector("#eventsamount").textContent = '0'
     let selected = document.getElementsByClassName("event-box pricing selected")
     if(selected.length>0){
- setTimeout(() => {
-    selected[0].click()
-  }, 1500);
+      selected[0].click()
+      setTimeout(() => {
+        $('#mainpricing').css("display", "block");
+        $('#loadingpricing').css("display", "none");
+      }, 1500);
     }
   
   })
