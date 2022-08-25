@@ -301,6 +301,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
   
   }
 
+  window.addEventListener('DOMContentLoaded', (event) => {
+
   function play() {
     var audio = new Audio('https://interactive-examples.mdn.mozilla.net/media/cc0-audio/t-rex-roar.mp3');
     audio.play();
@@ -317,7 +319,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   let newcount = 0
   }
   }, 1000);
-
+});
 
   (function() {
   getEvents();
