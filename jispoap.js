@@ -93,7 +93,7 @@ Webflow.push(function() {
   $(".event-box").removeClass("selected");
   
 document.querySelector(".event-box-pricing").style.opacity = "100";
-document.getElementById("samplestyle2").style.opacity = "0";
+document.getElementById("samplestyle2").style.opacity = "100";
   card.classList.add("selected");
   setTimeout(() => {
   if (events.stubhubEventUrl !== null) {
@@ -234,7 +234,7 @@ http.send();
   document.getElementById("samplestyle2").style.display = "flex";
   document.querySelector(".event-box-pricing").style.opacity = "100";
   setTimeout(() => {
-  document.getElementById("samplestyle2").style.opacity = "0";
+  document.getElementById("samplestyle2").style.opacity = "100";
   document.getElementById("samplestyle2").style.display = "none";
   
   }, 750);
