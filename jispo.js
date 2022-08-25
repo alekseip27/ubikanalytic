@@ -253,7 +253,9 @@ http.send();
     http.send();
     let selected = document.getElementsByClassName("event-box pricing selected")
     if(selected.length>0){
+  setTimeout(() => {
     selected[0].click()
+  }, 1500);
     }
     document.querySelector(".confirmation-pricing").style.display = 'none'
     document.querySelector("#eventsamount").textContent = '0'
@@ -295,7 +297,9 @@ http.send();
     document.querySelector("#eventsamount").textContent = '0'
     let selected = document.getElementsByClassName("event-box pricing selected")
     if(selected.length>0){
+ setTimeout(() => {
     selected[0].click()
+  }, 1500);
     }
   
   })
