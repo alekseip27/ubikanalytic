@@ -301,34 +301,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
   
   }
 
-  setTimeout(() => {
-
-  function play() {
-    var audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3');
-    audio.play();
-  }
-
-  let nowcount = document.querySelectorAll(".event-box").length
-  
-  let timer = setInterval(function () {
-
-  getEvents()
-  
-  let newcount = document.querySelectorAll(".event-box").length
-
-  console.log(newcount)
-  console.log(nowcount)
-  if(newcount>19999){
-  document.querySelector('#samplestyle').style.display = "flex";
-  play()
-  let nowcount = 0
-  let newcount = 0
-  }
-  }, 10000);
-
-  }, 3500);
-
-
   (function() {
   getEvents();
   })();
