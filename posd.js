@@ -334,8 +334,8 @@ count++
 
   setTimeout(() => {
 
-  document.querySelector('#loading').style.display = "flex";
-  document.querySelector('#flexbox').style.display = "none";
+  document.querySelector('#loading').style.display = "none";
+  document.querySelector('#flexbox').style.display = "flex";
 
   }, 3500);
   }, 3500);
