@@ -330,14 +330,15 @@ count++
   let count = 0
 
   }
-  }, 10000);
-
   setTimeout(() => {
 
   document.querySelector('#loading').style.display = "none";
   document.querySelector('#flexbox').style.display = "flex";
 
-  }, 3500);
+  }, 5000);
+   
+  }, 10000);
+
   }, 3500);
 
 
