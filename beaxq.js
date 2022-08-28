@@ -308,9 +308,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   }
 
  let nowcount = document.querySelectorAll(".event-box").length
-
-
-  let timer = setInterval(function () {
+ let timer = setInterval(function () {
 
   getEvents()
  let results = document.querySelectorAll('.event-box')
@@ -324,11 +322,11 @@ count++
 
   console.log("count" + count)
   console.log("now" + nowcount)
-  if(newcount>19999){
+  if(count>nowcount){
   document.querySelector('#samplestyle').style.display = "flex";
   play()
   let nowcount = 0
-  let newcount = 0
+  let count = 0
   }
   }, 10000);
 
