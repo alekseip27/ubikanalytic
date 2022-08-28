@@ -297,7 +297,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
   })}}
   request.send();
 
-
   
   }
 
@@ -308,16 +307,23 @@ window.addEventListener('DOMContentLoaded', (event) => {
     audio.play();
   }
 
-  let nowcount = document.querySelectorAll(".event-box").length
-  
+ let nowcount = document.querySelectorAll(".event-box").length
+
+
   let timer = setInterval(function () {
 
   getEvents()
-  
-  let newcount = document.querySelectorAll(".event-box").length
+ let results = document.querySelectorAll('.event-box')
+ let count = 0
 
-  console.log(newcount)
-  console.log(nowcount)
+ for (let i = 0; i<results.length;i++) {
+ if(results[i].style.display !== 'none' && results[i].getAttribute('id') !== 'samplestyle') {
+results[i].remove()
+count++
+ }}  
+
+  console.log("count" + count)
+  console.log("now" + nowcount)
   if(newcount>19999){
   document.querySelector('#samplestyle').style.display = "flex";
   play()
