@@ -307,9 +307,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
     audio.play();
   }
 
- let nowcount = document.querySelectorAll(".event-box").length
+ let nowcount = document.querySelectorAll(".event-box").length -1
  let timer = setInterval(function () {
-
+  document.querySelector('#loading').style.display = "flex";
+  document.querySelector('#flexbox').style.display = "none";
   getEvents()
  let results = document.querySelectorAll('.event-box')
  let count = 0
@@ -327,9 +328,16 @@ count++
   play()
   let nowcount = 0
   let count = 0
+
   }
   }, 10000);
 
+  setTimeout(() => {
+
+  document.querySelector('#loading').style.display = "flex";
+  document.querySelector('#flexbox').style.display = "none";
+
+  }, 3500);
   }, 3500);
 
 
