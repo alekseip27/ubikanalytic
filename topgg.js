@@ -317,21 +317,15 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
    for (let i = 0; i<results.length;i++) {
    if(results[i].style.display !== 'none' && results[i].getAttribute('id') !== 'samplestyle') {
-  count++
-   }
-
-   if(results[i].getAttribute('id') === 'samplestyle') {
   results[i].remove()
+  count++
+   }}  
 
-   }
 
-      
-}  
-  
     console.log("count" + count)
     console.log("now" + nowcount)
     if(count>nowcount){
-    document.querySelector('#samplestyle').style.display = "flex";
+    document.querySelector('#samplestyle').style.display = "none";
     play()
     let nowcount = 0
     let count = 0
@@ -344,7 +338,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
   
     }, 5000);
      
-    }, 6000);
+    }, 60000);
   
     }, 3500);
   
