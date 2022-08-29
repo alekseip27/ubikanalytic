@@ -314,9 +314,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
     getEvents()
    let results = document.querySelectorAll('.event-box')
    let count = 0
-  
+
    for (let i = 0; i<results.length;i++) {
-   if(results[i].style.display !== 'none' && results[i].getAttribute('id') !== 'samplestyle') {
+   if(results[i].style.display !== 'none' && results[i].getAttribute('id') !== 'samplestyle' && results[i].getAttribute('timeleft') === '0') {
   results[i].remove()
   count++
    }}  
