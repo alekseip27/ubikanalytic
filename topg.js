@@ -321,10 +321,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
    }
 
    if(results[i].getAttribute('id') === 'samplestyle') {
-  document.querySelector('#samplestyle').style.display = "none";
+  results[i].remove()
 
    }
-  results[i].remove()
+
       
 }  
   
