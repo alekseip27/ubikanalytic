@@ -317,11 +317,16 @@ window.addEventListener('DOMContentLoaded', (event) => {
 
    for (let i = 0; i<results.length;i++) {
    if(results[i].style.display !== 'none' && results[i].getAttribute('id') !== 'samplestyle') {
-  results[i].remove()
-    document.querySelector('#samplestyle').style.display = "none";
-
   count++
-   }}  
+   }
+
+   if(results[i].getAttribute('id') === 'samplestyle') {
+  document.querySelector('#samplestyle').style.display = "none";
+
+   }
+  results[i].remove()
+      
+}  
   
     console.log("count" + count)
     console.log("now" + nowcount)
