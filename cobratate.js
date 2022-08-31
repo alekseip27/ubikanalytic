@@ -340,9 +340,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
   
     }, 5000);
      
-    }, 6000);
+    }, 60000);
   
-    }, 1000);
+    }, 3500);
   
   
     (function() {
