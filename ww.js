@@ -340,12 +340,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
     document.querySelector('#flexbox').style.display = "flex";
   
     }, 5000);
-     
+setTimeout(() => {
    var wrapper = $('#Cards-Container');
    wrapper.find('.event-box').sort(function(a, b) {
    return +a.getAttribute("timeleft") - +b.getAttribute("timeleft")
    }).appendTo(wrapper);
-
+    }, 5000);
     }, 60000);
 
     }, 3500);
