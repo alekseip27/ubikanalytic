@@ -313,18 +313,17 @@ window.addEventListener('DOMContentLoaded', (event) => {
     document.querySelector('#loading').style.display = "flex";
     document.querySelector('#flexbox').style.display = "none";
     getEvents()
+
+setTimeout(() => {
    let results = document.querySelectorAll('.event-box')
    let count = 1
 
    for (let i = 0; i<results.length;i++) {
    if(results[i].style.display !== 'none' && results[i].getAttribute('id') !== 'samplestyle') {
   results[i].remove() }
-setTimeout(() => {
    if(results[i].getAttribute('asap') === 'true') {
-  count++ }
-    }, 2500);
-
-}    
+  count++ }}
+    }, 2500);    
 
     console.log("count" + count)
     console.log("now" + nowcount)
