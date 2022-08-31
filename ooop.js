@@ -342,7 +342,11 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }, 5000);
      
     }, 60000);
-  
+   var wrapper = $('#Cards-Container');
+   wrapper.find('.event-box').sort(function(a, b) {
+   return +a.getAttribute("timeleft") - +b.getAttribute("timeleft")
+   }).appendTo(wrapper);
+
     }, 3500);
   
   
