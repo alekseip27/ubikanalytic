@@ -317,12 +317,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
    let count = 1
 
    for (let i = 0; i<results.length;i++) {
+   if(results[i].style.display !== 'none' && results[i].getAttribute('id') !== 'samplestyle' && results[i].getAttribute('asap') === 'true') {
+  count++
+   }
    if(results[i].style.display !== 'none' && results[i].getAttribute('id') !== 'samplestyle') {
   results[i].remove()
    }
-   if(results[i].style.display !== 'none' && results[i].getAttribute('id') !== 'samplestyle' && results[i].getAttribute('asap') === 'true') {
-  count++
-   }}    
+
+}    
 
     console.log("count" + count)
     console.log("now" + nowcount)
