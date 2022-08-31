@@ -104,6 +104,7 @@ $('#history').css('display','flex');
 
 
 if(!!orderh){
+$('#orderhlogo').show()
 $('#buying').css('display','flex');
 $('#history').css('display','flex');
 }
