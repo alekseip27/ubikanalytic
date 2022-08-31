@@ -119,6 +119,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     eventstatus.textContent = 'ASAP'
     eventstatus.style.color = "red";
     card.setAttribute('timeleft', "0")
+    card.setAttribute('asap', "true")
     break; }
    
     case '15 min': {
@@ -318,6 +319,10 @@ window.addEventListener('DOMContentLoaded', (event) => {
    for (let i = 0; i<results.length;i++) {
    if(results[i].style.display !== 'none' && results[i].getAttribute('id') !== 'samplestyle') {
   results[i].remove()
+   }}  
+
+   for (let i = 0; i<results.length;i++) {
+   if(results[i].style.display !== 'none' && results[i].getAttribute('id') !== 'samplestyle' && results[i].getAttribute('asap') === 'true') {
   count++
    }}  
 
