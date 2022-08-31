@@ -314,7 +314,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     document.querySelector('#flexbox').style.display = "none";
     getEvents()
    let results = document.querySelectorAll('.event-box')
-   let count = 0
+   let count = 1
 
    for (let i = 0; i<results.length;i++) {
    if(results[i].style.display !== 'none' && results[i].getAttribute('id') !== 'samplestyle') {
