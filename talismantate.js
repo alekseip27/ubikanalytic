@@ -314,15 +314,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
     document.querySelector('#flexbox').style.display = "none";
     getEvents()
    let results = document.querySelectorAll('.event-box')
-   let count = 1
+   let count = 0
 
    for (let i = 0; i<results.length;i++) {
-   if(results[i].style.display !== 'none' && results[i].getAttribute('id') !== 'samplestyle' && results[i].getAttribute('asap') === 'true') {
-  count++
-   }
    if(results[i].style.display !== 'none' && results[i].getAttribute('id') !== 'samplestyle') {
-  results[i].remove()
-   }
+  results[i].remove() }
+   if(results[i].getAttribute('asap') === 'true') {
+  count++ }
 
 }    
 
@@ -342,9 +340,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
   
     }, 5000);
      
-    }, 60000);
+    }, 6000);
   
-    }, 3500);
+    }, 1000);
   
   
     (function() {
