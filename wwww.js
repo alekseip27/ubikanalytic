@@ -11,7 +11,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     
     request.onload = function() {
     
-    let data = JSON.parse(this.response)
+    let data = JSON.parse(this.response) 
     
     if (request.status >= 200 && request.status < 400) {
     
@@ -113,7 +113,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
     case 'error': {
     eventstatus.textContent = 'ERROR'
     eventstatus.style.color = "red";
-    card.setAttribute('timeleft', "0")
+    card.setAttribute('timeleft', "999999999")
+    card.setAttribute('error', "true")
     break; }
     case 'Immediate': {
     eventstatus.textContent = 'ASAP'
@@ -258,7 +259,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
     break; }
     }
     
-    
+    if(card.getAttribute('error') === 'true'){
+    const errorbutton = card.getElementsByClassName('main-buy-button')[0]
+    errorbutton.textContent = 'Respond'
+    errorbutton.addEventListener('click', function() {
+    window.location.assign("https://www.ubikanalytic.com/error-respond?id=" +events.Other_Master_Site_Event_Id)
+    })}
     
     const confirmbutton = card.getElementsByClassName('main-confirm-button')[0]
     const deletebutton = card.getElementsByClassName('main-delete-button-confirm')[0]
@@ -346,7 +352,7 @@ setTimeout(() => {
    return +a.getAttribute("timeleft") - +b.getAttribute("timeleft")
    }).appendTo(wrapper);
     }, 5000);
-    }, 60000);
+    }, 180000);
 
     }, 3500);
   
