@@ -319,7 +319,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     document.querySelector('#loading').style.display = "flex";
     document.querySelector('#flexbox').style.display = "none";
     getEvents()
-   let count = 1 + nowcount
+   let count = nowcount
    let results = document.querySelectorAll('.event-box')
 
    for (let i = 0; i<results.length;i++) {
