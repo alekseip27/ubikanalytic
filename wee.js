@@ -330,7 +330,7 @@ sound.play();
   results[i].remove() 
 }
 
-   if(results[i].getAttribute('asap') === 'true') {
+   if(results[i].getAttribute('asap') === 'true' && results[i].getAttribute('timeleft') === '0') {
   count++ 
 }}
 
