@@ -310,9 +310,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
     setTimeout(() => {
   
     function play() {
-      var audio = new Audio('https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3');
-      audio.play();
+sound = new Howl({
+  src: ['https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3']
+});
+sound.play();
     }
+
   
    let nowcount = document.querySelectorAll(".event-box").length -1
    let timer = setInterval(function () {
