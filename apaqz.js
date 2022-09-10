@@ -303,6 +303,8 @@ http.send();
     document.querySelector("#eventsamount").textContent = '0'
     let selected = document.getElementsByClassName("event-box pricing selected")
     if(selected.length>0){
+        $('#mainpricing').css("display", "none");
+        $('#loadingpricing').css("display", "flex");
       setTimeout(() => {
         selected[0].click()
       }, 3000);
