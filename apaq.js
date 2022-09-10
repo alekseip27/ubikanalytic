@@ -305,11 +305,11 @@ http.send();
     if(selected.length>0){
       setTimeout(() => {
         selected[0].click()
-      }, 1500);
+      }, 3000);
       setTimeout(() => {
         $('#mainpricing').css("display", "block");
         $('#loadingpricing').css("display", "none");
-      }, 1500);
+      }, 3000);
     }
   
   })
