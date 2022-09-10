@@ -321,7 +321,7 @@ http.send();
   $('#shub').click(function () {
   let url = document.querySelector('#shub').getAttribute('url');
   if(url !== 'null') {
-  window.open(url, '_blank').focus();
+  window.open(url, '_blank')
   $('#shub').css('cursor', 'pointer');
   } else if(url === 'null') {
   $('#shub').css('cursor', 'default');
@@ -343,7 +343,7 @@ http.send();
   $('#vseats').click(function () {
   let url = document.querySelector('#vseats').getAttribute('url');
   if(url !== 'null') {
-  window.open(url, '_blank').focus();
+  window.open(url, '_blank')
   $('#vseats').css('cursor', 'pointer');
   } else if(url === 'null') {
   $('#vseats').css('cursor', 'default');
