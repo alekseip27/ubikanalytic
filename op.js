@@ -304,13 +304,7 @@ Webflow.push(function() {
       document.querySelector("#eventsamount").textContent = '0'
       let selected = document.getElementsByClassName("event-box pricing selected")
       if(selected.length>0 && http.status >= 200 && http.status < 400) {
-          $('#mainpricing').css("display", "none");
-          $('#loadingpricing').css("display", "flex");
           selected[0].click()
-        setTimeout(() => {
-          $('#mainpricing').css("display", "block");
-          $('#loadingpricing').css("display", "none");
-        },3000 );
       } 
     }
     http.send();
