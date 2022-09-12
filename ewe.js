@@ -299,13 +299,12 @@ Webflow.push(function() {
       http.setRequestHeader("Authorization", pa);
       http.send();
 
-      request.onload = function() {
 let data = JSON.parse(this.response)
 console.log(data)
       document.querySelector(".confirmation-pricing").style.display = 'none'
       document.querySelector("#eventsamount").textContent = '0'
       let selected = document.getElementsByClassName("event-box pricing selected")
-      if(selected.length>0 && http.status >= 200 && http.status < 400) {
+      if(selected.length>0 && http.response === 'completed') {
           $('#mainpricing').css("display", "none");
           $('#loadingpricing').css("display", "flex");
           selected[0].click()
