@@ -294,7 +294,7 @@ Webflow.push(function() {
       var http = new XMLHttpRequest();
       var urll = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_confirm?user=" + uszz;
       let pa = datas['pyeo']
-      http.open("GET", urll, true);
+      http.open("PUT", urll, true);
       http.setRequestHeader("Content-type", "application/json; charset=utf-8");
       http.setRequestHeader("Authorization", pa);
      http.onload = function() {
