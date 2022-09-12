@@ -313,7 +313,7 @@ console.log(data)
           $('#loadingpricing').css("display", "none");
         }, );
       } 
-      }
+      
     })
   
   })
