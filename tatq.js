@@ -288,7 +288,6 @@ http.send();
    document.querySelector(".confirmation-pricing").style.display = 'flex'
    document.querySelector("#eventsamount").textContent = resp
    }}
-
 document.querySelector('#priceconfirm').addEventListener("click", () => {
     let uszz = datas['Email']
     var http = new XMLHttpRequest();
@@ -298,6 +297,10 @@ document.querySelector('#priceconfirm').addEventListener("click", () => {
     http.setRequestHeader("Content-type", "application/json; charset=utf-8");
     http.setRequestHeader("Authorization", pa);
     http.send();
+    request.onload = function() {
+
+let data = JSON.parse(this.response)
+console.log(data)
     document.querySelector(".confirmation-pricing").style.display = 'none'
     document.querySelector("#eventsamount").textContent = '0'
     let selected = document.getElementsByClassName("event-box pricing selected")
@@ -310,13 +313,12 @@ document.querySelector('#priceconfirm').addEventListener("click", () => {
         $('#loadingpricing').css("display", "none");
       }, );
     } 
-  
+    }
   })
     
-
-})
-
-
+    
+    
+    
   {
   $('#shub').click(function () {
   let url = document.querySelector('#shub').getAttribute('url');
