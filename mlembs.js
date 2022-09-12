@@ -294,11 +294,12 @@ Webflow.push(function() {
       var http = new XMLHttpRequest();
       var urll = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_confirm?user=" + uszz;
       let pa = datas['pyeo']
-      http.open("PUT", urll, true);
+      http.open("GET", urll, true);
       http.setRequestHeader("Content-type", "application/json; charset=utf-8");
       http.setRequestHeader("Authorization", pa);
       http.send();
-
+     http2.onload = function() {
+      console.log(http2)
 console.log(http.response)
       document.querySelector(".confirmation-pricing").style.display = 'none'
       document.querySelector("#eventsamount").textContent = '0'
