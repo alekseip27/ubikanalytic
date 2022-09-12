@@ -311,9 +311,9 @@ console.log(http.response)
         setTimeout(() => {
           $('#mainpricing').css("display", "block");
           $('#loadingpricing').css("display", "none");
-        }, );
+        },3000 );
       } 
-      
+    }
     })
   
   })
