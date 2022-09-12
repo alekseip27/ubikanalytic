@@ -299,12 +299,11 @@ Webflow.push(function() {
       http.setRequestHeader("Authorization", pa);
      http.onload = function() {
 
-console.log(http)
 
       document.querySelector(".confirmation-pricing").style.display = 'none'
       document.querySelector("#eventsamount").textContent = '0'
       let selected = document.getElementsByClassName("event-box pricing selected")
-      if(selected.length>0 && http.response === 'completed') {
+      if(selected.length>0 && http.status >= 200 && http.status < 400) {
           $('#mainpricing').css("display", "none");
           $('#loadingpricing').css("display", "flex");
           selected[0].click()
@@ -312,9 +311,9 @@ console.log(http)
           $('#mainpricing').css("display", "block");
           $('#loadingpricing').css("display", "none");
         },3000 );
+    http.send();
       } 
     }
-    http.send();
     })
   })
   
