@@ -297,10 +297,10 @@ Webflow.push(function() {
       http.open("GET", urll, true);
       http.setRequestHeader("Content-type", "application/json; charset=utf-8");
       http.setRequestHeader("Authorization", pa);
+     http.onload = function() {
       http.send();
-     http2.onload = function() {
-      console.log(http2)
-console.log(http.response)
+
+console.log(http)
       document.querySelector(".confirmation-pricing").style.display = 'none'
       document.querySelector("#eventsamount").textContent = '0'
       let selected = document.getElementsByClassName("event-box pricing selected")
