@@ -4,7 +4,7 @@ Webflow.push(function() {
   });
   });
   var input = document.getElementById("searchbar1");
-  input.addEventListener("keyup", function(event) {
+  input.addEventListener("keyup", function(event)     {
   if (event.keyCode === 13) {
   event.preventDefault();
 
@@ -289,33 +289,6 @@ http.send();
    document.querySelector("#eventsamount").textContent = resp
    }}
 
-   document.querySelector('#priceconfirm').addEventListener("click", () => {
-    let uszz = datas['Email']
-    var http = new XMLHttpRequest();
-    var urll = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_confirm?user=" + uszz;
-    let pa = datas['pyeo']
-    http.open("PUT", urll, true);
-    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-    http.setRequestHeader("Authorization", pa);
-        
-    http.send();
-    document.querySelector(".confirmation-pricing").style.display = 'none'
-    document.querySelector("#eventsamount").textContent = '0'
-    let selected = document.getElementsByClassName("event-box pricing selected")
-    if(selected.length>0){
-        $('#mainpricing').css("display", "none");
-        $('#loadingpricing').css("display", "flex");
-      setTimeout(() => {
-        selected[0].click()
-      }, 3000);
-      setTimeout(() => {
-        $('#mainpricing').css("display", "block");
-        $('#loadingpricing').css("display", "none");
-      }, 3000);
-    }
-  
-  })
-  
 
 
 })
