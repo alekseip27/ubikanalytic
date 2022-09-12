@@ -311,9 +311,9 @@ Webflow.push(function() {
           $('#mainpricing').css("display", "block");
           $('#loadingpricing').css("display", "none");
         },3000 );
-    http.send();
       } 
     }
+    http.send();
     })
   })
   
