@@ -12,6 +12,7 @@ Webflow.push(function() {
     }
     });
     document.querySelector('#search-button').addEventListener("click", () => {
+    $('#search-button').css({pointerEvents: "none"})
     let keywords1 = document.getElementById('searchbar1').value
     document.querySelector('#selectedevent').textContent = ''
     document. querySelector('#eventdate').textContent = ''
@@ -46,6 +47,7 @@ Webflow.push(function() {
     request.open('GET', url, true)
     request.setRequestHeader("Authorization", pa);
     request.onload = function() {
+    $('#search-button').css({pointerEvents: "auto"})
     let data = JSON.parse(this.response)
     if((request.status === 429) || (request.status === 500)){
     alert('API request rate limit reached, please try again later.')
