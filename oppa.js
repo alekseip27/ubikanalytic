@@ -365,6 +365,7 @@ Webflow.push(function() {
     }
     
     $('#fetchbutton').click(function () {
+    $('#fetchbutton').css({pointerEvents: "none"})
     let stid = document.querySelector('#shub').getAttribute('url').slice(-10,-1)
     if(stid !== 'null') {
     {
@@ -381,6 +382,7 @@ Webflow.push(function() {
     if((request.status === 429) || (request.status === 500)){
     alert('API request rate limit reached, please try again later.')
     } else if (request.status >= 200 && request.status < 400) {
+    $('#fetchbutton').css({pointerEvents: "auto"})
     const cardContainer = document.getElementById("Cards-Container3")
     data.forEach(events => {
     const style = document.getElementById('samplestyle3')
