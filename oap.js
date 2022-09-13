@@ -83,9 +83,10 @@ Webflow.push(function() {
     eventcost.textContent = '$' + events.cost
     
     card.addEventListener('click', function() {
-      $('#mainpricing').hide()
-      $('#loadingpricing').css("display", "flex");
-  
+    $('.event-box.pricing').css({pointerEvents: "none"})
+    $('#mainpricing').hide()
+    $('#loadingpricing').css("display", "flex");
+    $(this).closest('div').find(".main-field-price").prop("readonly", true);
     document.querySelector('#eventlastfetchedtime').textContent = ''
     document.querySelector('#fwicon5').textContent = ''
     $('.event-box-4').hide()
@@ -131,10 +132,10 @@ Webflow.push(function() {
     request.onload = function() {
     let data = JSON.parse(this.response)
     if((request.status === 429) || (request.status === 500)){
-    alert('API request rate limit reached, please try again later.')
+    alert('Something went wrong... Contact the senior engineer philantrophist business man investor and professional problem solver Mike Serrano')
     } else if (request.status >= 200 && request.status < 400) {
       setTimeout(() => {
-  
+    $('.event-box.pricing').css({pointerEvents: "auto"})
     const cardContainer = document.getElementById("Cards-Container2")
     data.forEach(events => {
     const style = document.getElementById('samplestyle2')
