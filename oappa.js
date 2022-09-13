@@ -244,8 +244,7 @@ Webflow.push(function() {
     })}}
     request.send();
     document.querySelector("#pricecancel").addEventListener('click', function() {
-        $('#mainpricing').css("display", "none");
-        $('#loadingpricing').css("display", "flex");
+    $('#pricecancel').css({pointerEvents: "none"})
       let usz = datas['Email']
       var http = new XMLHttpRequest();
       var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_remove_queue?user=" + usz
@@ -259,12 +258,10 @@ Webflow.push(function() {
       let selected = document.getElementsByClassName("event-box pricing selected")
       if(selected.length>0){
         selected[0].click()
-        setTimeout(() => {
-          $('#mainpricing').css("display", "block");
-          $('#loadingpricing').css("display", "none");
-        }, 1500);
       }
       document.querySelector(".confirmation-pricing").style.display = 'none'
+      $('#pricecancel').css({pointerEvents: "auto"})
+
       document.querySelector("#eventsamount").textContent = '0'
       document.querySelector(".notbt").style.display = 'none'
       $(".main-field-price").prop("readonly", false)
@@ -291,6 +288,7 @@ Webflow.push(function() {
      }}
   
   document.querySelector('#priceconfirm').addEventListener("click", () => {
+    $('#priceconfirm').css({pointerEvents: "none"})
       let uszz = datas['Email']
       var http = new XMLHttpRequest();
       var urll = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_confirm?user=" + uszz;
@@ -300,8 +298,8 @@ Webflow.push(function() {
       http.setRequestHeader("Authorization", pa);
      http.onload = function() {
 
-
       document.querySelector(".confirmation-pricing").style.display = 'none'
+      $('#priceconfirm').css({pointerEvents: "auto"})
       document.querySelector("#eventsamount").textContent = '0'
       let selected = document.getElementsByClassName("event-box pricing selected")
       if(selected.length>0 && http.status >= 200 && http.status < 400) {
