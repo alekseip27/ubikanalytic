@@ -162,6 +162,11 @@ Webflow.push(function() {
 eventprice.addEventListener("keypress", (event) => {
   if (event.keyCode === 13) {
 savepricebutton.click()
+
+savepricebutton.css({pointerEvents: "none"})
+    setTimeout(() => {
+savepricebutton.css({pointerEvents: "auto"})
+    },1000)
 }
 });
         
