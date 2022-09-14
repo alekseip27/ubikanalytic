@@ -160,10 +160,9 @@ Webflow.push(function() {
 
 
 eventprice.addEventListener("keypress", (event) => {
-  if (event.isComposing || event.keyCode === 13) {
-    return;
-  }
+  if (event.keyCode === 13) {
 savepricebutton.click()
+}
 });
         
 
