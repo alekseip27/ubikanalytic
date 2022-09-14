@@ -163,9 +163,9 @@ eventprice.addEventListener("keypress", (event) => {
   if (event.keyCode === 13) {
 savepricebutton.click()
 
-savepricebutton.css({pointerEvents: "none"})
+savepricebutton.style.pointerEvents = "none";
     setTimeout(() => {
-savepricebutton.css({pointerEvents: "auto"})
+savepricebutton.style.pointerEvents = "auto";
     },1000)
 }
 });
