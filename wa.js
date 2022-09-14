@@ -164,9 +164,6 @@ eventprice.addEventListener("keypress", (event) => {
 savepricebutton.click()
 
 savepricebutton.style.pointerEvents = "none";
-    setTimeout(() => {
-savepricebutton.style.pointerEvents = "auto";
-    },1000)
 }
 });
         
