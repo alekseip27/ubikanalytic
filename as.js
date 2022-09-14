@@ -159,8 +159,7 @@ Webflow.push(function() {
   const savepricebutton = card.getElementsByClassName('save-price-button')[0]   
 
 
-
-eventprice.addEventListener("keyup", (event) => {
+eventprice.addEventListener("keypress", (event) => {
   if (event.isComposing || event.keyCode === 13) {
     return;
   }
