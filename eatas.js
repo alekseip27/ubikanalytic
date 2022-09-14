@@ -158,10 +158,13 @@ Webflow.push(function() {
   
   const savepricebutton = card.getElementsByClassName('save-price-button')[0]   
 
-eventprice.on('keyup', function (e) {
-    if (e.key === 'Enter' || e.keyCode === 13) {
+
+
+eventprice.addEventListener("keyup", (event) => {
+  if (event.isComposing || event.keyCode === 13) {
+    return;
+  }
 savepricebutton.click()
-    }
 });
         
 
