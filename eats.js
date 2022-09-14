@@ -315,7 +315,7 @@ Webflow.push(function() {
   
     {
     $('#shub').click(function () {
-    let url = document.querySelector('#shub').getAttribute('url') + '?quantity=0';
+    let url = document.querySelector('#shub').getAttribute('url') + '?quantity=2';
     if(url !== 'null') {
     window.open(url, url)
     $('#shub').css('cursor', 'pointer');
