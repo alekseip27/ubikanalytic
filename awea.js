@@ -160,8 +160,7 @@ Webflow.push(function() {
 
 
 eventprice.addEventListener("keypress", (event) => {
-  if (event.keyCode === 13) {
-console.log($(this).closest('button').find(".notbt").css("display"))
+  if (event.keyCode === 13 && eventprice.readOnly === 'false') {
 savepricebutton.click()
 }
 });
