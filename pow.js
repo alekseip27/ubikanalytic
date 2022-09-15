@@ -159,7 +159,7 @@ Webflow.push(function() {
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
     let dticket = (events.cost/events.quantity)
 
-let pti = dticket.textContent.split(".");
+let pti = dticket.split(".");
 
 let ptix = pti[0] + '.' + pti[1].slice(0,2)
 
