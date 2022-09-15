@@ -166,7 +166,7 @@ if(dticket.includes('.')){
 
     eventpriceticket.textContent = '$' + ptix
 } else {
-    eventpriceticket.textContent = dticket
+    eventpriceticket.textContent = '$' + dticket
 }
         
 const savepricebutton = card.getElementsByClassName('save-price-button')[0]   
