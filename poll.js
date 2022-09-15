@@ -159,13 +159,11 @@ Webflow.push(function() {
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
     let dticket = (events.cost/events.quantity)
 
-    eventpriceticket.textContent = ('$' + dticket)
+let pti = dticket.textContent.split(".");
 
-if(dticket.length>7){
-eventpriceticket.textContent = ('$' + (events.cost/events.quantity).toFixed(2)  )
-}
+let ptix = pti[0] + '.' + pti[1].slice(0,2)
 
-  const savepricebutton = card.getElementsByClassName('save-price-button')[0]   
+const savepricebutton = card.getElementsByClassName('save-price-button')[0]   
 
 
 eventprice.addEventListener("keypress", (event) => {
