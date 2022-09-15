@@ -159,14 +159,15 @@ Webflow.push(function() {
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
     let dticket = String((events.cost/events.quantity))
 
-
+if(dticket.includes('.')){
     let pti = dticket.split(".");
 
     let ptix = pti[0] + '.' + pti[1].slice(0,2)
 
-
     eventpriceticket.textContent = '$' + ptix
-        
+} else {
+    eventpriceticket.textContent = dticket
+}
         
 const savepricebutton = card.getElementsByClassName('save-price-button')[0]   
 
