@@ -155,6 +155,9 @@ Webflow.push(function() {
     
     const eventprice = card.getElementsByClassName('main-field-price')[0]
     eventprice.value = events.listPrice
+
+    const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
+    eventpriceticket.textContent = (events.listPrice/events.cost)
   
   const savepricebutton = card.getElementsByClassName('save-price-button')[0]   
 
@@ -199,7 +202,8 @@ console.log(eventprice.readOnly)
     
     const eventcst = card.getElementsByClassName('main-text-cst')[0]
     eventcst.textContent = '$' + events.cost
-    
+   
+
     const eventnotes = card.getElementsByClassName('main-text-notes')[0]
     eventnotes.textContent = events.notes
     
@@ -411,6 +415,10 @@ console.log(eventprice.readOnly)
     eventqty.textContent = events.quantity
     const eventprice = card.getElementsByClassName('main-text-price3')[0]
     eventprice.textContent = '$' + events.price
+
+
+
+
     const eventdate = card.getElementsByClassName('main-text-date3')[0]
     eventdate.textContent = moment.unix(events.timestamp).format("MM/DD/YYYY hh:mm");
     cardContainer.appendChild(card);
