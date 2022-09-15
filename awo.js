@@ -164,6 +164,10 @@ Webflow.push(function() {
 
     let ptix = pti[0] + '.' + pti[1].slice(0,2)
 
+
+    eventpriceticket.textContent = ptix
+        
+        
 const savepricebutton = card.getElementsByClassName('save-price-button')[0]   
 
 
