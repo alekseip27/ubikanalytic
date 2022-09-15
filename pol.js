@@ -157,9 +157,13 @@ Webflow.push(function() {
     eventprice.value = events.listPrice
 
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
-    let dticket = (events.listPrice/events.quantity)
+    let dticket = (events.cost/events.quantity)
 
-    eventpriceticket.textContent = ('$' + (events.listPrice/events.quantity))
+    eventpriceticket.textContent = ('$' + dticket)
+
+if(dticket.length>7){
+eventpriceticket.textContent = ('$' + (events.cost/events.quantity).toFixed(2)  )
+}
 
   const savepricebutton = card.getElementsByClassName('save-price-button')[0]   
 
