@@ -160,7 +160,7 @@ Webflow.push(function() {
     let dticket = String((events.cost/events.quantity))
 
 
-    let pti = dticket).split(".");
+    let pti = dticket.split(".");
 
     let ptix = pti[0] + '.' + pti[1].slice(0,2)
 
