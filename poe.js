@@ -326,10 +326,11 @@ console.log(eventprice.readOnly)
 
       document.querySelector(".confirmation-pricing").style.display = 'none'
       $('#priceconfirm').css({pointerEvents: "auto"})
-      document.querySelector("#eventsamount").textContent = '0'
       let selected = document.getElementsByClassName("event-box pricing selected")
       if(selected.length>0 && http.status >= 200 && http.status < 400) {
           selected[0].click()
+      document.querySelector("#eventsamount").textContent = '0'
+
       } 
     }
     http.send();
