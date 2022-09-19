@@ -51,11 +51,7 @@ Webflow.push(function() {
     let data = JSON.parse(this.response)
     if((request.status === 429) || (request.status === 500)){
     alert('API request rate limit reached, please try again later.')
-    } if(request.status === 401){
-     document.querySelector(".locked-content").style.display = 'flex'
-     document.querySelector(".pageloading").style.display = 'none'
-}
-    else if (request.status >= 200 && request.status < 400) {
+    } else if (request.status >= 200 && request.status < 400) {
     document.querySelector(".locked-content").style.display = 'none'
     document.querySelector(".pageloading").style.display = 'none'
     const cardContainer = document.getElementById("Cards-Container")
