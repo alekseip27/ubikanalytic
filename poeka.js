@@ -278,25 +278,23 @@ console.log(eventprice.readOnly)
       var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_remove_queue?user=" + usz
       let pa = datas['pyeo']
       http.open("GET", url, true);
-      
       http.setRequestHeader("Content-type", "application/json; charset=utf-8");
       http.setRequestHeader("Authorization", pa);
         
-      http.send();
+      http.onload = function() {
       let selected = document.getElementsByClassName("event-box pricing selected")
-      if(selected.length>0){
+      if(selected.length>0 && http.status >= 200 && http.status < 400){
         selected[0].click()
       }
       document.querySelector(".confirmation-pricing").style.display = 'none'
       $('#pricecancel').css({pointerEvents: "auto"})
       $('.event-box.pricing').css({pointerEvents: "auto"})
 
-
       document.querySelector("#eventsamount").textContent = '0'
       document.querySelector(".notbt").style.display = 'none'
       $(".main-field-price").prop("readonly", false)
-      
-        
+      }
+      http.send();
       })    
   
   
