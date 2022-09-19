@@ -317,6 +317,8 @@ console.log(eventprice.readOnly)
   
   document.querySelector('#priceconfirm').addEventListener("click", () => {
     $('#priceconfirm').css({pointerEvents: "none"})
+    $('.event-box.pricing').css({pointerEvents: "none"})
+
       let uszz = datas['Email']
       var http = new XMLHttpRequest();
       var urll = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_confirm?user=" + uszz;
@@ -328,6 +330,8 @@ console.log(eventprice.readOnly)
 
       document.querySelector(".confirmation-pricing").style.display = 'none'
       $('#priceconfirm').css({pointerEvents: "auto"})
+      $('.event-box.pricing').css({pointerEvents: "auto"})
+
       let selected = document.getElementsByClassName("event-box pricing selected")
       if(selected.length>0 && http.status >= 200 && http.status < 400) {
           selected[0].click()
