@@ -271,6 +271,8 @@ console.log(eventprice.readOnly)
     request.send();
     document.querySelector("#pricecancel").addEventListener('click', function() {
     $('#pricecancel').css({pointerEvents: "none"})
+    $('.event-box.pricing').css({pointerEvents: "none"})
+
       let usz = datas['Email']
       var http = new XMLHttpRequest();
       var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_remove_queue?user=" + usz
@@ -287,6 +289,8 @@ console.log(eventprice.readOnly)
       }
       document.querySelector(".confirmation-pricing").style.display = 'none'
       $('#pricecancel').css({pointerEvents: "auto"})
+      $('.event-box.pricing').css({pointerEvents: "auto"})
+
 
       document.querySelector("#eventsamount").textContent = '0'
       document.querySelector(".notbt").style.display = 'none'
