@@ -16,9 +16,8 @@ let cbox7 = (document.querySelector("#checkbox7").checked)
 let cbox8 = (document.querySelector("#checkbox8").checked)
 let cbox9 = (document.querySelector("#checkbox9").checked)
 let cbox10 = (document.querySelector('#checkbox10').checked)
-let cbox11 = (document.querySelector('#checkbox11').checked)
 
-if(!!fld1 && !!fld2 && !!fld3 && !!fld4 && !!fld5 && !!fld6 && !!cbox1 && !!cbox2 && !!cbox3 && !!cbox4 && !!cbox5 && !!cbox6 && !!cbox7 && !!cbox8 && !!cbox9 && !!cbox10 && !!cbox11) {
+if(!!fld1 && !!fld2 && !!fld3 && !!fld4 && !!fld5 && !!fld6 && !!cbox1 && !!cbox2 && !!cbox3 && !!cbox4 && !!cbox5 && !!cbox6 && !!cbox7 && !!cbox8 && !!cbox9 && !!cbox10) {
 $("#buyfake").css("display", "none");
 $("#buybtn").css("display", "flex");
 }else {
@@ -62,7 +61,6 @@ document.querySelector("#checkbox7").checked = data[0].Buyer_Emails_Open_Team_Ub
 document.querySelector("#checkbox8").checked = data[0].Buyer_Emails_Forward_A_Copy_And_Save
 document.querySelector("#checkbox9").checked = data[0].Buyer_Emails_Copy_Phrase_And_Send
 document.querySelector("#checkbox10").checked = data[0].Buyer_Emails_Uncheck_Cview
-document.querySelector("#checkbox11").checked = data[0].Buyer_Emails_Phrasetocopy
 document.querySelector("#textverifiednumber").value = data[0].Buyer_Emails_Text_Verified_Number
 document.querySelector("#verifiedcode").value = data[0].Buyer_Emails_Google_Verification_Code
 document.querySelector("#textchestcode").value = data[0].Buyer_Emails_Textchest_Code
@@ -93,7 +91,6 @@ let cbox7 = (document.querySelector("#checkbox7").checked)
 let cbox8 = (document.querySelector("#checkbox8").checked)
 let cbox9 = (document.querySelector("#checkbox9").checked)
 let cbox10 = (document.querySelector("#checkbox10").checked)
-let cbox11 = (document.querySelector("#checkbox11").checked)
 let fld1 = document.querySelector("#textverifiednumber").value;
 let fld2 = document.querySelector("#verifiedcode").value;
 let fld3 = document.querySelector("#textchestcode").value;
@@ -131,7 +128,6 @@ var params = JSON.stringify(
 "checkbox8": cbox8,
 "checkbox9": cbox9,
 "checkbox10": cbox10,
-"checkbox11": cbox11,
 "field1": fld1,
 "field2": fld2,
 "field3": fld3,
@@ -207,7 +203,6 @@ let cbox7 = (document.querySelector("#checkbox7").checked)
 let cbox8 = (document.querySelector("#checkbox8").checked)
 let cbox9 = (document.querySelector("#checkbox9").checked)
 let cbox10 = (document.querySelector("#checkbox10").checked)
-let cbox11 = (document.querySelector("#checkbox11").checked)
 
 let fld1 = document.querySelector("#textverifiednumber").value;
 let fld2 = document.querySelector("#verifiedcode").value;
@@ -245,7 +240,6 @@ var params = JSON.stringify(
 "checkbox8": cbox8,
 "checkbox9": cbox9,
 "checkbox10": cbox10,
-"checkbox11": cbox11,
 "field1": fld1,
 "field2": fld2,
 "field3": fld3,
