@@ -29,7 +29,7 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const authChanged = firebase.auth().onAuthStateChanged((user) => {
   const signout = () => {
-    auth.signOut();
+
   };
   signOutButton.addEventListener("click", signout);
 
@@ -49,7 +49,12 @@ const authChanged = firebase.auth().onAuthStateChanged((user) => {
         let entry = data["entry"];
         let orderh = data["orderhistory"]
 
-          firebase.firestore().doc("users/" + firebase.auth().currentUser.uid).set({ Timestamp: timestamp }, { merge: true });
+if(!email.includes('@ubikanalytic.com')){
+auth.signOut();
+location.href = '/login'
+}
+        
+firebase.firestore().doc("users/" + firebase.auth().currentUser.uid).set({ Timestamp: timestamp }, { merge: true });
 
 if(!!admin) {
 $('#adminlogo').show()
