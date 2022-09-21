@@ -3,7 +3,7 @@ $("#purchasequantity").attr({"min" : 0});
 var pkid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 
 var request = new XMLHttpRequest()
-let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent?search-key=' + encodeURIComponent(pkid));
+let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent?search-key=' + pkid);
 
 console.log(xanoUrl.toString())
 request.open('GET', xanoUrl.toString(), true)
@@ -325,13 +325,14 @@ var params = JSON.stringify(
 http.open("POST", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
 http.onreadystatechange = function() {
+/**  
 if(http.readyState == 4 && http.status == 200) {
 document.querySelector('#loading').style.display = "flex";
 document.querySelector('#Item-Container').style.display = "none";
 setTimeout(() => {
 window.location.href = "/buy-queue";
 }, 2000);
-}
+} **/
 }
 http.send(params);
 })
