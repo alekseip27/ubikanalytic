@@ -381,6 +381,7 @@ var params = JSON.stringify(
 http.open("POST", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
 http.onreadystatechange = function() {
+/**
 if(http.readyState == 4 && http.status == 200) {
 document.querySelector('#loading').style.display = "flex";
 document.querySelector('#Item-Container').style.display = "none";
@@ -388,6 +389,7 @@ setTimeout(() => {
 window.location.href = "/buy-queue";
 }, 2000);
 }
+**/
 }
 http.send(params);
 })
