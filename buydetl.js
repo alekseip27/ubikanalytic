@@ -332,7 +332,7 @@ document.querySelector('#Item-Container').style.display = "none";
 setTimeout(() => {
 window.location.href = "/buy-queue";
 }, 2000);
-
+}
 }
 http.send(params);
 })
