@@ -31,7 +31,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     
     const buybutton = card.getElementsByClassName('main-buy-button')[0]
     buybutton.addEventListener('click', function() {
-    window.location.assign("https://www.ubikanalytic.com/buy-event?id=" + events.Other_Master_Site_Event_Id);
+    window.location.assign("https://www.ubikanalytic.com/buy-event?id=" + encodeURIComponent(events.Other_Master_Site_Event_Id).replace('%20','+'));
     });
     
     const eventname = card.getElementsByClassName('main-text-event')[0]
