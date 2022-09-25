@@ -29,7 +29,7 @@ firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
 const authChanged = firebase.auth().onAuthStateChanged((user) => {
   const signout = () => {
-
+    auth.signOut();
   };
   signOutButton.addEventListener("click", signout);
 
