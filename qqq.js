@@ -13,7 +13,7 @@ Webflow.push(function() {
     });
     document.querySelector('#search-button').addEventListener("click", () => {
     $('#search-button').css({pointerEvents: "none"})
-    let keywords1 = document.getElementById('searchbar1').value
+    let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
     document.querySelector('#selectedevent').textContent = ''
     document. querySelector('#eventdate').textContent = ''
     document.querySelector('#eventtime').textContent = ''
@@ -42,7 +42,7 @@ Webflow.push(function() {
     let stimestamp2 = moment(dt).format('YYYY-MM-DD')
     let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_events?searchkey=');
     let request = new XMLHttpRequest();
-    let url = xanoUrl.toString() +  encodeURIComponent(keywords1).replace(/%20/g, "%") + '&curdate=' + stimestamp2
+    let url = xanoUrl.toString() + keywords1.replaceAll("'", "''") + '&curdate=' + stimestamp2
     let pa = datas['pyeo']
     request.open('GET', url, true)
     request.setRequestHeader("Authorization", pa);
