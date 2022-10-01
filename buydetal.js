@@ -347,6 +347,9 @@ let acm = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase(
 let filledby = document.querySelector('#username').textContent
 let multattempt = document.querySelector('#unabletofulfill').checked
 let mults = 'false'
+
+let fileinput = document.getElementById("imageproof").files[0]
+
 if(!!multattempt) {
 let mults = 'true'
 } else {
@@ -376,7 +379,8 @@ var params = JSON.stringify(
 "Error_Message": errormsg,
 "Multiple_Attempts": mults,
 "Timestamp": purchasedate,
-"FilledBy": filledby
+"FilledBy": filledby,
+"Image": fileinput
 })
 http.open("POST", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
