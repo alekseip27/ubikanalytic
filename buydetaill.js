@@ -348,7 +348,12 @@ let filledby = document.querySelector('#username').textContent
 let multattempt = document.querySelector('#unabletofulfill').checked
 let mults = 'false'
 
-// let fileinput = document.getElementById("imageproof").files[0]
+var file = document.getElementById('imageproof').files[0];      
+var filename = file.name    
+var blob = new Blob([file]);
+var url  = URL.createObjectURL(blob); 
+
+let fileinput = url
 
 if(!!multattempt) {
 let mults = 'true'
@@ -379,7 +384,8 @@ var params = JSON.stringify(
 "Error_Message": errormsg,
 "Multiple_Attempts": mults,
 "Timestamp": purchasedate,
-"FilledBy": filledby
+"FilledBy": filledby,
+"Image": fileinput
 })
 http.open("POST", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
