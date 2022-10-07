@@ -161,7 +161,6 @@ Webflow.push(function() {
 
 function hasfoc() {
     let hasFocus = $(eventprice).is(':focus');
-}
      
 const myInterval = setInterval(hasfoc, 500);   
       
@@ -169,15 +168,15 @@ const myInterval = setInterval(hasfoc, 500);
     document.addEventListener('keydown', (e) => {
 
          if (e.key === 'Enter' && document.querySelector('#confirmprice').style.display === 'flex') {
+        document.querySelector('#confirmprice').style.display = 'none'
         document.getElementById("priceconfirm").click();
         $('#confirmprice').css({pointerEvents: "none"})
-        document.querySelector('#confirmprice').style.display = 'none'
         setTimeout(() => {
         $('#confirmprice').css({pointerEvents: "auto"})
         },1000)
         }
-      once: true})
     }
+}
 
 
         
