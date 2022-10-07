@@ -160,8 +160,7 @@ Webflow.push(function() {
     eventprice.value = events.listPrice
 
 function hasfoc() {
-$(eventprice).is(':focus');
-console.log(hasfoc)
+console.log($(eventprice).is(':focus'))
 }
 
 const myInterval = setInterval(hasfoc, 500);
