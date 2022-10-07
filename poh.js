@@ -87,7 +87,7 @@ Webflow.push(function() {
 
 
     card.addEventListener('click', function() {
-    clearInterval(hasfoc);
+    clearInterval(myInterval);
     $('.event-box.pricing').css({pointerEvents: "none"})
     $('#mainpricing').hide()
     $('#loadingpricing').css("display", "flex");
