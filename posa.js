@@ -84,13 +84,6 @@ Webflow.push(function() {
     const eventcost = card.getElementsByClassName('main-text-cost')[0]
     eventcost.textContent = '$' + events.cost
     
-function hasfoc() {
-$(eventprice).is(':focus');
-console.log(hasfoc)
-}
-
-const myInterval = setInterval(hasfoc, 500);
-
     card.addEventListener('click', function() {
 
 
@@ -165,6 +158,14 @@ const myInterval = setInterval(hasfoc, 500);
     
     const eventprice = card.getElementsByClassName('main-field-price')[0]
     eventprice.value = events.listPrice
+
+function hasfoc() {
+$(eventprice).is(':focus');
+console.log(hasfoc)
+}
+
+const myInterval = setInterval(hasfoc, 500);
+
 
 /**
 var interval = setInterval(function () {
