@@ -158,15 +158,6 @@ Webflow.push(function() {
     
     const eventprice = card.getElementsByClassName('main-field-price')[0]
     eventprice.value = events.listPrice
-
-function hasfoc() {
-    let hasFocus = $(eventprice).is(':focus');
-document.getElementById('state').textContent = hasFocus
-}
-
-const myInterval = setInterval(hasfoc, 500); 
-
-
         
 
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
