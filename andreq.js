@@ -159,27 +159,6 @@ Webflow.push(function() {
     const eventprice = card.getElementsByClassName('main-field-price')[0]
     eventprice.value = events.listPrice
 
-function hasfoc() {
-    var hasFocus = $(eventprice).is(':focus');
-    console.log(hasFocus)
-        if ($('#confirmprice').is(':visible') && hasFocus === false) {
-    document.addEventListener('keydown', (e) => {
-    if (e.repeat) return;
-
-         if (e.key === 'Enter' && document.querySelector('#confirmprice').style.display == 'flex') {
-        document.getElementById("priceconfirm").click();
-        $('#confirmprice').css({pointerEvents: "none"})
-        setTimeout(() => {
-        $('#confirmprice').css({pointerEvents: "auto"})
-        },1000)
-        }
-      once: true})
-    }}
-
-
-const myInterval = setInterval(hasfoc, 500);
-        
-        
         
 
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
@@ -206,6 +185,7 @@ savepricebutton.click()
         
 
   savepricebutton.addEventListener('click', function() {
+
   $(this).closest('div').find(".main-field-price").prop("readonly", true);
   $(this).hide()
   $(this).closest('div').find(".notbt").css("display", "flex");
