@@ -161,8 +161,7 @@ Webflow.push(function() {
 
 function hasfoc() {
     let hasFocus = $(eventprice).is(':focus');
-     
-const myInterval = setInterval(hasfoc, 500);   
+  
       
         if ($('#confirmprice').is(':visible') && hasFocus === false) {
     document.addEventListener('keydown', (e) => {
@@ -176,7 +175,9 @@ const myInterval = setInterval(hasfoc, 500);
         },1000)
         }
     }
-}
+)}}
+
+const myInterval = setInterval(hasfoc, 500); 
 
 
         
