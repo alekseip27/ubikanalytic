@@ -175,7 +175,7 @@ document.addEventListener('keydown', (e) => {
     },1000)
     }
   if (e.repeat) return;
-})
+})})}}
 
 const myInterval = setInterval(hasfoc, 500);
 
