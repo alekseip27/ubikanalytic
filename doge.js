@@ -161,7 +161,7 @@ Webflow.push(function() {
 
 function hasfoc() {
     let hasFocus = $(eventprice).is(':focus');
-document.getElementById('#state').textContent = hasFocus
+document.getElementById('state').textContent = hasFocus
 }
 
 const myInterval = setInterval(hasfoc, 500); 
