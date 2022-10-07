@@ -170,7 +170,7 @@ Webflow.push(function() {
         $('#confirmprice').css({pointerEvents: "auto"})
         },1000)
             
-        }) 
+   }, { once: true });
         
         
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
