@@ -355,7 +355,7 @@ setTimeout(() => {
    return +a.getAttribute("timeleft") - +b.getAttribute("timeleft")
    }).appendTo(wrapper);
     }, 5000);
-    }, 18000);
+    }, 180000);
 
     }, 3500);
   
