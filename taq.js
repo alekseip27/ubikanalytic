@@ -169,6 +169,8 @@ function hasfoc() {
      if (e.repeat) return
         document.querySelector('#confirmprice').style.display = 'none'
         document.getElementById("priceconfirm").click();
+        this.removeEventListener('click',arguments.callee,false);
+
         $('#confirmprice').css({pointerEvents: "none"})
         setTimeout(() => {
         $('#confirmprice').css({pointerEvents: "auto"})
