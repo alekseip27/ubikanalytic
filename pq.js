@@ -161,11 +161,11 @@ Webflow.push(function() {
 
 function hasfoc() {
     let hasFocus = $(eventprice).is(':focus');
-  
+}
         if ($('#confirmprice').is(':visible') && hasFocus === false) {
         document.addEventListener('keydown', (e) => {
  
-         if (e.key === 'Enter' && document.querySelector('#confirmprice').style.display === 'flex') {
+         if (e.key === 'Enter' && document.querySelector('#confirmprice').style.display === 'flex' && hasFocus === false) {
      if (e.repeat) return
         document.querySelector('#confirmprice').style.display = 'none'
         document.getElementById("priceconfirm").click();
