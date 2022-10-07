@@ -159,15 +159,9 @@ Webflow.push(function() {
     const eventprice = card.getElementsByClassName('main-field-price')[0]
     eventprice.value = events.listPrice
 
+
+
 function hasfoc() {
-console.log($(eventprice).is(':focus'))
-}
-
-const myInterval = setInterval(hasfoc, 500);
-
-
-/**
-var interval = setInterval(function () {
 var hasFocus = $(eventprice).is(':focus');
     if ($('#confirmprice').is(':visible') && hasfoc === false) {
     document.addEventListener('keypress', function (e) {
@@ -177,11 +171,9 @@ var hasFocus = $(eventprice).is(':focus');
     setTimeout(() => {
     $('#confirmprice').css({pointerEvents: "auto"})
     },1000)
-    }})
-    }
-    },1000
-    );
-**/
+    }})}}
+
+const myInterval = setInterval(hasfoc, 500);
 
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
     let dticket = String((events.cost/events.quantity))
