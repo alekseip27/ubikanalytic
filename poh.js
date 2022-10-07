@@ -84,10 +84,17 @@ Webflow.push(function() {
     const eventcost = card.getElementsByClassName('main-text-cost')[0]
     eventcost.textContent = '$' + events.cost
     
+function hasfoc() {
+$(eventprice).is(':focus');
+console.log(hasfoc)
+}
 
+const myInterval = setInterval(hasfoc, 500);
 
     card.addEventListener('click', function() {
-    clearInterval(myInterval);
+
+
+
     $('.event-box.pricing').css({pointerEvents: "none"})
     $('#mainpricing').hide()
     $('#loadingpricing').css("display", "flex");
@@ -159,14 +166,6 @@ Webflow.push(function() {
     const eventprice = card.getElementsByClassName('main-field-price')[0]
     eventprice.value = events.listPrice
 
-const myInterval = setInterval(hasfoc, 500);
-
-function hasfoc() {
-$(eventprice).is(':focus');
-console.log(hasfoc)
-
-}
-
 /**
 var interval = setInterval(function () {
 var hasFocus = $(eventprice).is(':focus');
@@ -203,7 +202,6 @@ const savepricebutton = card.getElementsByClassName('save-price-button')[0]
 eventprice.addEventListener("keypress", (event) => {
   if( (event.keyCode === 13) && (eventprice.readOnly == false) ) {
 savepricebutton.click()
-console.log(eventprice.readOnly)
 }
 });
         
