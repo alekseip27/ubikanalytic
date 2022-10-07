@@ -183,6 +183,7 @@ myFS.doc("accountstats/" + acm).set({[src] : i+1}, { merge: true })
 }}
 
 document.querySelector('#buybtn').addEventListener("click", () => {
+$('#buybtn').css({pointerEvents: "none"})
 let bm = document.querySelector('#purchaseemail').value
 let detailsmatch = !!document.querySelector('#detailsmatch').checked
 let willcall = !!document.querySelector('#willcall').checked
