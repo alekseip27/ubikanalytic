@@ -175,7 +175,8 @@ document.addEventListener('keydown', (e) => {
     }
   if (e.repeat) return;
 })
-
+}}
+        
 const myInterval = setInterval(hasfoc, 500);
 
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
