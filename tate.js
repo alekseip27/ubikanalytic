@@ -166,7 +166,7 @@ var hasFocus = $(eventprice).is(':focus');
 console.log(hasFocus)
     if ($('#confirmprice').is(':visible') && hasFocus === false) {
 document.addEventListener('keydown', (e) => {
-     if (e.key === 'Enter' && document.querySelector('#confirmprice').style.display == 'flex')) {
+     if (e.key === 'Enter' && document.querySelector('#confirmprice').style.display == 'flex') {
     document.getElementById("priceconfirm").click();
     $('#confirmprice').css({pointerEvents: "none"})
     setTimeout(() => {
