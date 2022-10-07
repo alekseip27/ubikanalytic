@@ -158,10 +158,9 @@ Webflow.push(function() {
     const eventprice = card.getElementsByClassName('main-field-price')[0]
     eventprice.value = events.listPrice
 
-
-var isFocused = (document.activeElement === eventprice);
 var interval = setInterval(function () {
-    if ($('#confirmprice').is(':visible') && isFocused === false) {
+var hasFocus = $(eventprice).is(':focus');
+    if ($('#confirmprice').is(':visible') && hasFocus === false) {
     document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter' && eventprice.style.display == 'flex') {
     document.getElementById("priceconfirm").click();
