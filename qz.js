@@ -84,6 +84,8 @@ Webflow.push(function() {
     const eventcost = card.getElementsByClassName('main-text-cost')[0]
     eventcost.textContent = '$' + events.cost
     
+
+
     card.addEventListener('click', function() {
     $('.event-box.pricing').css({pointerEvents: "none"})
     $('#mainpricing').hide()
@@ -155,6 +157,23 @@ Webflow.push(function() {
     
     const eventprice = card.getElementsByClassName('main-field-price')[0]
     eventprice.value = events.listPrice
+
+
+var isFocused = (document.activeElement === eventprice);
+var interval = setInterval(function () {
+    if ($('#confirmprice').is(':visible') && isFocused === false) {
+    document.addEventListener('keypress', function (e) {
+    if (e.key === 'Enter' && eventprice.style.display == 'flex') {
+    document.getElementById("priceconfirm").click();
+    $('#confirmprice').css({pointerEvents: "none"})
+    setTimeout(() => {
+    $('#confirmprice').css({pointerEvents: "auto"})
+    },1000)
+    }})
+    }
+    },1000
+    );
+
 
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
     let dticket = String((events.cost/events.quantity))
