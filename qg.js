@@ -177,7 +177,7 @@ function hasfoc() {
         },1000)
         }
     }
-)}}
+)}
 
 const myInterval = setInterval(hasfoc, 500); 
 
