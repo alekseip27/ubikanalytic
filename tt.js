@@ -164,12 +164,13 @@ function hasfoc() {
   
         if ($('#confirmprice').is(':visible') && hasFocus === false) {
         document.addEventListener('keydown', (e) => {
-        if (e.repeat) return
+ 
          if (e.key === 'Enter' && document.querySelector('#confirmprice').style.display === 'flex') {
+     if (e.repeat) return
         document.querySelector('#confirmprice').style.display = 'none'
+        document.getElementById("priceconfirm").click();
         $('#confirmprice').css({pointerEvents: "none"})
         setTimeout(() => {
-        document.getElementById("priceconfirm").click();
         $('#confirmprice').css({pointerEvents: "auto"})
         },1000)
         }
