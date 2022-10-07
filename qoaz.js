@@ -160,6 +160,12 @@ Webflow.push(function() {
 
 var interval = setInterval(function () {
 var hasFocus = $(eventprice).is(':focus');
+console.log(hasFocus)
+    },1000)
+
+
+var interval = setInterval(function () {
+var hasFocus = $(eventprice).is(':focus');
     if ($('#confirmprice').is(':visible') && hasFocus === false) {
     document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter' && eventprice.style.display == 'flex') {
