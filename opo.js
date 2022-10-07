@@ -165,7 +165,6 @@ function hasfoc() {
 var hasFocus = $(eventprice).is(':focus');
 console.log(hasFocus)
     if ($('#confirmprice').is(':visible') && hasFocus === false) {
-    document.addEventListener('keypress', function (e) {
 document.addEventListener('keydown', (e) => {
      if (e.key === 'Enter' && eventprice.style.display == 'flex') {
     document.getElementById("priceconfirm").click();
@@ -175,7 +174,7 @@ document.addEventListener('keydown', (e) => {
     },1000)
     }
   if (e.repeat) return;
-})})}}
+})
 
 const myInterval = setInterval(hasfoc, 500);
 
