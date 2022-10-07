@@ -161,8 +161,9 @@ Webflow.push(function() {
 
 
 
-function hasfoc() {
+hasfoc() {
 var hasFocus = $(eventprice).is(':focus');
+console.log(hasFocus)
     if ($('#confirmprice').is(':visible') && hasfoc === false) {
     document.addEventListener('keypress', function (e) {
     if (e.key === 'Enter' && eventprice.style.display == 'flex') {
