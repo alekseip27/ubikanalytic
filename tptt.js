@@ -162,22 +162,21 @@ Webflow.push(function() {
 function hasfoc() {
     let hasFocus = $(eventprice).is(':focus');
   
-      
         if ($('#confirmprice').is(':visible') && hasFocus === false) {
-    document.addEventListener('keydown', (e) => {
-
+        document.addEventListener('keydown', (e) => {
+        if (e.repeat) return
          if (e.key === 'Enter' && document.querySelector('#confirmprice').style.display === 'flex') {
         document.querySelector('#confirmprice').style.display = 'none'
-        document.getElementById("priceconfirm").click();
         $('#confirmprice').css({pointerEvents: "none"})
         setTimeout(() => {
+        document.getElementById("priceconfirm").click();
         $('#confirmprice').css({pointerEvents: "auto"})
         },1000)
         }
     }
 )}}
 
-const myInterval = setInterval(hasfoc, 500); 
+const myInterval = setInterval(hasfoc, 5000); 
 
 
         
