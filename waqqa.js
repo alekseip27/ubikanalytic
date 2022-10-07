@@ -161,7 +161,7 @@ Webflow.push(function() {
 
 
 
-hasfoc() {
+function hasfoc() {
 var hasFocus = $(eventprice).is(':focus');
 console.log(hasFocus)
     if ($('#confirmprice').is(':visible') && hasfoc === false) {
