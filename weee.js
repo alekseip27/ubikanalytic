@@ -466,3 +466,21 @@ document.querySelector('#isfocus').textContent = '0'
     request.send();
     }}})
     })
+
+
+{
+document.addEventListener('keydown', (e) => {
+setTimeout(function() {
+let isfoc = document.querySelector('#isfocus').textContent
+if (e.repeat) return;
+if (e.key === 'Enter' && isfoc === '0' && document.querySelector('#confirmprice').style.display == 'flex') {
+        document.getElementById("priceconfirm").click();
+        $('#confirmprice').css({pointerEvents: "none"})
+        setTimeout(() => {
+        $('#confirmprice').css({pointerEvents: "auto"})
+        },1000)
+
+
+}    }, 1000)
+})
+}
