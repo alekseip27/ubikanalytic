@@ -177,12 +177,35 @@ const savepricebutton = card.getElementsByClassName('save-price-button')[0]
 
 
 eventprice.addEventListener("keypress", (event) => {
+
+  if( (event.keyCode === 13) && (eventprice.readOnly == false) ) {
+savepricebutton.click()
 document.querySelector('#isfocus').textContent = '1'
     setTimeout(() => {
 document.querySelector('#isfocus').textContent = '0'
   }, 1500);
+
+}
+});
+
+eventprice.addEventListener("click", (event) => {
+
   if( (event.keyCode === 13) && (eventprice.readOnly == false) ) {
 savepricebutton.click()
+document.querySelector('#isfocus').textContent = '1'
+    setTimeout(() => {
+document.querySelector('#isfocus').textContent = '0'
+  }, 1500);
+
+}
+});
+
+savepricebutton.addEventListener("click", (event) => {
+if(eventprice.readOnly == false)  {
+document.querySelector('#isfocus').textContent = '1'
+    setTimeout(() => {
+document.querySelector('#isfocus').textContent = '0'
+  }, 1500);
 
 }
 });
