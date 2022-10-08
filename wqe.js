@@ -188,24 +188,12 @@ document.querySelector('#isfocus').textContent = '0'
 }
 });
 
-eventprice.addEventListener("click", (event) => {
-
-  if( (event.keyCode === 13) && (eventprice.readOnly == false) ) {
-savepricebutton.click()
-document.querySelector('#isfocus').textContent = '1'
-    setTimeout(() => {
-document.querySelector('#isfocus').textContent = '0'
-  }, 5000);
-
-}
-});
-
 savepricebutton.addEventListener("click", (event) => {
 if(eventprice.readOnly == false)  {
 document.querySelector('#isfocus').textContent = '1'
     setTimeout(() => {
 document.querySelector('#isfocus').textContent = '0'
-  }, 1500);
+  }, 5000);
 
 }
 });
