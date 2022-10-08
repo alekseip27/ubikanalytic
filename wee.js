@@ -195,7 +195,7 @@ savepricebutton.click()
 document.querySelector('#isfocus').textContent = '1'
     setTimeout(() => {
 document.querySelector('#isfocus').textContent = '0'
-  }, 1500);
+  }, 5000);
 
 }
 });
