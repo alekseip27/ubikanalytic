@@ -177,12 +177,12 @@ const savepricebutton = card.getElementsByClassName('save-price-button')[0]
 
 
 eventprice.addEventListener("keypress", (event) => {
-  if( (event.keyCode === 13) && (eventprice.readOnly == false) ) {
-savepricebutton.click()
 document.querySelector('#isfocus').textContent = '1'
     setTimeout(() => {
 document.querySelector('#isfocus').textContent = '0'
   }, 1500);
+  if( (event.keyCode === 13) && (eventprice.readOnly == false) ) {
+savepricebutton.click()
 
 }
 });
