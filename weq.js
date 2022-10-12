@@ -368,7 +368,7 @@ document.querySelector('#isfocus').textContent = '0'
     $('#shub').click(function () {
     let url = document.querySelector('#shub').getAttribute('url') + '?quantity=2';
     if(url !== 'null') {
-    window.open(url, url)
+    window.open(url,'shub')
     $('#shub').css('cursor', 'pointer');
     } else if(url === 'null') {
     $('#shub').css('cursor', 'default');
@@ -390,7 +390,7 @@ document.querySelector('#isfocus').textContent = '0'
     $('#vseats').click(function () {
     let url = document.querySelector('#vseats').getAttribute('url');
     if(url !== 'null') {
-    window.open(url, url)
+    window.open(url,'vseats')
     $('#vseats').css('cursor', 'pointer');
     } else if(url === 'null') {
     $('#vseats').css('cursor', 'default');
