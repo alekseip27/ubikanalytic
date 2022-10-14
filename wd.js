@@ -191,6 +191,18 @@ window.addEventListener('DOMContentLoaded', (event) => {
     eventstatus.style.color = "red";
     card.setAttribute('timeleft', "0")
     }
+    case '3 hrs': {
+    let purchasedate = moment(date).add(3, 'hours').format('MM/DD/YYYY HH:mm:ss')
+    var ms = moment(purchasedate,"MM/DD/YYYY HH:mm:ss").diff(moment(then,"MM/DD/YYYY HH:mm:ss"));
+    var d = moment.duration(ms);
+    var s = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
+    eventstatus.textContent = s
+    card.setAttribute('timeleft', Math.floor(d.asMinutes()))
+    if(then>purchasedate) {
+    eventstatus.textContent = 'ASAP'
+    eventstatus.style.color = "red";
+    card.setAttribute('timeleft', "0")
+    }
     break; }
     case '4 hrs': {
     let purchasedate = moment(date).add(4, 'hours').format('MM/DD/YYYY HH:mm:ss')
@@ -205,6 +217,42 @@ window.addEventListener('DOMContentLoaded', (event) => {
     card.setAttribute('timeleft', "0")
     }
     break; }
+    case '6 hrs': {
+    let purchasedate = moment(date).add(6, 'hours').format('MM/DD/YYYY HH:mm:ss')
+    var ms = moment(purchasedate,"MM/DD/YYYY HH:mm:ss").diff(moment(then,"MM/DD/YYYY HH:mm:ss"));
+    var d = moment.duration(ms);
+    var s = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
+    eventstatus.textContent = s
+    card.setAttribute('timeleft', Math.floor(d.asMinutes()))
+    if(then>purchasedate) {
+    eventstatus.textContent = 'ASAP'
+    eventstatus.style.color = "red";
+    card.setAttribute('timeleft', "0")
+    }
+    case '8 hrs': {
+    let purchasedate = moment(date).add(8, 'hours').format('MM/DD/YYYY HH:mm:ss')
+    var ms = moment(purchasedate,"MM/DD/YYYY HH:mm:ss").diff(moment(then,"MM/DD/YYYY HH:mm:ss"));
+    var d = moment.duration(ms);
+    var s = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
+    eventstatus.textContent = s
+    card.setAttribute('timeleft', Math.floor(d.asMinutes()))
+    if(then>purchasedate) {
+    eventstatus.textContent = 'ASAP'
+    eventstatus.style.color = "red";
+    card.setAttribute('timeleft', "0")
+    }
+    case '10 hrs': {
+    let purchasedate = moment(date).add(10, 'hours').format('MM/DD/YYYY HH:mm:ss')
+    var ms = moment(purchasedate,"MM/DD/YYYY HH:mm:ss").diff(moment(then,"MM/DD/YYYY HH:mm:ss"));
+    var d = moment.duration(ms);
+    var s = Math.floor(d.asHours()) + moment.utc(ms).format(":mm:ss");
+    eventstatus.textContent = s
+    card.setAttribute('timeleft', Math.floor(d.asMinutes()))
+    if(then>purchasedate) {
+    eventstatus.textContent = 'ASAP'
+    eventstatus.style.color = "red";
+    card.setAttribute('timeleft', "0")
+    }
     case '12 hrs': {
     let purchasedate = moment(date).add(12, 'hours').format('MM/DD/YYYY HH:mm:ss')
     var ms = moment(purchasedate,"MM/DD/YYYY HH:mm:ss").diff(moment(then,"MM/DD/YYYY HH:mm:ss"));
