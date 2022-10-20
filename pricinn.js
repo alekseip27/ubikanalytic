@@ -34,7 +34,6 @@ Webflow.push(function() {
     let docRef = myFS.doc("users/" + curUser.uid);
     docRef.get().then((docSnap) => {
     let datas = docSnap.data();
-  
     $(".platform-icon").hide()
     $('.event-box').hide()
     $('#samplestyle').show()
@@ -163,7 +162,7 @@ Webflow.push(function() {
 
 
 eventprice.addEventListener("keyup", (event) => {
-console.log(Number(eventprice.value)/87 * 100)
+console.log(Number(eventprice.value)/87 * 100).toFixed(2)
 })
         
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
