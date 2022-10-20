@@ -157,8 +157,14 @@ Webflow.push(function() {
     eventqty.textContent = events.quantity
     
     const eventprice = card.getElementsByClassName('main-field-price')[0]
+    
+    
     eventprice.value = events.listPrice
-        
+
+
+eventprice.addEventListener("keyup", (event) => {
+console.log(Number(eventprice.value) )
+)}
         
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
     let dticket = String((events.cost/events.quantity))
