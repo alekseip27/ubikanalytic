@@ -162,7 +162,7 @@ Webflow.push(function() {
 
 
 eventprice.addEventListener("keyup", (event) => {
-console.log(Number(eventprice.value)/87 * 100).toFixed(2)
+console.log((eventprice.value/87 * 100).toFixed(2))
 })
         
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
