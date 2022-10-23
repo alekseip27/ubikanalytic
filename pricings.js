@@ -162,6 +162,7 @@ eventprice.addEventListener("keyup", (event) => {
 
 if(document.querySelector('#vspricing').checked){
 console.log((eventprice.value/87 * 100).toFixed(2))
+eventprice.value = (eventprice.value/87 * 100).toFixed(2)
 }
 })
         
@@ -183,12 +184,12 @@ const savepricebutton = card.getElementsByClassName('save-price-button')[0]
 
 eventprice.addEventListener("keypress", (event) => {
 
-  if( (event.keyCode === 13) && (eventprice.readOnly == false) ) {
+if( (event.keyCode === 13) && (eventprice.readOnly == false) ) {
 savepricebutton.click()
 document.querySelector('#isfocus').textContent = '1'
-    setTimeout(() => {
+setTimeout(() => {
 document.querySelector('#isfocus').textContent = '0'
-  }, 5000);
+}, 5000);
 
 }
 });
@@ -196,9 +197,9 @@ document.querySelector('#isfocus').textContent = '0'
 savepricebutton.addEventListener("click", (event) => {
 if(eventprice.readOnly == false)  {
 document.querySelector('#isfocus').textContent = '1'
-    setTimeout(() => {
+setTimeout(() => {
 document.querySelector('#isfocus').textContent = '0'
-  }, 5000);
+}, 5000);
 
 }
 });
@@ -233,8 +234,7 @@ document.querySelector('#isfocus').textContent = '0'
   
   })    
         
-    
-    
+ 
     const eventcst = card.getElementsByClassName('main-text-cst')[0]
     eventcst.textContent = '$' + events.cost
    
@@ -250,8 +250,7 @@ document.querySelector('#isfocus').textContent = '0'
   
   
     const lastupdated = card.getElementsByClassName('main-text-updated')[0]
-    
-  
+   
     let tixid = events.id
     let usz = datas['Email']
     var http = new XMLHttpRequest();
