@@ -85,8 +85,6 @@ Webflow.push(function() {
     
     card.addEventListener('click', function() {
 
-
-
     $('.event-box.pricing').css({pointerEvents: "none"})
     $('#mainpricing').hide()
     $('#loadingpricing').css("display", "flex");
@@ -157,12 +155,14 @@ Webflow.push(function() {
     
     const eventprice = card.getElementsByClassName('main-field-price')[0]
     
-    
     eventprice.value = events.listPrice
 
 
 eventprice.addEventListener("keyup", (event) => {
+
+if(document.querySelector('#vspricing').checked){
 console.log((eventprice.value/87 * 100).toFixed(2))
+}
 })
         
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
