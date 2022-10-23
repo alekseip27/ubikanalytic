@@ -160,7 +160,7 @@ Webflow.push(function() {
 
 //setup before functions
 let typingTimer;                //timer identifier
-let doneTypingInterval = 1000;  //time in ms (5 seconds)
+let doneTypingInterval = 2000;  //time in ms (5 seconds)
 let myInput = eventprice
 
 //on keyup, start the countdown
