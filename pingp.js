@@ -1,11 +1,3 @@
-function delay(fn, ms) {
-  let timer = 0
-  return function(...args) {
-    clearTimeout(timer)
-    timer = setTimeout(fn.bind(this, ...args), ms || 0)
-  }
-}
-
 
 Webflow.push(function() {
     $('form').submit(function() {
@@ -166,13 +158,26 @@ Webflow.push(function() {
     
     eventprice.value = events.listPrice
 
+//setup before functions
+let typingTimer;                //timer identifier
+let doneTypingInterval = 1000;  //time in ms (5 seconds)
+let myInput = eventprice
 
+//on keyup, start the countdown
+myInput.addEventListener('keyup', () => {
+    clearTimeout(typingTimer);
+    if (myInput.value) {
+        typingTimer = setTimeout(doneTyping, doneTypingInterval);
+    }
+});
 
+//user is "finished typing," do something
+function doneTyping () {
 if(document.querySelector('#vspricing').checked){
-delay(
 eventprice.value = (eventprice.value/87 * 100).toFixed(2)
-,500)
 }
+}
+
       
 
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
