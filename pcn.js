@@ -159,11 +159,11 @@ Webflow.push(function() {
 
 
 eventprice.addEventListener("keyup", (event) => {
-setTimeout(() => {  
 if(document.querySelector('#vspricing').checked){
+setTimeout(() => {  
 eventprice.value = (eventprice.value/87 * 100).toFixed(2)
-}, 500);
-}
+},500)
+}})
         
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
     let dticket = String((events.cost/events.quantity))
