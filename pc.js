@@ -1,23 +1,3 @@
-var delay = (function() {
-    var timer = {}
-      , values = {}
-    return function(el) {
-        var id = el.form.id + '.' + el.name
-        return {
-            enqueue: function(ms, cb) {
-                if (values[id] == el.value) return
-                if (!el.value) return
-                var original = values[id] = el.value
-                clearTimeout(timer[id])
-                timer[id] = setTimeout(function() {
-                    if (original != el.value) return // solves race condition
-                    cb.apply(el)
-                }, ms)
-            }
-        }
-    }
-}())
-
 Webflow.push(function() {
     $('form').submit(function() {
     return false;
@@ -179,12 +159,11 @@ Webflow.push(function() {
 
 
 eventprice.addEventListener("keyup", (event) => {
-    
+setTimeout(() => {  
 if(document.querySelector('#vspricing').checked){
-console.log((eventprice.value/87 * 100).toFixed(2))
-    delay(this).enqueue(300, function() {
 eventprice.value = (eventprice.value/87 * 100).toFixed(2)
-})}})
+}, 500);
+}
         
     const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
     let dticket = String((events.cost/events.quantity))
@@ -477,10 +456,10 @@ document.querySelector('#isfocus').textContent = '0'
     eventrow.textContent = events.row
     const eventqty = card.getElementsByClassName('main-text-qty3')[0]
     eventqty.textContent = events.quantity
+
+       
     const eventprice = card.getElementsByClassName('main-text-price3')[0]
     eventprice.textContent = '$' + events.price
-
-
 
 
     const eventdate = card.getElementsByClassName('main-text-date3')[0]
