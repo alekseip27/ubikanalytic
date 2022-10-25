@@ -174,7 +174,7 @@ myInput.addEventListener('keyup', () => {
 //user is "finished typing," do something
 function doneTyping () {
 if(document.querySelector('#vspricing').checked){
-eventprice.value = (eventprice.value/87 * 100).toFixed(2)
+eventprice.value = (eventprice.value/86 * 100).toFixed(2)
 }
 }
 
