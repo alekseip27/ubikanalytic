@@ -21,7 +21,6 @@ document.querySelector('#event').textContent =  data[0].Other_Master_Event_Name
 document.querySelector('#venue').textContent =  data[0].Venue_Master_Venue
 document.querySelector('#time').textContent =  data[0].Other_Master_Event_Time
 document.querySelector('#url').textContent =  data[0].Other_Master_Event_Url
-document.querySelector('#purchasetotal').textContent =  data[0].Event_Other_Master_User_Purch_Amnt 
 document.querySelector('#quantityper').textContent =  data[0].Event_Other_Master_User_Quant_Per
 let purchasequantity = data[0].Event_Other_Master_Bought_Amnt
 if(purchasequantity.length>0) { 
