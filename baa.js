@@ -160,8 +160,7 @@ let now = moment(date2,"DD/MM/YYYY HH:mm:ss")
 
 var mss = moment(now).diff(moment(then));
 var dd = moment.duration(mss);
-var pdifference = Math.floor(dd.asHours()) + moment.utc(mss).format(":mm:ss");
-
+  
 let pq = document.querySelector('#purchasequantity').value
 let pa = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase();
 let pc = document.querySelector('#purchaseconfirmation').value
@@ -194,8 +193,8 @@ var params = JSON.stringify(
 "Confirmation": pc,
 "Purchase_Email": pem,
 "Purchased_By": purchasedby,
-"Purchase_Requested": purchrequest,
-"Purchase_Difference":pdifference
+"Purchase_Requested": 'manual,
+"Purchase_Difference":'manual'
 })
 http.open("POST", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
