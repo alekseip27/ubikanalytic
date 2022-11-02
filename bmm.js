@@ -21,8 +21,14 @@ document.querySelector('#event').textContent =  data[0].Other_Master_Event_Name
 document.querySelector('#venue').textContent =  data[0].Venue_Master_Venue
 document.querySelector('#time').textContent =  data[0].Other_Master_Event_Time
 document.querySelector('#url').textContent =  data[0].Other_Master_Event_Url
-
- 
+let purchasequantity = data[0].Event_Other_Master_Bought_Amnt
+if(purchasequantity.length>0) { 
+document.querySelector('#amountbought1').textContent = data[0].Event_Other_Master_Bought_Amnt }
+else { document.querySelector('#amountbought1').textContent = "0" }
+  
+document.querySelector('#amountbought2').textContent =  data[0].Event_Other_Master_User_Purch_Amnt 
+document.querySelector('#purchasefreq').textContent =  data[0].Event_Other_Master_User_Purch_Frequency
+document.querySelector('#purchasealltime').textContent = data[0].Purchased_Amount_Alltime
 
 itemContainer.appendChild(item);
 
@@ -74,22 +80,7 @@ myFS.doc("accountstats/" + acm).set({[src] : i+1}, { merge: true })
 document.querySelector('#buybtn').addEventListener("click", () => {
 $('#buybtn').css({pointerEvents: "none"})
 let bm = document.querySelector('#purchaseemail').value
-let detailsmatch = !!document.querySelector('#detailsmatch').checked
-let willcall = !!document.querySelector('#willcall').checked
 
-let dmatch = 'false'
-if(!!detailsmatch) {
-let dmatch = 'true'
-} else {
-let dmatch = 'false'
-}
-
-let wcall = 'false'
-if(!!willcall) {
-let wcall = 'true'
-} else {
-let wcall = 'false'
-}
 
 let deliveryselected = document.querySelector('#deliveryselected').value
 
@@ -118,8 +109,6 @@ var params = JSON.stringify(
 "Bought_Amnt": combined,
 "Purchased_Amount_Alltime": allt,
 "Event_Other_Master_Buy_Status": "Completed",
-"Details_Match": dmatch,
-"No_Will_Call": wcall,
 "Delivery_Method_Selected": deliveryselected
 })
 http.open("PUT", url, true);
@@ -131,8 +120,6 @@ var params = JSON.stringify(
 "search-key": eventid,
 "Bought_Amnt": combined,
 "Event_Other_Master_Buy_Status": "Added",
-"Details_Match": dmatch,
-"No_Will_Call": wcall,
 "Delivery_Method_Selected": deliveryselected
 })
 http.open("PUT", url, true);
@@ -204,12 +191,10 @@ var params = JSON.stringify(
 "Purchase_Quantity": pq,
 "Purchase_Quantity_Total": maxamount,
 "Purchase_Quantity_Alltime": combined,
-"Purchase_Account": pa,
 "Confirmation": pc,
 "Purchase_Email": pem,
 "Purchased_By": purchasedby,
 "Purchase_Requested": purchrequest,
-"Purchase_Urgency": purchurgency,
 "Purchase_Difference":pdifference
 })
 http.open("POST", url, true);
