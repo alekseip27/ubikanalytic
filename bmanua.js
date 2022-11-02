@@ -194,6 +194,7 @@ var params = JSON.stringify(
 "Purchase_Email": pem,
 "Purchased_By": purchasedby,
 "Purchase_Requested": 'manual',
+"Purchase_Urgency": 'manual',
 "Purchase_Difference":'manual'
 })
 http.open("POST", url, true);
