@@ -135,7 +135,7 @@ var params = JSON.stringify(
 {
 "search-key": eventid,
 "Bought_Amnt": combined,
-"Event_Other_Master_Buy_Status": "Added",
+"Event_Other_Master_Buy_Status": "Completed",
 "Delivery_Method_Selected": deliveryselected
 })
 http.open("PUT", url, true);
