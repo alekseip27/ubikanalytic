@@ -205,13 +205,10 @@ var params = JSON.stringify(
 "Event_Venue": eventvenue,
 "Purchase_Date": purchasedate,
 "Purchase_Quantity": currentam,
-"Purchase_Quantity_Alltime": newalltime, 
+"Purchase_Quantity_Alltime": newalltime,
 "Confirmation": pc,
 "Purchase_Email": pem,
-"Purchased_By": purchasedby,
-"Purchase_Requested": 'manual',
-"Purchase_Urgency": 'manual',
-"Purchase_Difference":'manual'
+"Purchased_By": purchasedby
 })
 http.open("POST", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
