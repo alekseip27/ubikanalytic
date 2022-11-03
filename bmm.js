@@ -110,9 +110,9 @@ let limit = Number(document.querySelector('#amountbought2').textContent)
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-manual?id=')[1]
 
 
-let bought = Number(document.querySelector('#amountbought1').textContent)
-let currentam = Number(document.querySelector('#purchasequantity').value)
-let newalltime = bought+currentam
+let bought2 = Number(document.querySelector('#amountbought1').textContent)
+let currentam2 = Number(document.querySelector('#purchasequantity').value)
+let newalltime2 = bought+currentam2
 
 
 
@@ -122,8 +122,8 @@ if(combined>=limit) {
 var params = JSON.stringify(
 {
 "search-key": eventid,
-"Bought_Amnt": currentam,
-"Purchased_Amount_Alltime": newalltime,
+"Bought_Amnt": currentam2,
+"Purchased_Amount_Alltime": newalltime2,
 "Event_Other_Master_Buy_Status": "Completed",
 "Delivery_Method_Selected": deliveryselected
 })
