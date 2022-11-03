@@ -117,14 +117,14 @@ let newalltime2 = bought+currentam2
 
 
 var http = new XMLHttpRequest();
-var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/update_event_second";
+var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/update_event_second_manual";
 if(combined>=limit) {
 var params = JSON.stringify(
 {
 "search-key": eventid,
 "Bought_Amnt": currentam2,
 "Purchased_Amount_Alltime": newalltime2,
-"Event_Other_Master_Buy_Status": "Completed",
+
 "Delivery_Method_Selected": deliveryselected
 })
 http.open("PUT", url, true);
