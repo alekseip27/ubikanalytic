@@ -194,7 +194,7 @@ let purchurgency = document.querySelector('#purchasefrequency').textContent
 
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-manual?id=')[1]
 var http = new XMLHttpRequest();
-var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/buy_event";
+var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/buy_event_manual";
 var params = JSON.stringify(
 
 {
@@ -204,9 +204,7 @@ var params = JSON.stringify(
 "Event_Time": eventtime,
 "Event_Venue": eventvenue,
 "Purchase_Date": purchasedate,
-"Purchase_Source": psrc,
 "Purchase_Quantity": currentam,
-"Purchase_Quantity_Total": currentam,
 "Purchase_Quantity_Alltime": newalltime, 
 "Confirmation": pc,
 "Purchase_Email": pem,
@@ -223,7 +221,7 @@ if(http.readyState == 4 && http.status == 200) {
 document.querySelector('#loading').style.display = "flex";
 document.querySelector('#Item-Container').style.display = "none";
 setTimeout(() => {
-window.location.href = "/buy-queue";
+window.location.href = "/events";
 }, 2000);
 }
 }
