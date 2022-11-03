@@ -23,12 +23,19 @@ document.querySelector('#time').textContent =  data[0].Other_Master_Event_Time
 document.querySelector('#url').textContent =  data[0].Other_Master_Event_Url
 let purchasequantity = data[0].Event_Other_Master_Bought_Amnt
 if(purchasequantity.length>0) { 
+  
+
 document.querySelector('#amountbought1').textContent = data[0].Event_Other_Master_Bought_Amnt }
 else { document.querySelector('#amountbought1').textContent = "0" }
   
 document.querySelector('#amountbought2').textContent =  data[0].Event_Other_Master_User_Purch_Amnt 
 document.querySelector('#purchasefreq').textContent =  data[0].Event_Other_Master_User_Purch_Frequency
 document.querySelector('#purchasealltime').textContent = data[0].Purchased_Amount_Alltime
+  
+
+
+
+
 
 itemContainer.appendChild(item);
 
@@ -98,6 +105,7 @@ let cpr = Number(document.querySelector('#purchasequantity').value)
 let combined = bought+cpr
 let alltime = Number(document.querySelector('#purchasealltime').textContent)
 let allt = bought+cpr+alltime
+
 let limit = Number(document.querySelector('#amountbought2').textContent)
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-manual?id=')[1]
 var http = new XMLHttpRequest();
@@ -126,6 +134,8 @@ http.open("PUT", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
 http.send(params);
 }}
+  
+  
 let purchaseacc = document.querySelector('#purchaseemail').value
 let maxamount = document.querySelector('#amountbought2').textContent
 let eventname = document.querySelector('#event').textContent
@@ -167,12 +177,12 @@ let pc = document.querySelector('#purchaseconfirmation').value
 let pem = document.querySelector('#purchaseemail').value
 let purchasedby = document.querySelector('#username').textContent
 let psrc = document.querySelector('#purchasesource').textContent
+
 let bought = Number(document.querySelector('#amountbought1').textContent)
-let cpur = Number(document.querySelector('#purchasequantity').value)
-let combined = bought+cpur
+let currentam = Number(document.querySelector('#purchasequantity').value)
+let newalltime = bought+currentam
 
 let purchurgency = document.querySelector('#purchasefrequency').textContent
-
 
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-manual?id=')[1]
 var http = new XMLHttpRequest();
@@ -187,9 +197,9 @@ var params = JSON.stringify(
 "Event_Venue": eventvenue,
 "Purchase_Date": purchasedate,
 "Purchase_Source": psrc,
-"Purchase_Quantity": pq,
-"Purchase_Quantity_Total": maxamount,
-"Purchase_Quantity_Alltime": combined,
+"Purchase_Quantity": currentam,
+"Purchase_Quantity_Total": currentam,
+"Purchase_Quantity_Alltime": newalltime, 
 "Confirmation": pc,
 "Purchase_Email": pem,
 "Purchased_By": purchasedby,
