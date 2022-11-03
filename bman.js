@@ -108,14 +108,22 @@ let allt = bought+cpr+alltime
 
 let limit = Number(document.querySelector('#amountbought2').textContent)
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-manual?id=')[1]
+
+
+let bought = Number(document.querySelector('#amountbought1').textContent)
+let currentam = Number(document.querySelector('#purchasequantity').value)
+let newalltime = bought+currentam
+
+
+
 var http = new XMLHttpRequest();
 var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/update_event_second";
 if(combined>=limit) {
 var params = JSON.stringify(
 {
 "search-key": eventid,
-"Bought_Amnt": combined,
-"Purchased_Amount_Alltime": allt,
+"Bought_Amnt": currentam,
+"Purchased_Amount_Alltime": newalltime,
 "Event_Other_Master_Buy_Status": "Completed",
 "Delivery_Method_Selected": deliveryselected
 })
