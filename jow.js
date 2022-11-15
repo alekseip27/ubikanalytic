@@ -117,8 +117,6 @@ Webflow.push(function() {
     document.querySelector('#shub').setAttribute('url', events.stubhubEventUrl);
     document.querySelector('#vseats').setAttribute('url', events.vividSeatsEventUrl);
 
-    document.querySelector('#vseats').setAttribute('id', events.vividSeatsEventUrl);
-
     $(".platform-icon").css('display', 'flex');
     document.querySelector('#fwicon1').textContent = ''
     document.querySelector('#fwicon2').textContent = ''
