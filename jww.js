@@ -94,6 +94,8 @@ Webflow.push(function() {
     document.querySelector('#fwicon5').textContent = ''
     $('.event-box-4').hide()
     $('#samplestyle4').show()
+    $('.event-box-5').hide()
+    $('#samplestyle5').show()
     $('.event-box-pricing').hide()
     $('#samplestyle2').show()
     $(".event-box").removeClass("selected");
@@ -114,6 +116,9 @@ Webflow.push(function() {
     document.querySelector('#selectedevent').setAttribute('eventid', events.id)
     document.querySelector('#shub').setAttribute('url', events.stubhubEventUrl);
     document.querySelector('#vseats').setAttribute('url', events.vividSeatsEventUrl);
+
+    document.querySelector('#vseats').setAttribute('id', events.vividSeatsEventUrl);
+
     $(".platform-icon").css('display', 'flex');
     document.querySelector('#fwicon1').textContent = ''
     document.querySelector('#fwicon2').textContent = ''
