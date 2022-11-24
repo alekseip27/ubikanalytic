@@ -45,6 +45,7 @@ const authChanged = firebase.auth().onAuthStateChanged((user) => {
         let email = data["Email"];
         let profileuid = curUser.uid;
         let admin = data["admin"];
+        let mod = data["moderator"];
         let buyer = data["buyer"];
         let entry = data["entry"];
         let orderh = data["orderhistory"]
@@ -82,6 +83,27 @@ $('#manage-emails').css('display','flex');
 
 }
 
+        
+
+
+if(!!mod) {
+$('#buyerlogo').show()
+$('#eventsdropdown').css('display','flex');
+$('#addevent').css('display','flex');
+$('#eventslist').css('display','flex');
+$('#buying').css('display','flex');
+$('#emaildropdown').css('display','flex');
+$('#queue').css('display','flex');
+$('#create-emails').css('display','flex');
+$('#history').css('display','flex');
+$('#errorlog').css('display','flex');
+}
+
+if(!!mod && window.location.href.includes('/events') && window.location.href !== 'https://www.ubikanalytic.com/events-list') {
+location.href = '/buy-queue'
+}
+        
+        
 if(!!buyer) {
 $('#buyerlogo').show()
 $('#eventsdropdown').css('display','flex');
