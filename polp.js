@@ -101,13 +101,21 @@ Webflow.push(function() {
     $(".event-box").removeClass("selected");
     
     card.classList.add("selected");
+    
     setTimeout(() => {
     if (events.stubhubEventUrl !== null && events.stubhubEventUrl.length>0 && !events.stubhubEventUrl.includes('viagogo')) {
     let stubhubid = events.stubhubEventUrl.slice(-9).replace('/','')
-    if(stubhubid.length === 9) {
     document.querySelector("#refreshstub").click()
     document.querySelector('#selectedevent').setAttribute('stubhub-id', events.stubhubEventUrl.split('/event/')[1].slice(0, -1));
-    }}}, 500);
+    } 
+    
+    if(events.stubhubEventUrl.include('viagogo')){
+    let stubhubid = events.stubhubEventUrl.slice(-9)
+    document.querySelector("#refreshstub").click()
+    document.querySelector('#selectedevent').setAttribute('stubhub-id', events.stubhubEventUrl.split('/event/')[1].slice(0, -1));
+    } 
+
+    }, 500);
     
     document.querySelector('#selectedevent').textContent = events.name.slice(0,15) 
     document.querySelector('#eventdate').textContent = events.date.slice(0,10)
