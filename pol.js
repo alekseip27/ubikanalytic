@@ -102,7 +102,7 @@ Webflow.push(function() {
     
     card.classList.add("selected");
     setTimeout(() => {
-    if (events.stubhubEventUrl !== null && events.stubhubEventUrl.length>0) {
+    if (events.stubhubEventUrl !== null && events.stubhubEventUrl.length>0 && !events.stubhubEventUrl.includes('viagogo')) {
     let stubhubid = events.stubhubEventUrl.slice(-9).replace('/','')
     if(stubhubid.length === 9) {
     document.querySelector("#refreshstub").click()
