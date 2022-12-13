@@ -109,7 +109,7 @@ Webflow.push(function() {
     document.querySelector('#selectedevent').setAttribute('stubhub-id', events.stubhubEventUrl.split('/event/')[1].slice(0, -1));
     } 
     
-    if(events.stubhubEventUrl.include('viagogo')){
+    if(events.stubhubEventUrl.includes('viagogo')){
     let stubhubid = events.stubhubEventUrl.slice(-9)
     document.querySelector("#refreshstub").click()
     document.querySelector('#selectedevent').setAttribute('stubhub-id', events.stubhubEventUrl.split('/event/')[1].slice(0, -1));
