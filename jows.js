@@ -102,7 +102,7 @@ Webflow.push(function() {
     
     card.classList.add("selected");
     setTimeout(() => {
-    if (events.stubhubEventUrl !== null) {
+    if (events.stubhubEventUrl !== null && events.stubhubEventUrl.length>0) {
     let stubhubid = events.stubhubEventUrl.split('/event/')[1].slice(0, -1);
     if(stubhubid.length === 9) {
     document.querySelector("#refreshstub").click()
