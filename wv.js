@@ -116,6 +116,12 @@ window.addEventListener('DOMContentLoaded', (event) => {
     card.setAttribute('timeleft', "999999999")
     card.setAttribute('error', "true")
     break; }
+    case 'Extremely Urgent': {
+    eventstatus.textContent = 'ASAP'
+    eventstatus.style.color = "red";
+    card.setAttribute('timeleft', "-1")
+    card.setAttribute('asap', "true")
+    break; }
     case 'Immediate': {
     eventstatus.textContent = 'ASAP'
     eventstatus.style.color = "red";
