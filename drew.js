@@ -31,7 +31,16 @@ else { document.querySelector('#amountbought1').textContent = "0" }
 document.querySelector('#amountbought2').textContent =  data[0].Event_Other_Master_User_Purch_Amnt 
 document.querySelector('#purchasefreq').textContent =  data[0].Event_Other_Master_User_Purch_Frequency
 document.querySelector('#purchasealltime').textContent = data[0].Purchased_Amount_Alltime
+
   
+ 
+let alltt = data[0].Purchased_Amount_Alltime
+if(alltt.length>0) { 
+document.querySelector('#purchasealltime').textContent = data[0].Purchased_Amount_Alltime
+} else {
+document.querySelector('#purchasealltime').textContent = "0"
+}
+ 
 
 
 
@@ -116,8 +125,9 @@ let currentam2 = Number(document.querySelector('#purchasequantity').value)
 let newalltime2 = bought+currentam2
 
 
-let num1 = Number(document.querySelector('#purchasealltime').value)
+let num1 = Number(document.querySelector('#purchasealltime').textContent)
 let num2 = Number(document.querySelector('#purchasequantity').value)
+
 let alltogether = num1+num2
 
 
