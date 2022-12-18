@@ -116,8 +116,8 @@ let currentam2 = Number(document.querySelector('#purchasequantity').value)
 let newalltime2 = bought+currentam2
 
 
-let num1 = Number(document.querySelector('#purchasealltime').textContent)
-let num2 = Number(document.querySelector('#purchasequantity').textContent)
+let num1 = Number(document.querySelector('#purchasealltime').value)
+let num2 = Number(document.querySelector('#purchasequantity').value)
 let alltogether = num1+num2
 
 
