@@ -62,7 +62,7 @@ $('#adminlogo').show()
 $('#eventsdropdown').css('display','flex');
 $('#events').css('display','flex');
 $('#addevent').css('display','flex');
-$('#eventslist').css('display','flex');
+$('#eventslist').css('display','none');
 $('#buying').css('display','flex');
 $('#queue').css('display','flex');
 $('#history').css('display','flex');
