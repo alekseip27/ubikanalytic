@@ -104,6 +104,7 @@ let bought = Number(document.querySelector('#amountbought1').textContent)
 let cpr = Number(document.querySelector('#purchasequantity').value)
 let combined = bought+cpr
 let alltime = Number(document.querySelector('#purchasealltime').textContent)
+
 let allt = bought+cpr+alltime
 
 let limit = Number(document.querySelector('#amountbought2').textContent)
@@ -115,6 +116,10 @@ let currentam2 = Number(document.querySelector('#purchasequantity').value)
 let newalltime2 = bought+currentam2
 
 
+let num1 = Number(document.querySelector('#purchasealltime').textContent)
+let num2 = Number(document.querySelector('#purchasequantity').textContent)
+let alltogether = num1+num2
+
 
 var http = new XMLHttpRequest();
 var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/update_event_second_manual";
@@ -122,8 +127,8 @@ if(combined>=limit) {
 var params = JSON.stringify(
 {
 "search-key": eventid,
-"Bought_Amnt": currentam2,
-"Purchased_Amount_Alltime": newalltime2,
+"Bought_Amnt": num2,
+"Purchased_Amount_Alltime": alltogether,
 
 "Delivery_Method_Selected": deliveryselected
 })
