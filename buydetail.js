@@ -241,6 +241,7 @@ var params = JSON.stringify(
 {
 "search-key": eventid,
 "Bought_Amnt": combined,
+"Purchased_Amount_Alltime": allt,
 "Event_Other_Master_Buy_Status": "Added",
 "Details_Match": dmatch,
 "No_Will_Call": wcall,
