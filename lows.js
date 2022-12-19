@@ -459,6 +459,10 @@ document.querySelector('#isfocus').textContent = '0'
     let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=');
     let request = new XMLHttpRequest();
     let url = xanoUrl.toString() + eventid + "&Event_Url=" + eventurl;
+
+let dates = []
+let amounts = []
+
     request.open('GET', url, true)
     request.onload = function() {
     let data = JSON.parse(this.response)
@@ -468,8 +472,15 @@ document.querySelector('#isfocus').textContent = '0'
     $('#fetchbutton').css({pointerEvents: "auto"})
     $('#refreshstub').css({pointerEvents: "auto"})
 
+
+        
+        
     const cardContainer = document.getElementById("Cards-Container3")
     data.forEach(events => {
+        
+amounts.push(events.quantity)
+dates.push(moment.unix(events.timestamp).format("MM/DD/YYYY hh:mm"))
+
     const style = document.getElementById('samplestyle3')
     const card = style.cloneNode(true)
     card.setAttribute('id', '');
@@ -491,7 +502,11 @@ document.querySelector('#isfocus').textContent = '0'
     const eventdate = card.getElementsByClassName('main-text-date3')[0]
     eventdate.textContent = moment.unix(events.timestamp).format("MM/DD/YYYY hh:mm");
     cardContainer.appendChild(card);
-    })}}
+    })}
+chart.data.datasets[0].data = amounts
+chart.config.data.labels = dates
+chart.update();
+}
     request.send();
     }}})
     })
