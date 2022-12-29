@@ -207,6 +207,30 @@ if(dticket.includes('.')){
 const savepricebutton = card.getElementsByClassName('save-price-button')[0]   
 
 
+
+const getchartvs = async function(){
+let datesvs = []
+let amountsvs = []
+
+let currentid = document.querySelector('#selectedevent').getAttribute('eventid')
+let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id='+currentid
+
+let response = await fetch(getevent);
+let commits = await response.json()
+
+for(var i = 0; i < commits.length; i++){
+amountsvs.push(commits[i].ticket_count)
+datesvs.push(commits[i].date_scraped)
+
+chartvs.data.datasets[0].data = amountsvs
+chartvs.config.data.labels = datesvs
+chartvs.update();
+
+}}
+
+card.addEventListener('click', getchartvs)
+
+
 eventprice.addEventListener("keypress", (event) => {
 
 if( (event.keyCode === 13) && (eventprice.readOnly == false) ) {
