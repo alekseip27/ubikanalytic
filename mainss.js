@@ -90,8 +90,8 @@ Webflow.push(function() {
         let dates_sd = []
         let amounts_sd = []
         
-        let eventid = document.querySelector('#shub').getAttribute('url').slice(-10,-1)
-        let eventurl = document.querySelector('#shub').getAttribute('url')
+        let eventid = events.stubhubEventUrl.slice(-10,-1)
+        let eventurl = events.stubhubEventUrl
         let getevent = ('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=') +  eventid + "&Event_Url=" + eventurl;
         
         let response = await fetch(getevent);
@@ -250,8 +250,8 @@ if(dticket.includes('.')){
         
 const savepricebutton = card.getElementsByClassName('save-price-button')[0]   
 
-
-
+ 
+ 
 
 
 eventprice.addEventListener("keypress", (event) => {
@@ -313,7 +313,7 @@ document.querySelector('#isfocus').textContent = '0'
 
     const eventnotes = card.getElementsByClassName('main-text-notes')[0]
     eventnotes.textContent = events.notes
-    
+ 
     var startDate = moment(events.lastPriceUpdate.slice(0,10), "YYYY/DD/MM");
     
     var currenDate = moment(new Date()).format("YYYY-DD-MM");
