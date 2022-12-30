@@ -84,6 +84,29 @@ Webflow.push(function() {
     const eventcost = card.getElementsByClassName('main-text-cost')[0]
     eventcost.textContent = '$' + events.cost
     
+
+
+    const getchartsd = async function(){
+        let dates_sd = []
+        let amounts_sd = []
+        
+        let eventid = document.querySelector('#shub').getAttribute('url').slice(-10,-1)
+        let eventurl = document.querySelector('#shub').getAttribute('url')
+        let getevent = ('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=') +  eventid + "&Event_Url=" + eventurl;
+        
+        let response = await fetch(getevent);
+        let commits = await response.json()
+        for(var i = 0; i < commits.length; i++){
+        amounts_sd.push(commits[i].quantity)
+        dates_sd.push(moment.unix(commits[i].timestamp).format("MM/DD/YYYY hh:mm"))    
+    
+        chart.data.datasets[0].data = amounts_sd
+        chart.config.data.labels = dates_sd
+        chart.update();
+        
+        }}
+                
+        
 const getchartvs = async function(){
 let datesvs = []
 let amountsvs = []
@@ -108,6 +131,7 @@ chartvs.update();
     card.addEventListener('click', function() {
 
 getchartvs()
+getchartsd()
 
 
     $('.event-box.pricing').css({pointerEvents: "none"})
@@ -459,43 +483,6 @@ document.querySelector('#isfocus').textContent = '0'
     }, 100);
     }
 
-    
-    $('#fetchbutton').click(function () {
-    $('#fetchbutton').css({pointerEvents: "none"})
-    $('#refreshstub').css({pointerEvents: "none"})
-    let stid = document.querySelector('#shub').getAttribute('url').slice(-10,-1)
-    if(stid !== 'null') {
-    {
-    let eventid = document.querySelector('#shub').getAttribute('url').slice(-10,-1)
-    let eventurl = document.querySelector('#shub').getAttribute('url')
-    let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=');
-    let request = new XMLHttpRequest();
-    let url = xanoUrl.toString() + eventid + "&Event_Url=" + eventurl;
-
-let dates = []
-let amounts = []
-
-    request.open('GET', url, true)
-    request.onload = function() {
-    let data = JSON.parse(this.response)
-    if((request.status === 429) || (request.status === 500)){
-    alert('API request rate limit reached, please try again later.')
-    } else if (request.status >= 200 && request.status < 400) {
-    $('#fetchbutton').css({pointerEvents: "auto"})
-    $('#refreshstub').css({pointerEvents: "auto"})
-        
-    data.forEach(events => {
-        
-amounts.push(events.quantity)
-dates.push(moment.unix(events.timestamp).format("MM/DD/YYYY hh:mm"))
-       
-    })}
-chart.data.datasets[0].data = amounts
-chart.config.data.labels = dates
-chart.update();
-}
-    request.send();
-    }}})
     })
 
 
