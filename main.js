@@ -116,10 +116,6 @@ getchartvs()
     $(this).closest('div').find(".main-field-price").prop("readonly", true);
     document.querySelector('#eventlastfetchedtime').textContent = ''
     document.querySelector('#fwicon5').textContent = ''
-    $('.event-box-4').hide()
-    $('#samplestyle4').show()
-    $('.event-box-5').hide()
-    $('#samplestyle5').show()
     $('.event-box-pricing').hide()
     $('#samplestyle2').show()
     $(".event-box").removeClass("selected");
@@ -462,16 +458,7 @@ document.querySelector('#isfocus').textContent = '0'
     
     }, 100);
     }
-    
-    {
-    var intervalId = window.setInterval(function(){
-    let boxes = document.querySelectorAll('.event-box-2')
-    for (let i = 0; i<boxes.length;i++) {
-    if(boxes[i].style.display == 'none' && boxes[i].id !== 'samplestyle3') {
-    boxes[i].remove()  
-    }}
-    }, 100);
-    }
+
     
     $('#fetchbutton').click(function () {
     $('#fetchbutton').css({pointerEvents: "none"})
@@ -481,8 +468,6 @@ document.querySelector('#isfocus').textContent = '0'
     {
     let eventid = document.querySelector('#shub').getAttribute('url').slice(-10,-1)
     let eventurl = document.querySelector('#shub').getAttribute('url')
-    $('.event-box-2').hide()
-    $('#samplestyle3').show()
     let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=');
     let request = new XMLHttpRequest();
     let url = xanoUrl.toString() + eventid + "&Event_Url=" + eventurl;
@@ -498,37 +483,12 @@ let amounts = []
     } else if (request.status >= 200 && request.status < 400) {
     $('#fetchbutton').css({pointerEvents: "auto"})
     $('#refreshstub').css({pointerEvents: "auto"})
-
-
         
-        
-    const cardContainer = document.getElementById("Cards-Container3")
     data.forEach(events => {
         
 amounts.push(events.quantity)
 dates.push(moment.unix(events.timestamp).format("MM/DD/YYYY hh:mm"))
-
-    const style = document.getElementById('samplestyle3')
-    const card = style.cloneNode(true)
-    card.setAttribute('id', '');
-    const eventsection = card.getElementsByClassName('main-text-section3')[0]
-    eventsection.textContent = events.section
-    if(eventsection.textContent.length>15) {
-    eventsection.textContent = events.section.slice(0, 15)+'...'
-    }
-    const eventrow = card.getElementsByClassName('main-text-row3')[0]
-    eventrow.textContent = events.row
-    const eventqty = card.getElementsByClassName('main-text-qty3')[0]
-    eventqty.textContent = events.quantity
-
        
-    const eventprice = card.getElementsByClassName('main-text-price3')[0]
-    eventprice.textContent = '$' + events.price
-
-
-    const eventdate = card.getElementsByClassName('main-text-date3')[0]
-    eventdate.textContent = moment.unix(events.timestamp).format("MM/DD/YYYY hh:mm");
-    cardContainer.appendChild(card);
     })}
 chart.data.datasets[0].data = amounts
 chart.config.data.labels = dates
