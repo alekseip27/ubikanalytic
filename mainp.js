@@ -60,7 +60,7 @@ Webflow.push(function() {
     quantityseatdata + Number(events.quantity)
     const style = document.getElementById('samplestyle')
     const card = style.cloneNode(true)
-    card.setAttribute('id', '');
+    card.setAttribute('id', events.id);
     card.setAttribute('date', events.date.slice(0,10))
     const eventname = card.getElementsByClassName('main-text-event')[0]
     eventname.textContent = events.name
@@ -111,7 +111,7 @@ const getchartvs = async function(){
 let datesvs = []
 let amountsvs = []
 
-let currentid = events.id
+let currentid = card.getAttribute('id')
 let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id='+currentid
 
 let response = await fetch(getevent);
