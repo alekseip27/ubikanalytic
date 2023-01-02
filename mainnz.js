@@ -111,7 +111,7 @@ const getchartvs = async function(){
 let datesvs = []
 let amountsvs = []
 
-let currentid = document.querySelector('#selectedevent').getAttribute('eventid')
+let currentid = events.id
 let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id='+currentid
 
 let response = await fetch(getevent);
