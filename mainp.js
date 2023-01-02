@@ -86,64 +86,47 @@ Webflow.push(function() {
     
 
 
-const getchartsd = async function() {
-  const dates_sd = []
-  const amounts_sd = []
-  
-  const eventid = events.stubhubEventUrl.slice(-10,-1)
-  const eventurl = events.stubhubEventUrl
-  const getevent = `https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=${eventid}&Event_Url=${eventurl}`
-  
-  const response = await fetch(getevent)
-  const commits = await response.json()
-  amounts_sd = commits.map(commit => commit.quantity)
-  dates_sd = commits.map(commit => moment.unix(commit.timestamp).format("MM/DD/YYYY hh:mm"))
-  
-  updateChart(amounts_sd, dates_sd)
-}
-
-function updateChart(amounts_sd, dates_sd) {
-  chart.data.datasets[0].data = amounts_sd
-  chart.config.data.labels = dates_sd
-  chart.update()
-}
-
+    const getchartsd = async function(){
+        let dates_sd = []
+        let amounts_sd = []
+        
+        let eventid = events.stubhubEventUrl.slice(-10,-1)
+        let eventurl = events.stubhubEventUrl
+        let getevent = ('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=') +  eventid + "&Event_Url=" + eventurl;
+        
+        let response = await fetch(getevent);
+        let commits = await response.json()
+        for(var i = 0; i < commits.length; i++){
+        amounts_sd.push(commits[i].quantity)
+        dates_sd.push(moment.unix(commits[i].timestamp).format("MM/DD/YYYY hh:mm"))    
+    
+        chart.data.datasets[0].data = amounts_sd
+        chart.config.data.labels = dates_sd
+        chart.update();
+        
+        }}
                 
         
-const getchartvs = async function() {
-  const datesvs = [];
-  const amountsvs = [];
+const getchartvs = async function(){
+let datesvs = []
+let amountsvs = []
 
-  const currentid = card.getAttribute('id');
-  const getevent = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id=${currentid}`;
+let currentid = card.getAttribute('id')
+let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id='+currentid
 
-  try {
-    const response = await fetch(getevent);
-    if (!response.ok) {
-      throw new Error(response.statusText);
-    }
-    const commits = await response.json();
-    if (commits.length === 0) {
-      throw new Error('No data found');
-    }
-    commits.forEach((commit) => {
-      if (commit.ticket_count > 0) {
-        amountsvs.push(commit.ticket_count);
-        datesvs.push(commit.date_scraped);
-      }
-    });
-    updateChart(datesvs, amountsvs);
-  } catch (error) {
-    console.error(error);
-  }
-};
+let response = await fetch(getevent);
+let commits = await response.json()
 
-function updateChart(labels, data) {
-  chartvs.data.datasets[0].data = data;
-  chartvs.config.data.labels = labels;
-  chartvs.update();
-}
+for(var i = 0; i < commits.length; i++){
+if(commits[i].ticket_count>0){
+amountsvs.push(commits[i].ticket_count)
+datesvs.push(commits[i].date_scraped)
 
+chartvs.data.datasets[0].data = amountsvs
+chartvs.config.data.labels = datesvs
+chartvs.update();
+
+}}}
         
         
     card.addEventListener('click', function() {
