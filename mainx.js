@@ -98,13 +98,25 @@ Webflow.push(function() {
         let response = await fetch(getevent);
         let commits = await response.json()
 
-        for (let commit of commits) {
-            amounts_sd.push(commit.quantity)
-            dates_sd.push(moment.unix(commit.timestamp).format("MM/DD/YYYY hh:mm"))
-            
-            chart.data.datasets[0].data = amounts_sd
-            chart.config.data.labels = dates_sd
-            chart.update();
+let dates_sd = []
+let amounts_sd = []
+
+// ...
+
+for (let commit of commits) {
+    amounts_sd.push(commit.quantity)
+    dates_sd.push(moment.unix(commit.timestamp).format("MM/DD/YYYY hh:mm"))
+}
+
+// Sort the dates in ascending order
+dates_sd.sort((a, b) => {
+    return new Date(a) - new Date(b);
+});
+
+chart.data.datasets[0].data = amounts_sd
+chart.config.data.labels = dates_sd
+chart.update();
+
         }
     }
     
