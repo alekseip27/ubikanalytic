@@ -99,8 +99,8 @@ Webflow.push(function() {
     let commits = await response.json()
     
 for (let commit of commits) {
-amounts_sd.push(commit.quantity)
-dates_sd.push(moment.unix(commit.timestamp).format("MM/DD/YYYY hh:mm"))
+    amounts_sd.push(Math.round(commit.quantity))
+    dates_sd.push(moment.unix(commit.timestamp).format("MM/DD/YYYY hh:mm"))
 }
 
 // Sort the dates in ascending order
@@ -126,7 +126,7 @@ let commits = await response.json()
 
 for(var i = 0; i < commits.length; i++){
 if(commits[i].ticket_count>0){
-amountsvs.push(commits[i].ticket_count)
+amountsvs.push(Math.round(commits[i].ticket_count))
 datesvs.push(commits[i].date_scraped)
 
 chartvs.data.datasets[0].data = amountsvs
