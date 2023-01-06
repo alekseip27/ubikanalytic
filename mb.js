@@ -149,6 +149,11 @@ let pc = document.querySelector('#purchaseconfirmation').value
 let pem = document.querySelector('#purchaseemail').value
 let purchasedby = document.querySelector('#username').textContent
 
+let bght = Number(document.querySelector('#purchasealltime').textContent)
+let cram = Number(document.querySelector('#purchasequantity').value)
+let nallt = bght+cram
+
+
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-manual?id=')[1]
 var http = new XMLHttpRequest();
 var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/buy_event_manual";
@@ -161,7 +166,7 @@ var params = JSON.stringify(
 "Event_Time": eventtime,
 "Event_Venue": eventvenue,
 "Purchase_Date": purchasedate,
-"Purchase_Quantity": currentam,
+"Purchase_Quantity": cram,
 "Purchase_Quantity_Alltime": nallt,
 "Confirmation": pc,
 "Purchase_Email": pem,
