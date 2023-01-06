@@ -217,7 +217,7 @@ let bought = Number(document.querySelector('#amountbought1').textContent)
 let cpr = Number(document.querySelector('#purchasequantity').value)
 let combined = bought+cpr
 let alltime = Number(document.querySelector('#purchasealltime').textContent)
-let allt = alltime+bought
+let allt = alltime+cpr
 let limit = Number(document.querySelector('#amountbought2').textContent)
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
@@ -295,6 +295,11 @@ let purchasedby = document.querySelector('#username').textContent
 let psrc = document.querySelector('#purchasesource').textContent
 let bought = Number(document.querySelector('#amountbought1').textContent)
 let cpur = Number(document.querySelector('#purchasequantity').value)
+
+let alltime = Number(document.querySelector('#purchasealltime').textContent)
+
+let altm = alltime + cpur
+
 let combined = bought+cpur
 
 let purchurgency = document.querySelector('#purchasefrequency').textContent
@@ -315,7 +320,7 @@ var params = JSON.stringify(
 "Purchase_Source": psrc,
 "Purchase_Quantity": pq,
 "Purchase_Quantity_Total": maxamount,
-"Purchase_Quantity_Alltime": combined,
+"Purchase_Quantity_Alltime": altm,
 "Purchase_Account": pa,
 "Confirmation": pc,
 "Purchase_Email": pem,
