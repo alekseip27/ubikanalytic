@@ -109,45 +109,26 @@ emailstats()
 accountstats()
 }, 2000);
 {
-let bought = Number(document.querySelector('#amountbought1').textContent)
-let cpr = Number(document.querySelector('#purchasequantity').value)
-let combined = bought+cpr
-let alltime = Number(document.querySelector('#purchasealltime').textContent)
 
-let allt = bought+cpr+alltime
-
-let limit = Number(document.querySelector('#amountbought2').textContent)
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-manual?id=')[1]
-
-
-let bought2 = Number(document.querySelector('#amountbought1').textContent)
-let currentam2 = Number(document.querySelector('#purchasequantity').value)
-let newalltime2 = bought+currentam2
-
-
-let num1 = Number(document.querySelector('#purchasealltime').textContent)
-let num2 = Number(document.querySelector('#purchasequantity').value)
-
-let alltogether = num1+num2
-
+let bght = Number(document.querySelector('#purchasealltime').textContent)
+let cram = Number(document.querySelector('#purchasequantity').value)
+let nallt = bght+cram
 
 var http = new XMLHttpRequest();
 var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/update_event_second_manual";
-if(combined>=limit) {
+
 var params = JSON.stringify(
 {
 "search-key": eventid,
-"Purchased_Amount_Alltime": alltogether,
+"Purchased_Amount_Alltime": nallt,
 "Delivery_Method_Selected": deliveryselected
 })
 http.open("PUT", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
 http.send(params);
-}}
-  
-  
-let purchaseacc = document.querySelector('#purchaseemail').value
-let maxamount = document.querySelector('#amountbought2').textContent
+}
+   
 let eventname = document.querySelector('#event').textContent
 let eventdate = document.querySelector('#date').textContent
 let eventtime = document.querySelector('#time').textContent
@@ -164,35 +145,9 @@ hour: '2-digit',
 minute: '2-digit',
 })
 
-let date2 = 
-date.toLocaleString('en-GB', {
-timeZone: 'America/New_York',
-year: 'numeric',
-month: '2-digit',
-day: '2-digit',
-hour: '2-digit',
-minute: '2-digit',
-second: '2-digit'
-})
-let purchrequest = document.querySelector('#purchaserequest').textContent
-let then = moment(purchrequest,"MM/DD/YYYY HH:mm:ss")
-let now = moment(date2,"DD/MM/YYYY HH:mm:ss")
-
-var mss = moment(now).diff(moment(then));
-var dd = moment.duration(mss);
-  
-let pq = document.querySelector('#purchasequantity').value
-let pa = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase();
 let pc = document.querySelector('#purchaseconfirmation').value
 let pem = document.querySelector('#purchaseemail').value
 let purchasedby = document.querySelector('#username').textContent
-let psrc = document.querySelector('#purchasesource').textContent
-
-let bought = Number(document.querySelector('#amountbought1').textContent)
-let currentam = Number(document.querySelector('#purchasequantity').value)
-let newalltime = bought+currentam
-
-let purchurgency = document.querySelector('#purchasefrequency').textContent
 
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-manual?id=')[1]
 var http = new XMLHttpRequest();
@@ -207,7 +162,7 @@ var params = JSON.stringify(
 "Event_Venue": eventvenue,
 "Purchase_Date": purchasedate,
 "Purchase_Quantity": currentam,
-"Purchase_Quantity_Alltime": newalltime,
+"Purchase_Quantity_Alltime": nallt,
 "Confirmation": pc,
 "Purchase_Email": pem,
 "Purchased_By": purchasedby
