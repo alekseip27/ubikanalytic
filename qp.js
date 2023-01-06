@@ -21,14 +21,12 @@ Webflow.push(function() {
     document.querySelector('#eventlocation').textContent = ''
     document.querySelector('#shub').setAttribute('url', '');
     document.querySelector('#vseats').setAttribute('url', '');
-    document.querySelector('#eventlastfetchedtime').textContent = ''
     document.querySelector('#fwicon1').textContent = ''
     document.querySelector('#fwicon2').textContent = ''
     document.querySelector('#fwicon3').textContent = ''
     document.querySelector('#fwicon4').textContent = ''
     document.querySelector('#fwicon5').textContent = ''
     document.querySelector('#selectedevent').setAttribute('lastfetched','')
-    document.querySelector('#eventlastfetchedtime').textContent = ''
     document.querySelector('#fwicon5').textContent = ''
     let curUser = firebase.auth().currentUser;
     let myFS = firebase.firestore();
@@ -146,7 +144,6 @@ getchartsd()
     $('#mainpricing').hide()
     $('#loadingpricing').css("display", "flex");
     $(this).closest('div').find(".main-field-price").prop("readonly", true);
-    document.querySelector('#eventlastfetchedtime').textContent = ''
     document.querySelector('#fwicon5').textContent = ''
     $('.event-box-pricing').hide()
     $('#samplestyle2').show()
