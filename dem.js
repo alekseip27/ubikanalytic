@@ -103,14 +103,15 @@ for (let commit of commits) {
     dates_sd.push(moment.unix(commit.timestamp).format("MM/DD/YYYY hh:mm"))
 }
 
-/*
-dates_sd.sort((a, b) => {
-return new Date(a) - new Date(b);
-*/
 
-chart.data.datasets[0].data = amounts_sd
-chart.data.datasets[1].data = prices_sd
-chart.config.data.labels = dates_sd
+
+const sortedLabels = dates_sd.map(e => e.label);
+const sortedamounts = amounts_sd.map(e => e.data);
+const sortedprices = prices_sd.map(e => e.data);
+
+chart.data.datasets[0].data = sortedamounts
+chart.data.datasets[1].data = sortedprices
+chart.config.data.labels = sortedLabels
 chart.update();
 
     }
