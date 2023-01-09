@@ -99,6 +99,7 @@ Webflow.push(function() {
     
 for (let commit of commits) {
     amounts_sd.push(commit.quantity)
+    prices_sd.push(commit.price)
     dates_sd.push(moment.unix(commit.timestamp).format("MM/DD/YYYY hh:mm"))
 }
 
@@ -108,6 +109,7 @@ return new Date(a) - new Date(b);
 });
 
 chart.data.datasets[0].data = amounts_sd
+chart.data.datasets[1].data = prices_sd
 chart.config.data.labels = dates_sd
 chart.update();
 
