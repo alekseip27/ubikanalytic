@@ -88,6 +88,7 @@ Webflow.push(function() {
  const getchartsd = async function(){
     let dates_sd = []
     let amounts_sd = []
+    let prices_sd = []
     
     let eventid = events.stubhubEventUrl.slice(-10,-1)
     let eventurl = events.stubhubEventUrl
@@ -97,6 +98,7 @@ Webflow.push(function() {
     let commits = await response.json()
     
 for (let commit of commits) {
+    prices_sd.push(commit.price)
     amounts_sd.push(commit.quantity)
     dates_sd.push(moment.unix(commit.timestamp).format("MM/DD/YYYY hh:mm"))
 }
@@ -107,6 +109,7 @@ return new Date(a) - new Date(b);
 });
 
 chart.data.datasets[0].data = amounts_sd
+chart.data.datasets[1].data = prices_sd
 chart.config.data.labels = dates_sd
 chart.update();
 
