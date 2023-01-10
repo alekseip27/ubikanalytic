@@ -89,8 +89,8 @@ Webflow.push(function() {
     let amounts_sd = []
     let prices_sd = []
     
-    let eventid = '150597262'
-    let eventurl = 'https://www.stubhub.com/frisky-cowboys-quebec-tickets-1-14-2023/event/150597262/'
+    let eventid = events.stubhubEventUrl.slice(-10,-1)
+    let eventurl = events.stubhubEventUrl
     let getevent = ('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=') +  eventid + "&Event_Url=" + eventurl;
     
     let response = await fetch(getevent);
