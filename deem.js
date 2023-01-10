@@ -84,7 +84,6 @@ Webflow.push(function() {
     
 
                 
-
  const getchartsd = async function(){
     let dates_sd = []
     let amounts_sd = []
@@ -95,7 +94,7 @@ Webflow.push(function() {
     let getevent = ('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=') +  eventid + "&Event_Url=" + eventurl;
     
     let response = await fetch(getevent);
-    let commits = await response.json()
+    let commits = await response.json().reverse
     
 for (let commit of commits) {
     amounts_sd.push(commit.quantity)
@@ -105,13 +104,14 @@ for (let commit of commits) {
 
 
 
-chart.data.datasets[0].data = amounts_sd.reverse()
-chart.data.datasets[1].data = prices_sd.reverse()
-chart.config.data.labels = dates_sd.reverse()
+chart.data.datasets[0].data = amounts_sd
+chart.data.datasets[1].data = prices_sd
+chart.config.data.labels = dates_sd
 chart.update();
 
     }
-    
+ 
+ 
 const getchartvs = async function(){
 let datesvs = []
 let amountsvs = []
