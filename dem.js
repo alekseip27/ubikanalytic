@@ -105,9 +105,9 @@ for (let commit of commits) {
 
 
 
-chart.data.datasets[0].data = amounts_sd
-chart.data.datasets[1].data = prices_sd
-chart.config.data.labels = dates_sd
+chart.data.datasets[0].data = amounts_sd.reverse()
+chart.data.datasets[1].data = prices_sd.reverse()
+chart.config.data.labels = dates_sd.reverse()
 chart.update();
 
     }
