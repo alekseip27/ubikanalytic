@@ -105,8 +105,8 @@ for (let commit of commits) {
 
 
 
-chart.data.datasets[0].data = amounts_sd.map(amounts_sd.pop,[...amounts_sd])
-chart.data.datasets[1].data = prices_sd.map(prices_sd.pop,[...prices_sd]) 
+chart.data.datasets[1].data = amounts_sd.map(amounts_sd.pop,[...amounts_sd])
+chart.data.datasets[0].data = prices_sd.map(prices_sd.pop,[...prices_sd]) 
 chart.config.data.labels =  dates_sd.map(dates_sd.pop,[...dates_sd]) 
 chart.update();
 
