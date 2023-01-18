@@ -96,7 +96,7 @@ Webflow.push(function() {
     let response = await fetch(getevent);
     let commits = await response.json()
     
-for (let commit of commits) {
+for (let committ of commits) {
     amounts_sd.push(commit.quantity)
     prices_sd.push(commit.price)
     dates_sd.push(moment.unix(commit.timestamp).format("MM/DD/YYYY hh:mm"))
@@ -139,24 +139,24 @@ let preferredsections = []
   let response = await fetch(getevent);
   let commitss = await response.json()
 
-for (let commit of commitss.vs1) {
+for (let committ of commitss.vs1) {
 if(committ.length>0){
-  preferredsections.push(commit)
+  preferredsections.push(committ)
 }}
 
-for (let commit of commitss.vs2) {
+for (let committ of commitss.vs2) {
 if(committ.length>0){
-  preferredsections.push(commit)
+  preferredsections.push(committ)
 }}
 
-for (let commit of commitss.vs3) {
+for (let committ of commitss.vs3) {
 if(committ.length>0){
-  preferredsections.push(commit)
+  preferredsections.push(committ)
 }}
 
-for (let commit of commitss.vs4) {
+for (let committ of commitss.vs4) {
 if(committ.length>0){
-  preferredsections.push(commit)
+  preferredsections.push(committ)
 }}
     
 for (let committ of commitss.vs5) {
