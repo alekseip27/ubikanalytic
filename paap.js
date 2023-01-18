@@ -96,7 +96,7 @@ Webflow.push(function() {
     let response = await fetch(getevent);
     let commits = await response.json()
     
-for (let committ of commits) {
+for (let commit of commits) {
     amounts_sd.push(commit.quantity)
     prices_sd.push(commit.price)
     dates_sd.push(moment.unix(commit.timestamp).format("MM/DD/YYYY hh:mm"))
