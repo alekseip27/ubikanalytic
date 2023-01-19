@@ -132,9 +132,9 @@ chart.update();
 
 }}
   
-chartvs.data.datasets[0].data = amountsvs
-chartvs.data.datasets[1].data = prefvs
-chartvs.config.data.labels = datesvs
+chartvs.data.datasets[0].data = amountsvs.map(amountsvs.pop,[...amountsvs]) 
+chartvs.data.datasets[1].data = prefvs.map(prefvs.pop,[...prefvs]) 
+chartvs.config.data.labels = datesvs.map(datesvs.pop,[...datesvs]) 
 chartvs.update();
 
 }
