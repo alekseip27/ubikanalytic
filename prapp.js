@@ -113,8 +113,7 @@ chart.update();
     }
  
  
-        
-const getchartvs = async function(){
+        const getchartvs = async function(){
   let datesvs = []
   let amountsvs = []
   let prefvs = []
@@ -128,57 +127,10 @@ const getchartvs = async function(){
   for(var i = 0; i < commits.length; i++){
   if(commits[i].ticket_count>0){
   amountsvs.push(Math.round(commits[i].ticket_count))
+  prefvs.push(Math.round(commits[i].preferred_count))
   datesvs.push(commits[i].date_scraped)
-  
-let curpref = commits[i].sections
-
-let preferredsections = []
-
-  let venueid = events.venue.id
-  let getevent = ('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/pref_sections?venueid=') +  venueid 
-  let response = await fetch(getevent);
-  let commitss = await response.json()
-
-for (let committ of commitss.vs1) {
-if(committ.length>0){
-  preferredsections.push(committ)
-}}
-
-for (let committ of commitss.vs2) {
-if(committ.length>0){
-  preferredsections.push(committ)
-}}
-
-for (let committ of commitss.vs3) {
-if(committ.length>0){
-  preferredsections.push(committ)
-}}
-
-for (let committ of commitss.vs4) {
-if(committ.length>0){
-  preferredsections.push(committ)
-}}
-    
-for (let committ of commitss.vs5) {
-if(committ.length>0){
-  preferredsections.push(committ)
-}}
-
-let prefs = [...new Set(preferredsections)];
-
-prefcount = 0
-
-for (let curp of curpref) {
-if(prefs.includes(curp)){
-prefcount++
-}}
-
-
-prefvs.push(prefcount)
-
 
 }}
-
   
 chartvs.data.datasets[0].data = amountsvs
 chartvs.data.datasets[1].data = prefvs
@@ -187,8 +139,6 @@ chartvs.update();
 
 }
 
-        
-        
     card.addEventListener('click', function() {
 
 getchartvs()
