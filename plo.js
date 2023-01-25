@@ -452,7 +452,7 @@ document.querySelector('#isfocus').textContent = '0'
   
     {
     $('#shub').click(function () {
-    let url = document.querySelector('#shub').getAttribute('url') + '?quantity=2';
+    let url = document.querySelector('#shub').getAttribute('url') + '?quantity=0';
     if(url !== 'null') {
     window.open(url,'shub')
     $('#shub').css('cursor', 'pointer');
