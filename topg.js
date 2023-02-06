@@ -49,11 +49,19 @@ const authChanged = firebase.auth().onAuthStateChanged((user) => {
         let buyer = data["buyer"];
         let entry = data["entry"];
         let orderh = data["orderhistory"]
+        let marcus = data['marcus']
 
-if(!email.includes('@ubikanalytic.com')){
+if(!email.includes('@ubikanalytic.com') ){
 auth.signOut();
 location.href = '/login'
 }
+        
+        
+if(marcus === true){
+document.querySelector('#eventsdropdown').style.display = 'flex'
+document.querySelector('#eventsm').style.display = 'flex'
+}
+        
         
 firebase.firestore().doc("users/" + firebase.auth().currentUser.uid).set({ Timestamp: timestamp }, { merge: true });
 
