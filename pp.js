@@ -116,7 +116,7 @@ chart.update();
         const getchartvs = async function(){
   let datesvs = []
   let amountsvs = []
-//  let prefvs = []
+  let prefvs = []
 
   let currentid = card.getAttribute('id')
   let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id='+currentid
@@ -127,13 +127,13 @@ chart.update();
   for(var i = 0; i < commits.length; i++){
   if(commits[i].ticket_count>0){
   amountsvs.push(Math.round(commits[i].ticket_count))
- // prefvs.push(Math.round(commits[i].preferred_count))
+  prefvs.push(Math.round(commits[i].preferred_count))
   datesvs.push(commits[i].date_scraped)
 
 }}
   
 chartvs.data.datasets[0].data = amountsvs
-//chartvs.data.datasets[1].data = prefvs
+chartvs.data.datasets[1].data = prefvs
 chartvs.config.data.labels = datesvs
 chartvs.update();
 
