@@ -246,7 +246,7 @@ eventprice.value = (eventprice.value/85 * 100).toFixed(2)
       
 const lowerablecheckbox = card.getElementsByClassName('main-checkbox-lowerprice')[0]  
 lowerablecheckbox.addEventListener('change',function(){
-console.log(lowerablecheckbox.parentElement.id)
+console.log(lowerablecheckbox.parentElement)
 })
         
         
