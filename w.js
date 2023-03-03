@@ -244,14 +244,21 @@ eventprice.value = (eventprice.value/85 * 100).toFixed(2)
 }
 
       
-
-    const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
-    let dticket = String((events.cost/events.quantity))
+const lowerablecheckbox = card.getElementsByClassName('main-checkbox-lowerprice')[0]  
+lowerablecheckbox.addEventListener('change',function(){
+lowerablecheckbox.parentElement.id
+})
+        
+        
+        
+        
+const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
+let dticket = String((events.cost/events.quantity))
 
 if(dticket.includes('.')){
-    let pti = dticket.split(".");
+let pti = dticket.split(".");
 
-    let ptix = pti[0] + '.' + pti[1].slice(0,2)
+let ptix = pti[0] + '.' + pti[1].slice(0,2)
 
     eventpriceticket.textContent = '$' + ptix
 } else {
