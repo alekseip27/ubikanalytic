@@ -282,7 +282,7 @@ lowerablecheckbox.addEventListener('change', function (event) {
     var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/lowerable?event_id="+event_id+"ticket_id="+ticket_id;
     http.open("PUT", url, true);
     http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-    http.send(params);
+    http.send();
 }
 
 })
