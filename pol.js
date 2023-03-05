@@ -220,7 +220,11 @@ getchartsd()
     eventqty.textContent = events.quantity
     
     const eventprice = card.getElementsByClassName('main-field-price')[0]
+
+    const lowerablecheck = card.getElementsByClassName('main-checkbox-lowerprice')[0]
     
+    lowerablecheck.setAttribute('id', "check"+events.id);
+
     eventprice.value = events.listPrice
 
 //setup before functions
