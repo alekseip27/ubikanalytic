@@ -217,7 +217,7 @@ let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/check_if_lower
 let response = await fetch(getevent);
 let commits = await response.json()
 if(commits === true){
-document.getElementById('#'+events.id).checked = true
+document.getElementById('#check'+events.id).checked = true
 }}
 
 
