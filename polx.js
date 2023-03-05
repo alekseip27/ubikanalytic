@@ -210,7 +210,6 @@ getchartsd()
     const card = style.cloneNode(true)
     card.setAttribute('id', events.id);
 
-    
     const eventid = card.getElementsByClassName('main-text-id')[0]
     eventid.textContent = events.id
     const eventsection = card.getElementsByClassName('main-text-section')[0]
@@ -266,7 +265,7 @@ eventprice.value = (eventprice.value/85 * 100).toFixed(2)
 const lowerablecheckbox = card.getElementsByClassName('main-checkbox-lowerprice')[0]  
 
 lowerablecheckbox.addEventListener('change', function (event) {
-    if (lowerablecheckbox.checked) {
+    if (lowerablecheckbox.checked === true) {
     const ticket_id = lowerablecheckbox.parentNode.parentElement.parentElement.parentElement.id
     const event_id = document.querySelector('#selectedevent').getAttribute('eventid')
     var http = new XMLHttpRequest();
@@ -276,11 +275,11 @@ lowerablecheckbox.addEventListener('change', function (event) {
     http.send();
 }
     
-    else if(lowerablecheckbox.unchecked){
+    else if(lowerablecheckbox.checked === false){
     const ticket_id = lowerablecheckbox.parentNode.parentElement.parentElement.parentElement.id
     const event_id = document.querySelector('#selectedevent').getAttribute('eventid')
     var http = new XMLHttpRequest();
-    var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/lowerable_remove?event_id="+event_id+"ticket_id="+ticket_id;
+    var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/lowerable?event_id="+event_id+"ticket_id="+ticket_id;
     http.open("PUT", url, true);
     http.setRequestHeader("Content-type", "application/json; charset=utf-8");
     http.send(params);
