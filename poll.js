@@ -209,6 +209,24 @@ getchartsd()
     const style = document.getElementById('samplestyle2')
     const card = style.cloneNode(true)
     card.setAttribute('id', events.id);
+
+
+ 
+const checked_check = async function(){
+
+      let currentid = card.getAttribute('id')
+      let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/check_if_lowerable?ticket_id='+events.id
+      
+      let response = await fetch(getevent);
+      let commits = await response.json()
+    
+if(commits === true){
+document.querySelector('#'+events.id).checked = true
+}}
+
+
+checked_check()
+    
     const eventid = card.getElementsByClassName('main-text-id')[0]
     eventid.textContent = events.id
     const eventsection = card.getElementsByClassName('main-text-section')[0]
