@@ -213,15 +213,11 @@ getchartsd()
 
  
 const checked_check = async function(){
-
-      let currentid = card.getAttribute('id')
-      let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/check_if_lowerable?ticket_id='+events.id
-      
-      let response = await fetch(getevent);
-      let commits = await response.json()
-    
+let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/check_if_lowerable?ticket_id='+events.id
+let response = await fetch(getevent);
+let commits = await response.json()
 if(commits === true){
-document.querySelector('#'+events.id).checked = true
+document.getElementById('#'+events.id).checked = true
 }}
 
 
