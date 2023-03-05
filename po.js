@@ -248,8 +248,8 @@ const lowerablecheckbox = card.getElementsByClassName('main-checkbox-lowerprice'
 
 lowerablecheckbox.addEventListener('change', function (event) {
     if (lowerablecheckbox.checked) {
-    const event_id = lowerablecheckbox.parentNode.parentElement.parentElement.parentElement.id   
-    const ticket_id = document.querySelector('#selectedevent').getAttribute('eventid')
+    const ticket_id = lowerablecheckbox.parentNode.parentElement.parentElement.parentElement.id
+    const event_id = document.querySelector('#selectedevent').getAttribute('eventid')
     var http = new XMLHttpRequest();
     var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/lowerable?event_id="+event_id+"&ticket_id="+ticket_id;
     http.open("PUT", url, true);
@@ -258,8 +258,8 @@ lowerablecheckbox.addEventListener('change', function (event) {
 }
     
     else if(lowerablecheckbox.unchecked){
-    var event_id = lowerablecheckbox.parentNode.parentElement.parentElement.parentElement.id
-    const ticket_id = document.querySelector('#selectedevent').getAttribute('eventid')
+    const ticket_id = lowerablecheckbox.parentNode.parentElement.parentElement.parentElement.id
+    const event_id = document.querySelector('#selectedevent').getAttribute('eventid')
     var http = new XMLHttpRequest();
     var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/lowerable_remove?event_id="+event_id+"ticket_id="+ticket_id;
     http.open("PUT", url, true);
