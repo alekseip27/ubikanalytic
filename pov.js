@@ -279,7 +279,7 @@ lowerablecheckbox.addEventListener('change', function (event) {
     const ticket_id = lowerablecheckbox.parentNode.parentElement.parentElement.parentElement.id
     const event_id = document.querySelector('#selectedevent').getAttribute('eventid')
     var http = new XMLHttpRequest();
-    var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/lowerable?event_id="+event_id+"ticket_id="+ticket_id;
+    var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/remove_lowerable?ticket_id="+ticket_id;
     http.open("PUT", url, true);
     http.setRequestHeader("Content-type", "application/json; charset=utf-8");
     http.send();
