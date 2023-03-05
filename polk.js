@@ -210,18 +210,6 @@ getchartsd()
     const card = style.cloneNode(true)
     card.setAttribute('id', events.id);
 
-
- 
-const checked_check = async function(){
-let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/check_if_lowerable?ticket_id='+events.id
-let response = await fetch(getevent);
-let commits = await response.json()
-if(commits === true){
-document.getElementById('#check'+events.id).checked = true
-}}
-
-
-checked_check()
     
     const eventid = card.getElementsByClassName('main-text-id')[0]
     eventid.textContent = events.id
@@ -236,6 +224,19 @@ checked_check()
     const eventprice = card.getElementsByClassName('main-field-price')[0]
 
     const lowerablecheck = card.getElementsByClassName('main-checkbox-lowerprice')[0]
+    
+     
+const checked_check = async function(){
+let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/check_if_lowerable?ticket_id='+events.id
+let response = await fetch(getevent);
+let commits = await response.json()
+if(commits === true){
+lowerablecheck.checked = true
+}}
+
+
+checked_check()
+    
     
     lowerablecheck.setAttribute('id', "check"+events.id);
 
