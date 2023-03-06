@@ -12,6 +12,9 @@ Webflow.push(function() {
     document.getElementById("search-button").click();
     }
     });
+
+
+
     document.querySelector('#search-button').addEventListener("click", () => {
     $('#search-button').css({pointerEvents: "none"})
     let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
@@ -39,9 +42,9 @@ Webflow.push(function() {
     const dt = new Date();
     let stimestamp2 = moment(dt).format('YYYY-MM-DD')
 
+    if(datas['Email'] === 'aleksei@ubikanalytic' || datas['Email'] === 'tim@ubikanalytic.com'){
     xanoUrls = new URL('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_events?searchkey=');
     urlz = xanoUrls.toString() + keywords1.replaceAll("'", "''") + '&curdate=' + stimestamp2
-    if(datas['Email'] === 'aleksei@ubikanalytic' || datas['Email'] === 'tim@ubikanalytic.com'){
     } else {
     xanoUrls = new URL('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/get_events_by_id');
     urlz = xanoUrls.toString()
