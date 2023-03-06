@@ -187,7 +187,6 @@ getchartsd()
     document.querySelector('#eventdate').textContent = events.date.slice(0,10)
     document.querySelector('#eventtime').textContent = events.date.slice(11, 16)
     document.querySelector('#eventlocation').textContent = events.venue.city + ", " + events.venue.state
-    document.querySelector('#selectedevent').setAttribute('eventid', events.id)
     document.querySelector('#shub').setAttribute('url', events.stubhubEventUrl);
     document.querySelector('#vseats').setAttribute('url', events.vividSeatsEventUrl);
 
@@ -199,7 +198,7 @@ getchartsd()
         
     {
 
-    let eventid = card.getAttribute('eventid')
+    let eventid = document.querySelector('#selectedevent').getAttribute('eventid')
  
     $('.event-box-2').hide()
   
