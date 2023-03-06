@@ -199,8 +199,8 @@ getchartsd()
         
     {
 
-    let eventid = document.querySelector('#selectedevent').getAttribute('eventid');
-    
+    let eventid = card.getAttribute('eventid')
+ 
     $('.event-box-2').hide()
   
     let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_inventory?searchkey=');
