@@ -64,6 +64,7 @@ Webflow.push(function() {
     card.setAttribute('id', events.Id)
     } else {
     card.setAttribute('id', events.id);
+    document.querySelector('#lowerbox').style.display = 'none'
     }
         
         
@@ -253,7 +254,7 @@ checked_check()
    
     if(datas['Email'] !== 'aleksei@ubikanalytic' || datas['Email'] !== 'tim@ubikanalytic.com'){
     lowerablecheck.style.display = 'none'
-    document.querySelector('#lowerbox').style.display = 'none'
+    document.querySelector('#lowerabletext').style.display = 'none'
     }
     
     lowerablecheck.setAttribute('id', "check"+events.id);
