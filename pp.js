@@ -181,7 +181,7 @@ getchartsd()
     }, 500);
 
     if(datas['Email'] === 'aleksei@ubikanalytic' || datas['Email'] === 'tim@ubikanalytic.com'){
-    document.querySelector('#selectedevent').setAttribute('eventid', events.Id)
+    document.querySelector('#selectedevent').setAttribute('eventid', events.id)
     } else {
     document.querySelector('#selectedevent').setAttribute('eventid', events.Id)
     }
