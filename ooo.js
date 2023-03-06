@@ -214,7 +214,7 @@ getchartsd()
     request.onload = function() {
     let data = JSON.parse(this.response)
     if((request.status === 429) || (request.status === 500)){
-    alert('Something went wrong... Contact the senior engineer philantrophist business man investor and professional problem solver Mike Serrano')
+    alert('Something went wrong... Contact Aleksei')
     } else if (request.status >= 200 && request.status < 400) {
       setTimeout(() => {
     $('.event-box.pricing').css({pointerEvents: "auto"})
@@ -250,7 +250,11 @@ lowerablecheck.checked = true
 
 
 checked_check()
-    
+   
+    if(datas['Email'] !== 'aleksei@ubikanalytic' || datas['Email'] !== 'tim@ubikanalytic.com'){
+    lowerablecheck.style.display = 'none'
+    document.querySelector('#lowerbox').style.display = 'none'
+    }
     
     lowerablecheck.setAttribute('id', "check"+events.id);
 
