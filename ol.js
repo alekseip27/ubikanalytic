@@ -61,10 +61,12 @@ Webflow.push(function() {
     const card = style.cloneNode(true)
     
     if(datas['Email'] === 'aleksei@ubikanalytic' || datas['Email'] === 'tim@ubikanalytic.com'){
-    card.setAttribute('id', events.id)
+    card.setAttribute('id', events.Id)
     } else {
-    card.setAttribute('id', events.Id);
+    card.setAttribute('id', events.id);
     }
+        
+        
     card.setAttribute('date', events.date.slice(0,10))
     const eventname = card.getElementsByClassName('main-text-event')[0]
     eventname.textContent = events.name
