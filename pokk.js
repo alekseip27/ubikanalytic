@@ -196,11 +196,12 @@ getchartsd()
     document.querySelector('#fwicon2').textContent = ''
     document.querySelector('#fwicon3').textContent = ''
     document.querySelector('#fwicon4').textContent = ''
+        
     {
+
     let eventid = document.querySelector('#selectedevent').getAttribute('eventid');
     
     $('.event-box-2').hide()
-  
   
     let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_inventory?searchkey=');
     
