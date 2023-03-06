@@ -33,6 +33,7 @@ Webflow.push(function() {
     let docRef = myFS.doc("users/" + curUser.uid);
     docRef.get().then((docSnap) => {
     let datas = docSnap.data();
+    let usr = datas['Email']
     $(".platform-icon").hide()
     $('.event-box').hide()
     $('#samplestyle').show()
@@ -40,7 +41,7 @@ Webflow.push(function() {
     let stimestamp2 = moment(dt).format('YYYY-MM-DD')
     let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_events?searchkey=');
     let request = new XMLHttpRequest();
-    let url = xanoUrl.toString() + keywords1.replaceAll("'", "''") + '&curdate=' + stimestamp2
+    let url = xanoUrl.toString() + keywords1.replaceAll("'", "''") + '&curdate=' + stimestamp2+'&user='+usr
     let pa = datas['pyeo']
     request.open('GET', url, true)
     request.setRequestHeader("Authorization", pa);
