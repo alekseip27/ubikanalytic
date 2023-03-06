@@ -59,7 +59,12 @@ Webflow.push(function() {
     quantityseatdata + Number(events.quantity)
     const style = document.getElementById('samplestyle')
     const card = style.cloneNode(true)
-    card.setAttribute('id', events.id);
+    
+    if(datas['Email'] === 'aleksei@ubikanalytic' || datas['Email'] === 'tim@ubikanalytic.com'){
+    card.setAttribute('id', events.id)
+    } else {
+    card.setAttribute('id', events.Id);
+    }
     card.setAttribute('date', events.date.slice(0,10))
     const eventname = card.getElementsByClassName('main-text-event')[0]
     eventname.textContent = events.name
