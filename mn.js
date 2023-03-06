@@ -253,10 +253,13 @@ lowerablecheck.checked = true
 
 checked_check()
    
-    if(datas['Email'] !== 'aleksei@ubikanalytic.com' || datas['Email'] !== 'tim@ubikanalytic.com'){
+    if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
+    lowerablecheck.style.display = 'flex'
+    document.querySelector('#lowerabletext').style.display = 'flex'
+    } else {
     lowerablecheck.style.display = 'none'
-    document.querySelector('#lowerabletext').style.display = 'none'
-    }
+    document.querySelector('#lowerabletext').style.display = 'none'    
+}
     
     lowerablecheck.setAttribute('id', "check"+events.id);
 
