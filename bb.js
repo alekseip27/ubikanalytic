@@ -181,10 +181,6 @@ getchartsd()
     }, 500);
 
     document.querySelector('#selectedevent').setAttribute('eventid', events.id)
-        
-    if(datas['Email'] !== 'aleksei@ubikanalytic' || datas['Email'] !== 'tim@ubikanalytic.com'){
-    document.querySelector('#selectedevent').setAttribute('eventid', events.Id)
-    }
 
     document.querySelector('#selectedevent').textContent = events.name.slice(0,15) 
     document.querySelector('#eventdate').textContent = events.date.slice(0,10)
