@@ -60,7 +60,7 @@ Webflow.push(function() {
     const style = document.getElementById('samplestyle')
     const card = style.cloneNode(true)
     
-    if(datas['Email'] === 'aleksei@ubikanalytic' || datas['Email'] === 'tim@ubikanalytic.com'){
+    if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
     card.setAttribute('id', events.Id)
     } else {
     card.setAttribute('id', events.id);
@@ -180,7 +180,12 @@ getchartsd()
 
     }, 500);
 
+    if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
     document.querySelector('#selectedevent').setAttribute('eventid', events.id)
+    } else {
+    document.querySelector('#selectedevent').setAttribute('eventid', events.Id)
+    }
+
 
     document.querySelector('#selectedevent').textContent = events.name.slice(0,15) 
     document.querySelector('#eventdate').textContent = events.date.slice(0,10)
@@ -248,7 +253,7 @@ lowerablecheck.checked = true
 
 checked_check()
    
-    if(datas['Email'] !== 'aleksei@ubikanalytic' || datas['Email'] !== 'tim@ubikanalytic.com'){
+    if(datas['Email'] !== 'aleksei@ubikanalytic.com' || datas['Email'] !== 'tim@ubikanalytic.com'){
     lowerablecheck.style.display = 'none'
     document.querySelector('#lowerabletext').style.display = 'none'
     }
