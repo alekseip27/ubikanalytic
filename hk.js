@@ -160,7 +160,7 @@ getchartsd()
     $(this).closest('div').find(".main-field-price").prop("readonly", true);
     document.querySelector('#fwicon5').textContent = ''
     $('.event-box-pricing').hide()
-    $('#samplestyle2').show()
+    document.querySelector('#samplestyle2').style.display = 'flex'
     $(".event-box").removeClass("selected");
     
     card.classList.add("selected");
