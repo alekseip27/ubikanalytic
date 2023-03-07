@@ -31,6 +31,7 @@ Webflow.push(function() {
     document.querySelector('.chart-tab').style.display = 'none'
     document.querySelector('#pricingpart1').style.display = 'none'
     document.querySelector('#pricingpart2').style.display = 'flex'
+    document.querySelector('#lowerable').checked = false
 
 
     $('.event-box-pricing').hide()
