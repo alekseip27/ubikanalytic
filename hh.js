@@ -61,9 +61,9 @@ Webflow.push(function() {
     const card = style.cloneNode(true)
     
     if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
-    card.setAttribute('id', events.Id)
+    card.setAttribute('id', events.id)
     } else {
-    card.setAttribute('id', events.id);
+    card.setAttribute('id', events.Id);
     document.querySelector('#lowerbox').style.display = 'none'
     }
         
