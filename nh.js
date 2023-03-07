@@ -29,6 +29,7 @@ Webflow.push(function() {
     document.querySelector('#selectedevent').setAttribute('lastfetched','')
     document.querySelector('#fwicon5').textContent = ''
     document.querySelector('.chart-tab').style.display = 'none'
+    document.querySelector('.chart-loading').style.display = 'flex'
     $('.event-box-pricing').hide()
     chart.data.datasets[1].data = ''
     chart.data.datasets[0].data = ''
@@ -191,6 +192,7 @@ getchartsd()
     $('.event-box-pricing').hide()
     document.querySelector('#samplestyle2').style.display = 'flex'
     document.querySelector('.chart-tab').style.display = 'flex'
+    document.querySelector('.chart-loading').style.display = 'none'
     $(".event-box").removeClass("selected");
     
     card.classList.add("selected");
