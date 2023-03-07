@@ -161,6 +161,7 @@ getchartsd()
     document.querySelector('#fwicon5').textContent = ''
     $('.event-box-pricing').hide()
     document.querySelector('#samplestyle2').style.display = 'flex'
+    document.querySelector('.chart-tab').style.display = 'flex'
     $(".event-box").removeClass("selected");
     
     card.classList.add("selected");
@@ -430,6 +431,8 @@ document.querySelector('#isfocus').textContent = '0'
     $('#mainpricing').css("display", "block");
     $('#loadingpricing').css("display", "none");
     $('#samplestyle2').hide()
+    document.querySelector('.chart-tab').style.display = 'none'
+
   }, 750);
   }
   
