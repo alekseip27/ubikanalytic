@@ -29,6 +29,10 @@ Webflow.push(function() {
     document.querySelector('#selectedevent').setAttribute('lastfetched','')
     document.querySelector('#fwicon5').textContent = ''
     document.querySelector('.chart-tab').style.display = 'none'
+    document.querySelector('#pricingpart1').style.display = 'none'
+    document.querySelector('#pricingpart2').style.display = 'flex'
+
+
     $('.event-box-pricing').hide()
     chart.data.datasets[1].data = ''
     chart.data.datasets[0].data = ''
@@ -472,6 +476,8 @@ document.querySelector('#isfocus').textContent = '0'
     }
   
     });
+    document.querySelector('#pricingpart1').style.display = 'flex'
+    document.querySelector('#pricingpart2').style.display = 'none'
     cardContainer.appendChild(card);
   
     })}}
