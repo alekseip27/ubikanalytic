@@ -29,7 +29,7 @@ Webflow.push(function() {
     document.querySelector('#selectedevent').setAttribute('lastfetched','')
     document.querySelector('#fwicon5').textContent = ''
     document.querySelector('.chart-tab').style.display = 'none'
-    document.querySelector('.event-box-pricing').style.display = 'none'
+    $('.event-box-pricing').hide()
     let curUser = firebase.auth().currentUser;
     let myFS = firebase.firestore();
     let docRef = myFS.doc("users/" + curUser.uid);
