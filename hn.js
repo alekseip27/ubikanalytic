@@ -163,6 +163,7 @@ document.querySelector('.chart-loading').style.display = 'none'
 }
 
 card.addEventListener('click', function() {
+document.querySelector('.chart-tab').style.display = 'none'
 document.querySelector('.chart-loading').style.display = 'flex'
 chart.data.datasets[1].data = ''
 chart.data.datasets[0].data = ''
