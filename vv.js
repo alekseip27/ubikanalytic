@@ -163,6 +163,22 @@ chartvs.update();
 
     card.addEventListener('click', function() {
 
+chart.data.datasets[1].data = ''
+chart.data.datasets[0].data = ''
+chart.config.data.labels =  ''
+chart.update();
+
+
+chartvs.data.datasets[0].data = ''
+chartvs.data.datasets[1].data = ''
+chartvs.config.data.labels = ''
+chartvs.update();
+
+
+
+
+
+
 getchartvs()
 getchartsd()
 
