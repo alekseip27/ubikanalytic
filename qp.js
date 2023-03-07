@@ -82,6 +82,7 @@ Webflow.push(function() {
     } else {
     card.setAttribute('id', events.Id);
     document.querySelector('#lowerbox').style.display = 'none'
+    document.querySelcetor('#searchblock').style.display = 'none'
     }
         
         
