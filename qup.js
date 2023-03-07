@@ -8,7 +8,7 @@ Webflow.push(function() {
     input.addEventListener("keyup", function(event)     {
     if (event.keyCode === 13) {
     event.preventDefault();
-  
+
     document.getElementById("search-button").click();
     }
     });
@@ -52,7 +52,11 @@ Webflow.push(function() {
     let datas = docSnap.data();
     let usr = datas['Email']
     $(".platform-icon").hide()
-    $('.event-box').hide()
+$('.event-box').each(function(i, obj) {
+if(this.id !== 'samplestyle'){
+this.remove()
+}
+});
     $('#samplestyle').show()
     const dt = new Date();
     let stimestamp2 = moment(dt).format('YYYY-MM-DD')
@@ -195,7 +199,11 @@ getchartsd()
     $('#loadingpricing').css("display", "flex");
     $(this).closest('div').find(".main-field-price").prop("readonly", true);
     document.querySelector('#fwicon5').textContent = ''
-    $('.event-box-pricing').hide()
+    $('.event-box-pricing').each(function(i, obj) {
+    if(this.id !== 'samplestyle2'){
+    this.remove()
+    }
+    });
     document.querySelector('#samplestyle2').style.display = 'flex'
     $(".event-box").removeClass("selected");
     
