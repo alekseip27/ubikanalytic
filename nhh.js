@@ -29,7 +29,6 @@ Webflow.push(function() {
     document.querySelector('#selectedevent').setAttribute('lastfetched','')
     document.querySelector('#fwicon5').textContent = ''
     document.querySelector('.chart-tab').style.display = 'none'
-    document.querySelector('.chart-loading').style.display = 'flex'
     $('.event-box-pricing').hide()
     chart.data.datasets[1].data = ''
     chart.data.datasets[0].data = ''
@@ -132,7 +131,8 @@ chart.data.datasets[1].data = amounts_sd.map(amounts_sd.pop,[...amounts_sd])
 chart.data.datasets[0].data = prices_sd.map(prices_sd.pop,[...prices_sd]) 
 chart.config.data.labels =  dates_sd.map(dates_sd.pop,[...dates_sd]) 
 chart.update();
-
+document.querySelector('.chart-tab').style.display = 'flex'
+document.querySelector('.chart-loading').style.display = 'none'
     }
  
  
@@ -152,18 +152,18 @@ chart.update();
   amountsvs.push(Math.round(commits[i].ticket_count))
   prefvs.push(Math.round(commits[i].preferred_count))
   datesvs.push(commits[i].date_scraped)
-
 }}
   
 chartvs.data.datasets[0].data = amountsvs
 chartvs.data.datasets[1].data = prefvs
 chartvs.config.data.labels = datesvs
 chartvs.update();
-
+document.querySelector('.chart-tab').style.display = 'flex'
+document.querySelector('.chart-loading').style.display = 'none'
 }
 
-    card.addEventListener('click', function() {
-
+card.addEventListener('click', function() {
+document.querySelector('.chart-loading').style.display = 'flex'
 chart.data.datasets[1].data = ''
 chart.data.datasets[0].data = ''
 chart.config.data.labels =  ''
@@ -191,8 +191,6 @@ getchartsd()
     document.querySelector('#fwicon5').textContent = ''
     $('.event-box-pricing').hide()
     document.querySelector('#samplestyle2').style.display = 'flex'
-    document.querySelector('.chart-tab').style.display = 'flex'
-    document.querySelector('.chart-loading').style.display = 'none'
     $(".event-box").removeClass("selected");
     
     card.classList.add("selected");
