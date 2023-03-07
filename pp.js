@@ -30,6 +30,17 @@ Webflow.push(function() {
     document.querySelector('#fwicon5').textContent = ''
     document.querySelector('.chart-tab').style.display = 'none'
     $('.event-box-pricing').hide()
+    chart.data.datasets[1].data = ''
+    chart.data.datasets[0].data = ''
+    chart.config.data.labels =  ''
+    chart.update();
+
+    chartvs.data.datasets[0].data = ''
+    chartvs.data.datasets[1].data = ''
+    chartvs.config.data.labels = ''
+    chartvs.update();
+        
+      
     let curUser = firebase.auth().currentUser;
     let myFS = firebase.firestore();
     let docRef = myFS.doc("users/" + curUser.uid);
@@ -124,7 +135,7 @@ chart.update();
     }
  
  
-        const getchartvs = async function(){
+  const getchartvs = async function(){
   let datesvs = []
   let amountsvs = []
   let prefvs = []
