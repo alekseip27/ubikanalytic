@@ -431,7 +431,6 @@ document.querySelector('#isfocus').textContent = '0'
     $('#mainpricing').css("display", "block");
     $('#loadingpricing').css("display", "none");
     $('#samplestyle2').hide()
-    document.querySelector('.chart-tab').style.display = 'none'
 
   }, 750);
   }
