@@ -76,13 +76,13 @@ Webflow.push(function() {
     quantityseatdata + Number(events.quantity)
     const style = document.getElementById('samplestyle')
     const card = style.cloneNode(true)
-    
+ 
     if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
     card.setAttribute('id', events.id)
     } else {
     card.setAttribute('id', events.Id);
     document.querySelector('#lowerbox').style.display = 'none'
-    document.querySelcetor('#searchblock').style.display = 'none'
+    document.querySelector('#searchblock').style.display = 'none'
     }
         
         
