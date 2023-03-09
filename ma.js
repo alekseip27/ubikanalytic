@@ -102,15 +102,9 @@ this.remove()
     const cardContainer = document.getElementById("Cards-Container")
     let quantityseatdata = 0
 
-if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
-document.querySelector('#lowerable').checked = false
-} else {
-document.querySelector('#lowerable').checked = true
-filterchecked()   
-}
 
 
-
+    
     data.forEach(events => {
     quantityseatdata + Number(events.quantity)
     const style = document.getElementById('samplestyle')
@@ -123,8 +117,7 @@ filterchecked()
     document.querySelector('#lowerbox').style.display = 'none'
     document.querySelector('#searchblock').style.display = 'none'
     }
-        
-    {
+    
         
     card.setAttribute('date', events.date.slice(0,10))
     const eventname = card.getElementsByClassName('main-text-event')[0]
@@ -529,6 +522,17 @@ document.querySelector('#isfocus').textContent = '0'
   
     })}}
     request.send();
+
+{
+
+if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
+document.querySelector('#lowerable').checked = false
+} else {
+document.querySelector('#lowerable').checked = true
+filterchecked()   
+}
+}
+
     document.querySelector("#pricecancel").addEventListener('click', function() {
     $('#pricecancel').css({pointerEvents: "none"})
     $('.event-box.pricing').css({pointerEvents: "none"})
@@ -574,7 +578,7 @@ document.querySelector('#isfocus').textContent = '0'
      document.querySelector(".confirmation-pricing").style.display = 'flex'
      document.querySelector("#eventsamount").textContent = resp
      }}
-  
+ 
   document.querySelector('#priceconfirm').addEventListener("click", () => {
     $('#priceconfirm').css({pointerEvents: "none"})
     $('.event-box.pricing').css({pointerEvents: "none"})
