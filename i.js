@@ -101,6 +101,16 @@ this.remove()
     document.querySelector(".pageloading").style.display = 'none'
     const cardContainer = document.getElementById("Cards-Container")
     let quantityseatdata = 0
+
+if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
+document.querySelector('#lowerable').checked = false
+} else {
+document.querySelector('#lowerable').checked = true
+filterchecked()   
+}
+}
+
+
     data.forEach(events => {
     quantityseatdata + Number(events.quantity)
     const style = document.getElementById('samplestyle')
@@ -115,14 +125,6 @@ this.remove()
     }
         
     {
-
-if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
-document.querySelector('#lowerable').checked = false
-} else {
-document.querySelector('#lowerable').checked = true
-filterchecked()   
-}
-}
         
     card.setAttribute('date', events.date.slice(0,10))
     const eventname = card.getElementsByClassName('main-text-event')[0]
