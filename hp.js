@@ -116,7 +116,6 @@ this.remove()
         
     if(datas['Email'] !== 'aleksei@ubikanalytic.com' || datas['Email'] !== 'tim@ubikanalytic.com'){
     document.querySelector('#lowerable').checked = true
-    filterchecked()
     }
         
     card.setAttribute('date', events.date.slice(0,10))
