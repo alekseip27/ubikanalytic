@@ -108,7 +108,7 @@ document.querySelector('#lowerable').checked = false
 document.querySelector('#lowerable').checked = true
 filterchecked()   
 }
-}
+
 
 
     data.forEach(events => {
