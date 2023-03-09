@@ -113,7 +113,7 @@ this.remove()
     if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
     card.setAttribute('id', events.id)
     } else {
-    card.setAttribute('id', events.id);
+    card.setAttribute('id', events.Id);
     document.querySelector('#lowerbox').style.display = 'none'
     document.querySelector('#searchblock').style.display = 'none'
     }
@@ -256,7 +256,7 @@ getchartsd()
     if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
     document.querySelector('#selectedevent').setAttribute('eventid', events.id)
     } else {
-    document.querySelector('#selectedevent').setAttribute('eventid', events.id)
+    document.querySelector('#selectedevent').setAttribute('eventid', events.Id)
     }
 
 
