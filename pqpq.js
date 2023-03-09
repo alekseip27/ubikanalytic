@@ -296,7 +296,7 @@ if(commits === true){
 lowerablecheck.checked = true
 if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
 card.remove()
-}}
+}}}
 
 
 checked_check()
