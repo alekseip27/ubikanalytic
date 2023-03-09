@@ -292,8 +292,10 @@ let curevent = document.querySelector('#selectedevent').getAttribute('eventid')
 let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/check_if_lowerable?ticket_id='+events.id+'&event_id='+curevent
 let response = await fetch(getevent);
 let commits = await response.json()
-if(commits === true){x
+if(commits === true){
 lowerablecheck.checked = true
+if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
+card.remove()
 }}
 
 
@@ -311,9 +313,6 @@ checked_check()
 
     eventprice.value = events.listPrice
         
-if(datas['Email'] !== 'aleksei@ubikanalytic.com' && lowerablecheck.checked === true || datas['Email'] !== 'tim@ubikanalytic.com' && lowerablecheck.checked === true) {
-card.remove()  
-}
         
 
 //setup before functions
