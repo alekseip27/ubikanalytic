@@ -529,9 +529,7 @@ if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubik
 document.querySelector('#lowerable').checked = false
 } else {
 document.querySelector('#lowerable').checked = true
-filterchecked()   
-}
-}
+}}
 
     document.querySelector("#pricecancel").addEventListener('click', function() {
     $('#pricecancel').css({pointerEvents: "none"})
