@@ -90,7 +90,9 @@ this.remove()
     document.querySelector('#searchblock').style.display = 'none'
     }
         
-
+    if(datas['Email'] !== 'aleksei@ubikanalytic.com' || datas['Email'] !== 'tim@ubikanalytic.com'){
+    if(!!document.querySelector('#lowerable').checked){
+    }}
         
     card.setAttribute('date', events.date.slice(0,10))
     const eventname = card.getElementsByClassName('main-text-event')[0]
@@ -294,9 +296,7 @@ let response = await fetch(getevent);
 let commits = await response.json()
 if(commits === true){
 lowerablecheck.checked = true
-if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
-card.remove()
-}}}
+}}
 
 
 checked_check()
