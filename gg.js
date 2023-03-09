@@ -669,14 +669,3 @@ if (e.key === 'Enter' && isfoc === '0' && document.querySelector('#confirmprice'
 })
 }
 
-
-
-var newinterval = window.setInterval(function(){
-
-let boxl = document.querySelectorAll('.event-box').length
-
-
-if(boxl>900)
-filterchecked()
-clearInterval(newinterval)
-}, 1000);
