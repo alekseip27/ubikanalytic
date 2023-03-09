@@ -114,10 +114,6 @@ this.remove()
     document.querySelector('#searchblock').style.display = 'none'
     }
         
-    if(datas['Email'] !== 'aleksei@ubikanalytic.com' || datas['Email'] !== 'tim@ubikanalytic.com'){
-    document.querySelector('#lowerable').checked = true
-    }
-        
     card.setAttribute('date', events.date.slice(0,10))
     const eventname = card.getElementsByClassName('main-text-event')[0]
     eventname.textContent = events.name
