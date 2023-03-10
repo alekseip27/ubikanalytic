@@ -54,7 +54,7 @@ const filterchecked = async function(){
     document.querySelector('#pricingpart2').style.display = 'flex'
     document.querySelector('#lowerable').checked = false
     document.querySelector('#urlmain').style.display = 'none'
-
+    document.querySelector('#urlmain').setAttribute('url','')
 
     $('.event-box-pricing').hide()
     chart.data.datasets[1].data = ''
