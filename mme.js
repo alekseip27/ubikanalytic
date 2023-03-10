@@ -178,6 +178,19 @@ let response = await fetch(getevent);
 let commits = await response.json()
 if(commits.length>0){
 document.querySelector('#urlmain').setAttribute('url',commits[0].Other_Master_Event_Url)
+
+    document.querySelector('#urlmain').addEventListener('click',function(){
+    let url = document.querySelector('#urlmain').getAttribute('url');
+    if(url !== 'null') {
+    window.open(url,'urlmain')
+    $('#urlmain').css('cursor', 'pointer');
+    } else if(url === 'null') {
+    $('#urlmain').css('cursor', 'default');
+    }
+    })
+
+    
+    
 }}
 
 
@@ -661,17 +674,6 @@ document.querySelector('#lowerable').checked = true
 
     })
 
-{
-document.querySelector('#urlmain').addEventListener('click',function(){
-let url = document.querySelector('#urlmain').getAttribute('url');
-if(url !== 'null') {
-window.open(url,'urlmain')
-$('#urlmain').css('cursor', 'pointer');
-} else if(url === 'null') {
-$('#urlmain').css('cursor', 'default');
-}
-})
-}
 
 
 {
