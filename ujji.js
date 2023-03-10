@@ -177,7 +177,6 @@ let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/getevent_prima
 let response = await fetch(getevent);
 let commits = await response.json()
 console.log(commits)
-document.querySelector('#urlmain').setAttribute('url',commits.Other_Master_Event_Url);
 }
 
 
