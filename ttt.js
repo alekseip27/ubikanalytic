@@ -181,7 +181,7 @@ if(commits.length>0){
 document.querySelector('#urlmain').setAttribute('url',commits[0].Other_Master_Event_Url)
 document.querySelector('#urlmain').style.display = 'flex'
     document.querySelector('#urlmain').addEventListener('click',function(){
-    document.querySelector('#fwicon').textContent = ''
+    document.querySelector('#fwicon6').textContent = ''
     let url = document.querySelector('#urlmain').getAttribute('url');
     if(url !== 'null') {
     window.open(url,'urlmain')
@@ -192,7 +192,7 @@ document.querySelector('#urlmain').style.display = 'flex'
     })
 }else{
 document.querySelector('#urlmain').style.display = 'flex'
-document.querySelector('#fwicon').textContent = ''
+document.querySelector('#fwicon6').textContent = ''
 }}
 
 
