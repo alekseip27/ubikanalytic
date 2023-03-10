@@ -171,7 +171,7 @@ document.querySelector('.chart-loading').style.display = 'none'
 
 
 const primaryurl = async function(){
-let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/getevent_primaryurl?search-key='+events.venue.id+events.date.slice(0,10)+'&search-key2='+events.venue.name+events.date.slice(0,10)
+let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/getevent_primaryurl?search-key='+events.venue.id+events.date.slice(0,10)+'&search-key2='+events.venue.name+'&search-key3='+events.date.slice(0,10)
 let response = await fetch(getevent);
 let commits = await response.json()
 if(commits.length>0){
