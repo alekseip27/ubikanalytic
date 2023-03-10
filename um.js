@@ -14,7 +14,6 @@ Webflow.push(function() {
     });
 
 
- 
 const filterchecked = async function(){
 
     let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/filterchecked'
@@ -31,9 +30,7 @@ const filterchecked = async function(){
     } else [
     events[i].style.display = 'none'
     ]
-    
     }}
-
 
 
     document.querySelector('#search-button').addEventListener("click", () => {
@@ -56,6 +53,7 @@ const filterchecked = async function(){
     document.querySelector('#pricingpart1').style.display = 'none'
     document.querySelector('#pricingpart2').style.display = 'flex'
     document.querySelector('#lowerable').checked = false
+    document.querySelector('#urlmain').style.display = 'none'
 
 
     $('.event-box-pricing').hide()
@@ -201,6 +199,7 @@ document.querySelector('.chart-loading').style.display = 'none'
 }
 
 card.addEventListener('click', function() {
+document.querySelector('#urlmain').setAttribute('url',)
 document.querySelector('.chart-tab').style.display = 'none'
 document.querySelector('.chart-loading').style.display = 'flex'
 chart.data.datasets[1].data = ''
@@ -633,7 +632,7 @@ document.querySelector('#lowerable').checked = true
     let url = document.querySelector('#vseats').getAttribute('url');
     if(url !== 'null') {
     window.open(url,'vseats')
-    $('#vseats').css('cursor', 'pointer');
+    $('#vseats').css('clsor', 'pointer');
     } else if(url === 'null') {
     $('#vseats').css('cursor', 'default');
     }
@@ -650,6 +649,18 @@ document.querySelector('#lowerable').checked = true
     }
 
     })
+
+{
+document.querySelector('#urlmain').addEventListener('click',function(){
+let url = document.querySelector('#urlmain').getAttribute('url');
+if(url !== 'null') {
+window.open(url,'urlmain')
+$('#urlmain').css('cursor', 'pointer');
+} else if(url === 'null') {
+$('#urlmain').css('cursor', 'default');
+}
+})
+}
 
 
 {
