@@ -176,8 +176,9 @@ const primaryurl = async function(){
 let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/getevent_primaryurl?search-key='+events.venue.id+events.date.slice(0,10)
 let response = await fetch(getevent);
 let commits = await response.json()
-console.log(commits)
-}
+if(commits.length>0){
+document.querySelector('#urlmain').setAttribute('url',commits[0].Other_Master_Event_Url)
+}}
 
 
 
