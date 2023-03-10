@@ -172,6 +172,15 @@ document.querySelector('.chart-loading').style.display = 'none'
     }
  
  
+const primaryurl = async function(){
+let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/getevent?search-key='+card.getAttribute('id')
+let response = await fetch(getevent);
+let commits = await response.json()
+console.log(commits)
+}
+
+
+
   const getchartvs = async function(){
   let datesvs = []
   let amountsvs = []
@@ -198,6 +207,8 @@ document.querySelector('.chart-tab').style.display = 'flex'
 document.querySelector('.chart-loading').style.display = 'none'
 }
 
+ 
+  
 card.addEventListener('click', function() {
 //document.querySelector('#urlmain').setAttribute('url',)
 document.querySelector('.chart-tab').style.display = 'none'
@@ -220,7 +231,7 @@ chartvs.update();
 
 getchartvs()
 getchartsd()
-
+primaryurl()
 
     $('.event-box.pricing').css({pointerEvents: "none"})
     $('#mainpricing').hide()
