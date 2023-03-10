@@ -161,38 +161,35 @@ for (let commit of commits) {
 }
 
 
-
-
 chart.data.datasets[1].data = amounts_sd.map(amounts_sd.pop,[...amounts_sd])
 chart.data.datasets[0].data = prices_sd.map(prices_sd.pop,[...prices_sd]) 
 chart.config.data.labels =  dates_sd.map(dates_sd.pop,[...dates_sd]) 
 chart.update();
 document.querySelector('.chart-tab').style.display = 'flex'
 document.querySelector('.chart-loading').style.display = 'none'
-    }
- 
- 
+}
+
+
 const primaryurl = async function(){
-let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/getevent_primaryurl?search-key='+events.venue.id+events.date.slice(0,10)
+let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/getevent_primaryurl?search-key='+events.venue.id+events.date.slice(0,10)+'&search-key2='+events.venue.name+events.date.slice(0,10)
 let response = await fetch(getevent);
 let commits = await response.json()
 if(commits.length>0){
 document.querySelector('#urlmain').setAttribute('url',commits[0].Other_Master_Event_Url)
 document.querySelector('#urlmain').style.display = 'flex'
-    document.querySelector('#urlmain').addEventListener('click',function(){
-    document.querySelector('#fwicon6').textContent = ''
-    let url = document.querySelector('#urlmain').getAttribute('url');
-    if(url !== 'null') {
-    window.open(url,'urlmain')
-    $('#urlmain').css('cursor', 'pointer');
-    } else if(url === 'null') {
-    $('#urlmain').css('cursor', 'default');
-    }
-    })
-}else{
-//document.querySelector('#urlmain').style.display = 'none'
-//document.querySelector('#fwicon6').textContent = ''
+document.querySelector('#urlmain').addEventListener('click',function(){
+document.querySelector('#fwicon6').textContent = ''
+let url = document.querySelector('#urlmain').getAttribute('url');
+if(url !== 'null') {
+window.open(url,'urlmain')
+$('#urlmain').css('cursor', 'pointer');
+} else if(url === 'null') {
+$('#urlmain').css('cursor', 'default');
+}
+})
 }}
+
+
 
 
 
