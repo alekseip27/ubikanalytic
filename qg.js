@@ -47,7 +47,6 @@ const filterchecked = async function(){
     document.querySelector('#fwicon3').textContent = ''
     document.querySelector('#fwicon4').textContent = ''
     document.querySelector('#fwicon5').textContent = ''
-    document.querySelector('#fwicon6').textcontent = ''
     document.querySelector('#selectedevent').setAttribute('lastfetched','')
     document.querySelector('#fwicon5').textContent = ''
     document.querySelector('.chart-tab').style.display = 'none'
@@ -191,8 +190,8 @@ document.querySelector('#urlmain').style.display = 'flex'
     }
     })
 }else{
-document.querySelector('#urlmain').style.display = 'flex'
-document.querySelector('#fwicon6').textContent = ''
+//document.querySelector('#urlmain').style.display = 'none'
+//document.querySelector('#fwicon6').textContent = ''
 }}
 
 
