@@ -178,7 +178,7 @@ let response = await fetch(getevent);
 let commits = await response.json()
 if(commits.length>0){
 document.querySelector('#urlmain').setAttribute('url',commits[0].Other_Master_Event_Url)
-
+document.querySelector('#urlmain').style.display = 'flex'
     document.querySelector('#urlmain').addEventListener('click',function(){
     let url = document.querySelector('#urlmain').getAttribute('url');
     if(url !== 'null') {
@@ -188,9 +188,8 @@ document.querySelector('#urlmain').setAttribute('url',commits[0].Other_Master_Ev
     $('#urlmain').css('cursor', 'default');
     }
     })
-
-    
-    
+}else{
+document.querySelector('#urlmain').style.display = 'flex'
 }}
 
 
