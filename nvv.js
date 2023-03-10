@@ -177,6 +177,7 @@ let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/getevent?searc
 let response = await fetch(getevent);
 let commits = await response.json()
 console.log(commits)
+console.log(card.getAttribute('id'))
 }
 
 
