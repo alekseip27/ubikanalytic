@@ -199,7 +199,7 @@ document.querySelector('.chart-loading').style.display = 'none'
 }
 
 card.addEventListener('click', function() {
-document.querySelector('#urlmain').setAttribute('url',)
+//document.querySelector('#urlmain').setAttribute('url',)
 document.querySelector('.chart-tab').style.display = 'none'
 document.querySelector('.chart-loading').style.display = 'flex'
 chart.data.datasets[1].data = ''
