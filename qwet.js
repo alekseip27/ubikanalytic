@@ -235,6 +235,7 @@ document.querySelector('.chart-loading').style.display = 'none'
   
 card.addEventListener('click', function() {
 document.querySelector('#urlmain').style.display = 'none'
+document.getElementById('#142box').style.display = 'none'
 document.querySelector('#urlmain').setAttribute('url','')
 document.querySelector('.chart-tab').style.display = 'none'
 document.querySelector('.chart-loading').style.display = 'flex'
