@@ -54,6 +54,7 @@ const filterchecked = async function(){
     document.querySelector('#pricingpart2').style.display = 'flex'
     document.querySelector('#lowerable').checked = false
     document.querySelector('#urlmain').style.display = 'none'
+    document.getElementById('142box').style.display = 'none'
     document.querySelector('#urlmain').setAttribute('url','')
 
     $('.event-box-pricing').hide()
@@ -187,20 +188,19 @@ $('#urlmain').css('cursor', 'pointer');
     
 } else if(url.includes('ticketmaster')){
 
-document.querySelector('#142box').style.display = 'flex'
+document.getElementById('142box').style.display = 'flex'
 let onefourtwo = 'http://142.93.115.105:8100/event/' + url.split('/event/')[1] + '/details/'
 
-document.querySelector('#142box').addEventListener('click',function(){
+document.getElementById('142box').addEventListener('click',function(){
 window.open(onefourtwo,'onefourtwo')
 })
 
 } else if(url === 'null') {
 $('#urlmain').css('cursor', 'default');
-document.querySelector('#142box').style.display = 'none'
+document.getElementById('142box').style.display = 'none'
 }
 })
 }}
-
 
 
 
