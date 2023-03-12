@@ -182,15 +182,15 @@ document.querySelector('#urlmain').style.display = 'flex'
 document.querySelector('#urlmain').addEventListener('click',function(){
 document.querySelector('#fwicon6').textContent = ''
 let url = document.querySelector('#urlmain').getAttribute('url');
+    
 if(url !== 'null') {
 window.open(url,'urlmain')
-$('#urlmain').css('cursor', 'pointer');
-    
-} else if(url.includes('ticketmaster')){
+$('#urlmain').css('cursor', 'pointer');   
+}
 
+if(url.includes('ticketmaster')){
 document.getElementById('142box').style.display = 'flex'
 let onefourtwo = 'http://142.93.115.105:8100/event/' + url.split('/event/')[1] + '/details/'
-
 document.getElementById('142box').addEventListener('click',function(){
 window.open(onefourtwo,'onefourtwo')
 })
