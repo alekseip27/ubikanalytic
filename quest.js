@@ -191,6 +191,17 @@ $('#urlmain').css('cursor', 'pointer');
 if(url.includes('ticketmaster')){
 document.getElementById('142box').style.display = 'flex'
 let onefourtwo = 'http://142.93.115.105:8100/event/' + url.split('/event/')[1] + '/details/'
+
+const tmcount = async function(){
+let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/tmcount?eventid=' + url.split('/event/')[1]
+let response = await fetch(getevent);
+let commits = await response.json()
+console.log(commits)
+document.getElementById('tmcount').textContent = commits[0]
+}
+
+tmcount()
+
 document.getElementById('142box').addEventListener('click',function(){
 window.open(onefourtwo,'onefourtwo')
 })
