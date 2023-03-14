@@ -182,7 +182,7 @@ document.querySelector('#urlmain').style.display = 'flex'
 document.querySelector('#urlmain').addEventListener('click',function(){
 document.querySelector('#fwicon6').textContent = ''
 let url = document.querySelector('#urlmain').getAttribute('url');
-    
+
 if(url !== 'null') {
 window.open(url,'urlmain')
 $('#urlmain').css('cursor', 'pointer');   
@@ -196,9 +196,9 @@ const tmcount = async function(){
 let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/tmcount?eventid=' + url.split('/event/')[1]
 let response = await fetch(getevent);
 let commits = await response.json()
-console.log(commits)
+if(typeof commits === 'number'){
 document.getElementById('tmcount').textContent = commits
-}
+}}
 
 tmcount()
 
