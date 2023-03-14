@@ -188,7 +188,7 @@ window.open(url,'urlmain')
 $('#urlmain').css('cursor', 'pointer');   
 }
 
-if(url.includes('ticketmaster')){
+if(url.includes('ticketmaster') || url.includes('livenation')){
 document.getElementById('142box').style.display = 'flex'
 let onefourtwo = 'http://142.93.115.105:8100/event/' + url.split('/event/')[1] + '/details/'
 
