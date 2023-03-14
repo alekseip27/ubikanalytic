@@ -196,8 +196,8 @@ const tmcount = async function(){
 let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/tmcount?eventid=' + url.split('/event/')[1]
 let response = await fetch(getevent);
 let commits = await response.json()
-console.log(response)
-document.getElementById('tmcount').textContent = response
+console.log(commits[0])
+document.getElementById('tmcount').textContent = commits[0]
 }
 
 tmcount()
