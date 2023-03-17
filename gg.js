@@ -403,7 +403,7 @@ myInput.addEventListener('keyup', () => {
 //user is "finished typing," do something
 function doneTyping () {
 if(document.querySelector('#vspricing').checked){
-eventprice.value = Math.round((y = (25 / 22) * eventprice.value + 12.7273))
+eventprice.value = Math.round((y = (25 / 22) * eventprice.value))
 
 }
 }
