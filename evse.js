@@ -165,6 +165,9 @@ headers: {
 });
 
 const result = await response.json();
+
+primaryurl()
+
 }
 
 
@@ -179,7 +182,6 @@ scrapebutton.addEventListener('click',function(){
 scrapetm()
 primrem.textContent = ''
 dpd.textContent = ''
-primaryurl()
 })
 
 
