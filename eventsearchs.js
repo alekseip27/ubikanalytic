@@ -191,6 +191,8 @@ primaryurl()
 
 
 if(events.Event_Other_Master_Source_Formula == 'TM' && !evid.startsWith('Z') && evid.length == 16) {
+primrem.textContent = '0'
+dpd.textContent = '0'
 primaryurl()
 rescrapebutton.style.display = 'flex'
 scrapebutton.style.display = 'flex'
