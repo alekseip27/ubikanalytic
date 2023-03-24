@@ -114,6 +114,7 @@ if(events.Event_Other_Master_Primary_Remain_Amnt.length === 0) {
 card.setAttribute('primaryamount', '0');
 } else {
 card.setAttribute('primaryamount', events.Event_Other_Master_Primary_Remain_Amnt);
+primrem.textContent = events.Event_Other_Master_Primary_Remain_Amnt
 }
 
 
