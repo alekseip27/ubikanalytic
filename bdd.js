@@ -284,6 +284,7 @@ let purchasedby = document.querySelector('#username').textContent
 let psrc = document.querySelector('#purchasesource').textContent
 let bought = Number(document.querySelector('#amountbought1').textContent)
 let cpur = Number(document.querySelector('#purchasequantity').value)
+let purchrequest = document.querySelector('#purchaserequest').textContent
 
 let alltime = Number(document.querySelector('#purchasealltime').textContent)
 
@@ -305,7 +306,7 @@ var params = JSON.stringify(
 "Event_Date": eventdate,
 "Event_Time": eventtime,
 "Event_Venue": eventvenue,
-"Purchase_Date": purchasedate,
+"Purchase_Date": purchaseDate,
 "Purchase_Source": psrc,
 "Purchase_Quantity": pq,
 "Purchase_Quantity_Total": maxamount,
