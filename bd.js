@@ -259,34 +259,23 @@ let eventtime = document.querySelector('#time').textContent
 let eventvenue = document.querySelector('#venue').textContent
 
 const date = new Date();
-let purchasedate = 
-date.toLocaleString('en-US', {
-timeZone: 'America/New_York',
-year: 'numeric',
-month: '2-digit',
-day: '2-digit',
-hour: '2-digit',
-minute: '2-digit',
-})
 
-let date2 = 
-date.toLocaleString('en-GB', {
-timeZone: 'America/New_York',
-year: 'numeric',
-month: '2-digit',
-day: '2-digit',
-hour: '2-digit',
-minute: '2-digit',
-second: '2-digit'
-})
-let purchrequest = document.querySelector('#purchaserequest').textContent
-let then = moment(purchrequest,"MM/DD/YYYY HH:mm:ss")
-let now = moment(date2,"DD/MM/YYYY HH:mm:ss")
+let purchaseDate = moment(date, 'America/New_York').format('YYYY-MM-DD HH:mm:ss');
+let purchaseRequest = document.querySelector('#purchaserequest').textContent;
 
-var mss = moment(now).diff(moment(then));
-var dd = moment.duration(mss);
-var pdifference = Math.floor(dd.asHours()) + moment.utc(mss).format(":mm:ss");
+let then = moment(purchaseRequest, 'MM/DD/YYYY HH:mm:ss');
+let now = moment(purchaseDate, 'YYYY-MM-DD HH:mm:ss');
 
+let duration = moment.duration(now.diff(then));
+let hours = Math.floor(duration.asHours());
+let minutes = duration.minutes();
+let seconds = duration.seconds();
+
+let pdifference = `${hours}:${minutes}:${seconds}`;
+
+console.log(pdifference);
+
+  
 let pq = document.querySelector('#purchasequantity').value
 let pa = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase();
 let pc = document.querySelector('#purchaseconfirmation').value
