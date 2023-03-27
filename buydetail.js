@@ -256,7 +256,8 @@ let eventname = document.querySelector('#event').textContent
 let eventdate = document.querySelector('#date').textContent
 let eventtime = document.querySelector('#time').textContent
 let eventvenue = document.querySelector('#venue').textContent
-let purchaseDate = moment(date, 'America/New_York').format('YYYY-MM-DD HH:mm:ss');
+
+let purchaseDate = moment().tz('America/New_York').format('MM/DD/YYYY, hh:mm A')
 let purchaseRequest = document.querySelector('#purchaserequest').textContent;
 
 
