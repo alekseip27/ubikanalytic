@@ -261,7 +261,8 @@ let purchaseDate = moment().tz('America/New_York').format('MM/DD/YYYY, hh:mm A')
 let purchaseRequest = document.querySelector('#purchaserequest').textContent;
 
 
-
+const pfilled = moment().tz('America/New_York').format('MM/DD/YYYY hh:mm:ss')
+const prequested = moment(document.querySelector('#purchaserequest').textContent, 'MM/DD/YYYY, h:mm').format('MM/DD/YYYY hh:mm:ss')
 
 const now = moment(moment().tz('America/New_York').format('MM/DD/YYYY, h:mm A'))
 const then = moment(document.querySelector('#purchaserequest').textContent, 'MM/DD/YYYY, h:mm A')
@@ -315,7 +316,9 @@ var params = JSON.stringify(
 "Purchased_By": purchasedby,
 "Purchase_Requested": purchrequest,
 "Purchase_Urgency": purchurgency,
-"Purchase_Difference":pdifference
+"Purchase_Difference":pdifference,
+"p_filled":pfilled,
+"p_requested":prequested
 })
 http.open("POST", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
