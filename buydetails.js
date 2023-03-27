@@ -267,7 +267,7 @@ const now = moment(moment().tz('America/New_York').format('MM/DD/YYYY, h:mm A'))
 const then = moment(document.querySelector('#purchaserequest').textContent, 'MM/DD/YYYY, h:mm A')
 
 let duration = moment.duration(now.diff(then));
-let hours = Math.floor(duration.asHours());
+let hours = Math.round(duration.asHours());
 let minutes = duration.minutes();
 
 let pdifference = `${hours}:${minutes}:00`;
