@@ -169,7 +169,6 @@ myFS.doc("stats/" + bm).set({[src] : i+1}, { merge: true })
 accountstats = async function() {
 let acm = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase();
 
- 
 
 let src = document.querySelector('#purchasesource').textContent
 let myFS = firebase.firestore()
@@ -257,23 +256,21 @@ let eventname = document.querySelector('#event').textContent
 let eventdate = document.querySelector('#date').textContent
 let eventtime = document.querySelector('#time').textContent
 let eventvenue = document.querySelector('#venue').textContent
-
-const date = new Date();
-
 let purchaseDate = moment(date, 'America/New_York').format('YYYY-MM-DD HH:mm:ss');
 let purchaseRequest = document.querySelector('#purchaserequest').textContent;
 
-let then = moment(purchaseRequest, 'MM/DD/YYYY HH:mm:ss');
-let now = moment(purchaseDate, 'YYYY-MM-DD HH:mm:ss');
+
+
+
+const now = moment(moment().tz('America/New_York').format('MM/DD/YYYY, h:mm A'))
+const then = moment(document.querySelector('#purchaserequest').textContent, 'MM/DD/YYYY, h:mm A')
 
 let duration = moment.duration(now.diff(then));
 let hours = Math.floor(duration.asHours());
 let minutes = duration.minutes();
-let seconds = duration.seconds();
 
-let pdifference = `${hours}:${minutes}:${seconds}`;
+let pdifference = `${hours}:${minutes}:00`;
 
-console.log(pdifference);
 
   
 let pq = document.querySelector('#purchasequantity').value
