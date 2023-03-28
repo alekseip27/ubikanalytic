@@ -264,14 +264,16 @@ let purchaseRequest = document.querySelector('#purchaserequest').textContent;
 const pfilled = moment().tz('America/New_York').format('MM/DD/YYYY HH:mm:ss')
 const prequested = moment(document.querySelector('#purchaserequest').textContent, 'MM/DD/YYYY, h:mm').format('MM/DD/YYYY HH:mm:ss')
 
-const now = moment(moment().tz('America/New_York').format('MM/DD/YYYY, h:mm A'))
+const now = moment(moment().tz('America/New_York').format('MM/DD/YYYY, h:mm:ss A'))
 const then = moment(document.querySelector('#purchaserequest').textContent, 'MM/DD/YYYY, h:mm A')
 
 let duration = moment.duration(now.diff(then));
 let hours = Math.round(duration.asHours());
 let minutes = duration.minutes();
+let seconds = duration.seconds();
 
-let pdifference = `${hours}:${minutes}:00`;
+let pdifference = `${hours}:${minutes}:${seconds}`;
+
 
 
   
