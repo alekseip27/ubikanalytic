@@ -37,22 +37,16 @@ const filterchecked = async function(){
   $('#search-button').css({pointerEvents: "none"})
   let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
   document.querySelector('#selectedevent').textContent = ''
-  document.querySelector('#selectedeventmobile').textContent = ''
   document.querySelector('#eventdate').textContent = ''
   document.querySelector('#eventtime').textContent = ''
-  document.querySelector('#eventdatemobile').textContent = ''
-  document.querySelector('#eventtimemobile').textContent = ''
   document.querySelector('#eventlocation').textContent = ''
   document.querySelector('#shub').setAttribute('url', '');
   document.querySelector('#vseats').setAttribute('url', '');
   document.querySelector('#shubmobile').setAttribute('url', '');
   document.querySelector('#vseatsmobile').setAttribute('url', '');
   document.querySelector('#fwicon1').textContent = ''
-  document.querySelector('#fwicon11').textContent = ''
   document.querySelector('#fwicon2').textContent = ''
-  document.querySelector('#fwicon22').textContent = ''
   document.querySelector('#fwicon3').textContent = ''
-  document.querySelector('#fwicon33').textContent = ''
   document.querySelector('#fwicon4').textContent = ''
   document.querySelector('#fwicon5').textContent = ''
   document.querySelector('#selectedevent').setAttribute('lastfetched','')
