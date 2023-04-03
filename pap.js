@@ -339,11 +339,8 @@ primaryurl()
 
   $(".platform-icon").css('display', 'flex');
   document.querySelector('#fwicon1').textContent = ''
-  document.querySelector('#fwicon11').textContent = ''
   document.querySelector('#fwicon2').textContent = ''
-  document.querySelector('#fwicon22').textContent = ''
   document.querySelector('#fwicon3').textContent = ''
-  document.querySelector('#fwicon33').textContent = ''
   document.querySelector('#fwicon4').textContent = ''
       
   {
