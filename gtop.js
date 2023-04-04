@@ -51,11 +51,14 @@ const authChanged = firebase.auth().onAuthStateChanged((user) => {
         let orderh = data["orderhistory"]
         let marcus = data['marcus']
         let pricing = data['pricing']
-        
+
+/**
 if(!email.includes('@ubikanalytic.com' || email === null) ){
 auth.signOut();
 location.href = '/login'
 }
+        
+**/
 
 if(marcus === true){
 document.querySelector('#eventsdropdown').style.display = 'flex'
