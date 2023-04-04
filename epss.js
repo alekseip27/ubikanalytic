@@ -98,8 +98,7 @@ this.remove()
   request.onload = function() {
   $('#search-button').css({pointerEvents: "auto"})
   let data = JSON.parse(this.response)
-  if((request.status === 429) || (request.status === 500)){
-  else if(request.status === 401){
+  if(request.status === 401){
   document.querySelector(".locked-content").style.display = 'flex'
   document.querySelector(".pageloading").style.display = 'none'
   } else if (request.status >= 200 && request.status < 400) {
