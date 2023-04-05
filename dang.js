@@ -548,13 +548,13 @@ http.send();
 
 
   const lastupdated = card.getElementsByClassName('main-text-updated')[0]
- 
+  
+  let time1 = moment.utc(events.lastPriceUpdate).format('MM-DD HH:mm');
 
-const lastPriceUpdateUTC = new Date(events.lastPriceUpdate);
-const lastPriceUpdateEST = new Date(lastPriceUpdateUTC.getTime() - (lastPriceUpdateUTC.getTimezoneOffset() * 60000) - (5 * 60 * 60000));
-const lastPriceUpdateESTString = `${(lastPriceUpdateEST.getMonth() + 1).toString().padStart(2, '0')}-${lastPriceUpdateEST.getDate().toString().padStart(2, '0')} ${(lastPriceUpdateEST.getHours()).toString().padStart(2, '0')}:${(lastPriceUpdateEST.getMinutes()).toString().padStart(2, '0')}`;
+  let updatedTime = moment.utc(time1, 'MM-DD HH:mm').subtract(7, 'hours');
+    
+  lastupdated.textContent = updatedTime.format('MM-DD HH:mm')
 
-lastupdated.textContent = lastPriceUpdateESTString;
     
 
   let tixid = events.id
