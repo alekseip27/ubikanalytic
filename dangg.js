@@ -551,7 +551,7 @@ http.send();
   
   let time1 = moment.utc(events.lastPriceUpdate).format('MM-DD HH:mm');
 
-  let updatedTime = moment.utc(time1, 'MM-DD HH:mm').subtract(7, 'hours');
+  let updatedTime = moment.utc(time1, 'MM-DD HH:mm').subtract(4, 'hours');
     
   lastupdated.textContent = updatedTime.format('MM-DD HH:mm')
 
