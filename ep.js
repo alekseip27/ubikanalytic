@@ -549,6 +549,8 @@ http.send();
 
   const lastupdated = card.getElementsByClassName('main-text-updated')[0]
  
+lastupdated.textContent = events.lastPriceUpdate
+
   let tixid = events.id
   let usz = datas['Email']
   var http = new XMLHttpRequest();
