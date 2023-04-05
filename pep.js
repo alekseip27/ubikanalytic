@@ -549,7 +549,8 @@ http.send();
 
   const lastupdated = card.getElementsByClassName('main-text-updated')[0]
  
-lastupdated.textContent = events.lastPriceUpdate
+lastupdated.textContent = moment.utc(events.lastPriceUpdate).format('MM-DD HH:mm');
+
 
   let tixid = events.id
   let usz = datas['Email']
