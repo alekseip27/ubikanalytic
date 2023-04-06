@@ -386,17 +386,15 @@ primaryurl()
   
    
 const checked_check = async function(){
-let curevent = document.querySelector('#selectedevent').getAttribute('eventid')
-let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/check_if_lowerable?ticket_id='+events.id+'&event_id='+curevent
-let response = await fetch(getevent);
-let commits = await response.json()
-if(commits === true){
-lowerablecheck.checked = true  
-} else if (commits === false) && (datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
-card.style.display = 'none'
-}
-}
-
+  let curevent = document.querySelector('#selectedevent').getAttribute('eventid')
+  let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/check_if_lowerable?ticket_id='+events.id+'&event_id='+curevent
+  let response = await fetch(getevent);
+  let commits = await response.json()
+  if(commits === true){
+  lowerablecheck.checked = true  
+  }
+  }
+  
 
 checked_check()
 
