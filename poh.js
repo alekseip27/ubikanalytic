@@ -392,17 +392,24 @@ let response = await fetch(getevent);
 let commits = await response.json()
 if(commits === true){
 lowerablecheck.checked = true
-}}
+}
+
+}
 
 
 checked_check()
+
  
-  if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
-  lowerablecheck.style.display = 'flex'
-  document.querySelector('#lowerabletext').style.display = 'flex'
-  } else {
-  lowerablecheck.style.display = 'none'
-  document.querySelector('#lowerabletext').style.display = 'none'    
+if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
+lowerablecheck.style.display = 'flex'
+document.querySelector('#lowerabletext').style.display = 'flex'
+} else {
+lowerablecheck.style.display = 'none'
+document.querySelector('#lowerabletext').style.display = 'none'    
+
+if(lowerablecheck.checked == false){
+card.style.display = 'none'
+}
 }
   
   lowerablecheck.setAttribute('id', "check"+events.id);
