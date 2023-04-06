@@ -383,20 +383,27 @@ primaryurl()
   const eventprice = card.getElementsByClassName('main-field-price')[0]
 
   const lowerablecheck = card.getElementsByClassName('main-checkbox-lowerprice')[0]
-  
-   
+
+
 const checked_check = async function(){
+  let em = document.querySelector('#lowerable').checked
   let curevent = document.querySelector('#selectedevent').getAttribute('eventid')
   let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/check_if_lowerable?ticket_id='+events.id+'&event_id='+curevent
   let response = await fetch(getevent);
   let commits = await response.json()
-  if(commits === true){
-  lowerablecheck.checked = true  
-  }
-  }
-  
 
-checked_check()
+  card.style.display = 'none'
+
+if(commits === true){
+lowerablecheck.checked = true
+card.style.display = 'flex'
+}
+
+if(em === true && commits === false){
+card.style.display = 'none'
+}
+
+} 
 
  
  
@@ -405,9 +412,13 @@ lowerablecheck.style.display = 'flex'
 document.querySelector('#lowerabletext').style.display = 'flex'
 } else {
 lowerablecheck.style.display = 'none'
-document.querySelector('#lowerabletext').style.display = 'none'    
+document.querySelector('#lowerabletext').style.display = 'none'
 }
-  
+
+
+ 
+
+checked_check()
   lowerablecheck.setAttribute('id', "check"+events.id);
 
   eventprice.value = events.listPrice
@@ -775,4 +786,3 @@ if (e.key === 'Enter' && isfoc === '0' && document.querySelector('#confirmprice'
 }    }, 1000)
 })
 }
-
