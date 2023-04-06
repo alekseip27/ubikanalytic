@@ -391,19 +391,16 @@ let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/check_if_lower
 let response = await fetch(getevent);
 let commits = await response.json()
 if(commits === true){
-lowerablecheck.checked = true
+lowerablecheck.checked = true  
+} else if (commits === false) && (datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
+card.style.display = 'none'
 }
-
 }
 
 
 checked_check()
 
-    
-if(lowerablecheck.checked == false && (datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com')){
-card.style.display = 'none'
-}
-    
+ 
  
 if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
 lowerablecheck.style.display = 'flex'
