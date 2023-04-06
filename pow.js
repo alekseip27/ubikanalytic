@@ -386,7 +386,6 @@ primaryurl()
 
 
 const checked_check = async function(){
-  let em = document.querySelector('#lowerable').checked
   let curevent = document.querySelector('#selectedevent').getAttribute('eventid')
   let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/check_if_lowerable?ticket_id='+events.id+'&event_id='+curevent
   let response = await fetch(getevent);
@@ -394,18 +393,39 @@ const checked_check = async function(){
 
   card.style.display = 'none'
 
+console.log(commits)
 if(commits === true){
 lowerablecheck.checked = true
 card.style.display = 'flex'
-}
-
-if(em === true && commits === false){
+} else {
 card.style.display = 'none'
+}} 
+
+
+let esm = document.querySelector('#lowerable').checked 
+if(esm === true){
+checked_check()
+}
+ 
+
+const checkedchecktwo = async function(){
+  let curevent = document.querySelector('#selectedevent').getAttribute('eventid')
+  let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/check_if_lowerable?ticket_id='+events.id+'&event_id='+curevent
+  let response = await fetch(getevent);
+  let commits = await response.json()
+
+if(commits === true){
+lowerablecheck.checked = true
+}}
+
+checkedchecktwo()
+
+
+let em = document.querySelector('#lowerable').checked 
+if(em === true){
+checked_check()
 }
 
-} 
-
- 
  
 if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
 lowerablecheck.style.display = 'flex'
@@ -416,13 +436,14 @@ document.querySelector('#lowerabletext').style.display = 'none'
 }
 
 
- 
 
-checked_check()
-  lowerablecheck.setAttribute('id', "check"+events.id);
+ 
+lowerablecheck.setAttribute('id', "check"+events.id);
 
   eventprice.value = events.listPrice
-      
+
+
+
       
 
 //setup before functions
