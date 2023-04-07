@@ -117,7 +117,7 @@ this.remove()
 
   if(events.tags === 'lowerable'){
   card.setAttribute('tags',events.tags)
-  card.style.srcset = 'https://us-tuna-sounds-images.voicemod.net/01a89175-1642-4918-ac05-6d99032b41fd-1662352346101.jpg'
+  card.style.backgroundColor = 'red'
   }
     
   if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
