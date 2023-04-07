@@ -13,26 +13,6 @@ Webflow.push(function() {
   }
   });
 
-
-const filterchecked = async function(){
-
-  let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/filterchecked'
-        
-  let response = await fetch(getevent);
-  let result = await response.json()
-    
-  var events = document.getElementsByClassName("event-box");
-  for (var i = 0; i < events.length; i++) {
-  let eventid = parseInt(events[i].id)
-  
-  if(result.includes(eventid) === true){
-  events[i].style.display = 'flex'
-  } else [
-  events[i].style.display = 'none'
-  ]
-  }}
-
-
   document.querySelector('#search-button').addEventListener("click", () => {
   $('#search-button').css({pointerEvents: "none"})
   let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
@@ -372,10 +352,12 @@ primaryurl()
   data.forEach(events => {
   const style = document.getElementById('samplestyle2')
   const card = style.cloneNode(true)
+  const lowerablecheck = card.getElementsByClassName('main-checkbox-lowerprice')[0]
   card.setAttribute('id', events.id);
 
   if(events.tags === 'lowerable'){
   card.setAttribute('tags',events.tags)
+  lowerablecheck.checked = true
   }
 
 
@@ -391,49 +373,6 @@ primaryurl()
   
   const eventprice = card.getElementsByClassName('main-field-price')[0]
 
-  const lowerablecheck = card.getElementsByClassName('main-checkbox-lowerprice')[0]
-
-
-const checked_check = async function(){
-  let curevent = document.querySelector('#selectedevent').getAttribute('eventid')
-  let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/check_if_lowerable?ticket_id='+events.id+'&event_id='+curevent
-  let response = await fetch(getevent);
-  let commits = await response.json()
-
-  card.style.display = 'none'
-
-console.log(commits)
-if(commits === true){
-lowerablecheck.checked = true
-card.style.display = 'flex'
-} else {
-card.style.display = 'none'
-}} 
-
-
-let esm = document.querySelector('#lowerable').checked 
-if(esm === true){
-checked_check()
-}
- 
-
-const checkedchecktwo = async function(){
-  let curevent = document.querySelector('#selectedevent').getAttribute('eventid')
-  let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/check_if_lowerable?ticket_id='+events.id+'&event_id='+curevent
-  let response = await fetch(getevent);
-  let commits = await response.json()
-
-if(commits === true){
-lowerablecheck.checked = true
-}}
-
-checkedchecktwo()
-
-
-let em = document.querySelector('#lowerable').checked 
-if(em === true){
-checked_check()
-}
 
  
 if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
