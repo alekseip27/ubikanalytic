@@ -117,7 +117,6 @@ this.remove()
 
   if(events.tags === 'lowerable'){
   card.setAttribute('tags',events.tags)
-  card.style.backgroundColor = 'red'
   }
     
   if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
@@ -377,7 +376,6 @@ primaryurl()
 
   if(events.tags === 'lowerable'){
   card.setAttribute('tags',events.tags)
-  card.style.backgroundColor = 'red'
   }
 
 
