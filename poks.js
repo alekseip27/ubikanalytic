@@ -116,7 +116,7 @@ this.remove()
   const card = style.cloneNode(true)
 
   console.log('tags ' + events.tags)
-  card.setAttribute('lowerable',events.tags[0])
+  card.setAttribute('tags',events.tags)
   
   if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
   card.setAttribute('id', events.id)
