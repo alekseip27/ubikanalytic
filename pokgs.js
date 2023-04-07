@@ -115,9 +115,11 @@ this.remove()
   const style = document.getElementById('samplestyle')
   const card = style.cloneNode(true)
 
-  console.log('tags ' + events.tags)
+  if(events.tags === 'lowerable'){
   card.setAttribute('tags',events.tags)
-  
+  card.style.backgroundColor = 'red'
+  }
+    
   if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
   card.setAttribute('id', events.id)
   } else {
