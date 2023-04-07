@@ -356,9 +356,9 @@ primaryurl()
   $('.event-box-2').hide()
 
   let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_inventory?searchkey=');
-  
+  let userr = datas['Email']
   let request = new XMLHttpRequest();
-  let url = xanoUrl.toString() + eventid
+  let url = xanoUrl.toString() + eventid + '&user='+userr
   let pa = datas['pyeo']
   request.open('GET', url, true)
   request.setRequestHeader("Authorization", pa);
