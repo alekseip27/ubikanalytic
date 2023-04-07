@@ -115,6 +115,8 @@ this.remove()
   const style = document.getElementById('samplestyle')
   const card = style.cloneNode(true)
 
+  card.setAttribute('lowerable',events.tags)
+  
   if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
   card.setAttribute('id', events.id)
   } else {
@@ -475,7 +477,7 @@ lowerablecheckbox.addEventListener('change', function (event) {
   const ticket_id = lowerablecheckbox.parentNode.parentElement.parentElement.parentElement.id
   const event_id = document.querySelector('#selectedevent').getAttribute('eventid')
   var http = new XMLHttpRequest();
-  var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/lowerable?event_id="+event_id+"&ticket_id="+ticket_id;
+  var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/allow_pricechanges?event_id="+event_id+"&ticket_id="+ticket_id;
   http.open("PUT", url, true);
   http.setRequestHeader("Content-type", "application/json; charset=utf-8");
   http.send();
@@ -485,7 +487,7 @@ lowerablecheckbox.addEventListener('change', function (event) {
   const ticket_id = lowerablecheckbox.parentNode.parentElement.parentElement.parentElement.id
   const event_id = document.querySelector('#selectedevent').getAttribute('eventid')
   var http = new XMLHttpRequest();
-  var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm:v1/lowerable_remove?ticket_id="+ticket_id+"&event_id="+event_id;
+  var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/remove_pricechanges?ticket_id="+ticket_id+"&event_id="+event_id;
   http.open("PUT", url, true);
   http.setRequestHeader("Content-type", "application/json; charset=utf-8");
   http.send();
