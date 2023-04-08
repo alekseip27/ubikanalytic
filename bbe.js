@@ -42,9 +42,9 @@ window.addEventListener('DOMContentLoaded', (event) => {
         
     let ems = document.querySelector('#email').textContent
     
-    if(ems.includes('tim' || ems.includes('aleksei'))){
-    editbutton.style.display = 'flex'
-    }
+if(ems.includes('tim' || ems.includes('aleksei'))){
+  editbutton.style.display = 'flex'
+}
     
 
     
