@@ -33,6 +33,21 @@ window.addEventListener('DOMContentLoaded', (event) => {
     buybutton.addEventListener('click', function() {
     window.location.assign("https://www.ubikanalytic.com/buy-event?id=" + encodeURIComponent(events.Other_Master_Site_Event_Id).replace('%20','+'));
     });
+
+    const editbutton = card.getElementsByClassName('main-edit-button')[0]
+    editbutton.style.display = 'none'
+    editbutton.addEventListener('click', function() {
+    window.location.assign("https://www.ubikanalytic.com/edit-event?id=" + encodeURIComponent(events.Other_Master_Site_Event_Id).replace('%20','+'));
+    });
+        
+    let ems = document.querySelector('#email').textContent
+    
+    if(ems.includes('tim' || ems.includes('aleksei')){
+    editbutton.style.display = 'flex'
+     }
+
+    
+
     
     const eventname = card.getElementsByClassName('main-text-event')[0]
     eventname.textContent = events.Other_Master_Event_Name;
