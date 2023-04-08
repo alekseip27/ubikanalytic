@@ -42,12 +42,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
         
     let ems = document.querySelector('#email').textContent
     
-if(ems.includes('tim' || ems.includes('aleksei'))){
-  editbutton.style.display = 'flex'
-}
-    
-
-    
     const eventname = card.getElementsByClassName('main-text-event')[0]
     eventname.textContent = events.Other_Master_Event_Name;
     if(eventname.textContent.length>21) {
@@ -550,6 +544,31 @@ setTimeout(() => {
    }).appendTo(wrapper);
    }, 2500);
    
+       
+       
+       
+       
+auth.onAuthStateChanged(async (user) => {
+
+if(user){
+
+let myFS = firebase.firestore();
+let docRef = myFS.doc("users/" + firebase.auth().currentUser.uid);
+docRef.get().then((docSnap) => {
+let data = docSnap.data();
+let admin = data["admin"];
+
+if(admin === true){
+var ebutton = document.getElementsByClassName("main-edit-button");
+for (var i = 0; i < ebutton.length; i++) {
+ebutton[i].style.display = 'flex'
+}}
+})
+}})
+       
+       
+       
    })
    
   
+
