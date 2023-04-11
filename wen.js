@@ -196,7 +196,7 @@ prefvs.push(Math.round(commits[i].preferred_count))
 datesvs.push(commits[i].date_scraped)
 
 let resale = Math.round(commits[i].ticket_count/venuecap*100)
-resalepercent.push(resale+'%')
+resalepercent.push(resale)
 }}
 
 chartvs.data.datasets[0].data = amountsvs
