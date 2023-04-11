@@ -161,7 +161,7 @@ document.querySelector('.chart-loading').style.display = 'none'
 }
 
 async function getchartvs(){
-
+venuecap = 0
 let currentid = card.getAttribute('id')
 let VDID = events.venue.id + events.date.slice(0,10)
 var http = new XMLHttpRequest();
@@ -175,7 +175,6 @@ venuecap = data[0]
 console.log(venuecap)
 }
 http.send()
-
 
 let datesvs = []
 let amountsvs = []
