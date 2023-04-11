@@ -222,54 +222,6 @@ document.getElementById('142boxmobile').style.display = 'none'
 
 
 
-const getchartvs = async function(){
-        let currentid = card.getAttribute('id')
-        var http = new XMLHttpRequest();
-        var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent?search-key="+currentid
-        http.open("GET", url, true);
-        http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-        
-        http.onload = function() {
-        let data = JSON.parse(this.response)
-        venuecap = data[0].Venue_Master_Venue_Capacity
-        }
-        http.send();
-    
-    let datesvs = []
-    let amountsvs = []
-    let prefvs = []
-    let resalepercent = []
-    
-
-    let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id='+currentid
-    
-    let response = await fetch(getevent);
-    let commits = await response.json()
-    
-    for(var i = 0; i < commits.length; i++){
-    if(commits[i].ticket_count>0){
-
-    amountsvs.push(Math.round(commits[i].ticket_count))
-    prefvs.push(Math.round(commits[i].preferred_count))
-    datesvs.push(commits[i].date_scraped)
-
-    let resale = Math.round(commits[i].ticket_count/venuecap*100)
-    resalepercent.push(resale+'%')
-    }}
-    
-    chartvs.data.datasets[0].data = amountsvs
-    chartvs.data.datasets[1].data = prefvs
-    chartvs.data.datasets[1].data = resalepercent
-    chartvs.config.data.labels = datesvs
-    chartvs.update();
-    document.querySelector('.chart-tab').style.display = 'flex'
-    document.querySelector('.chart-loading').style.display = 'none'
-    }
-    
-
-
-
-
 
 card.addEventListener('click', function() {
 document.querySelector('#urlmain').style.display = 'none'
@@ -296,7 +248,7 @@ chartvs.update();
 
 
 
-getchartvs()
+//getchartvs()
 getchartsd()
 primaryurl()
 
