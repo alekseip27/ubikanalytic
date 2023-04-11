@@ -163,7 +163,7 @@ document.querySelector('.chart-loading').style.display = 'none'
 async function getchartvs(){
 
 let currentid = card.getAttribute('id')
-let VDID = events.id + events.date.slice(0,10)
+let VDID = events.venue.id + events.date.slice(0,10)
 var http = new XMLHttpRequest();
 var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent_byvdid?search-key="+VDID
 http.open("GET", url, true);
