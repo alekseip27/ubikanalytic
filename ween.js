@@ -171,7 +171,7 @@ http.setRequestHeader("Content-type", "application/json; charset=utf-8");
 
 http.onload = function() {
 let data = JSON.parse(this.response)
-venuecap = data[0].Venue_Master_Venue_Capacity
+venuecap = data[0]
 console.log(venuecap)
 }
 http.send()
