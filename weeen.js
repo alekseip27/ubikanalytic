@@ -175,6 +175,7 @@ venuecap = data[0]
 console.log(venuecap)
 }
 http.send()
+  
 
 let datesvs = []
 let amountsvs = []
