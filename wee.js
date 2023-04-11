@@ -160,6 +160,54 @@ document.querySelector('.chart-tab').style.display = 'flex'
 document.querySelector('.chart-loading').style.display = 'none'
 }
 
+async function getchartvs(){
+
+let currentid = card.getAttribute('id')
+let VDID = events.id + events.date.slice(0,10)
+var http = new XMLHttpRequest();
+var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent_byvdid?search-key="+VDID
+http.open("GET", url, true);
+http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+
+http.onload = function() {
+let data = JSON.parse(this.response)
+venuecap = data[0].Venue_Master_Venue_Capacity
+console.log(venuecap)
+}
+http.send()
+
+
+let datesvs = []
+let amountsvs = []
+let prefvs = []
+let resalepercent = []
+
+
+let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id='+currentid
+
+let response = await fetch(getevent);
+let commits = await response.json()
+
+for(var i = 0; i < commits.length; i++){
+if(commits[i].ticket_count>0){
+
+amountsvs.push(Math.round(commits[i].ticket_count))
+prefvs.push(Math.round(commits[i].preferred_count))
+datesvs.push(commits[i].date_scraped)
+
+let resale = Math.round(commits[i].ticket_count/venuecap*100)
+resalepercent.push(resale+'%')
+}}
+
+chartvs.data.datasets[0].data = amountsvs
+chartvs.data.datasets[1].data = prefvs
+chartvs.data.datasets[2].data = resalepercent
+chartvs.config.data.labels = datesvs
+chartvs.update();
+document.querySelector('.chart-tab').style.display = 'flex'
+document.querySelector('.chart-loading').style.display = 'none'
+}
+
 
 const primaryurl = async function(){
 let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/getevent_primaryurl?search-key='+events.venue.id+events.date.slice(0,10)+'&search-key2='+events.name+'&search-key3='+events.date.slice(0,10)
@@ -248,7 +296,7 @@ chartvs.update();
 
 
 
-//getchartvs()
+getchartvs()
 getchartsd()
 primaryurl()
 
