@@ -159,54 +159,58 @@ chart.update();
 document.querySelector('.chart-tab').style.display = 'flex'
 document.querySelector('.chart-loading').style.display = 'none'
 }
+async function getchartvs() {
+    let VDID = "218252023-04-20";
+    var http = new XMLHttpRequest();
+    var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent_byvdid?search-key=" + VDID;
+    http.open("GET", url, true);
+    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
 
-async function getchartvs(){
-let venuecap = 0
-let currentid = card.getAttribute('id')
-let VDID = events.venue.id + events.date.slice(0,10)
-var http = new XMLHttpRequest();
-var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent_byvdid?search-key="+VDID
-http.open("GET", url, true);
-http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    http.onload = function() {
+        let data = JSON.parse(this.response);
+        let venuecap = data[0];
+        secodnpart(venuecap);
+    }
 
-http.onload = function() {
-let data = JSON.parse(this.response)
-venuecap = data[0]
-console.log(venuecap)
+    http.send();
 }
-http.send()
-  
 
-let datesvs = []
-let amountsvs = []
-let prefvs = []
-let resalepercent = []
+function secodnpart(venuecap) {
+    let datesvs = [];
+    let amountsvs = [];
+    let prefvs = [];
+    let resalepercent = [];
 
+    let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id=4343254';
 
-let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id='+currentid
+    fetch(getevent)
+        .then(response => response.json())
+        .then(commits => {
+            for (var i = 0; i < commits.length; i++) {
+                if (commits[i].ticket_count > 0) {
+                    amountsvs.push(Math.round(commits[i].ticket_count));
+                    prefvs.push(Math.round(commits[i].preferred_count));
+                    datesvs.push(commits[i].date_scraped);
 
-let response = await fetch(getevent);
-let commits = await response.json()
+                    let resale = Math.round(commits[i].ticket_count / venuecap * 100);
+                    resalepercent.push(resale);
+                }
+            }
 
-for(var i = 0; i < commits.length; i++){
-if(commits[i].ticket_count>0){
-
-amountsvs.push(Math.round(commits[i].ticket_count))
-prefvs.push(Math.round(commits[i].preferred_count))
-datesvs.push(commits[i].date_scraped)
-
-let resale = Math.round(commits[i].ticket_count/venuecap*100)
-resalepercent.push(resale)
-}}
-
-chartvs.data.datasets[0].data = amountsvs
-chartvs.data.datasets[1].data = prefvs
-chartvs.data.datasets[2].data = resalepercent
-chartvs.config.data.labels = datesvs
-chartvs.update();
-document.querySelector('.chart-tab').style.display = 'flex'
-document.querySelector('.chart-loading').style.display = 'none'
+            chartvs.data.datasets[0].data = amountsvs;
+            chartvs.data.datasets[1].data = prefvs;
+            chartvs.data.datasets[2].data = resalepercent;
+            chartvs.config.data.labels = datesvs;
+            chartvs.update();
+            document.querySelector('.chart-tab').style.display = 'flex';
+            document.querySelector('.chart-loading').style.display = 'none';
+        })
+        .catch(error => {
+            console.error(error);
+        });
 }
+
+
 
 
 const primaryurl = async function(){
