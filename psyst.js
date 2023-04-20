@@ -159,8 +159,7 @@ Webflow.push(function() {
   document.querySelector('.chart-tab').style.display = 'flex'
   document.querySelector('.chart-loading').style.display = 'none'
   }
-  
- function getvenuedata(){
+  function getvenuedata(){
   document.getElementById('venueresale').textContent = ''
   document.getElementById('venuecap').textContent = ''
   document.getElementById('fwicon').textContent = ''
@@ -172,7 +171,6 @@ let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent_byvdid?s
 fetch(getevent)
     .then(response => response.json())
     .then(commits => {
-if(!!commits){
   document.getElementById('fwicon').textContent = ''
   document.getElementById('lowcaptext').textContent = '/'
   document.querySelector('#venuebox').style.display = 'flex'
@@ -189,9 +187,7 @@ fetch(geteventparttwo)
 const lastCommit = commits[commits.length - 1];
 document.getElementById('venueresale').textContent = Math.round(lastCommit.ticket_count/venuecap*100) + '%'
 document.getElementById('venuecap').textContent = venuecap
-})} else {
-  document.querySelector('#venuebox').style.display = 'none'
-}
+})
 
 })}
   
