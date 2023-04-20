@@ -167,7 +167,7 @@ Webflow.push(function() {
   document.getElementById('lowcaptext').textContent = ''
   
 
-let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent_byvdid?search-key='+"99182023-04-21";
+let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent_byvdid?search-key='+events.venue.id + events.date.slice(0,10)
 
 fetch(getevent)
     .then(response => response.json())
@@ -179,7 +179,7 @@ let venuecap = commits[0].Venue_Master_Venue_Capacity
 document.getElementById('venuename').textContent = commits[0].Venue_Master_Venue
 
 
-let geteventparttwo = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id=' + '4299857';
+let geteventparttwo = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id=' + card.getAttribute('id')
 
 fetch(geteventparttwo)
 .then(response => response.json())
