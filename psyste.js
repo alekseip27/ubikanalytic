@@ -162,6 +162,7 @@ Webflow.push(function() {
   function getvenuedata(){
   document.getElementById('venueresale').textContent = ''
   document.getElementById('venuecap').textContent = ''
+  document.getElementById('venuename').textContent = ''
   document.getElementById('fwicon').textContent = ''
   document.getElementById('lowcaptext').textContent = ''
   
@@ -173,9 +174,9 @@ fetch(getevent)
     .then(commits => {
   document.getElementById('fwicon').textContent = ''
   document.getElementById('lowcaptext').textContent = '/'
-  document.querySelector('#venuebox').style.display = 'flex'
+  document.getElementById('venuebox').style.display = 'flex'
 let venuecap = commits[0].Venue_Master_Venue_Capacity
-document.querySelector('#venuename').textContent = commits[0].Venue_Master_Venue
+document.getElementById('venuename').textContent = commits[0].Venue_Master_Venue
 
 
 let geteventparttwo = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id=' + '4299857';
