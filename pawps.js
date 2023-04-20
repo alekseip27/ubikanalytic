@@ -159,6 +159,36 @@ Webflow.push(function() {
   document.querySelector('.chart-tab').style.display = 'flex'
   document.querySelector('.chart-loading').style.display = 'none'
   }
+  
+  function getvenuedata(){
+
+let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent_byvdid?search-key='+ events.venue.id + events.date.slice(0,10)
+
+fetch(getevent)
+    .then(response => response.json())
+    .then(commits => {
+if(!!commits){
+  document.querySelector('#venuebox').style.display = 'flex'
+let venuecap = commits[0].Venue_Master_Venue_Capacity
+document.querySelector('#venuename').textContent = commits[0].Venue_Master_Venue
+
+
+let geteventparttwo = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id=' +card.getAttribute('id')
+
+fetch(geteventparttwo)
+.then(response => response.json())
+.then(commits => {
+// Extract the last item from the commits array
+const lastCommit = commits[commits.length - 1];
+document.getElementById('venueresale').textContent = Math.round(lastCommit.ticket_count/venuecap*100) + '%'
+document.getElementById('venuecap').textContent = venuecap
+})} else {
+  document.querySelector('#venuebox').style.display = 'none'
+}
+
+})}
+  
+  
   async function getchartvs() {
   venuecap = 0
   let VDID = events.venue.id + events.date.slice(0,10)
@@ -170,13 +200,13 @@ Webflow.push(function() {
   http.onload = function() {
       let data = JSON.parse(this.response);
       let venuecap = data[0];
-      secodnpart(venuecap);
+      secondpart(venuecap);
   }
 
   http.send();
 }
 
-function secodnpart(venuecap) {
+function secondpart(venuecap) {
 let currentid = card.getAttribute('id')
   let datesvs = [];
   let amountsvs = [];
