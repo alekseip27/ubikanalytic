@@ -209,6 +209,8 @@ let currentid = card.getAttribute('id')
 
           chartvs.data.datasets[0].data = amountsvs;
           chartvs.data.datasets[1].data = prefvs;
+          chartvs.data.datasets[2].data = lowestprice;
+          chartvs.data.datasets[3].data = lowestpricepref;
           chartvs.config.data.labels = datesvs;
           chartvs.update();
           document.querySelector('.chart-tab').style.display = 'flex';
