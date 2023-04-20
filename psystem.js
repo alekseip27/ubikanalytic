@@ -345,6 +345,7 @@ let currentid = card.getAttribute('id')
   getchartvs()
   getchartsd()
   primaryurl()
+getvenuedata()
   
     $('.event-box.pricing').css({pointerEvents: "none"})
     $('#mainpricing').hide()
