@@ -422,10 +422,12 @@ getvenuedata()
     request.setRequestHeader("Authorization", pa);
     request.onload = function() {
     let data = JSON.parse(this.response)
+    console.log(data)
     if((request.status === 429) || (request.status === 500)){
     alert('Something went wrong... Contact Aleksei')
     } else if (request.status >= 200 && request.status < 400) {
       setTimeout(() => {
+       
     $('.event-box.pricing').css({pointerEvents: "auto"})
     const cardContainer = document.getElementById("Cards-Container2")
     data.forEach(events => {
