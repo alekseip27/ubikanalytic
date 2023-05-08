@@ -347,13 +347,7 @@ let currentid = card.getAttribute('id')
   
   
   
-  
-  
-  
-  getchartvs()
-  getchartsd()
-  primaryurl()
-getvenuedata()
+
   
     $('.event-box.pricing').css({pointerEvents: "none"})
     $('#mainpricing').hide()
@@ -469,7 +463,13 @@ eventBox.remove();
     chartvs.config.data.labels = ''
     chartvs.update();
   
-    }
+    } else {
+        
+  getchartvs()
+  getchartsd()
+  primaryurl()
+getvenuedata()
+  }
     
     if((request.status === 429) || (request.status === 500)){
     alert('Something went wrong... Contact Aleksei')
