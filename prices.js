@@ -424,7 +424,47 @@ getvenuedata()
     let data = JSON.parse(this.response)
     
     if(data === 'lowerable_soldout'){
-    document.querySelector('#search-button').click()
+ $('#search-button').css({pointerEvents: "none"})
+    let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
+    document.querySelector('#selectedevent').textContent = ''
+    document.querySelector('#eventdate').textContent = ''
+    document.querySelector('#eventtime').textContent = ''
+    document.querySelector('#eventlocation').textContent = ''
+    document.querySelector('#shub').setAttribute('url', '');
+    document.querySelector('#vseats').setAttribute('url', '');
+    document.querySelector('#shubmobile').setAttribute('url', '');
+    document.querySelector('#vseatsmobile').setAttribute('url', '');
+    document.querySelector('#fwicon1').textContent = ''
+    document.querySelector('#fwicon2').textContent = ''
+    document.querySelector('#fwicon3').textContent = ''
+    document.querySelector('#fwicon4').textContent = ''
+    document.querySelector('#fwicon5').textContent = ''
+    document.querySelector('#selectedevent').setAttribute('lastfetched','')
+    document.querySelector('#fwicon5').textContent = ''
+    document.querySelector('.chart-tab').style.display = 'none'
+    document.querySelector('#pricingpart1').style.display = 'none'
+    document.querySelector('#pricingpart2').style.display = 'flex'
+    document.querySelector('#lowerable').checked = false
+    document.querySelector('#urlmain').style.display = 'none'
+    document.querySelector('#urlmainmobile').style.display = 'none'
+    document.getElementById('142box').style.display = 'none'
+    document.getElementById('142boxmobile').style.display = 'none'
+    document.querySelector('#urlmain').setAttribute('url','')
+    document.querySelector('#urlmainmobile').setAttribute('url','')
+  
+    $('.event-box-pricing').hide()
+    chart.data.datasets[1].data = ''
+    chart.data.datasets[0].data = ''
+    chart.config.data.labels =  ''
+    chart.update();
+  
+    chartvs.data.datasets[0].data = ''
+    chartvs.data.datasets[1].data = ''
+    chartvs.config.data.labels = ''
+    chartvs.update();
+        
+
+document.querySelector('#search-button').click()
     }
     
     if((request.status === 429) || (request.status === 500)){
