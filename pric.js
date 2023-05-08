@@ -422,7 +422,11 @@ getvenuedata()
     request.setRequestHeader("Authorization", pa);
     request.onload = function() {
     let data = JSON.parse(this.response)
-    console.log(data)
+    
+    if(data === 'lowerable_soldout'){
+    request.open('GET', url, true)
+    }
+    
     if((request.status === 429) || (request.status === 500)){
     alert('Something went wrong... Contact Aleksei')
     } else if (request.status >= 200 && request.status < 400) {
