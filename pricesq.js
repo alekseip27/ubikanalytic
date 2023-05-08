@@ -424,6 +424,14 @@ getvenuedata()
     let data = JSON.parse(this.response)
     
     if(data === 'lowerable_soldout'){
+
+
+const eventBoxes = document.querySelectorAll('.event-box');
+eventBoxes.forEach(eventBox => {
+if (eventBox.classList.contains('selected')) {
+eventBox.remove();
+}});
+        
  $('#search-button').css({pointerEvents: "none"})
     let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
     document.querySelector('#selectedevent').textContent = ''
@@ -442,8 +450,6 @@ getvenuedata()
     document.querySelector('#selectedevent').setAttribute('lastfetched','')
     document.querySelector('#fwicon5').textContent = ''
     document.querySelector('.chart-tab').style.display = 'none'
-    document.querySelector('#pricingpart1').style.display = 'none'
-    document.querySelector('#pricingpart2').style.display = 'flex'
     document.querySelector('#lowerable').checked = false
     document.querySelector('#urlmain').style.display = 'none'
     document.querySelector('#urlmainmobile').style.display = 'none'
@@ -462,9 +468,7 @@ getvenuedata()
     chartvs.data.datasets[1].data = ''
     chartvs.config.data.labels = ''
     chartvs.update();
-        
-
-document.querySelector('#search-button').click()
+  
     }
     
     if((request.status === 429) || (request.status === 500)){
