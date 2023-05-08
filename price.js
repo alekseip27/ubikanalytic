@@ -424,7 +424,7 @@ getvenuedata()
     let data = JSON.parse(this.response)
     
     if(data === 'lowerable_soldout'){
-    request.open('GET', url, true)
+    document.querySelector('#search-button').click()
     }
     
     if((request.status === 429) || (request.status === 500)){
