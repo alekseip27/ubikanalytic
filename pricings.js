@@ -443,7 +443,7 @@ eventBox.remove();
     document.querySelector('#fwicon5').textContent = ''
     document.querySelector('#selectedevent').setAttribute('lastfetched','')
     document.querySelector('#fwicon5').textContent = ''
-    document.querySelector('.chart-tab').style.display = 'flex'
+    document.querySelector('.chart-tab').style.display = 'none'
     document.querySelector('.chart-loading').style.display = 'none'
     document.querySelector('#lowerable').checked = false
     document.querySelector('#urlmain').style.display = 'none'
