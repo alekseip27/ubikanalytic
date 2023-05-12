@@ -259,58 +259,63 @@ let currentid = card.getAttribute('id')
       });
 }
 
-  
-  
-const primaryurl = async function(){
-    let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/getevent_primaryurl?search-key='+events.venue.id+events.date.slice(0,10)+'&search-key2='+events.name+'&search-key3='+events.date.slice(0,10)
-    let response = await fetch(getevent);
-    let commits = await response.json()
+  const primaryUrl = async (events) => {
+  try {
+    const response = await fetch(`https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/getevent_primaryurl?search-key=${events.venue.id}${events.date.slice(0, 10)}&search-key2=${events.name}&search-key3=${events.date.slice(0, 10)}`);
+    const data = await response.json();
 
-    if(commits.length>0){
-    document.querySelector('#urlmain').setAttribute('url',commits[0].Other_Master_Event_Url)
-    document.querySelector('#urlmain').style.display = 'flex'
-    document.querySelector('#urlmainmobile').setAttribute('url',commits[0].Other_Master_Event_Url)
-    document.querySelector('#urlmainmobile').style.display = 'flex'
-    document.querySelector('#urlmain').addEventListener('click',function(){
-    document.querySelector('#fwicon6').textContent = ''
-    let url = document.querySelector('#urlmain').getAttribute('url');
-    
-    if(url.includes('ticketmaster') || url.includes('livenation')){
-    document.getElementById('142box').style.display = 'flex'
-    document.getElementById('142boxmobile').style.display = 'flex'
-    let onefourtwo = 'http://142.93.115.105:8100/event/' + url.split('/event/')[1] + '/details/'
-    
-    if(url !== 'null') {
-    window.open(url,'urlmain')
-    $('#urlmain').css('cursor', 'pointer');   
-    }
+    if (data.length > 0) {
+      const url = data[0].Other_Master_Event_Url;
+      const urlMain = document.querySelector('#urlmain');
+      const urlMainMobile = document.querySelector('#urlmainmobile');
+      const fwIcon6 = document.querySelector('#fwicon6');
+      const box142 = document.getElementById('142box');
+      const box142Mobile = document.getElementById('142boxmobile');
 
-        
-    const tmcount = async function(){
-    let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/tmcount?eventid=' + url.split('/event/')[1]
-    let response = await fetch(getevent);
-    let commits = await response.json()
-    if(typeof commits === 'number'){
-    document.getElementById('tmcount').textContent = commits
-    }}
-    
-    tmcount()
-    
-    document.getElementById('142box').addEventListener('click',function(){
-    window.open(onefourtwo,'onefourtwo')
-    })
-    
-    document.getElementById('142boxmobile').addEventListener('click',function(){
-    window.open(onefourtwo,'onefourtwomobile')
-      })
-    
-    } else if(url === 'null') {
-    $('#urlmain').css('cursor', 'default');
-    document.getElementById('142box').style.display = 'none'
-    document.getElementById('142boxmobile').style.display = 'none'
+      urlMain.setAttribute('url', url);
+      urlMain.style.display = 'flex';
+      urlMainMobile.setAttribute('url', url);
+      urlMainMobile.style.display = 'flex';
+      urlMain.addEventListener('click', () => {
+        fwIcon6.textContent = '';
+
+        if (url.includes('ticketmaster') || url.includes('livenation')) {
+          box142.style.display = 'flex';
+          box142Mobile.style.display = 'flex';
+          const oneFourTwo = `http://142.93.115.105:8100/event/${url.split('/event/')[1]}/details/`;
+
+          if (url !== 'null') {
+            window.open(url, 'urlmain');
+            $('#urlmain').css('cursor', 'pointer');
+          }
+
+          const getEvent = `https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/tmcount?eventid=${url.split('/event/')[1]}`;
+          const response = await fetch(getEvent);
+          const count = await response.json();
+
+          if (typeof count === 'number') {
+            document.getElementById('tmcount').textContent = count;
+          }
+
+          box142.addEventListener('click', () => {
+            window.open(oneFourTwo, 'onefourtwo');
+          });
+
+          box142Mobile.addEventListener('click', () => {
+            window.open(oneFourTwo, 'onefourtwomobile');
+          });
+        } else if (url === 'null') {
+          $('#urlmain').css('cursor', 'default');
+          box142.style.display = 'none';
+          box142Mobile.style.display = 'none';
+        }
+      });
     }
-    })
-    }}
+  } catch (error) {
+    console.error(error);
+  }
+};
+
   
   
   
