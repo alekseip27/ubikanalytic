@@ -277,6 +277,7 @@ let currentid = card.getAttribute('id')
   document.querySelector('#fwicon6').textContent = ''
   let url = document.querySelector('#urlmain').getAttribute('url');
   
+  /**    
   if(url !== 'null') {
   window.open(url,'urlmain')
   $('#urlmain').css('cursor', 'pointer');   
@@ -286,7 +287,8 @@ let currentid = card.getAttribute('id')
     window.open(url,'urlmainmobile')
     $('#urlmainmobile').css('cursor', 'pointer');   
     }
-  
+  **/
+      
   if(url.includes('ticketmaster') || url.includes('livenation')){
   document.getElementById('142box').style.display = 'flex'
   document.getElementById('142boxmobile').style.display = 'flex'
