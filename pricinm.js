@@ -307,7 +307,7 @@ let currentid = card.getAttribute('id')
   })
   
   document.getElementById('142boxmobile').addEventListener('click',function(){
-  window.open(onefourtwo,'onefourtwo')
+  window.open(onefourtwo,'onefourtwomobile')
     })
   
   } else if(url === 'null') {
