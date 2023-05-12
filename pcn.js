@@ -261,68 +261,57 @@ let currentid = card.getAttribute('id')
 
   
   
-  
-  
-  const primaryurl = async function(){
-  let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/getevent_primaryurl?search-key='+events.venue.id+events.date.slice(0,10)+'&search-key2='+events.name+'&search-key3='+events.date.slice(0,10)
-  let response = await fetch(getevent);
-  let commits = await response.json()
-  console.log(commits)
-  if(commits.length>0){
-  document.querySelector('#urlmain').setAttribute('url',commits[0].Other_Master_Event_Url)
-  document.querySelector('#urlmain').style.display = 'flex'
-  document.querySelector('#urlmainmobile').setAttribute('url',commits[0].Other_Master_Event_Url)
-  document.querySelector('#urlmainmobile').style.display = 'flex'
-  document.querySelector('#urlmain').addEventListener('click',function(){
-  document.querySelector('#fwicon6').textContent = ''
-  let url = document.querySelector('#urlmain').getAttribute('url');
-  
-  /**    
-  if(url !== 'null') {
-  window.open(url,'urlmain')
-  $('#urlmain').css('cursor', 'pointer');   
-  }
-  
-  if(url !== 'null') {
-    window.open(url,'urlmainmobile')
-    $('#urlmainmobile').css('cursor', 'pointer');   
+
+const primaryurl = async function(){
+    let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/getevent_primaryurl?search-key='+events.venue.id+events.date.slice(0,10)+'&search-key2='+events.name+'&search-key3='+events.date.slice(0,10)
+    let response = await fetch(getevent);
+    let commits = await response.json()
+    console.log(commits)
+    if(commits.length>0){
+    document.querySelector('#urlmain').setAttribute('url',commits[0].Other_Master_Event_Url)
+    document.querySelector('#urlmain').style.display = 'flex'
+    document.querySelector('#urlmainmobile').setAttribute('url',commits[0].Other_Master_Event_Url)
+    document.querySelector('#urlmainmobile').style.display = 'flex'
+    document.querySelector('#urlmain').addEventListener('click',function(){
+    document.querySelector('#fwicon6').textContent = ''
+    let url = document.querySelector('#urlmain').getAttribute('url');
+    
+    if(url !== 'null') {
+    window.open(url,'urlmain')
+    $('#urlmain').css('cursor', 'pointer');   
     }
-  **/
-      
-  if(url.includes('ticketmaster') || url.includes('livenation')){
-  document.getElementById('142box').style.display = 'flex'
-  document.getElementById('142boxmobile').style.display = 'flex'
-  let onefourtwo = 'http://142.93.115.105:8100/event/' + url.split('/event/')[1] + '/details/'
-  
-  const tmcount = async function(){
-  let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/tmcount?eventid=' + url.split('/event/')[1]
-  let response = await fetch(getevent);
-  let commits = await response.json()
-  if(typeof commits === 'number'){
-  document.getElementById('tmcount').textContent = commits
-  }}
-  
-  tmcount()
-  
-  document.getElementById('142box').addEventListener('click',function(){
-  window.open(onefourtwo,'onefourtwo')
-  })
-  
-  document.getElementById('142boxmobile').addEventListener('click',function(){
-  window.open(onefourtwo,'onefourtwomobile')
+
+        
+    if(url.includes('ticketmaster') || url.includes('livenation')){
+    document.getElementById('142box').style.display = 'flex'
+    document.getElementById('142boxmobile').style.display = 'flex'
+    let onefourtwo = 'http://142.93.115.105:8100/event/' + url.split('/event/')[1] + '/details/'
+    
+    const tmcount = async function(){
+    let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/tmcount?eventid=' + url.split('/event/')[1]
+    let response = await fetch(getevent);
+    let commits = await response.json()
+    if(typeof commits === 'number'){
+    document.getElementById('tmcount').textContent = commits
+    }}
+    
+    tmcount()
+    
+    document.getElementById('142box').addEventListener('click',function(){
+    window.open(onefourtwo,'onefourtwo')
     })
-  
-  } else if(url === 'null') {
-  $('#urlmain').css('cursor', 'default');
-  document.getElementById('142box').style.display = 'none'
-  document.getElementById('142boxmobile').style.display = 'none'
-  }
-  })
-  }}
-  
-  
-  
-  
+    
+    document.getElementById('142boxmobile').addEventListener('click',function(){
+    window.open(onefourtwo,'onefourtwomobile')
+      })
+    
+    } else if(url === 'null') {
+    $('#urlmain').css('cursor', 'default');
+    document.getElementById('142box').style.display = 'none'
+    document.getElementById('142boxmobile').style.display = 'none'
+    }
+    })
+    }}
   
   
   
