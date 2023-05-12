@@ -286,11 +286,6 @@ const primaryurl = async function(){
     document.getElementById('142box').style.display = 'flex'
     document.getElementById('142boxmobile').style.display = 'flex'
     let onefourtwo = 'http://142.93.115.105:8100/event/' + url.split('/event/')[1] + '/details/'
-    
-    if(url !== 'null') {
-    window.open(url,'urlmain')
-    $('#urlmain').css('cursor', 'pointer');   
-    }
 
         
     const tmcount = async function(){
