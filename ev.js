@@ -254,6 +254,10 @@ if(eventname.textContent.length>13) {
 eventname.textContent = events.Other_Master_Event_Name.slice(0, 13)+'...'
 }
 
+ const eventurl = card.getElementsByClassName('main-text-url')[0]
+ eventurl.textContent = events.Other_Master_Event_Url
+ 
+ 
 let eventtime = card.getElementsByClassName('main-text-time')[0]
 eventtime.textContent = events.Other_Master_Event_Time.slice(0, 8)
 
