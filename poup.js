@@ -95,7 +95,7 @@ Webflow.push(function() {
     const style = document.getElementById('samplestyle')
     const card = style.cloneNode(true)
   
-    if(events.tags === 'lowerable'){
+    if(events.tags.includes('lowerable')){
     card.setAttribute('tags',events.tags)
     }
       
