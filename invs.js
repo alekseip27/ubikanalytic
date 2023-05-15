@@ -478,7 +478,8 @@ getvenuedata()
     const lowerablecheck = card.getElementsByClassName('main-checkbox-lowerprice')[0]
     card.setAttribute('id', events.id);
   
-    if(events.tags.includes('lowerable')){
+    console.log(events.tags)
+    if(events.tags === 'lowerable'){
     card.setAttribute('tags',events.tags)
     lowerablecheck.checked = true
     }
