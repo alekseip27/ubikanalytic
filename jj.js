@@ -477,13 +477,18 @@ getvenuedata()
     const card = style.cloneNode(true)
     const lowerablecheck = card.getElementsByClassName('main-checkbox-lowerprice')[0]
     card.setAttribute('id', events.id);
-  
-    console.log(events)
+
     if(events.tags === 'lowerable'){
     card.setAttribute('tags',events.tags)
     lowerablecheck.checked = true
     }
   
+    if(events.tags.includes('lowerable')){
+    card.setAttribute('tags',events.tags)
+    lowerablecheck.checked = true
+    }
+  
+    console.log(events.tags)
   
     const eventid = card.getElementsByClassName('main-text-id')[0]
     eventid.textContent = events.id
