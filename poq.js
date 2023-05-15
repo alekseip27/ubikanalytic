@@ -95,7 +95,7 @@ Webflow.push(function() {
     const style = document.getElementById('samplestyle')
     const card = style.cloneNode(true)
   
-    if(events.tags.includes('lowerable')){
+    if(events.tags === 'lowerable'){
     card.setAttribute('tags',events.tags)
     }
       
@@ -478,7 +478,7 @@ getvenuedata()
     const lowerablecheck = card.getElementsByClassName('main-checkbox-lowerprice')[0]
     card.setAttribute('id', events.id);
   
-    if(events.tags === 'lowerable'){
+    if(events.tags.includes('lowerable')){
     card.setAttribute('tags',events.tags)
     lowerablecheck.checked = true
     }
