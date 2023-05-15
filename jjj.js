@@ -483,10 +483,11 @@ getvenuedata()
     lowerablecheck.checked = true
     }
   
+    if(events.tags !== null){
     if(events.tags.includes('lowerable')){
     card.setAttribute('tags',events.tags)
     lowerablecheck.checked = true
-    }
+    }}
   
     console.log(events.tags)
   
