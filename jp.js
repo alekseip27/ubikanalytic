@@ -266,7 +266,8 @@ const primaryurl = async function(){
     let commits = await response.json()
 
     if(commits.length>0){
-    document.querySelector('#urlmain').setAttribute('url',commits[0].Other_Master_Event_Url)
+    document.querySelector('#mainurl').value = commits[0].Other_Master_Event_Url
+    
     document.querySelector('#urlmain').style.display = 'flex'
     document.querySelector('#urlmainmobile').setAttribute('url',commits[0].Other_Master_Event_Url)
     document.querySelector('#urlmainmobile').style.display = 'flex'
@@ -384,6 +385,10 @@ const primaryurl = async function(){
     document.querySelector('#eventtime').textContent = events.date.slice(11, 16)
     document.querySelector('#eventlocation').textContent = events.venue.city + ", " + events.venue.state
     document.querySelector('#shub').setAttribute('url', events.stubhubEventUrl);
+      
+    document.querySelector('#shuburl').value = events.stubhubEventUrl
+    document.querySelector('#vsurl').value = events.vividSeatsEventUrl
+    
     document.querySelector('#vseats').setAttribute('url', events.vividSeatsEventUrl);
     document.querySelector('#shubmobile').setAttribute('url', events.stubhubEventUrl);
     document.querySelector('#vseatsmobile').setAttribute('url', events.vividSeatsEventUrl);
@@ -425,6 +430,10 @@ eventBox.remove();
     document.querySelector('#eventdate').textContent = ''
     document.querySelector('#eventtime').textContent = ''
     document.querySelector('#eventlocation').textContent = ''
+    document.querySelector('#shuburl').value = ''
+    document.querySelector('#vsurl').value = ''
+    document.querySelector('#mainurl').value = ''
+    
     document.querySelector('#shub').setAttribute('url', '');
     document.querySelector('#vseats').setAttribute('url', '');
     document.querySelector('#shubmobile').setAttribute('url', '');
