@@ -428,19 +428,18 @@ document.getElementById('shuburl').value = ''
   .then(response => response.json())
   .then(data => {
     // Handle the response data
-    console.log(data);
 
-    if (data.newurl_one && data.newurl_one.length > 0) {
+    if (!!data.newurl_one) {
       document.querySelector('#urlmain').setAttribute('url', data.newurl_one);
       document.querySelector('#urlmainmobile').setAttribute('url', data.newurl_one);
     }
 
-    if (data.newurl_two && data.newurl_two.length > 0) {
+    if (!!data.newurl_two) {
       document.querySelector('#vseats').setAttribute('url', data.newurl_two);
       document.querySelector('#vseatsmobile').setAttribute('url', data.newurl_two);
     }
 
-    if (data.newurl_three && data.newurl_three.length > 0) {
+    if (!!data.newurl_three) {
       document.querySelector('#shub').setAttribute('url', data.newurl_three);
       document.querySelector('#shubmobile').setAttribute('url', data.newurl_three);
     }
