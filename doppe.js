@@ -425,46 +425,6 @@ document.getElementById('shuburl').value = ''
     document.querySelector('#fwicon3').textContent = ''
     document.querySelector('#fwicon4').textContent = ''
 
-      fetch('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/geturldata?eventid=' + events.id)
-  .then(response => response.json())
-  .then(data => {
-    // Handle the response data
-
-    if (!!data.newurl_one) {
-      document.querySelector('#urlmain').setAttribute('url', data.newurl_one);
-      document.querySelector('#urlmainmobile').setAttribute('url', data.newurl_one);
-        
-    document.querySelector('#urlmain').addEventListener('click',function(){
-    let cururlone = document.querySelector('#urlmain').getAttribute('url')
-    window.open(cururlone,'urlmain')
-    })}
-
-    if (!!data.newurl_two) {
-      document.querySelector('#vseats').setAttribute('url', data.newurl_two);
-      document.querySelector('#vseatsmobile').setAttribute('url', data.newurl_two);
-
-    document.querySelector('#vseats').addEventListener('click',function(){
-    let cururltwo = document.querySelector('#vseats').getAttribute('url')
-    window.open(cururltwo,'vseats')
-    })}
-
-    if (!!data.newurl_three) {
-      document.querySelector('#shub').setAttribute('url', data.newurl_three);
-      document.querySelector('#shubmobile').setAttribute('url', data.newurl_three);
-
-    document.querySelector('#shub').addEventListener('click',function(){
-    let cururlthree = document.querySelector('#shub').getAttribute('url')
-    window.open(cururlthree,'shub')
-    })
-
-        
-    }
-  })
-  .catch(error => {
-    // Handle any errors
-    console.error('Error:', error);
-  });
-
 
 
       
