@@ -509,7 +509,6 @@ getvenuedata()
     lowerablecheck.checked = true
     }}
   
-    console.log(events.tags)
   
     const eventid = card.getElementsByClassName('main-text-id')[0]
     eventid.textContent = events.id
@@ -783,7 +782,6 @@ getvenuedata()
     
      http2.send();
      http2.onload = function() {
-      console.log(http2)
      let resp = http2.response
      if(resp>=1 ) {
      document.querySelector(".confirmation-pricing").style.display = 'flex'
