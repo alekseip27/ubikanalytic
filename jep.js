@@ -41,6 +41,10 @@ Webflow.push(function() {
     document.getElementById('142boxmobile').style.display = 'none'
     document.querySelector('#urlmain').setAttribute('url','')
     document.querySelector('#urlmainmobile').setAttribute('url','')
+
+document.getElementById('mainurl').value = ''
+document.getElementById('vsurl').value = ''
+document.getElementById('shuburl').value = ''
   
     $('.event-box-pricing').hide()
     chart.data.datasets[1].data = ''
@@ -279,6 +283,8 @@ const primaryurl = async function(){
     }
     })
 
+
+
     document.querySelector('#fwicon6').textContent = ''
     let url = commits[0].Other_Master_Event_Url
     
@@ -328,6 +334,11 @@ const primaryurl = async function(){
   document.querySelector('#urlmainmobile').setAttribute('url','')
   document.querySelector('.chart-tab').style.display = 'none'
   document.querySelector('.chart-loading').style.display = 'flex'
+      
+document.getElementById('mainurl').value = ''
+document.getElementById('vsurl').value = ''
+document.getElementById('shuburl').value = ''
+      
   chart.data.datasets[1].data = ''
   chart.data.datasets[0].data = ''
   chart.config.data.labels =  ''
