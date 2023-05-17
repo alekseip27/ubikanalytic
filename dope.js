@@ -433,16 +433,31 @@ document.getElementById('shuburl').value = ''
     if (!!data.newurl_one) {
       document.querySelector('#urlmain').setAttribute('url', data.newurl_one);
       document.querySelector('#urlmainmobile').setAttribute('url', data.newurl_one);
-    }
+        
+    document.querySelector('#urlmain').addEventListener('click',function(){
+    let cururlone = document.querySelector('#urlmain').getAttribute('url')
+    window.open(cururlone,'urlmain')
+    })}
 
     if (!!data.newurl_two) {
       document.querySelector('#vseats').setAttribute('url', data.newurl_two);
       document.querySelector('#vseatsmobile').setAttribute('url', data.newurl_two);
-    }
+
+    document.querySelector('#vseats').addEventListener('click',function(){
+    let cururltwo = document.querySelector('#vseats').getAttribute('url')
+    window.open(cururltwo,'vseats')
+    })}
 
     if (!!data.newurl_three) {
       document.querySelector('#shub').setAttribute('url', data.newurl_three);
       document.querySelector('#shubmobile').setAttribute('url', data.newurl_three);
+
+    document.querySelector('#shub').addEventListener('click',function(){
+    let cururlthree = document.querySelector('#shub').getAttribute('url')
+    window.open(cururlthree,'shub')
+    })
+
+        
     }
   })
   .catch(error => {
