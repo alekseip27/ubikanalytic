@@ -285,6 +285,9 @@ const primaryurl = async function(){
 
 
 
+        
+        
+
     document.querySelector('#fwicon6').textContent = ''
     let url = commits[0].Other_Master_Event_Url
     
@@ -324,6 +327,13 @@ const primaryurl = async function(){
   
   
   
+
+
+
+
+
+
+
   
   card.addEventListener('click', function() {
   document.querySelector('#urlmain').style.display = 'none'
@@ -352,6 +362,10 @@ document.getElementById('shuburl').value = ''
   
   
   
+      
+
+      
+      
 
   
     $('.event-box.pricing').css({pointerEvents: "none"})
@@ -409,7 +423,38 @@ document.getElementById('shuburl').value = ''
     document.querySelector('#fwicon2').textContent = ''
     document.querySelector('#fwicon3').textContent = ''
     document.querySelector('#fwicon4').textContent = ''
-        
+
+      
+fetch('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/geturldata?eventid='+events.id)
+  .then(response => response.json())
+  .then(data => {
+    // Handle the response data
+    console.log(data);
+  })
+  .catch(error => {
+    // Handle any errors
+    console.error('Error:', error);
+  });
+
+
+if(data.newurl_one.length>0){
+document.querySelector('#urlmain').setAttribute('url',data.newurl_one)
+document.querySelector('#urlmainmobile').setAttribute('url',data.newurl_one)
+}
+if(data.newurl_two.length>0){
+document.querySelector('#vseats').setAttribute('url', data.newurl_twol);
+document.querySelector('#vseatsmobile').setAttribute('url', data.newurl_two);
+}
+
+if(data.newurl_three.length>0){
+document.querySelector('#shub').setAttribute('url', data.newurl_three);
+document.querySelector('#shubmobile').setAttribute('url', data.newurl_three);
+}
+
+
+      
+      
+      
     {
   
     let eventid = document.querySelector('#selectedevent').getAttribute('eventid')
