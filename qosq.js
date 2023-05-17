@@ -278,7 +278,8 @@ const primaryurl = async function(){
 
     document.querySelector('#urlmain').addEventListener('click',function(){
     if(url !== 'null') {
-    window.open(url,'urlmain')
+    let cururl = document.querySelector('#urlmain').getAttribute('url')
+    window.open(cururl,'urlmain')
     $('#urlmain').css('cursor', 'pointer');   
     }
     })
