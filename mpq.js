@@ -102,6 +102,11 @@ document.getElementById('shuburl').value = ''
     if(events.tags === 'lowerable'){
     card.setAttribute('tags',events.tags)
     }
+
+
+    if(events[0] === 'unlisted'){
+    card.style.backgroundColor = "red";
+    }
       
     if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
     card.setAttribute('id', events.id)
