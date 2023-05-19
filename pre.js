@@ -105,7 +105,7 @@ document.getElementById('shuburl').value = ''
 
 
     if(events[0] === 'unlisted'){
-    card.style.backgroundColor = "red";
+    card.style.backgroundColor = "#ffe3e3";
         console.log(events)
     }
       
