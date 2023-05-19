@@ -106,6 +106,7 @@ document.getElementById('shuburl').value = ''
 
     if(events[0] === 'unlisted'){
     card.style.backgroundColor = "red";
+        console.log(events)
     }
       
     if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
