@@ -106,7 +106,6 @@ document.getElementById('shuburl').value = ''
 
     if(events[0] === 'unlisted'){
     card.style.backgroundColor = "#ffe3e3";
-        console.log(events)
     }
       
     if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
@@ -931,10 +930,8 @@ getvenuedata()
 
 
 
-
-
-
 function getpdates() {
+
   let curUser = firebase.auth().currentUser;
   let myFS = firebase.firestore();
   let docRef = myFS.doc("users/" + curUser.uid);
@@ -951,7 +948,7 @@ function getpdates() {
       const pdateElement = eventBox.querySelector('.main-text-pdate');
 
       // Skip if pdateElement already has text content
-      if (pdateElement.textContent) {
+      if (pdateElement.textContent || eventBox.id === 'samplestyle') {
         continue;
       }
 
@@ -974,6 +971,8 @@ function getpdates() {
             pdateElement.textContent = formattedDate;
             pdateElement.setAttribute('date', formattedDate);
             success = true;
+          } else {
+            throw new Error('Response not OK');
           }
         } catch (error) {
           console.error('Error:', error);
@@ -984,5 +983,5 @@ function getpdates() {
   });
 }
 
+document.getElementById('scrapedates').addEventListener('click', getpdates);
 
-document.getElementById('scrapedates').addEventListener('click',getpdates())
