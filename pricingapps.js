@@ -43,8 +43,6 @@ Webflow.push(function() {
     document.querySelector('#urlmainmobile').setAttribute('url','')
 
 document.getElementById('mainurl').value = ''
-document.getElementById('vsurl').value = ''
-document.getElementById('shuburl').value = ''
   
     $('.event-box-pricing').hide()
     chart.data.datasets[1].data = ''
@@ -351,8 +349,6 @@ const primaryurl = async function(){
   document.querySelector('.chart-loading').style.display = 'flex'
       
 document.getElementById('mainurl').value = ''
-document.getElementById('vsurl').value = ''
-document.getElementById('shuburl').value = ''
       
   chart.data.datasets[1].data = ''
   chart.data.datasets[0].data = ''
@@ -416,8 +412,6 @@ document.getElementById('shuburl').value = ''
     document.querySelector('#eventlocation').textContent = events.venue.city + ", " + events.venue.state
     document.querySelector('#shub').setAttribute('url', events.stubhubEventUrl);
       
-    document.querySelector('#shuburl').value = events.stubhubEventUrl
-    document.querySelector('#vsurl').value = events.vividSeatsEventUrl
     
     document.querySelector('#vseats').setAttribute('url', events.vividSeatsEventUrl);
     document.querySelector('#shubmobile').setAttribute('url', events.stubhubEventUrl);
@@ -465,8 +459,6 @@ eventBox.remove();
     document.querySelector('#eventdate').textContent = ''
     document.querySelector('#eventtime').textContent = ''
     document.querySelector('#eventlocation').textContent = ''
-    document.querySelector('#shuburl').value = ''
-    document.querySelector('#vsurl').value = ''
     document.querySelector('#mainurl').value = ''
     
     document.querySelector('#shub').setAttribute('url', '');
