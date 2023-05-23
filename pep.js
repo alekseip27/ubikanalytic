@@ -347,6 +347,7 @@ const primaryurl = async function(){
   document.getElementById('142box').style.display = 'none'
   document.getElementById('142boxmobile').style.display = 'none'
   document.querySelector('#urlmain').setAttribute('url','')
+  document.querySelector('#selectedevent').setAttribute('VDID','')
   document.querySelector('#urlmainmobile').setAttribute('url','')
   document.querySelector('.chart-tab').style.display = 'none'
   document.querySelector('.chart-loading').style.display = 'flex'
@@ -410,6 +411,7 @@ document.getElementById('mainurl').value = ''
   
   
     document.querySelector('#selectedevent').textContent = events.name.slice(0,15) 
+    document.querySelector('#selectedevent').setAttribute('VDID',events.venue.id + events.date.slice(0,10))
     document.querySelector('#eventdate').textContent = events.date.slice(0,10)
     document.querySelector('#eventtime').textContent = events.date.slice(11, 16)
     document.querySelector('#eventlocation').textContent = events.venue.city + ", " + events.venue.state
@@ -459,6 +461,7 @@ eventBox.remove();
  $('#search-button').css({pointerEvents: "none"})
     let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
     document.querySelector('#selectedevent').textContent = ''
+    document.querySelector('#selectedevent').setAttribute('VDID','')
     document.querySelector('#eventdate').textContent = ''
     document.querySelector('#eventtime').textContent = ''
     document.querySelector('#eventlocation').textContent = ''
