@@ -36,6 +36,7 @@ Webflow.push(function() {
     document.querySelector('#pricingpart2').style.display = 'flex'
     document.querySelector('#lowerable').checked = false
     document.querySelector('#urlmain').style.display = 'none'
+    document.querySelector('#changedata').style.display = 'none'
     document.querySelector('#urlmainmobile').style.display = 'none'
     document.getElementById('142box').style.display = 'none'
     document.getElementById('142boxmobile').style.display = 'none'
@@ -276,6 +277,7 @@ const primaryurl = async function(){
     document.querySelector('#mainurl').value = commits[0].Other_Master_Event_Url
     
     document.querySelector('#urlmain').style.display = 'flex'
+    document.querySelector('#changedata').style.display = 'flex'
     document.querySelector('#urlmainmobile').setAttribute('url',commits[0].Other_Master_Event_Url)
     document.querySelector('#urlmainmobile').style.display = 'flex'
 
