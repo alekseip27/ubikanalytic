@@ -342,6 +342,7 @@ const primaryurl = async function(){
   
   card.addEventListener('click', function() {
   document.querySelector('#urlmain').style.display = 'none'
+  document.querySelector('#changedata').style.display = 'none'
   document.querySelector('#urlmainmobile').style.display = 'none'
   document.getElementById('142box').style.display = 'none'
   document.getElementById('142boxmobile').style.display = 'none'
