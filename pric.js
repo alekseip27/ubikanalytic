@@ -415,7 +415,7 @@ const urlon = `https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_data?even
 
 fetch(urlon).then(response => response.text()).then(data => {
     
-    if(!response.text().includes('message')){
+    if(!data.includes('message')){
     document.querySelector('#sdatacount').textContent = data;
     }
     })
