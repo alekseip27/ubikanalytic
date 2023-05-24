@@ -409,7 +409,8 @@ document.getElementById('mainurl').value = ''
     } else {
     document.querySelector('#selectedevent').setAttribute('eventid', events.id)
     }
-  let shubid = events.stubhubEventUrl.slice(-9).replace('/','')
+  let shubid = events.stubhubEventId
+  
 const urlon = `https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_data?eventid=${shubid}`;
 
 fetch(urlon).then(response => response.text()).then(data => {
