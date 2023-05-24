@@ -414,7 +414,10 @@ document.getElementById('mainurl').value = ''
 const urlon = `https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_data?eventid=${shubid}`;
 
 fetch(urlon).then(response => response.text()).then(data => {
+    
+    if(!response.text().includes('message')){
     document.querySelector('#sdatacount').textContent = data;
+    }
     })
     .catch(error => {
     console.error('Error:', error);
