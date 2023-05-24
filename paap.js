@@ -349,6 +349,7 @@ const primaryurl = async function(){
   document.querySelector('#urlmain').setAttribute('url','')
   document.querySelector('#selectedevent').setAttribute('VDID','')
   document.querySelector('#urlmainmobile').setAttribute('url','')
+  document.querySelector('#sdatacount').textContent = '0'
   document.querySelector('.chart-tab').style.display = 'none'
   document.querySelector('.chart-loading').style.display = 'flex'
       
@@ -408,12 +409,11 @@ document.getElementById('mainurl').value = ''
     } else {
     document.querySelector('#selectedevent').setAttribute('eventid', events.id)
     }
-  
-const urlon = `https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_data?eventid=${stubhubid}`;
+  let shubid = events.stubhubEventUrl.slice(-9).replace('/','')
+const urlon = `https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_data?eventid=${shubid}`;
 
 fetch(urlon).then(response => response.text()).then(data => {
-    const sdatacountElement = document.querySelector('#sdatacount');
-    sdatacountElement.textContent = data;
+    document.querySelector('#sdatacount').textContent = data;
     })
     .catch(error => {
     console.error('Error:', error);
