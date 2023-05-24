@@ -104,7 +104,7 @@ document.getElementById('mainurl').value = ''
 
 
     if(events[0] === 'unlisted'){
-    card.style.backgroundColor = "#ffe3e3";
+    card.classList.add('unlisted')
     }
       
     if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
