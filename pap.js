@@ -409,7 +409,19 @@ document.getElementById('mainurl').value = ''
     document.querySelector('#selectedevent').setAttribute('eventid', events.id)
     }
   
-  
+const urlon = `https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_data?eventid=${stubhubid}`;
+
+fetch(urlon).then(response => response.text()).then(data => {
+    const sdatacountElement = document.querySelector('#sdatacount');
+    sdatacountElement.textContent = data;
+    })
+    .catch(error => {
+    console.error('Error:', error);
+    });
+
+      
+      
+      
     document.querySelector('#selectedevent').textContent = events.name.slice(0,15) 
     document.querySelector('#selectedevent').setAttribute('VDID',events.venue.id + events.date.slice(0,10))
     document.querySelector('#eventdate').textContent = events.date.slice(0,10)
