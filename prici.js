@@ -145,7 +145,8 @@ document.getElementById('mainurl').value = ''
     let dates_sd = []
     let amounts_sd = []
     let prices_sd = []
-    
+    let rows_sd = []
+    let sections_sd = []
     let eventid = events.stubhubEventUrl.slice(-10,-1)
     let eventurl = events.stubhubEventUrl
     let getevent = ('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=') +  eventid + "&Event_Url=" + eventurl;
@@ -156,12 +157,18 @@ document.getElementById('mainurl').value = ''
   for (let commit of commits) {
     amounts_sd.push(commit.quantity)
     prices_sd.push(commit.price)
+    rows_sd.push(commit.row)
+    sections_sd.push(commit.section)
+      
     dates_sd.push(moment.unix(commit.timestamp).format("MM/DD/YYYY hh:mm"))
   }
   
   
-  chart.data.datasets[1].data = amounts_sd.map(amounts_sd.pop,[...amounts_sd])
   chart.data.datasets[0].data = prices_sd.map(prices_sd.pop,[...prices_sd]) 
+  chart.data.datasets[1].data = amounts_sd.map(amounts_sd.pop,[...amounts_sd])
+  chart.data.datasets[2].data = sections_sd.map(sections_sd.pop,[...sections_sd])
+  chart.data.datasets[3].data = rows_sd.map(rows_sd.pop,[...rows_sd])
+
   chart.config.data.labels =  dates_sd.map(dates_sd.pop,[...dates_sd]) 
   chart.update();
   document.querySelector('.chart-tab').style.display = 'flex'
