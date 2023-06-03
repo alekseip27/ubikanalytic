@@ -141,7 +141,7 @@ document.getElementById('mainurl').value = ''
     
   
 
-
+async function getchartsd() {
 
 let dates_sd = [];
 let amounts_sd = [];
@@ -152,7 +152,6 @@ let eventid = events.stubhubEventUrl.slice(-10,-1)
 let eventurl = events.stubhubEventUrl
 let getevent = ('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=') +  eventid + "&Event_Url=" + eventurl;
 
-async function getchartsd() {
   let response = await fetch(getevent);
   let commits = await response.json();
 
