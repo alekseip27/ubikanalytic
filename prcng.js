@@ -140,42 +140,41 @@ document.getElementById('mainurl').value = ''
     eventcost.textContent = '$' + events.cost
     
   
-                
-  const getchartsd = async function(){
-      
-  let dates_sd = [];
-  let amounts_sd = [];
-  let prices_sd = [];
-  let rows_sd = [];
-  let sections_sd = [];
-  let getevent =
-    'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=151320355&Event_Url=https://www.stubhub.com/the-interrupters-san-francisco-tickets-5-30-2023/event/151320355/';
-  
-  async function updateChart() {
-    let response = await fetch(getevent);
-    let commits = await response.json();
-  
-    for (let commit of commits) {
-      amounts_sd.push(commit.quantity);
-      prices_sd.push(commit.price);
-      rows_sd.push(commit.row);
-      sections_sd.push(commit.section);
-  
-      dates_sd.push(moment.unix(commit.timestamp).format('MM/DD/YYYY hh:mm'));
-    }
-  
-    chart.data.datasets[0].data = [...prices_sd];
-    chart.data.datasets[1].data = [...amounts_sd];
-    chart.data.datasets[2].data = [...sections_sd];
-    chart.data.datasets[3].data = [...rows_sd];
-    chart.data.labels = [...dates_sd];
-    chart.update();
-  
-    document.querySelector('.chart-tab').style.display = 'flex';
-    document.querySelector('.chart-loading').style.display = 'none';
+
+
+
+let dates_sd = [];
+let amounts_sd = [];
+let prices_sd = [];
+let rows_sd = [];
+let sections_sd = [];
+let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=151320355&Event_Url=https://www.stubhub.com/the-interrupters-san-francisco-tickets-5-30-2023/event/151320355/';
+
+async function getchartsd() {
+  let response = await fetch(getevent);
+  let commits = await response.json();
+
+  for (let commit of commits) {
+    amounts_sd.push(commit.quantity);
+    prices_sd.push(commit.price);
+    rows_sd.push(commit.row);
+    sections_sd.push(commit.section);
+
+    dates_sd.push(moment.unix(commit.timestamp).format('MM/DD/YYYY hh:mm'));
   }
 
+  chart.data.datasets[0].data = [...prices_sd];
+  chart.data.datasets[1].data = [...amounts_sd];
+  chart.data.datasets[2].data = [...sections_sd];
+  chart.data.datasets[3].data = [...rows_sd];
+  chart.data.labels = [...dates_sd];
+  chart.update();
+
+  document.querySelector('.chart-tab').style.display = 'flex';
+  document.querySelector('.chart-loading').style.display = 'none';
 }
+
+// Call the updateChart function to populate the chart data
   
   
  function getvenuedata(){
