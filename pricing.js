@@ -148,7 +148,9 @@ let amounts_sd = [];
 let prices_sd = [];
 let rows_sd = [];
 let sections_sd = [];
-let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=151320355&Event_Url=https://www.stubhub.com/the-interrupters-san-francisco-tickets-5-30-2023/event/151320355/';
+let eventid = events.stubhubEventUrl.slice(-10,-1)
+let eventurl = events.stubhubEventUrl
+let getevent = ('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=') +  eventid + "&Event_Url=" + eventurl;
 
 async function getchartsd() {
   let response = await fetch(getevent);
