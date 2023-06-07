@@ -736,7 +736,7 @@ getvenuedata()
     lastupdated.textContent = updatedTime.format('MM-DD HH:mm')
     
     const vwprice = card.getElementsByClassName('main-text-vw')[0]
-    vwprice.textContent = Math.round((y = (25 / 22) * events.listPrice)
+    vwprice.textContent = Math.round((y = (25 / 22) * events.listPrice))
   
     let tixid = events.id
     let usz = datas['Email']
