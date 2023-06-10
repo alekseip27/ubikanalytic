@@ -607,7 +607,7 @@ getvenuedata()
   //user is "finished typing," do something
   function doneTyping () {
   if(document.querySelector('#vspricing').checked){
-  eventprice.value = Math.round((y = (25 / 22) * eventprice.value))
+  eventprice.value = Math.round((eventprice.value*1.136)) 
   
   }
   }
@@ -736,7 +736,7 @@ getvenuedata()
     lastupdated.textContent = updatedTime.format('MM-DD HH:mm')
     
     const vwprice = card.getElementsByClassName('main-text-vw')[0]
-    vwprice.textContent = Math.round((y = (25 / 22) * events.listPrice))
+    vwprice.textContent = Math.round((events.listPrice * 1.136))
   
     let tixid = events.id
     let usz = datas['Email']
