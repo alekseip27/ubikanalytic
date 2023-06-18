@@ -214,6 +214,17 @@ document.getElementById('venuecap').textContent = venuecap
 })}
 
   async function getchartvs() {
+      
+  document.getElementById('fwicontotal3day').textContent = ''
+  document.getElementById('total3daytext').textContent = ''
+  document.getElementById('total3dayamount').textContent = ''
+      
+  document.getElementById('fwiconpreferred3day').textContent = ''
+  document.getElementById('preferred3daytext').textContent = ''
+  document.getElementById('preferred3dayamount').textContent = ''
+     
+
+      
   venuecap = 0;
   let VDID = events.venue.id + events.date.slice(0,10);
   var http = new XMLHttpRequest();
@@ -263,11 +274,14 @@ function secondpart(venuecap) {
       let lastThreePrefVs = prefvs.slice(-3);
       let avgAmountsVs = lastThreeAmountsVs.reduce((a, b) => a + b, 0) / lastThreeAmountsVs.length;
       let avgPrefVs = lastThreePrefVs.reduce((a, b) => a + b, 0) / lastThreePrefVs.length;
-      console.log('Average of last 3 amounts vs:', avgAmountsVs.toFixed(2));
-      console.log('Average of last 3 pref vs:', avgPrefVs.toFixed(2));
-
-      document.querySelector('#total3dayamount').textcontent = avgAmountsVs.toFixed(2)
-      document.querySelector('#preferred3dayamount').textcontent = avgPrefVs.toFixed(2)
+     
+      document.getElementById('fwicontotal3day').textContent = ''
+      document.getElementById('total3daytext').textContent = 'Total 3 Day:'
+      document.getElementById('total3dayamount').textcontent = (avgAmountsVs.toFixed(2))
+      
+      document.getElementById('fwiconpreferred3day').textContent = ''
+      document.getElementById('preferred3daytext').textContent = 'Preferred 3 Day:'
+      document.getElementById('preferred3dayamount').textcontent = (avgPrefVs.toFixed(2))
 
       chartvs.data.datasets[0].data = amountsvs;
       chartvs.data.datasets[1].data = prefvs;
