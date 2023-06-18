@@ -263,6 +263,8 @@ function secondpart(venuecap) {
       let lastThreePrefVs = prefvs.slice(-3);
       let avgAmountsVs = lastThreeAmountsVs.reduce((a, b) => a + b, 0) / lastThreeAmountsVs.length;
       let avgPrefVs = lastThreePrefVs.reduce((a, b) => a + b, 0) / lastThreePrefVs.length;
+      console.log('Average of last 3 amounts vs:', avgAmountsVs.toFixed(2));
+      console.log('Average of last 3 pref vs:', avgPrefVs.toFixed(2));
 
       document.querySelector('#total3dayamount').textcontent = avgAmountsVs.toFixed(2)
       document.querySelector('#preferred3dayamount').textcontent = avgPrefVs.toFixed(2)
