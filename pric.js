@@ -213,68 +213,74 @@ document.getElementById('venuecap').textContent = venuecap
 }
 })}
 
-  
   async function getchartvs() {
-  venuecap = 0
-  let VDID = events.venue.id + events.date.slice(0,10)
+  venuecap = 0;
+  let VDID = events.venue.id + events.date.slice(0,10);
   var http = new XMLHttpRequest();
   var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent_byvdid?search-key=" + VDID;
   http.open("GET", url, true);
   http.setRequestHeader("Content-type", "application/json; charset=utf-8");
 
   http.onload = function() {
-      let data = JSON.parse(this.response);
-      let venuecap = data[0];
-      secondpart(venuecap);
-  }
+    let data = JSON.parse(this.response);
+    let venuecap = data[0];
+    secondpart(venuecap);
+  };
 
   http.send();
 }
 
 function secondpart(venuecap) {
-let currentid = card.getAttribute('id')
+  let currentid = card.getAttribute('id');
   let datesvs = [];
   let amountsvs = [];
   let prefvs = [];
   let resalepercent = [];
-  let lowestprice = []
-  let lowestpricepref = []
+  let lowestprice = [];
+  let lowestpricepref = [];
 
-  let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id='+currentid;
+  let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id=' + currentid;
 
   fetch(getevent)
-      .then(response => response.json())
-      .then(commits => {
-          for (var i = 0; i < commits.length; i++) {
-              if (commits[i].ticket_count > 0) {
-                  amountsvs.push(Math.round(commits[i].ticket_count));
-                  prefvs.push(Math.round(commits[i].preferred_count));
-                  datesvs.push(commits[i].date_scraped);
+    .then(response => response.json())
+    .then(commits => {
+      for (var i = 0; i < commits.length; i++) {
+        if (commits[i].ticket_count > 0) {
+          amountsvs.push(Math.round(commits[i].ticket_count));
+          prefvs.push(Math.round(commits[i].preferred_count));
+          datesvs.push(commits[i].date_scraped);
 
-                  lowestprice.push(Math.round(commits[i].lowestprice));
-                  lowestpricepref.push(Math.round(commits[i].lowestpreferredprice));
+          lowestprice.push(Math.round(commits[i].lowestprice));
+          lowestpricepref.push(Math.round(commits[i].lowestpreferredprice));
 
-                  let resale = Math.round(commits[i].ticket_count / venuecap * 100);
-                  resalepercent.push(resale);
+          let resale = Math.round(commits[i].ticket_count / venuecap * 100);
+          resalepercent.push(resale);
+        }
+      }
 
-              
+      // Add the code to calculate the average of last 3 amounts vs and pref vs
+      let lastThreeAmountsVs = amountsvs.slice(-3);
+      let lastThreePrefVs = prefvs.slice(-3);
+      let avgAmountsVs = lastThreeAmountsVs.reduce((a, b) => a + b, 0) / lastThreeAmountsVs.length;
+      let avgPrefVs = lastThreePrefVs.reduce((a, b) => a + b, 0) / lastThreePrefVs.length;
 
-              }
-          }
+      document.querySelector('#total3dayamount').textcontent = avgAmountsVs.toFixed(2)
+      document.querySelector('#preferred3dayamount').textcontent = avgPrefVs.toFixed(2)
 
-          chartvs.data.datasets[0].data = amountsvs;
-          chartvs.data.datasets[1].data = prefvs;
-          chartvs.data.datasets[2].data = lowestprice;
-          chartvs.data.datasets[3].data = lowestpricepref;
-          chartvs.config.data.labels = datesvs;
-          chartvs.update();
-          document.querySelector('.chart-tab').style.display = 'flex';
-          document.querySelector('.chart-loading').style.display = 'none';
-      })
-      .catch(error => {
-          console.error(error);
-      });
+      chartvs.data.datasets[0].data = amountsvs;
+      chartvs.data.datasets[1].data = prefvs;
+      chartvs.data.datasets[2].data = lowestprice;
+      chartvs.data.datasets[3].data = lowestpricepref;
+      chartvs.config.data.labels = datesvs;
+      chartvs.update();
+      document.querySelector('.chart-tab').style.display = 'flex';
+      document.querySelector('.chart-loading').style.display = 'none';
+    })
+    .catch(error => {
+      console.error(error);
+    });
 }
+
 
         
 const primaryurl = async function(){
