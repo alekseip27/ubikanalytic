@@ -277,11 +277,11 @@ function secondpart(venuecap) {
      
       document.getElementById('fwicontotal3day').textContent = ''
       document.getElementById('total3daytext').textContent = 'Total 3 Day:'
-      document.getElementById('total3dayamount').textcontent = (avgAmountsVs.toFixed(2))
+      document.getElementById('total3dayamount').textContent = (avgAmountsVs.toFixed(2))
       
       document.getElementById('fwiconpreferred3day').textContent = ''
       document.getElementById('preferred3daytext').textContent = 'Preferred 3 Day:'
-      document.getElementById('preferred3dayamount').textcontent = (avgPrefVs.toFixed(2))
+      document.getElementById('preferred3dayamount').textContent = (avgPrefVs.toFixed(2))
 
       chartvs.data.datasets[0].data = amountsvs;
       chartvs.data.datasets[1].data = prefvs;
