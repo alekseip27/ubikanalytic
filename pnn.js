@@ -269,19 +269,21 @@ function secondpart(venuecap) {
         }
       }
 
-      // Add the code to calculate the average of last 3 amounts vs and pref vs
-      let lastThreeAmountsVs = amountsvs.slice(-3);
-      let lastThreePrefVs = prefvs.slice(-3);
-      let avgAmountsVs = lastThreeAmountsVs.reduce((a, b) => a + b, 0) / lastThreeAmountsVs.length;
-      let avgPrefVs = lastThreePrefVs.reduce((a, b) => a + b, 0) / lastThreePrefVs.length;
-     
+      let threeDaysAgoCount = amountsvs[amountsvs.length - 4]; // 3 days ago count
+      let todayCount = amountsvs[amountsvs.length - 1]; // Today's count
+      let movingAverage = (threeDaysAgoCount - todayCount) / 3;
+
+      let threeDaysAgoCountpref = prefvs[prefvs.length - 4]; // 3 days ago count
+      let todayCountpref = prefvs[prefvs.length - 1]; // Today's count
+      let movingAveragepref = (threeDaysAgoCountpref - todayCountpref) / 3;
+
       document.getElementById('fwicontotal3day').textContent = ''
       document.getElementById('total3daytext').textContent = 'Total 3 Day:'
-      document.getElementById('total3dayamount').textContent = (avgAmountsVs.toFixed(2))
+      document.getElementById('total3dayamount').textContent = movingAverage.toFixed(2)
       
       document.getElementById('fwiconpreferred3day').textContent = ''
       document.getElementById('preferred3daytext').textContent = 'Preferred 3 Day:'
-      document.getElementById('preferred3dayamount').textContent = (avgPrefVs.toFixed(2))
+      document.getElementById('preferred3dayamount').textContent = (movingAveragepref.toFixed(2))
 
       chartvs.data.datasets[0].data = amountsvs;
       chartvs.data.datasets[1].data = prefvs;
