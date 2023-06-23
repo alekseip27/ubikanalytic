@@ -47,8 +47,8 @@
     let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
     let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
     $('.event-box').hide()
-    //document.querySelector('#loading').style.display = "flex";
-    //document.querySelector('#flexbox').style.display = "none";
+    document.querySelector('#loading').style.display = "flex";
+    document.querySelector('#flexbox').style.display = "none";
     
     let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getdata?search-key-1=') + keywords1.replaceAll("'", "''") + "&search-key-2=" + keywords2.replaceAll("'", "''")
     function getEvents() {
@@ -67,8 +67,8 @@
     let data = JSON.parse(this.response)
     
     if (request.status >= 200 && request.status < 400) {
-    // document.querySelector('#loading').style.display = "none";
-    // document.querySelector('#flexbox').style.display = "flex";
+    document.querySelector('#loading').style.display = "none";
+    document.querySelector('#flexbox').style.display = "flex";
     const cardContainer = document.getElementById("Cards-Container")
     
     data.forEach(events => {
@@ -191,6 +191,33 @@
     
     
     
+    
+    
+    
+    
+    
+    let vpricing = card.getElementsByClassName('main-vividseats-amount')[0]
+    if(!!events.Event_Other_Master_Vivid_Venue_Id){
+    
+    let ticketcount = 0
+    let vdid = events.Event_Other_Master_Vivid_Venue_Id+'-'+events.Other_Master_Event_Date.slice(0,10)
+    
+    let myFS = fb2.firestore()
+    let docRef = myFS.doc("vsdata/" + vdid);
+    docRef.get().then(docSnap => {
+    let data = docSnap.data()
+    let tickets = data['tickets']
+    let prod = data['production_id']
+    for (var i = 0; i < tickets.length; i++) {
+    ticketcount+=Number(tickets[i].amount)
+    }
+    vpricing.textContent = ticketcount
+    vpricing.addEventListener('click', function() {
+    window.open('http://www.vividseats.com/shop/viewTickets.shtml?productionId=' + prod,'vs')
+    })
+    vpricing.classList.add("clickable");
+    card.setAttribute('vsamount',ticketcount)
+    })}
     
     if(events.Event_Other_Master_Primary_Remain_Amnt.length === 0) {
     card.setAttribute('primaryamount', '0');
