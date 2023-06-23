@@ -1,3 +1,16 @@
+ 
+
+const firebaseConfig2 = {
+    apiKey: "AIzaSyDc-qzxFU2KMOVX7LdK1AOr9GyCsjfVP48",
+    authDomain: "ticketifo.firebaseapp.com",
+    projectId: "ticketifo",
+    storageBucket: "ticketifo.appspot.com",
+    messagingSenderId: "226381163659",
+    appId: "1:226381163659:web:9ade848a7c01e3b75b788e"
+    };
+    
+    fb2 = firebase.initializeApp(firebaseConfig2,"Secondary");
+
 
     function checkresults() {
     
