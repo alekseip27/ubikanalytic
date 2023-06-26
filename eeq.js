@@ -1,5 +1,4 @@
-
-function checkresults() {
+    function checkresults() {
     
     let results = document.querySelectorAll('.event-box')
     let count = 0
@@ -8,7 +7,6 @@ function checkresults() {
     count++
     document.querySelector('#counter').textContent = count
     }
-    
     if(count<2) {
     document.querySelector('#countertxt').textContent = 'Result'
     } else {
@@ -24,6 +22,10 @@ function checkresults() {
     else {return -1;}
     }).appendTo('#Cards-Container');
     }, 2500)}
+    
+    var intervalId = window.setInterval(function(){
+    checkresults()
+    }, 100);
     
     var input = document.getElementById("searchbar1");
     input.addEventListener("keyup", function(event) {
@@ -41,9 +43,11 @@ function checkresults() {
     });
     
     document.querySelector('#search-button').addEventListener("click", () => {
-    let keywords1 = document.getElementById('searchbar1').value
-    let keywords2 = document.getElementById('searchbar2').value
+    let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
+    let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
     $('.event-box').hide()
+    document.querySelector('#loading').style.display = "flex";
+    document.querySelector('#flexbox').style.display = "none";
     
     let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getdata?search-key-1=') + keywords1.replaceAll("'", "''") + "&search-key-2=" + keywords2.replaceAll("'", "''")
     function getEvents() {
@@ -62,6 +66,8 @@ function checkresults() {
     let data = JSON.parse(this.response)
     
     if (request.status >= 200 && request.status < 400) {
+    document.querySelector('#loading').style.display = "none";
+    document.querySelector('#flexbox').style.display = "flex";
     const cardContainer = document.getElementById("Cards-Container")
     
     data.forEach(events => {
@@ -125,7 +131,7 @@ function checkresults() {
     return;
     } catch (error) {
     
-    //console.error(error);
+    console.error(error);
     retries--;
     await new Promise(resolve => setTimeout(resolve, 1000));
     }
@@ -182,7 +188,7 @@ function checkresults() {
     scrapebutton.style.display = 'flex'
     }
     
-    
+
     if(events.Event_Other_Master_Primary_Remain_Amnt.length === 0) {
     card.setAttribute('primaryamount', '0');
     } else {
@@ -285,6 +291,8 @@ function checkresults() {
     cardContainer.appendChild(card);
     })
     } else if(request.status>400){
+    document.querySelector('#loading').style.display = "none";
+    document.querySelector('#flexbox').style.display = "flex";
     console.log('searchfailed')
     }
     }
@@ -303,5 +311,18 @@ function checkresults() {
     {
     document.addEventListener("DOMContentLoaded", function(event) {
     document.getElementById("search-button").click();
+    
+    
+    
     })
+    }
+    
+    {
+    var intervalId = window.setInterval(function(){
+    let boxes = document.querySelectorAll('.event-box')
+    for (let i = 0; i<boxes.length;i++) {
+    if(boxes[i].style.display == 'none' && boxes[i].id !== 'samplestyle') {
+    boxes[i].remove()
+    }}
+    }, 100);
     }
