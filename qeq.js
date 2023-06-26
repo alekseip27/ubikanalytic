@@ -1,18 +1,5 @@
- 
 
-const firebaseConfig2 = {
-    apiKey: "AIzaSyDc-qzxFU2KMOVX7LdK1AOr9GyCsjfVP48",
-    authDomain: "ticketifo.firebaseapp.com",
-    projectId: "ticketifo",
-    storageBucket: "ticketifo.appspot.com",
-    messagingSenderId: "226381163659",
-    appId: "1:226381163659:web:9ade848a7c01e3b75b788e"
-    };
-    
-    fb2 = firebase.initializeApp(firebaseConfig2,"Secondary");
-
-
-    function checkresults() {
+function checkresults() {
     
     let results = document.querySelectorAll('.event-box')
     let count = 0
@@ -21,6 +8,7 @@ const firebaseConfig2 = {
     count++
     document.querySelector('#counter').textContent = count
     }
+    
     if(count<2) {
     document.querySelector('#countertxt').textContent = 'Result'
     } else {
@@ -36,10 +24,6 @@ const firebaseConfig2 = {
     else {return -1;}
     }).appendTo('#Cards-Container');
     }, 2500)}
-    
-    var intervalId = window.setInterval(function(){
-    checkresults()
-    }, 100);
     
     var input = document.getElementById("searchbar1");
     input.addEventListener("keyup", function(event) {
@@ -57,11 +41,9 @@ const firebaseConfig2 = {
     });
     
     document.querySelector('#search-button').addEventListener("click", () => {
-    let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
-    let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
+    let keywords1 = document.getElementById('searchbar1').value
+    let keywords2 = document.getElementById('searchbar2').value
     $('.event-box').hide()
-    document.querySelector('#loading').style.display = "flex";
-    document.querySelector('#flexbox').style.display = "none";
     
     let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getdata?search-key-1=') + keywords1.replaceAll("'", "''") + "&search-key-2=" + keywords2.replaceAll("'", "''")
     function getEvents() {
@@ -80,8 +62,6 @@ const firebaseConfig2 = {
     let data = JSON.parse(this.response)
     
     if (request.status >= 200 && request.status < 400) {
-    document.querySelector('#loading').style.display = "none";
-    document.querySelector('#flexbox').style.display = "flex";
     const cardContainer = document.getElementById("Cards-Container")
     
     data.forEach(events => {
@@ -145,7 +125,7 @@ const firebaseConfig2 = {
     return;
     } catch (error) {
     
-    console.error(error);
+    //console.error(error);
     retries--;
     await new Promise(resolve => setTimeout(resolve, 1000));
     }
@@ -202,35 +182,6 @@ const firebaseConfig2 = {
     scrapebutton.style.display = 'flex'
     }
     
-    
-    
-    
-    
-    
-    
-    
-    let vpricing = card.getElementsByClassName('main-vividseats-amount')[0]
-    if(!!events.Event_Other_Master_Vivid_Venue_Id){
-    
-    let ticketcount = 0
-    let vdid = events.Event_Other_Master_Vivid_Venue_Id+'-'+events.Other_Master_Event_Date.slice(0,10)
-    
-    let myFS = fb2.firestore()
-    let docRef = myFS.doc("vsdata/" + vdid);
-    docRef.get().then(docSnap => {
-    let data = docSnap.data()
-    let tickets = data['tickets']
-    let prod = data['production_id']
-    for (var i = 0; i < tickets.length; i++) {
-    ticketcount+=Number(tickets[i].amount)
-    }
-    vpricing.textContent = ticketcount
-    vpricing.addEventListener('click', function() {
-    window.open('http://www.vividseats.com/shop/viewTickets.shtml?productionId=' + prod,'vs')
-    })
-    vpricing.classList.add("clickable");
-    card.setAttribute('vsamount',ticketcount)
-    })}
     
     if(events.Event_Other_Master_Primary_Remain_Amnt.length === 0) {
     card.setAttribute('primaryamount', '0');
@@ -334,8 +285,6 @@ const firebaseConfig2 = {
     cardContainer.appendChild(card);
     })
     } else if(request.status>400){
-    document.querySelector('#loading').style.display = "none";
-    document.querySelector('#flexbox').style.display = "flex";
     console.log('searchfailed')
     }
     }
@@ -354,18 +303,5 @@ const firebaseConfig2 = {
     {
     document.addEventListener("DOMContentLoaded", function(event) {
     document.getElementById("search-button").click();
-    
-    
-    
     })
-    }
-    
-    {
-    var intervalId = window.setInterval(function(){
-    let boxes = document.querySelectorAll('.event-box')
-    for (let i = 0; i<boxes.length;i++) {
-    if(boxes[i].style.display == 'none' && boxes[i].id !== 'samplestyle') {
-    boxes[i].remove()
-    }}
-    }, 100);
     }
