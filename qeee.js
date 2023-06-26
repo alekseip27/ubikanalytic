@@ -131,7 +131,6 @@
     return;
     } catch (error) {
     
-    console.error(error);
     retries--;
     await new Promise(resolve => setTimeout(resolve, 1000));
     }
