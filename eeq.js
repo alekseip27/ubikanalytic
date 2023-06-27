@@ -48,8 +48,9 @@
     $('.event-box').hide()
     document.querySelector('#loading').style.display = "flex";
     document.querySelector('#flexbox').style.display = "none";
-    
-    let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getdata?search-key-1=') + keywords1.replaceAll("'", "''") + "&search-key-2=" + keywords2.replaceAll("'", "''")
+
+    let xanoUrl = new URL('https://shibuy.co:8443/eventdata?ename=') + keywords1.replaceAll("'", "''") + "&vname=" + keywords2.replaceAll("'", "''")        
+    // let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getdata?search-key-1=') + keywords1.replaceAll("'", "''") + "&search-key-2=" + keywords2.replaceAll("'", "''")
     function getEvents() {
     checkresults()
     datear()
