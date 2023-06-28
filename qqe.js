@@ -155,7 +155,7 @@
     
     const result = await response.json();
     
-    primaryurl()
+    // primaryurl()
     
     }
     
