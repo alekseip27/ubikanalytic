@@ -104,7 +104,33 @@
     card.setAttribute('primaryamount', events.Event_Other_Master_Primary_Remain_Amnt);
     primrem.textContent = events.Event_Other_Master_Primary_Remain_Amnt
     }
+
+const primaryurl = (eventid) => {
+  const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid;
+
+  return fetch(url)
+    .then(response => response.json())
+    .then(data => {
+ 
+      const eventBox = document.querySelector(`.event-box[eventid="${eventid}"]`);
+      if (eventBox) {
+        const primarycount = eventBox.querySelector('.main-text-primary');
+        const diffperdaytxt = eventBox.querySelector('.main-text-aday');
         
+        if (typeof data.count === 'number') {
+          primarycount.textContent = data.count;
+        }
+        
+        if (typeof data.diffperday === 'number') {
+          diffperdaytxt.textContent = data.diffperday;
+        }
+      }
+    })
+    .catch(error => {
+      console.log('Error:', error);
+      // Handle any errors that occurred during the request
+    });
+};
     
     const scrapetm = async function(){
     const url = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/142_scrape_event?eventid='+evid
@@ -118,7 +144,7 @@
     
     const result = await response.json();
     
-    // primaryurl()
+    primaryurl(events.Other_Master_Site_Event_Id)
     
     }
     
@@ -140,14 +166,14 @@
     rescrapebutton.addEventListener('click',function(){
     primrem.textContent = ''
     dpd.textContent = ''
-    //primaryurl()
+    primaryurl(events.Other_Master_Site_Event_Id)
     })
     
     
     if(events.Event_Other_Master_Source_Formula == 'TM' && !evid.startsWith('Z') && evid.length == 16) {
     primrem.textContent = '0'
     dpd.textContent = '0'
-    //primaryurl()
+    primaryurl(events.Other_Master_Site_Event_Id)
     rescrapebutton.style.display = 'flex'
     scrapebutton.style.display = 'flex'
     }
