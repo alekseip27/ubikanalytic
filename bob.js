@@ -1,41 +1,3 @@
-const fetchEventData = (eventid) => {
-  const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid;
-
-  return fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      const eventBox = document.querySelector(`.event-box[eventid="${eventid}"]`);
-      if (eventBox) {
-        const primarycount = eventBox.querySelector('.main-text-primary');
-        const diffperdaytxt = eventBox.querySelector('.main-text-aday');
-        
-        if (typeof data.count === 'number') {
-          primarycount.textContent = data.count;
-        }
-        
-        if (typeof data.diffperday === 'number') {
-          diffperdaytxt.textContent = data.diffperday;
-        }
-      }
-    })
-    .catch(error => {
-      console.log('Error:', error);
-      // Handle any errors that occurred during the request
-    });
-};
-
-const eventBoxes = document.querySelectorAll('.event-box');
-eventBoxes.forEach(eventBox => {
-  const source = eventBox.getAttribute('source');
-  const eventid = eventBox.getAttribute('eventid');
-
-  if (source === 'TM') {
-    fetchEventData(eventid);
-  }
-});
-
-
-
     function checkresults() {
     
     let results = document.querySelectorAll('.event-box')
@@ -185,7 +147,7 @@ eventBoxes.forEach(eventBox => {
     if(events.Event_Other_Master_Source_Formula == 'TM' && !evid.startsWith('Z') && evid.length == 16) {
     primrem.textContent = '0'
     dpd.textContent = '0'
-    fetchEventData(events.Other_Master_Site_Event_Id)
+    //fetchEventData(events.Other_Master_Site_Event_Id)
     rescrapebutton.style.display = 'flex'
     scrapebutton.style.display = 'flex'
     }
