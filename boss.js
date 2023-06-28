@@ -269,46 +269,6 @@ function checkresults() {
   getEvents();
   
   })();
-  
-
-
-
-  const fetchEventData = (eventid) => {
-    const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid;
-  
-    return fetch(url)
-      .then(response => response.json())
-      .then(data => {
-        const eventBox = document.querySelector(`.event-box[eventid="${eventid}"]`);
-        if (eventBox) {
-          const primarycount = eventBox.querySelector('.main-text-primary');
-          const diffperdaytxt = eventBox.querySelector('.main-text-aday');
-          
-          if (typeof data.count === 'number') {
-            primarycount.textContent = data.count;
-          }
-          
-          if (typeof data.diffperday === 'number') {
-            diffperdaytxt.textContent = data.diffperday;
-          }
-        }
-      })
-      .catch(error => {
-        console.log('Error:', error);
-        // Handle any errors that occurred during the request
-      });
-  };
-  
-  const eventBoxes = document.querySelectorAll('.event-box');
-  eventBoxes.forEach(eventBox => {
-    const source = eventBox.getAttribute('source');
-    const eventid = eventBox.getAttribute('eventid');
-  
-    if (source === 'TM') {
-      fetchEventData(eventid);
-    }
-  });
-  
 
 
   })
