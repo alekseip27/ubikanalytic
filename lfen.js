@@ -1,3 +1,41 @@
+const fetchEventData = (eventid) => {
+  const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid;
+
+  return fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      const eventBox = document.querySelector(`.event-box[eventid="${eventid}"]`);
+      if (eventBox) {
+        const primarycount = eventBox.querySelector('.main-text-primary');
+        const diffperdaytxt = eventBox.querySelector('.main-text-aday');
+        
+        if (typeof data.count === 'number') {
+          primarycount.textContent = data.count;
+        }
+        
+        if (typeof data.diffperday === 'number') {
+          diffperdaytxt.textContent = data.diffperday;
+        }
+      }
+    })
+    .catch(error => {
+      console.log('Error:', error);
+      // Handle any errors that occurred during the request
+    });
+};
+
+const eventBoxes = document.querySelectorAll('.event-box');
+eventBoxes.forEach(eventBox => {
+  const source = eventBox.getAttribute('source');
+  const eventid = eventBox.getAttribute('eventid');
+
+  if (source === 'TM') {
+    fetchEventData(eventid);
+  }
+});
+
+
+
     function checkresults() {
     
     let results = document.querySelectorAll('.event-box')
@@ -105,26 +143,6 @@
     primrem.textContent = events.Event_Other_Master_Primary_Remain_Amnt
     }
 
-const primaryurl = () => {
-  const url = 'https://shibuy.co:8443/primaryurl?eventid=' + evid ;
-
-  return fetch(url)
-    .then(response => response.json())
-    .then(data => {
-       
-        if (typeof data.count === 'number') {
-          primrem.textContent = data.count;
-        }
-        
-        if (typeof data.diffperday === 'number') {
-          dpd.textContent = data.diffperday;
-        }
-    })
-    .catch(error => {
-      console.log('Error:', error);
-      // Handle any errors that occurred during the request
-    });
-};
     
     const scrapetm = async function(){
     const url = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/142_scrape_event?eventid='+evid
@@ -167,7 +185,7 @@ const primaryurl = () => {
     if(events.Event_Other_Master_Source_Formula == 'TM' && !evid.startsWith('Z') && evid.length == 16) {
     primrem.textContent = '0'
     dpd.textContent = '0'
-    //primaryurl()
+    fetchEventData(events.Other_Master_Site_Event_Id)
     rescrapebutton.style.display = 'flex'
     scrapebutton.style.display = 'flex'
     }
