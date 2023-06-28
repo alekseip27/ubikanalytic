@@ -105,26 +105,20 @@
     primrem.textContent = events.Event_Other_Master_Primary_Remain_Amnt
     }
 
-const primaryurl = (eventid) => {
-  const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid;
+const primaryurl = () => {
+  const url = 'https://shibuy.co:8443/primaryurl?eventid=' + evid ;
 
   return fetch(url)
     .then(response => response.json())
     .then(data => {
- 
-      const eventBox = document.querySelector(`.event-box[eventid="${eventid}"]`);
-      if (eventBox) {
-        const primarycount = eventBox.querySelector('.main-text-primary');
-        const diffperdaytxt = eventBox.querySelector('.main-text-aday');
-        
+       
         if (typeof data.count === 'number') {
-          primarycount.textContent = data.count;
+          primrem.textContent = data.count;
         }
         
         if (typeof data.diffperday === 'number') {
-          diffperdaytxt.textContent = data.diffperday;
+          dpd.textContent = data.diffperday;
         }
-      }
     })
     .catch(error => {
       console.log('Error:', error);
@@ -144,7 +138,7 @@ const primaryurl = (eventid) => {
     
     const result = await response.json();
     
-    primaryurl(events.Other_Master_Site_Event_Id)
+    primaryurl()
     
     }
     
@@ -166,14 +160,14 @@ const primaryurl = (eventid) => {
     rescrapebutton.addEventListener('click',function(){
     primrem.textContent = ''
     dpd.textContent = ''
-    primaryurl(events.Other_Master_Site_Event_Id)
+    primaryurl()
     })
     
     
     if(events.Event_Other_Master_Source_Formula == 'TM' && !evid.startsWith('Z') && evid.length == 16) {
     primrem.textContent = '0'
     dpd.textContent = '0'
-    primaryurl(events.Other_Master_Site_Event_Id)
+    primaryurl()
     rescrapebutton.style.display = 'flex'
     scrapebutton.style.display = 'flex'
     }
