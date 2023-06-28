@@ -110,19 +110,20 @@
     let retries = 3;
     while (retries > 0) {
     try {
-    let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/tmcount?eventid='+evid;
+    let getevent = 'https://shibuy.co:8443/primaryurl?eventid='+evid
+    //let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/tmcount?eventid='+evid;
     let response = await fetch(getevent);
     let commits = await response.json();
     
-    if (typeof commits.count === 'number' && commits.count>0 && commits.count2 === 0) {
+    if (typeof commits.count === 'number' && commits.count>0) {
     primrem.textContent = commits.count;
     card.setAttribute('primaryamount', commits.count);
     }
     
-    if (typeof commits.count === 'number' && commits.count2>0 && commits.count === 0) {
-    primrem.textContent = commits.count2;
-    card.setAttribute('primaryamount', commits.count2);
-    }
+    //if (typeof commits.count === 'number' && commits.count2>0 && commits.count === 0) {
+    //primrem.textContent = commits.count2;
+    //card.setAttribute('primaryamount', commits.count2);
+    //}
     
     if (typeof commits.diffperday === 'number') {
     card.setAttribute('perday', commits.diffperday);
