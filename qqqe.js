@@ -104,44 +104,7 @@
     card.setAttribute('primaryamount', events.Event_Other_Master_Primary_Remain_Amnt);
     primrem.textContent = events.Event_Other_Master_Primary_Remain_Amnt
     }
-    
-    
-    const primaryurl = async function() {
-    let retries = 3;
-    while (retries > 0) {
-    try {
-    let getevent = 'https://shibuy.co:8443/primaryurl?eventid='+evid
-    //let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/tmcount?eventid='+evid;
-    let response = await fetch(getevent);
-    let commits = await response.json();
-    
-    if (typeof commits.count === 'number' && commits.count>0) {
-    primrem.textContent = commits.count;
-    card.setAttribute('primaryamount', commits.count);
-    }
-    
-    //if (typeof commits.count === 'number' && commits.count2>0 && commits.count === 0) {
-    //primrem.textContent = commits.count2;
-    //card.setAttribute('primaryamount', commits.count2);
-    //}
-    
-    if (typeof commits.diffperday === 'number') {
-    card.setAttribute('perday', commits.diffperday);
-    dpd.textContent = commits.diffperday;
-    }
-    
-    return;
-    } catch (error) {
-    
-    retries--;
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    }
-    }
-    
-    
-    throw new Error('Fetching the event data failed after multiple attempts.');
-    }
-    
+        
     
     const scrapetm = async function(){
     const url = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/142_scrape_event?eventid='+evid
