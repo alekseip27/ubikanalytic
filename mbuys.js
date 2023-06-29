@@ -3,7 +3,7 @@ $("#purchasequantity").attr({"min" : 0});
 var pkid = document.location.href.split('https://www.ubikanalytic.com/buy-manual?id=')[1]
 
 var request = new XMLHttpRequest()
-let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent?search-key=' + pkid);
+let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent?search-key=' + encodeURIComponent(pkid));
 
 console.log(xanoUrl.toString())
 request.open('GET', xanoUrl.toString(), true)
@@ -122,7 +122,7 @@ var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/update_event_second_ma
 
 var params = JSON.stringify(
 {
-"search-key": eventid,
+"search-key": encodeURIComponent(eventid),
 "Purchased_Amount_Alltime": nallt,
 "Delivery_Method_Selected": deliveryselected
 })
@@ -162,7 +162,7 @@ var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/buy_event_manual";
 var params = JSON.stringify(
 
 {
-"ID": eventid,
+"ID": encodeURIComponent(eventid),
 "Event_Name": eventname,
 "Event_Date": eventdate,
 "Event_Time": eventtime,
