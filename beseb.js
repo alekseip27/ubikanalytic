@@ -435,7 +435,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     var http = new XMLHttpRequest();
     var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/delete_event";
     var params = JSON.stringify({
-    "search-key": eventid,
+    "search-key": encodeURIComponent(eventid),
     "Purchase_Total": "",
     "Quantity_Per": "",
     "Section": "",
