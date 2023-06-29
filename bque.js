@@ -420,7 +420,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     const errorbutton = card.getElementsByClassName('main-buy-button')[0]
     errorbutton.textContent = 'Respond'
     errorbutton.addEventListener('click', function() {
-    window.location.assign("https://www.ubikanalytic.com/error-respond?id=" +events.Other_Master_Site_Event_Id)
+    window.location.assign("https://www.ubikanalytic.com/error-respond?id=" +encodeURIComponent(events.Other_Master_Site_Event_Id).replace('%20','+'));
     })}
     
     const confirmbutton = card.getElementsByClassName('main-confirm-button')[0]
