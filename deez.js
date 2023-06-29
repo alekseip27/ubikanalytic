@@ -224,7 +224,7 @@ var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/update_event_second";
 if(combined>=limit) {
 var params = JSON.stringify(
 {
-"search-key": eventid,
+"search-key": encodeURIComponent(eventid),
 "Bought_Amnt": combined,
 "Purchased_Amount_Alltime": allt,
 "Event_Other_Master_Buy_Status": "Completed",
@@ -238,7 +238,7 @@ http.send(params);
 } else {
 var params = JSON.stringify(
 {
-"search-key": eventid,
+"search-key": encodeURIComponent(eventid),
 "Bought_Amnt": combined,
 "Purchased_Amount_Alltime": allt,
 "Event_Other_Master_Buy_Status": "Added",
@@ -302,7 +302,7 @@ var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/buy_event";
 var params = JSON.stringify(
 
 {
-"ID": eventid,
+"ID": encodeURIComponent(eventid),
 "Event_Name": eventname,
 "Event_Date": eventdate,
 "Event_Time": eventtime,
