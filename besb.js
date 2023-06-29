@@ -425,7 +425,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     
     const confirmbutton = card.getElementsByClassName('main-confirm-button')[0]
     const deletebutton = card.getElementsByClassName('main-delete-button-confirm')[0]
-    const eventid = events.Other_Master_Site_Event_Id
+    const eventid = encodeURIComponent(events.Other_Master_Site_Event_Id)
     confirmbutton.addEventListener('click', function() {
     confirmbutton.style.display = "none";
     deletebutton.style.display = "flex";
