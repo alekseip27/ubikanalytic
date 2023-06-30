@@ -109,26 +109,28 @@ function checkresults() {
   }
 
 const scrapeurl = (eventid) => {
-    const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid;
-  
-    const request = fetch(url)
-      .then(response => response.json())
-      .then(data => {
+  const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid;
 
-          if (typeof data.count === 'number') {
-            primrem.textContent = data.count;
-          }
-  
-          if (typeof data.diffperday === 'number') {
-            dpd.textContent = data.diffperday;
-          }
-        }
-      })
-      .catch(error => {
-        console.log('Error:', error);
-        // Handle any errors that occurred during the request
-      })
-  };
+  const request = fetch(url)
+    .then(response => response.json())
+    .then(data => {
+  const primrems = card.getElementsByClassName('main-text-primary')[0]
+  const dpds = card.getElementsByClassName('main-text-aday')[0]
+
+      if (typeof data.count === 'number') {
+        primrems.textContent = data.count;
+      }
+
+      if (typeof data.diffperday === 'number') {
+        dpds.textContent = data.diffperday;
+      }
+    })
+    .catch(error => {
+      console.log('Error:', error);
+      // Handle any errors that occurred during the request
+    });
+};
+
   
   const scrapetm = async function(){
   const url = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/142_scrape_event?eventid='+evid
