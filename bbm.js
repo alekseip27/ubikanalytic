@@ -80,6 +80,7 @@ function checkresults() {
   const evid = events.Other_Master_Site_Event_Id
   
   card.setAttribute('id', '');
+  card.setAttribute('checked','false')
   card.setAttribute('name', events.Other_Master_Event_Name);
   
   card.setAttribute('date', events.Other_Master_Event_Date.slice(0, 10).replaceAll("-","/"));
