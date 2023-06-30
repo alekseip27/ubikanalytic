@@ -43,6 +43,9 @@ function checkresults() {
   });
   
   document.querySelector('#search-button').addEventListener("click", () => {
+
+  searchcompleted = false
+      
   let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
   let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
   $('.event-box').hide()
@@ -72,7 +75,6 @@ function checkresults() {
   const cardContainer = document.getElementById("Cards-Container")
   
   data.forEach(events => {
-  
   const style = document.getElementById('samplestyle')
   const card = style.cloneNode(true)
   const evid = events.Other_Master_Site_Event_Id
@@ -254,6 +256,8 @@ function checkresults() {
   
   cardContainer.appendChild(card);
   })
+ searchcompleted = true
+      
   } else if(request.status>400){
   document.querySelector('#loading').style.display = "none";
   document.querySelector('#flexbox').style.display = "flex";
