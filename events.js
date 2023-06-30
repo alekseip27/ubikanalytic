@@ -108,21 +108,19 @@ function checkresults() {
   primrem.textContent = events.Event_Other_Master_Primary_Remain_Amnt
   }
 
+
 const scrapeurl = (eventid) => {
   const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid;
 
   const request = fetch(url)
     .then(response => response.json())
     .then(data => {
-  const primrems = card.getElementsByClassName('main-text-primary')[0]
-  const dpds = card.getElementsByClassName('main-text-aday')[0]
-
       if (typeof data.count === 'number') {
-        primrems.textContent = data.count;
+        primrem.textContent = data.count;
       }
 
       if (typeof data.diffperday === 'number') {
-        dpds.textContent = data.diffperday;
+        dpd.textContent = data.diffperday;
       }
     })
     .catch(error => {
@@ -130,6 +128,8 @@ const scrapeurl = (eventid) => {
       // Handle any errors that occurred during the request
     });
 };
+
+
 
   
   const scrapetm = async function(){
@@ -144,7 +144,7 @@ const scrapeurl = (eventid) => {
   
   const result = await response.json();
   
-  scrapeurl()
+  scrapeurl(evid)
   
   }
   
@@ -166,7 +166,7 @@ const scrapeurl = (eventid) => {
   rescrapebutton.addEventListener('click',function(){
   primrem.textContent = ''
   dpd.textContent = ''
-  scrapeurl()
+  scrapeurl(evid)
   })
   
   
