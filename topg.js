@@ -126,6 +126,7 @@ $('#buyerlogo').show()
 $('#eventsdropdown').css('display','flex');
 $('#addevent').css('display','flex');
 $('#eventslist').css('display','flex');
+$('#events').css('display','none');
 $('#buying').css('display','flex');
 $('#emaildropdown').css('display','flex');
 $('#queue').css('display','flex');
@@ -133,7 +134,7 @@ $('#history').css('display','flex');
 $('#errorlog').css('display','flex');
 }
 
-if(!!buyer && window.location.href.includes('/events/') && window.location.href !== 'https://www.ubikanalytic.com/events-list') {
+if(!!buyer && window.location.href === 'https://www.ubikanalytic.com/events' || window.location.href === 'https://www.ubikanalytic.com/events#') {
 location.href = '/events-list'
 }
 
