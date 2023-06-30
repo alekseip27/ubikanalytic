@@ -133,8 +133,8 @@ $('#history').css('display','flex');
 $('#errorlog').css('display','flex');
 }
 
-if(!!buyer && window.location.href.includes('/events') && window.location.href !== 'https://www.ubikanalytic.com/events-list') {
-location.href = '/buy-queue'
+if(!!buyer && window.location.href.includes('/events/') && window.location.href !== 'https://www.ubikanalytic.com/events-list') {
+location.href = '/events-list'
 }
 
 if(!!entry) {
