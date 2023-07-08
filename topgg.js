@@ -134,7 +134,7 @@ $('#history').css('display','flex');
 $('#errorlog').css('display','flex');
 }
 
-if(!!buyer && window.location.href === 'https://www.ubikanalytic.com/events' || window.location.href === 'https://www.ubikanalytic.com/events#') {
+if(!!buyer && window.location.href === 'https://www.ubikanalytic.com/events' || !!buyer && window.location.href === 'https://www.ubikanalytic.com/events#') {
 location.href = '/events-list'
 }
 
