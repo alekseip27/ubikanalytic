@@ -44,6 +44,17 @@ function checkresults() {
   
   document.querySelector('#search-button').addEventListener("click", () => {
 
+
+if(document.getElementById('searchbar1').value.slice(-1) === ' '){
+document.getElementById('searchbar1').value = document.getElementById('searchbar1').value.slice(0,-1)
+}
+
+
+if(document.getElementById('searchbar2').value.slice(-1) === ' '){
+document.getElementById('searchbar2').value = document.getElementById('searchbar2').value.slice(0,-1)
+}
+
+      
   searchcompleted = false
 
   let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
