@@ -45,7 +45,9 @@ function checkresults() {
   document.querySelector('#search-button').addEventListener("click", () => {
 
   searchcompleted = false
-      
+
+if()
+
   let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
   let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
   $('.event-box').hide()
@@ -223,12 +225,14 @@ const scrapeurl = (eventid) => {
   txtsource.textContent = events.Event_Other_Master_Source_Formula
   
   if(events.Event_Other_Master_Source_Formula == 'TM') {
-  $(txtsource).click(function() {
+      
+  txtsource.addEventListener('click',function(){
   window.open('http://142.93.115.105:8100/event/' + evid +'/details/', "142")
   });
   txtsource.classList.add("clickable");
   }
-  
+
+      
   const eventdate = card.getElementsByClassName('main-text-date')[0]
   
   var tdate = events.Other_Master_Event_Date.slice(0, 10).replaceAll("-","/")
