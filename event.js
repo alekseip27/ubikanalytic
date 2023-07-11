@@ -46,8 +46,6 @@ function checkresults() {
 
   searchcompleted = false
 
-if()
-
   let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
   let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
   $('.event-box').hide()
