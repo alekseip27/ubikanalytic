@@ -46,14 +46,10 @@ function checkresults() {
 
 
 var searchbar1 = document.getElementById('searchbar1');
-if (searchbar1.value.slice(-1) === ' ') {
-  searchbar1.value = searchbar1.value.trimEnd();
-}
+searchbar1.value = searchbar1.value.trimEnd();
 
 var searchbar2 = document.getElementById('searchbar2');
-if (searchbar2.value.slice(-1) === ' ') {
-  searchbar2.value = searchbar2.value.trimEnd();
-}
+searchbar2.value = searchbar2.value.trimEnd();
 
       
   searchcompleted = false
