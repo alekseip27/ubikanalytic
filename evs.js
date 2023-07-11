@@ -45,13 +45,14 @@ function checkresults() {
   document.querySelector('#search-button').addEventListener("click", () => {
 
 
-if(document.getElementById('searchbar1').value.slice(-1) === ' '){
-document.getElementById('searchbar1').value = document.getElementById('searchbar1').value.slice(0,-1)
+var searchbar1 = document.getElementById('searchbar1');
+if (searchbar1.value.slice(-1) === ' ') {
+  searchbar1.value = searchbar1.value.trimEnd();
 }
 
-
-if(document.getElementById('searchbar2').value.slice(-1) === ' '){
-document.getElementById('searchbar2').value = document.getElementById('searchbar2').value.slice(0,-1)
+var searchbar2 = document.getElementById('searchbar2');
+if (searchbar2.value.slice(-1) === ' ') {
+  searchbar2.value = searchbar2.value.trimEnd();
 }
 
       
