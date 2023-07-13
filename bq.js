@@ -547,7 +547,7 @@ setTimeout(() => {
    
        
 
-setInterval(function () {
+checkeditbutton = setInterval(function () {
 
 let myFS = firebase.firestore();
 let docRef = myFS.doc("users/" + firebase.auth().currentUser.uid);
@@ -560,9 +560,11 @@ var ebutton = document.getElementsByClassName("main-edit-button");
 for (var i = 0; i < ebutton.length; i++) {
 ebutton[i].style.display = 'flex'
 }}
+clearInterval(checkeditbutton);
+    
 })
        
-}, 5000);
+}, 1000);
        
        
    })
