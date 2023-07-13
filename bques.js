@@ -465,7 +465,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
     }
   
     setTimeout(() => {
-  
+
+    
     function play() {
 sound = new Howl({
   src: ['https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3']
@@ -545,12 +546,8 @@ setTimeout(() => {
    }, 2500);
    
        
-       
-       
-       
-auth.onAuthStateChanged(async (user) => {
 
-if(user){
+setInterval(function () {
 
 let myFS = firebase.firestore();
 let docRef = myFS.doc("users/" + firebase.auth().currentUser.uid);
@@ -564,8 +561,8 @@ for (var i = 0; i < ebutton.length; i++) {
 ebutton[i].style.display = 'flex'
 }}
 })
-}})
        
+}, 5000);
        
        
    })
