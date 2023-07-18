@@ -74,7 +74,7 @@ searchbar2.value = searchbar2.value.trimEnd();
   request.open('GET', url, true)
   
   request.onload = function() {
-  
+  console.log(this.response)
   let data = JSON.parse(this.response)
   
   if (request.status >= 200 && request.status < 400) {
