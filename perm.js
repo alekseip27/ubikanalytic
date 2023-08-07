@@ -54,7 +54,7 @@ const authChanged = firebase.auth().onAuthStateChanged((user) => {
 
 
         
-if(!!user){
+if(email === null){
 auth.signOut();
 location.href = '/login'
 }
