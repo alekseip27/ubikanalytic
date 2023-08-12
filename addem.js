@@ -32,7 +32,7 @@ $("#buybtn").css("display", "none");
 var pkid = document.location.href.split('https://www.ubikanalytic.com/email/add?')[1]
 
 var request = new XMLHttpRequest()
-let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getdata_email?search=' + pkid);
+let xanoUrl = new URL('https://shibuy.co:8443/searchemaildata?variable1=' + pkid);
 
 request.open('GET', xanoUrl.toString(), true)
 
