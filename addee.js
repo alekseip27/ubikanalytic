@@ -1,4 +1,4 @@
-{
+4{
     document.addEventListener("input", () => {
     let fld1 = document.querySelector("#textverifiednumber").value;
     let fld2 = document.querySelector("#verifiedcode").value;
@@ -191,80 +191,74 @@
     
     }
     
+
     {
-    document.querySelector('#savebtn').addEventListener("click", () => {
+        document.querySelector('#savebtn').addEventListener("click", () => {
+        
     
-    var http = new XMLHttpRequest();
-    var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/email_create_saveprogress";
+            {
+                    
+                const emails = document.location.href.split('https://www.ubikanalytic.com/email/add?')[1]
+                let cbox1 = (document.querySelector("#checkbox1").checked)
+                let cbox2 = (document.querySelector("#checkbox2").checked)
+                let cbox3 = (document.querySelector("#checkbox3").checked)
+                let cbox4 = (document.querySelector("#checkbox4").checked)
+                let cbox5 = (document.querySelector("#checkbox5").checked)
+                let cbox6 = (document.querySelector("#checkbox6").checked)
+                let cbox7 = (document.querySelector("#checkbox7").checked)
+                let cbox8 = (document.querySelector("#checkbox8").checked)
+                let cbox9 = (document.querySelector("#checkbox9").checked)
+                let cbox10 = (document.querySelector("#checkbox10").checked)
+                let fld1 = document.querySelector("#textverifiednumber").value;
+                let fld2 = document.querySelector("#verifiedcode").value;
+                let fld3 = document.querySelector("#textchestcode").value;
+                let fld4 = document.querySelector("#googledate").value
+                let fld5 = document.querySelector("#teamubikconf").value
+                let fld6 = document.querySelector("#teamubiktest").value;
+                
+                
+                
+                const endpointUrl = "https://shibuy.co:8443/email_saveprogress?" +
+                "email=" + encodeURIComponent(emails) +
+                "&checkbox1=" + cbox1 +
+                "&checkbox2=" + cbox2 +
+                "&checkbox3=" + cbox3 +
+                "&checkbox4=" + cbox4 +
+                "&checkbox5=" + cbox5 +
+                "&checkbox6=" + cbox6 +
+                "&checkbox7=" + cbox7 +
+                "&checkbox8=" + cbox8+
+                "&checkbox9=" + cbox9 +
+                "&checkbox10=" + cbox10 +
+                "&field1=" + fld1 +
+                "&field2=" + fld2 +
+                "&field3=" + fld3 +
+                "&field4=" + fld4 +
+                "&field5=" + fld5 +
+                "&field6=" + fld6
+                    
+                    fetch(endpointUrl, {
+                    method: 'PUT',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+            if(data.RecordsAffected>0){
+            document.querySelector('#loading').style.display = "flex";
+            document.querySelector('#Item-Container').style.display = "none";       
+            setTimeout(() => {
+            window.location.href = "/email/queue";
+            }, 2000);
+            }
+                        
+                    })
+                    .catch(error => {
+                    console.log(error);
+                    });
+            
+                }
     
-    const email = document.location.href.split('https://www.ubikanalytic.com/email/add?')[1]
-    
-    let cbox1 = (document.querySelector("#checkbox1").checked)
-    let cbox2 = (document.querySelector("#checkbox2").checked)
-    let cbox3 = (document.querySelector("#checkbox3").checked)
-    let cbox4 = (document.querySelector("#checkbox4").checked)
-    let cbox5 = (document.querySelector("#checkbox5").checked)
-    let cbox6 = (document.querySelector("#checkbox6").checked)
-    let cbox7 = (document.querySelector("#checkbox7").checked)
-    let cbox8 = (document.querySelector("#checkbox8").checked)
-    let cbox9 = (document.querySelector("#checkbox9").checked)
-    let cbox10 = (document.querySelector("#checkbox10").checked)
-    
-    let fld1 = document.querySelector("#textverifiednumber").value;
-    let fld2 = document.querySelector("#verifiedcode").value;
-    let fld3 = document.querySelector("#textchestcode").value;
-    let fld4 = document.querySelector("#googledate").value
-    let fld5 = document.querySelector("#teamubikconf").value
-    let fld6 = document.querySelector("#teamubiktest").value;
-    
-    const dt = new Date();
-    let dtt =
-    dt.toLocaleString('en-US', {
-    timeZone: 'America/New_York',
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    })
-    let stimestamp = moment(dtt).format('MM/DD/YYYY HH:mm:ss')
-    
-    let submittedby = document.querySelector("#username").textcontent;
-    
-    var params = JSON.stringify(
-    
-    {
-    "email": email,
-    "checkbox1": cbox1,
-    "checkbox2": cbox2,
-    "checkbox3": cbox3,
-    "checkbox4": cbox4,
-    "checkbox5": cbox5,
-    "checkbox6": cbox6,
-    "checkbox7": cbox7,
-    "checkbox8": cbox8,
-    "checkbox9": cbox9,
-    "checkbox10": cbox10,
-    "field1": fld1,
-    "field2": fld2,
-    "field3": fld3,
-    "field4": fld4,
-    "field5": fld5,
-    "field6": fld6,
-    "Submitted_By": submittedby,
-    "Submitted_Date": stimestamp
-    
-    })
-    http.open("PUT", url, true);
-    
-    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-    
-    http.onreadystatechange = function() {
-    if(http.readyState == 4 && http.status == 200) {
-    }
-    }
-    http.send(params);
-    })
-    }
-    
+        })
+        }
