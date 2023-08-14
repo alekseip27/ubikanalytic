@@ -1,4 +1,4 @@
-4{
+{
     document.addEventListener("input", () => {
     let fld1 = document.querySelector("#textverifiednumber").value;
     let fld2 = document.querySelector("#verifiedcode").value;
