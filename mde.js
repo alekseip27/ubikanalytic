@@ -245,14 +245,6 @@
                     })
                     .then(response => response.json())
                     .then(data => {
-            if(data.RecordsAffected>0){
-            document.querySelector('#loading').style.display = "flex";
-            document.querySelector('#Item-Container').style.display = "none";       
-            setTimeout(() => {
-            window.location.href = "/email/queue";
-            }, 2000);
-            }
-                        
                     })
                     .catch(error => {
                     console.log(error);
