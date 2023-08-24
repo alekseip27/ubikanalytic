@@ -213,91 +213,114 @@ document.getElementById('venuecap').textContent = venuecap
 }
 })}
 
-  async function getchartvs() {
+        
+async function getchartvs() {
       
-  document.getElementById('fwicontotal3day').textContent = ''
-  document.getElementById('total3daytext').textContent = ''
-  document.getElementById('total3dayamount').textContent = ''
-      
-  document.getElementById('fwiconpreferred3day').textContent = ''
-  document.getElementById('preferred3daytext').textContent = ''
-  document.getElementById('preferred3dayamount').textContent = ''
-     
+    document.getElementById('fwicontotal3day').textContent = ''
+    document.getElementById('total3daytext').textContent = ''
+    document.getElementById('total3dayamount').textContent = ''
+        
+    document.getElementById('fwiconpreferred3day').textContent = ''
+    document.getElementById('preferred3daytext').textContent = ''
+    document.getElementById('preferred3dayamount').textContent = ''
+       
+  
+        
+    venuecap = 0;
+    let VDID = events.venue.id + events.date.slice(0,10);
+    var http = new XMLHttpRequest();
+    var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent_byvdid?search-key=" + VDID;
+    http.open("GET", url, true);
+    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+  
+    http.onload = function() {
+      let data = JSON.parse(this.response);
+      let venuecap = data[0];
+      secondpart(venuecap);
+    };
+  
+    http.send();
+  }
+  
 
-      
-  venuecap = 0;
-  let VDID = events.venue.id + events.date.slice(0,10);
-  var http = new XMLHttpRequest();
-  var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent_byvdid?search-key=" + VDID;
-  http.open("GET", url, true);
-  http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-
-  http.onload = function() {
-    let data = JSON.parse(this.response);
-    let venuecap = data[0];
-    secondpart(venuecap);
-  };
-
-  http.send();
-}
-
-function secondpart(venuecap) {
-  let currentid = card.getAttribute('id');
-  let datesvs = [];
-  let amountsvs = [];
-  let prefvs = [];
-  let resalepercent = [];
-  let lowestprice = [];
-  let lowestpricepref = [];
-
-  let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id=' + currentid;
-
-  fetch(getevent)
-    .then(response => response.json())
-    .then(commits => {
-      for (var i = 0; i < commits.length; i++) {
-        if (commits[i].ticket_count > 0) {
-          amountsvs.push(Math.round(commits[i].ticket_count));
-          prefvs.push(Math.round(commits[i].preferred_count));
-          datesvs.push(commits[i].date_scraped);
-
-          lowestprice.push(Math.round(commits[i].lowestprice));
-          lowestpricepref.push(Math.round(commits[i].lowestpreferredprice));
-
-          let resale = Math.round(commits[i].ticket_count / venuecap * 100);
-          resalepercent.push(resale);
+  function secondpart(venuecap) {
+    let currentid = card.getAttribute('id');
+    let datesvs = [];
+    let amountsvs = [];
+    let prefvs = [];
+    let resalepercent = [];
+    let lowestprice = [];
+    let lowestpricepref = [];
+  
+    let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id=' + currentid;
+  
+    fetch(getevent)
+      .then(response => response.json())
+      .then(commits => {
+        for (var i = 0; i < commits.length; i++) {
+          if (commits[i].ticket_count > 0) {
+            amountsvs.push(Math.round(commits[i].ticket_count));
+            prefvs.push(Math.round(commits[i].preferred_count));
+            datesvs.push(commits[i].date_scraped);
+  
+            lowestprice.push(Math.round(commits[i].lowestprice));
+            lowestpricepref.push(Math.round(commits[i].lowestpreferredprice));
+  
+            let resale = Math.round(commits[i].ticket_count / venuecap * 100);
+            resalepercent.push(resale);
+          }
         }
-      }
-
-      let threeDaysAgoCount = amountsvs[amountsvs.length - 4]; // 3 days ago count
-      let todayCount = amountsvs[amountsvs.length - 1]; // Today's count
-      let movingAverage = (threeDaysAgoCount - todayCount) / 3;
-
-      let threeDaysAgoCountpref = prefvs[prefvs.length - 4]; // 3 days ago count
-      let todayCountpref = prefvs[prefvs.length - 1]; // Today's count
-      let movingAveragepref = (threeDaysAgoCountpref - todayCountpref) / 3;
-
-      document.getElementById('fwicontotal3day').textContent = ''
-      document.getElementById('total3daytext').textContent = 'Total 3 Day:'
-      document.getElementById('total3dayamount').textContent = movingAverage.toFixed(2)
-      
-      document.getElementById('fwiconpreferred3day').textContent = ''
-      document.getElementById('preferred3daytext').textContent = 'Preferred 3 Day:'
-      document.getElementById('preferred3dayamount').textContent = (movingAveragepref.toFixed(2))
-
-      chartvs.data.datasets[0].data = amountsvs;
-      chartvs.data.datasets[1].data = prefvs;
-      chartvs.data.datasets[2].data = lowestprice;
-      chartvs.data.datasets[3].data = lowestpricepref;
-      chartvs.config.data.labels = datesvs;
-      chartvs.update();
-      document.querySelector('.chart-tab').style.display = 'flex';
-      document.querySelector('.chart-loading').style.display = 'none';
-    })
-    .catch(error => {
-      console.error(error);
-    });
-}
+  
+        // Sort the data arrays based on dates in ascending order
+        const sortedData = [];
+        for (let i = 0; i < datesvs.length; i++) {
+          const dateParts = datesvs[i].split(' ');
+          const date = dateParts[0];
+          sortedData.push({
+            date: new Date(date),
+            amount: amountsvs[i],
+            preferred: prefvs[i],
+            lowestPrice: lowestprice[i],
+            lowestPricePref: lowestpricepref[i]
+          });
+        }
+        sortedData.sort((a, b) => a.date - b.date);
+  
+        // Calculate moving averages
+        let movingAverage = 0;
+        let movingAveragepref = 0;
+        for (let i = sortedData.length - 4; i < sortedData.length; i++) {
+          movingAverage += sortedData[i].amount;
+          movingAveragepref += sortedData[i].preferred;
+        }
+        movingAverage /= 3;
+        movingAveragepref /= 3;
+  
+        // Update the display elements
+        document.getElementById('fwicontotal3day').textContent = '';
+        document.getElementById('total3daytext').textContent = 'Total 3 Day:';
+        document.getElementById('total3dayamount').textContent = movingAverage.toFixed(2);
+  
+        document.getElementById('fwiconpreferred3day').textContent = '';
+        document.getElementById('preferred3daytext').textContent = 'Preferred 3 Day:';
+        document.getElementById('preferred3dayamount').textContent = movingAveragepref.toFixed(2);
+  
+        // Update the chart data and labels
+        chartvs.data.datasets[0].data = sortedData.map(item => item.amount);
+        chartvs.data.datasets[1].data = sortedData.map(item => item.preferred);
+        chartvs.data.datasets[2].data = sortedData.map(item => item.lowestPrice);
+        chartvs.data.datasets[3].data = sortedData.map(item => item.lowestPricePref);
+        chartvs.config.data.labels = sortedData.map(item => item.date.toISOString().slice(0, 10));
+        chartvs.update();
+  
+        document.querySelector('.chart-tab').style.display = 'flex';
+        document.querySelector('.chart-loading').style.display = 'none';
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+  
 
 
         
