@@ -433,30 +433,13 @@ window.addEventListener('DOMContentLoaded', (event) => {
     
     deletebutton.addEventListener('click', function() {
     var http = new XMLHttpRequest();
-    var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/delete_event";
-    var params = JSON.stringify({
-    "search-key": encodeURIComponent(eventid),
-    "Purchase_Total": "",
-    "Quantity_Per": "",
-    "Section": "",
-    "Buying_Urgency": "",
-    "Purchase_Frequency": "",
-    "Purchase_Account": "",
-    "Other_Buy_Request_Date": "",
-    "Event_Other_Master_Buy_Status": "",
-    "Presale_Code": "",
-    "Notes": ""
-    })
+    var url = "https://shibuy.co:8443/delete_event?eventid="+encodeURIComponent(eventid)
     http.open("PUT", url, true);
     http.setRequestHeader("Content-type", "application/json; charset=utf-8");
     http.send(params);
     card.style.display = "none";
     });
-    
-    
-    
-    
-    
+
     cardContainer.appendChild(card);
     })}}
     request.send();
