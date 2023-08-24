@@ -436,7 +436,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     var url = "https://shibuy.co:8443/delete_event?eventid="+encodeURIComponent(eventid)
     http.open("PUT", url, true);
     http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-    http.send(params);
+    http.send();
     card.style.display = "none";
     });
 
