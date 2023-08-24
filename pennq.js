@@ -140,42 +140,59 @@ document.getElementById('mainurl').value = ''
     eventcost.textContent = '$' + events.cost
     
   
-
 async function getchartsd() {
 
-let dates_sd = [];
-let amounts_sd = [];
-let prices_sd = [];
-let rows_sd = [];
-let sections_sd = [];
-let eventid = events.stubhubEventUrl.slice(-10,-1)
-let eventurl = events.stubhubEventUrl
-let getevent = ('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=') +  eventid + "&Event_Url=" + eventurl;
+    let dates_sd = [];
+    let amounts_sd = [];
+    let prices_sd = [];
+    let rows_sd = [];
+    let sections_sd = [];
+    let eventid = events.stubhubEventUrl.slice(-10,-1)
+    let eventurl = events.stubhubEventUrl
+    let getevent = ('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=') +  eventid + "&Event_Url=" + eventurl;
+    
+    let response = await fetch(getevent);
+    let commits = await response.json();
+    
+    for (let commit of commits) {
+        amounts_sd.push(commit.quantity);
+        prices_sd.push(commit.price);
+        rows_sd.push(commit.row);
+        sections_sd.push(commit.section);
 
-  let response = await fetch(getevent);
-  let commits = await response.json();
+        dates_sd.push(commit.timestamp); // Store Unix timestamps directly
+    }
 
-  for (let commit of commits) {
-    amounts_sd.push(commit.quantity);
-    prices_sd.push(commit.price);
-    rows_sd.push(commit.row);
-    sections_sd.push(commit.section);
+    // Combine data into an array of objects for easier sorting
+    let data = dates_sd.map((timestamp, index) => ({
+        timestamp,
+        price: prices_sd[index],
+        amount: amounts_sd[index],
+        section: sections_sd[index],
+        row: rows_sd[index]
+    }));
 
-    dates_sd.push(moment.unix(commit.timestamp).format('MM/DD/YYYY hh:mm'));
-  }
+    // Sort data by timestamp in ascending order
+    data.sort((a, b) => a.timestamp - b.timestamp);
 
-  chart.data.datasets[0].data = [...prices_sd];
-  chart.data.datasets[1].data = [...amounts_sd];
-  chart.data.datasets[2].data = [...sections_sd];
-  chart.data.datasets[3].data = [...rows_sd];
-  chart.data.labels = [...dates_sd];
-  chart.update();
+    // Update chart data and labels after sorting
+    chart.data.datasets[0].data = data.map(item => item.price);
+    chart.data.datasets[1].data = data.map(item => item.amount);
+    chart.data.datasets[2].data = data.map(item => item.section);
+    chart.data.datasets[3].data = data.map(item => item.row);
+    chart.data.labels = data.map(item => formatTimestamp(item.timestamp)); // Convert Unix timestamp to formatted date
+    chart.update();
 
-  document.querySelector('.chart-tab').style.display = 'flex';
-  document.querySelector('.chart-loading').style.display = 'none';
+    document.querySelector('.chart-tab').style.display = 'flex';
+    document.querySelector('.chart-loading').style.display = 'none';
 }
 
-// Call the updateChart function to populate the chart data
+function formatTimestamp(unixTimestamp) {
+    const date = new Date(unixTimestamp * 1000); // Convert Unix timestamp to JavaScript timestamp
+    const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
+    return formattedDate;
+}
+
   
   
  function getvenuedata(){
