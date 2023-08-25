@@ -1,9 +1,9 @@
 $("#purchasequantity").attr({"min" : 0});
 {
 var pkid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
- 
+
 var request = new XMLHttpRequest()
-let xanoUrl = new URL('https://shibuy.co:8443/getevent?eventid=' + pkid);
+let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent?search-key=' + pkid);
 
 console.log(xanoUrl.toString())
 request.open('GET', xanoUrl.toString(), true)
@@ -152,8 +152,7 @@ document.querySelector('#Item-Container').style.display = "flex";
 console.log('error')
 }}
 request.send()
-}
-{
+}{
 emailstats = async function() {
 let bm = document.querySelector('#purchaseemail').value
 let src = document.querySelector('#purchasesource').textContent
@@ -251,7 +250,6 @@ http.open("PUT", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
 http.send(params);
 }}
-
 let purchaseacc = document.querySelector('#purchaseemail').value
 let maxamount = document.querySelector('#amountbought2').textContent
 let eventname = document.querySelector('#event').textContent
@@ -293,53 +291,52 @@ let alltime = Number(document.querySelector('#purchasealltime').textContent)
 
 let altm = alltime + cpur
 
+let combined = bought+cpur
 
 let purchurgency = document.querySelector('#purchasefrequency').textContent
 
 
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
-  
 var http = new XMLHttpRequest();
-var endpointUrl = "https://shibuy.co:8443/buy_event";
+var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/buy_event";
+var params = JSON.stringify(
 
+{
+"ID": encodeURIComponent(eventid),
+"Event_Name": eventname,
+"Event_Date": eventdate,
+"Event_Time": eventtime,
+"Event_Venue": eventvenue,
+"Purchase_Date": purchaseDate,
+"Purchase_Source": psrc,
+"Purchase_Quantity": pq,
+"Purchase_Quantity_Total": maxamount,
+"Purchase_Quantity_Alltime": altm,
+"Purchase_Account": pa,
+"Confirmation": pc,
+"Purchase_Email": pem,
+"Purchased_By": purchasedby,
+"Purchase_Requested": purchrequest,
+"Purchase_Urgency": purchurgency,
+"Purchase_Difference":pdifference,
+"p_filled":pfilled,
+"p_requested":prequested
+})
+http.open("POST", url, true);
+http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+http.onreadystatechange = function() {
 
-const newRowData = {
-ID: encodeURIComponent(eventid),
-Event_Name: eventname,
-Event_Date: eventdate,
-Event_Time: eventtime,
-Event_Venue: eventvenue,
-Purchase_Date: purchaseDate,
-Purchase_Source: psrc,
-Purchase_Quantity: pq,
-Purchase_Quantity_Total: maxamount,
-Purchase_Quantity_Alltime: altm,
-Purchase_Account: pa,
-Confirmation: pc,
-Purchase_Email: pem,
-Purchased_By: purchasedby,
-Purchase_Requested: purchrequest,
-Purchase_Urgency: purchurgency,
-Purchase_Difference:pdifference,
-p_filled:pfilled,
-p_requested:prequested
-};
-
-  fetch(endpointUrl, {
-    method: 'POST',
-    headers: {
-    'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(newRowData)
-    })
-    .then(response => response.json())
-    .then(data => {
-console.log(data)
-    })
-    .catch(error => {
-    console.log(error);
-    });
-
+if(http.readyState == 4 && http.status == 200) {
+document.querySelector('#loading').style.display = "flex";
+document.querySelector('#Item-Container').style.display = "none";
+setTimeout(() => {
+window.location.href = "/buy-queue";
+}, 2000);
+}
+}
+http.send(params);
+})
+}
 
 
 setTimeout(() => {
@@ -349,4 +346,3 @@ $('#purchaseacc').css('opacity', '0');
 }
 }, 1000);
 
-})}
