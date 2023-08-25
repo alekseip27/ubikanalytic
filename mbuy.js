@@ -3,9 +3,8 @@ $("#purchasequantity").attr({"min" : 0});
 var pkid = document.location.href.split('https://www.ubikanalytic.com/buy-manual?id=')[1]
 
 var request = new XMLHttpRequest()
-let xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/getevent?search-key=' + encodeURIComponent(pkid));
-
-console.log(xanoUrl.toString())
+let xanoUrl = new URL('https://shibuy.co:8443/getevent?eventid=' + encodeURIComponent(pkid));
+  
 request.open('GET', xanoUrl.toString(), true)
 
 request.onload = function() {
@@ -43,11 +42,6 @@ document.querySelector('#purchasealltime').textContent = data[0].Purchased_Amoun
 document.querySelector('#purchasealltime').textContent = "0"
 }
  
-
-
-
-
-
 itemContainer.appendChild(item);
 
 function copyToClipboard(text) {
@@ -65,35 +59,7 @@ document.querySelector('#Item-Container').style.display = "flex";
 console.log('error')
 }}
 request.send()
-}{
-emailstats = async function() {
-let bm = document.querySelector('#purchaseemail').value
-let src = document.querySelector('#purchasesource').textContent
-let myFS = firebase.firestore()
-let docSnap = await myFS.doc("stats/"+ bm).get();
-let data = docSnap.data()
-let i = data[src]
-if(Number(data[src]) == 0 || isNaN(i)) {
-myFS.doc("stats/" + bm).set({[src] : 1}, { merge: true })
-} else {
-myFS.doc("stats/" + bm).set({[src] : i+1}, { merge: true })
-}}
-
-accountstats = async function() {
-let acm = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase();
-
- 
-
-let src = document.querySelector('#purchasesource').textContent
-let myFS = firebase.firestore()
-let docSnap = await myFS.doc("accountstats/"+ acm).get();
-let data = docSnap.data()
-let i = data[src]
-if(Number(data[src]) == 0 || isNaN(i)) {
-myFS.doc("accountstats/" + acm).set({[src] : 1}, { merge: true })
-} else {
-myFS.doc("accountstats/" + acm).set({[src] : i+1}, { merge: true })
-}}
+}
 
 document.querySelector('#buybtn').addEventListener("click", () => {
 $('#buybtn').css({pointerEvents: "none"})
@@ -102,14 +68,6 @@ let bm = document.querySelector('#purchaseemail').value
 
 let deliveryselected = document.querySelector('#deliveryselected').value
 
-let acm = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase();
-let myFS = firebase.firestore()
-myFS.doc("stats/" + bm).set({}, {merge:true})
-myFS.doc("accountstats/" + acm).set({}, {merge:true})
-setTimeout(() => {
-emailstats()
-accountstats()
-}, 2000);
 {
 
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-manual?id=')[1]
@@ -118,17 +76,14 @@ let cram = Number(document.querySelector('#purchasequantity').value)
 let nallt = bght+cram
 
 var http = new XMLHttpRequest();
-var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/update_event_second_manual";
-
-var params = JSON.stringify(
-{
-"search-key": encodeURIComponent(eventid),
-"Purchased_Amount_Alltime": nallt,
-"Delivery_Method_Selected": deliveryselected
-})
+const url = "https://shibuy.co:8443/update_event_second?" +
+"eventid=" + encodeURIComponent(eventid) +
+"&Purchased_Amount_Alltime="+ nallt +
+"&Delivery_Method_Selected="+ deliveryselected
+  
 http.open("PUT", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-http.send(params);
+http.send();
 }
    
 let eventname = document.querySelector('#event').textContent
@@ -136,16 +91,7 @@ let eventdate = document.querySelector('#date').textContent
 let eventtime = document.querySelector('#time').textContent
 let eventvenue = document.querySelector('#venue').textContent
 
-const date = new Date();
-let purchasedate = 
-date.toLocaleString('en-US', {
-timeZone: 'America/New_York',
-year: 'numeric',
-month: '2-digit',
-day: '2-digit',
-hour: '2-digit',
-minute: '2-digit',
-})
+let purchasedate = moment().tz('America/New_York').format('MM/DD/YYYY, hh:mm A')
 
 let pc = document.querySelector('#purchaseconfirmation').value
 let pem = document.querySelector('#purchaseemail').value
@@ -158,42 +104,49 @@ let nallt = bght+cram
 
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-manual?id=')[1]
 var http = new XMLHttpRequest();
-var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/buy_event_manual";
-var params = JSON.stringify(
 
-{
-"ID": encodeURIComponent(eventid),
-"Event_Name": eventname,
-"Event_Date": eventdate,
-"Event_Time": eventtime,
-"Event_Venue": eventvenue,
-"Purchase_Date": purchasedate,
-"Purchase_Quantity": cram,
-"Purchase_Quantity_Alltime": nallt,
-"Confirmation": pc,
-"Purchase_Email": pem,
-"Purchased_By": purchasedby
+var endpointUrl = "https://shibuy.co:8443/buy_event";
+
+
+const newRowData = {
+ID: encodeURIComponent(eventid),
+Event_Name: eventname,
+Event_Date: eventdate,
+Event_Time: eventtime,
+Event_Venue: eventvenue,
+Purchase_Date: purchasedate,
+Purchase_Source: "manual",
+Purchase_Quantity: cram,
+Purchase_Quantity_Total: maxamount,
+Purchase_Quantity_Alltime: nallt,
+Purchase_Account: "manual",
+Confirmation: pc,
+Purchase_Email: pem,
+Purchased_By: purchasedby,
+Purchase_Requested: "manual",
+Purchase_Urgency: "manual",
+Purchase_Difference:"manual",
+p_filled:pfilled
+};
+
+fetch(endpointUrl, {
+method: 'POST',
+headers: {
+'Content-Type': 'application/json'
+},
+body: JSON.stringify(newRowData)
 })
-http.open("POST", url, true);
-http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-http.onreadystatechange = function() {
+.then(response => response.json())
+.then(data => {
 
-if(http.readyState == 4 && http.status == 200) {
-document.querySelector('#loading').style.display = "flex";
-document.querySelector('#Item-Container').style.display = "none";
-setTimeout(() => {
-window.location.href = "/events";
-}, 2000);
-}
-}
-http.send(params);
+    document.querySelector('#loading').style.display = "flex";
+    document.querySelector('#Item-Container').style.display = "none";
+    setTimeout(() => {
+    window.location.href = "/buy-queue";
+    }, 2000);
+
 })
-}
-
-
-setTimeout(() => {
-if(!!$('#purchaseacc').text() == false) {
-$('#purchaseacc').text('noaccount')
-$('#purchaseacc').css('opacity', '0');
-}
-}, 1000);
+.catch(error => {
+console.log(error);
+});
+})
