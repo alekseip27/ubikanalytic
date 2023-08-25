@@ -1,6 +1,6 @@
 $("#purchasequantity").attr({"min" : 0});
 {
-var pkid = document.location.href.split('https://www.ubikanalytic.com/buy-event-copy?id=')[1]
+var pkid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
  
 var request = new XMLHttpRequest()
 let xanoUrl = new URL('https://shibuy.co:8443/getevent?eventid=' + pkid);
@@ -185,7 +185,7 @@ let combined = bought+cpr
 let alltime = Number(document.querySelector('#purchasealltime').textContent)
 let allt = alltime+cpr
 let limit = Number(document.querySelector('#amountbought2').textContent)
-var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event-copy?id=')[1]
+var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
 const url = "https://shibuy.co:8443/update_event_second?" +
 "eventid=" + encodeURIComponent(eventid) +
@@ -246,7 +246,7 @@ let altm = alltime + cpur
 let purchurgency = document.querySelector('#purchasefrequency').textContent
 
 
-var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event-copy?id=')[1]
+var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
   
 var http = new XMLHttpRequest();
 var endpointUrl = "https://shibuy.co:8443/buy_event";
