@@ -92,7 +92,7 @@ let eventtime = document.querySelector('#time').textContent
 let eventvenue = document.querySelector('#venue').textContent
 
 let purchasedate = moment().tz('America/New_York').format('MM/DD/YYYY, hh:mm A')
-let pfilled = moment().tz('America/New_York').format('MM/DD/YYYY, hh:mm:ss')
+let pfilled = moment().tz('America/New_York').format('MM/DD/YYYY hh:mm:ss')
 
 let pc = document.querySelector('#purchaseconfirmation').value
 let pem = document.querySelector('#purchaseemail').value
