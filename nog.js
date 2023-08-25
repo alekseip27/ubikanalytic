@@ -192,7 +192,7 @@ const url = "https://shibuy.co:8443/update_event_second?" +
 "&Purchase_Total=" + combined +
 "&Purchased_Amount_Alltime="+ allt +
 "&Details_Match=" + dmatch +
-"No_Will_Call="+ wcall +
+"&No_Will_Call="+ wcall +
 "&Delivery_Method_Selected="+ deliveryselected
 if(combined>=limit) {
 urll = url + "&Event_Other_Master_Buy_Status=Completed"
