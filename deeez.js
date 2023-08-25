@@ -152,34 +152,7 @@ document.querySelector('#Item-Container').style.display = "flex";
 console.log('error')
 }}
 request.send()
-}{
-emailstats = async function() {
-let bm = document.querySelector('#purchaseemail').value
-let src = document.querySelector('#purchasesource').textContent
-let myFS = firebase.firestore()
-let docSnap = await myFS.doc("stats/"+ bm).get();
-let data = docSnap.data()
-let i = data[src]
-if(Number(data[src]) == 0 || isNaN(i)) {
-myFS.doc("stats/" + bm).set({[src] : 1}, { merge: true })
-} else {
-myFS.doc("stats/" + bm).set({[src] : i+1}, { merge: true })
-}}
-
-accountstats = async function() {
-let acm = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase();
-
-
-let src = document.querySelector('#purchasesource').textContent
-let myFS = firebase.firestore()
-let docSnap = await myFS.doc("accountstats/"+ acm).get();
-let data = docSnap.data()
-let i = data[src]
-if(Number(data[src]) == 0 || isNaN(i)) {
-myFS.doc("accountstats/" + acm).set({[src] : 1}, { merge: true })
-} else {
-myFS.doc("accountstats/" + acm).set({[src] : i+1}, { merge: true })
-}}
+}
 
 document.querySelector('#buybtn').addEventListener("click", () => {
 $('#buybtn').css({pointerEvents: "none"})
@@ -204,13 +177,7 @@ let wcall = 'false'
 let deliveryselected = document.querySelector('#deliveryselected').value
 
 let acm = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase();
-let myFS = firebase.firestore()
-myFS.doc("stats/" + bm).set({}, {merge:true})
-myFS.doc("accountstats/" + acm).set({}, {merge:true})
-setTimeout(() => {
-emailstats()
-accountstats()
-}, 2000);
+
 {
 let bought = Number(document.querySelector('#amountbought1').textContent)
 let cpr = Number(document.querySelector('#purchasequantity').value)
