@@ -283,7 +283,13 @@ p_requested:prequested
     })
     .then(response => response.json())
     .then(data => {
-console.log(data)
+
+document.querySelector('#loading').style.display = "flex";
+document.querySelector('#Item-Container').style.display = "none";
+setTimeout(() => {
+window.location.href = "/buy-queue";
+}, 2000);
+     
     })
     .catch(error => {
     console.log(error);
