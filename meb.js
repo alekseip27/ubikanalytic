@@ -125,7 +125,7 @@ Purchased_By: purchasedby,
 Purchase_Requested: "manual",
 Purchase_Urgency: "manual",
 Purchase_Difference:"manual",
-p_filled:pfilled
+p_filled:purchasedate
 };
 
 fetch(endpointUrl, {
