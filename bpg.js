@@ -303,7 +303,7 @@ window.location.href = "/buy-queue";
 }
 http.send(params);
 })
-}
+
 
 
 setTimeout(() => {
@@ -312,4 +312,3 @@ $('#purchaseacc').text('noaccount')
 $('#purchaseacc').css('opacity', '0');
 }
 }, 1000);
-
