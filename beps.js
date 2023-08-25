@@ -202,7 +202,7 @@ urll = url + "&Event_Other_Master_Buy_Status=Added"
 
 http.open("PUT", urll, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-http.send(params);
+http.send();
 
 let purchaseacc = document.querySelector('#purchaseemail').value
 let maxamount = document.querySelector('#amountbought2').textContent
