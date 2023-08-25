@@ -138,11 +138,10 @@ body: JSON.stringify(newRowData)
 })
 .then(response => response.json())
 .then(data => {
-
-    document.querySelector('#loading').style.display = "flex";
     document.querySelector('#Item-Container').style.display = "none";
+    document.querySelector('#loading').style.display = "flex";
     setTimeout(() => {
-    window.location.href = "/buy-queue";
+    window.location.href = "/events";
     }, 2000);
 
 })
