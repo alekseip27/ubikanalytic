@@ -189,15 +189,14 @@ var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-eve
 var http = new XMLHttpRequest();
 const url = "https://shibuy.co:8443/update_event_second?" +
 "eventid=" + encodeURIComponent(eventid) +
-"&Bought_Amnt=" + combined +
 "&Purchased_Amount_Alltime="+ allt +
 "&Details_Match=" + dmatch +
 "&No_Will_Call="+ wcall +
 "&Delivery_Method_Selected="+ deliveryselected
 if(combined>=limit) {
-urll = url + "&Event_Other_Master_Buy_Status=Completed"
+urll = url + "&Event_Other_Master_Buy_Status=Completed"+ "&Bought_Amnt=0"
 } else {
-urll = url + "&Event_Other_Master_Buy_Status=Added"
+urll = url + "&Event_Other_Master_Buy_Status=Added" + "&Bought_Amnt=" + combined
 }
 
 http.open("PUT", urll, true);
