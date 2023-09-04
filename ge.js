@@ -125,6 +125,8 @@ const scrapeurl = (eventid) => {
     .then(data => {
       if (typeof data.count === 'number' && data.count !== 0) {
         primrem.textContent = data.count;
+      } else {
+        primrem.textContent = 'test'
       }
 
       if (typeof data.diffperday === 'number') {
