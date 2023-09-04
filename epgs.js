@@ -90,7 +90,7 @@ searchbar2.value = searchbar2.value.trimEnd();
   card.setAttribute('checked','false')
   card.setAttribute('name', events.Other_Master_Event_Name);
 
- if(Other_Master_Event_Date){
+ if(events.Other_Master_Event_Date){
   card.setAttribute('date', events.Other_Master_Event_Date.slice(0, 10).replaceAll("-","/"));
  }
       
