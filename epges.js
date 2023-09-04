@@ -109,6 +109,7 @@ searchbar2.value = searchbar2.value.trimEnd();
   
   const primrem = card.getElementsByClassName('main-text-primary')[0]
   const dpd = card.getElementsByClassName('main-text-aday')[0]
+  primrem.textContent = ''
   
   if(events.Event_Other_Master_Primary_Remain_Amnt === 0) {
   primrem.textContent = ''
