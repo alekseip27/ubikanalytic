@@ -123,7 +123,7 @@ const scrapeurl = (eventid) => {
   const request = fetch(url)
     .then(response => response.json())
     .then(data => {
-      if (typeof data.count === 'number') {
+      if (typeof data.count === 'number' && data.count !== 0) {
         primrem.textContent = data.count;
       }
 
