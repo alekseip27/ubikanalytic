@@ -144,7 +144,7 @@ function checkresults() {
       chart.data.datasets[0].data = amounts;
       chart.config.data.labels = dates;
       chart.update();
-        
+      document.querySelector('#graph-overlay').style.display = 'flex'
     };
   
     http.send();
