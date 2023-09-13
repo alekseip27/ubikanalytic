@@ -109,7 +109,7 @@ searchbar2.value = searchbar2.value.trimEnd();
 
 const charticon = card.getElementsByClassName('main-text-chart')[0]
  
-charticon..addEventListener('click', function() {
+charticon.addEventListener('click', function() {
 if (events.Event_Other_Master_Source_Formula === 'TM') {
   let dates = [];
   let amounts = [];
