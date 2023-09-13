@@ -119,7 +119,7 @@ function checkresults() {
     primrem.textContent = events.Event_Other_Master_Primary_Remain_Amnt
     }
   
-  
+  /** 
   const charticon = card.getElementsByClassName('main-text-chart')[0]
    
   charticon.addEventListener('click', function() {
@@ -152,7 +152,7 @@ function checkresults() {
       }
     });
 
-        
+**/   
   
   const scrapeurl = (eventid) => {
     const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid;
