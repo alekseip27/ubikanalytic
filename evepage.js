@@ -133,7 +133,7 @@ function checkresults() {
   
     http.onload = function() {
       let data = JSON.parse(this.response);
-      let scrapedate = data[0].scrap_date
+      let scrapedate = data[0].scrape_date
   const totalAmount = data[0].amounts.reduce((accumulator, currentValue) => {
     return accumulator + currentValue.amount;
   }, 0);
