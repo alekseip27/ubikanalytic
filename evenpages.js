@@ -27,7 +27,7 @@ function checkresults() {
     checkresults()
     }, 100);
     
-    var input = document.getElementById("searchbar1");
+    var input = document.getElementById("esearchbar1");
     input.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
     event.preventDefault();
@@ -123,6 +123,7 @@ function checkresults() {
   const charticon = card.getElementsByClassName('main-text-chart')[0]
    
   charticon.addEventListener('click', function() {
+  document.querySelector('#graph-overlay').style.display = 'flex'
   if (events.Event_Other_Master_Source_Formula === 'TM') {
     let dates = [];
     let amounts = [];
@@ -144,7 +145,6 @@ function checkresults() {
       chart.data.datasets[0].data = amounts;
       chart.config.data.labels = dates;
       chart.update();
-      document.querySelector('#graph-overlay').style.display = 'flex'
     };
   
     http.send();
