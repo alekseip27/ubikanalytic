@@ -120,6 +120,40 @@ searchbar2.value = searchbar2.value.trimEnd();
   }
 
 
+const charticon = card.getElementsByClassName('main-text-chart')[0]
+ 
+charticon..addEventListener('click', function() {
+if (events.Event_Other_Master_Source_Formula === 'TM') {
+  let dates = [];
+  let amounts = [];
+  var http = new XMLHttpRequest();
+  var url = "https://shibuy.co:8443/142data?eventid=" + events.Other_Master_Site_Event_Id
+  http.open("GET", url, true);
+  http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+
+  http.onload = function() {
+    let data = JSON.parse(this.response);
+    let scrapedate = data[0].scrap_date
+const totalAmount = data[0].amounts.reduce((accumulator, currentValue) => {
+  return accumulator + currentValue.amount;
+}, 0);
+
+    amounts.push(totalAmount)
+    dates.push(scrapedate)
+      
+    chart.data.datasets[0].data = amounts;
+    chart.config.data.labels = dates;
+    chart.update();
+      
+  };
+
+  http.send();
+
+    }
+  });
+});
+      
+
 const scrapeurl = (eventid) => {
   const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid;
 
