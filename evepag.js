@@ -143,6 +143,8 @@ document.querySelector('#graph-overlay').style.display = 'flex'
   
     http.send();
   
+      } else {
+charticon.style.display = 'none'
       }
     
     });
