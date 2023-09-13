@@ -139,6 +139,8 @@ document.querySelector('#graph-overlay').style.display = 'flex'
   chart.data.datasets[0].data = amounts;
   chart.config.data.labels = dates;
   chart.update();
+  document.querySelector('#tmloader').style.display = 'none'
+  document.querySelector('#tmchart').style.display = 'flex'
 };
   
     http.send();
