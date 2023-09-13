@@ -143,12 +143,14 @@ document.querySelector('#graph-overlay').style.display = 'flex'
   
     http.send();
   
-      } else {
-charticon.style.display = 'none'
       }
     
     });
-        
+
+      if (events.Event_Other_Master_Source_Formula !== 'TM') {
+charticon.style.display = 'none'
+      }
+          
     const primrem = card.getElementsByClassName('main-text-primary')[0]
     const dpd = card.getElementsByClassName('main-text-aday')[0]
     primrem.textContent = ''
