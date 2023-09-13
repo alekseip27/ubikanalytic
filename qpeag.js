@@ -122,10 +122,13 @@ document.querySelector('#graph-overlay').style.display = 'flex'
    http.onload = function () {
   let data = JSON.parse(this.response);
   let scrapedate = data[0].scrape_date;
-  const totalAmount = data[0].amounts.reduce((accumulator, currentValue) => {
-    return accumulator + currentValue.amount;
+       
+const totalAmount = data.reduce((accumulator, event) => {
+  const eventTotal = event.sections.reduce((eventAccumulator, section) => {
+    return eventAccumulator + section.amount;
   }, 0);
-
+  return accumulator + eventTotal;
+}, 0);
   amounts.push(totalAmount);
 
   // Convert the date format to Eastern Standard Time (EST)
