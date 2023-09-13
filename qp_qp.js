@@ -107,50 +107,62 @@ function checkresults() {
     card.setAttribute('vivid_id', events.Event_Other_Master_Vivid_Venue_Id);
     card.setAttribute('vivid_ed', events.Other_Master_Event_Date.slice(0,10));
   
-  const charticon = card.getElementsByClassName('main-text-chart')[0]
-   
-  charticon.addEventListener('click', function() {
-document.querySelector('#graph-overlay').style.display = 'flex'
+const charticon = card.getElementsByClassName('main-text-chart')[0];
+
+charticon.addEventListener('click', function () {
+  document.querySelector('#graph-overlay').style.display = 'flex';
   if (events.Event_Other_Master_Source_Formula === 'TM') {
     let dates = [];
     let amounts = [];
     var http = new XMLHttpRequest();
-    var url = "https://shibuy.co:8443/142data?eventid=" + events.Other_Master_Site_Event_Id
+    var url = "https://shibuy.co:8443/142data?eventid=" + events.Other_Master_Site_Event_Id;
     http.open("GET", url, true);
     http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-  
-   http.onload = function () {
-  let data = JSON.parse(this.response);
-  let scrapedate = data[0].scrape_date;
-       
-const totalAmount = data.reduce((accumulator, event) => {
-  const eventTotal = event.sections.reduce((eventAccumulator, section) => {
-    return eventAccumulator + section.amount;
-  }, 0);
-  return accumulator + eventTotal;
-}, 0);
-  amounts.push(totalAmount);
 
-  // Convert the date format to Eastern Standard Time (EST)
-  const dateObj = new Date(scrapedate);
-  const estOffset = -5 * 60; // EST is UTC-5
-  const estDate = new Date(dateObj.getTime() + estOffset * 60 * 1000);
-  const formattedDate = estDate.toISOString().replace('T', ' ').slice(0, 16);
+    // Set a timeout for the request (5 seconds)
+    const requestTimeout = 5000; // 5 seconds
 
-  dates.push(formattedDate);
+    // Create a timer to log an error if the request takes too long
+    const timeoutTimer = setTimeout(() => {
+      document.querySelector('#tmloader').style.display = 'none';
+      document.querySelector('#tmerror').style.display = 'flex';
+      document.querySelector('#tmchart').style.display = 'none';
+      http.abort(); // Abort the request
+    }, requestTimeout);
 
-  chart.data.datasets[0].data = amounts;
-  chart.config.data.labels = dates;
-  chart.update();
-  document.querySelector('#tmloader').style.display = 'none'
-  document.querySelector('#tmchart').style.display = 'flex'
-};
-  
+    http.onload = function () {
+      // Clear the timeout timer since the request has completed
+      clearTimeout(timeoutTimer);
+
+      let data = JSON.parse(this.response);
+      let scrapedate = data[0].scrape_date;
+
+      const totalAmount = data.reduce((accumulator, event) => {
+        const eventTotal = event.sections.reduce((eventAccumulator, section) => {
+          return eventAccumulator + section.amount;
+        }, 0);
+        return accumulator + eventTotal;
+      }, 0);
+      amounts.push(totalAmount);
+
+      // Convert the date format to Eastern Standard Time (EST)
+      const dateObj = new Date(scrapedate);
+      const estOffset = -5 * 60; // EST is UTC-5
+      const estDate = new Date(dateObj.getTime() + estOffset * 60 * 1000);
+      const formattedDate = estDate.toISOString().replace('T', ' ').slice(0, 16);
+
+      dates.push(formattedDate);
+
+      chart.data.datasets[0].data = amounts;
+      chart.config.data.labels = dates;
+      chart.update();
+      document.querySelector('#tmloader').style.display = 'none';
+      document.querySelector('#tmchart').style.display = 'flex';
+    };
+
     http.send();
-  
-      }
-    
-    });
+  }
+});
 
       if (events.Event_Other_Master_Source_Formula !== 'TM') {
 charticon.style.display = 'none'
