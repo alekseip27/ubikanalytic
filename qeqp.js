@@ -109,10 +109,11 @@ function checkresults() {
   
 const charticon = card.getElementsByClassName('main-text-chart')[0];
 
+
 charticon.addEventListener('click', function () {
   document.querySelector('#graph-overlay').style.display = 'flex';
   if (events.Event_Other_Master_Source_Formula === 'TM') {
-      let dates = [];
+    let dates = [];
     let amounts = [];
     var http = new XMLHttpRequest();
     var url = "https://shibuy.co:8443/142data?eventid=" + events.Other_Master_Site_Event_Id;
@@ -137,34 +138,41 @@ charticon.addEventListener('click', function () {
       let data = JSON.parse(this.response);
       let scrapedate = data[0].scrape_date;
 
-    data.forEach(event => {
-      event.summaries.forEach(summary => {
-        const totalAmount = summary.amounts.reduce((accumulator, amount) => accumulator + amount.amount, 0);
-        amounts.push(totalAmount);
+      data.forEach(event => {
+        event.summaries.forEach(summary => {
+          const totalAmount = summary.amounts.reduce((accumulator, amount) => accumulator + amount.amount, 0);
+          amounts.push(totalAmount);
 
-        // Convert the date format to Eastern Standard Time (EST)
-        const dateObj = new Date(summary.scrape_date);
-        const estOffset = -4 * 60; // EST is UTC-5
-        const estDate = new Date(dateObj.getTime() + estOffset * 60 * 1000);
-        const formattedDate = estDate.toISOString().replace('T', ' ').slice(0, 16);
+          // Convert the date format to Eastern Standard Time (EST)
+          const dateObj = new Date(summary.scrape_date);
+          const estOffset = -4 * 60; // EST is UTC-5
+          const estDate = new Date(dateObj.getTime() + estOffset * 60 * 1000);
+          const formattedDate = estDate.toISOString().replace('T', ' ').slice(0, 16);
 
-        dates.push(formattedDate);
+          dates.push(formattedDate);
+        });
       });
-    });
 
-      chart.data.datasets[0].data = amounts;
-      chart.config.data.labels = dates;
+      // Sort the data by date in ascending order
+      const sortedData = dates.map((date, index) => ({
+        date,
+        amount: amounts[index],
+      })).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      // Update the chart with sorted data
+      chart.data.datasets[0].data = sortedData.map(item => item.amount);
+      chart.config.data.labels = sortedData.map(item => item.date);
       chart.update();
+
       document.querySelector('#tmloader').style.display = 'none';
       document.querySelector('#tmchart').style.display = 'flex';
       document.querySelector('#tmerror').style.display = 'none';
-        
     };
 
     http.send();
   }
 });
-
+        
       if (events.Event_Other_Master_Source_Formula !== 'TM') {
 charticon.style.display = 'none'
       }
