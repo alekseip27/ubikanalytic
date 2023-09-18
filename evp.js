@@ -116,7 +116,7 @@ charticon.addEventListener('click', function () {
   let dates = [];
 let amounts = [];
 var http = new XMLHttpRequest();
-var url = "https://shibuy.co:8443/142data?eventid=" + "06005F218D351563";
+var url = "https://shibuy.co:8443/142data?eventid=" + events.Other_Master_Site_Event_Id;
 http.open("GET", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
 
@@ -178,6 +178,7 @@ const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}`;
   chart.config.data.labels = sortedDates;
   chart.update();
   document.querySelector('#tmloader').style.display = 'none';
+  document.querySelector('#tmerror').style.display = 'none';
   document.querySelector('#tmchart').style.display = 'flex';
 };
 
