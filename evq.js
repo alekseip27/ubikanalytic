@@ -113,63 +113,76 @@ const charticon = card.getElementsByClassName('main-text-chart')[0];
 charticon.addEventListener('click', function () {
   document.querySelector('#graph-overlay').style.display = 'flex';
   if (events.Event_Other_Master_Source_Formula === 'TM') {
-    let dates = [];
-    let amounts = [];
-    var http = new XMLHttpRequest();
-    var url = "https://shibuy.co:8443/142data?eventid=" + events.Other_Master_Site_Event_Id;
-    http.open("GET", url, true);
-    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+  let dates = [];
+let amounts = [];
+var http = new XMLHttpRequest();
+var url = "https://shibuy.co:8443/142data?eventid=" + "06005F218D351563";
+http.open("GET", url, true);
+http.setRequestHeader("Content-type", "application/json; charset=utf-8");
 
-    // Set a timeout for the request (5 seconds)
-    const requestTimeout = 5000; // 5 seconds
+// Set a timeout for the request (5 seconds)
+const requestTimeout = 5000; // 5 seconds
 
-    // Create a timer to log an error if the request takes too long
-    const timeoutTimer = setTimeout(() => {
-      document.querySelector('#tmloader').style.display = 'none';
-      document.querySelector('#tmerror').style.display = 'flex';
-      document.querySelector('#tmchart').style.display = 'none';
-      http.abort(); // Abort the request
-    }, requestTimeout);
+// Create a timer to log an error if the request takes too long
+const timeoutTimer = setTimeout(() => {
+  document.querySelector('#tmloader').style.display = 'none';
+  document.querySelector('#tmerror').style.display = 'flex';
+  document.querySelector('#tmchart').style.display = 'none';
+  http.abort(); // Abort the request
+}, requestTimeout);
 
-    http.onload = function () {
-      // Clear the timeout timer since the request has completed
-      clearTimeout(timeoutTimer);
+http.onload = function () {
+  // Clear the timeout timer since the request has completed
+  clearTimeout(timeoutTimer);
 
-      let data = JSON.parse(this.response);
-      let scrapedate = data[0].scrape_date;
+  let data = JSON.parse(this.response);
+  let scrapedate = data[0].scrape_date;
 
-      data.forEach(event => {
-        event.summaries.forEach(summary => {
-          const totalAmount = summary.amounts.reduce((accumulator, amount) => accumulator + amount.amount, 0);
-          amounts.push(totalAmount);
+  data.forEach(event => {
+    event.summaries.forEach(summary => {
+      const totalAmount = summary.amounts.reduce((accumulator, amount) => accumulator + amount.amount, 0);
 
-          // Convert the date format to Eastern Standard Time (EST)
-          const dateObj = new Date(summary.scrape_date);
-          const estOffset = -4 * 60; // EST is UTC-5
-          const estDate = new Date(dateObj.getTime() + estOffset * 60 * 1000);
-          const formattedDate = estDate.toISOString().replace('T', ' ').slice(0, 16);
+    // Convert the date format to Eastern Standard Time (EST)
+const dateObj = new Date(summary.scrape_date);
+const estOffset = -4 * 60; // EST is UTC-5
+dateObj.setTime(dateObj.getTime() + estOffset * 60 * 1000);
 
-          dates.push(formattedDate);
-        });
-      });
+const year = dateObj.getFullYear();
+const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
+const day = dateObj.getDate().toString().padStart(2, '0');
+const hours = dateObj.getHours().toString().padStart(2, '0');
+const minutes = dateObj.getMinutes().toString().padStart(2, '0');
 
-      // Sort the data by date in ascending order
-      const sortedData = dates.map((date, index) => ({
-        date,
-        amount: amounts[index],
-      })).sort((a, b) => new Date(a.date) - new Date(b.date));
+const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}`;
 
-      // Update the chart with sorted data
-      chart.data.datasets[0].data = sortedData.map(item => item.amount);
-      chart.config.data.labels = sortedData.map(item => item.date);
-      chart.update();
 
-      document.querySelector('#tmloader').style.display = 'none';
-      document.querySelector('#tmchart').style.display = 'flex';
-      document.querySelector('#tmerror').style.display = 'none';
-    };
+      dates.push(formattedDate);
+      amounts.push(totalAmount);
+    });
+  });
 
-    http.send();
+  // Create an array of objects with dates and amounts
+  const dataObjects = dates.map((date, index) => ({
+    date,
+    amount: amounts[index],
+  }));
+
+  // Sort the dataObjects array based on date in ascending order
+  dataObjects.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+  // Extract sorted dates and amounts from dataObjects
+  const sortedDates = dataObjects.map(item => item.date);
+  const sortedAmounts = dataObjects.map(item => item.amount);
+
+  chart.data.datasets[0].data = sortedAmounts;
+  chart.config.data.labels = sortedDates;
+  chart.update();
+  document.querySelector('#tmloader').style.display = 'none';
+  document.querySelector('#tmchart').style.display = 'flex';
+};
+
+http.send();
+
   }
 });
         
