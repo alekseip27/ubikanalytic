@@ -157,6 +157,8 @@ charticon.addEventListener('click', function () {
       chart.update();
       document.querySelector('#tmloader').style.display = 'none';
       document.querySelector('#tmchart').style.display = 'flex';
+      document.querySelector('#tmerror').style.display = 'none';
+        
     };
 
     http.send();
