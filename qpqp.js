@@ -137,21 +137,20 @@ charticon.addEventListener('click', function () {
       let data = JSON.parse(this.response);
       let scrapedate = data[0].scrape_date;
 
-      const totalAmount = data.reduce((accumulator, event) => {
-        const eventTotal = event.sections.reduce((eventAccumulator, section) => {
-          return eventAccumulator + section.amount;
-        }, 0);
-        return accumulator + eventTotal;
-      }, 0);
-      amounts.push(totalAmount);
+    data.forEach(event => {
+      event.summaries.forEach(summary => {
+        const totalAmount = summary.amounts.reduce((accumulator, amount) => accumulator + amount.amount, 0);
+        amounts.push(totalAmount);
 
-      // Convert the date format to Eastern Standard Time (EST)
-      const dateObj = new Date(scrapedate);
-      const estOffset = -5 * 60; // EST is UTC-5
-      const estDate = new Date(dateObj.getTime() + estOffset * 60 * 1000);
-      const formattedDate = estDate.toISOString().replace('T', ' ').slice(0, 16);
+        // Convert the date format to Eastern Standard Time (EST)
+        const dateObj = new Date(summary.scrape_date);
+        const estOffset = -4 * 60; // EST is UTC-5
+        const estDate = new Date(dateObj.getTime() + estOffset * 60 * 1000);
+        const formattedDate = estDate.toISOString().replace('T', ' ').slice(0, 16);
 
-      dates.push(formattedDate);
+        dates.push(formattedDate);
+      });
+    });
 
       chart.data.datasets[0].data = amounts;
       chart.config.data.labels = dates;
