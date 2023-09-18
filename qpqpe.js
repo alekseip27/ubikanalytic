@@ -112,7 +112,7 @@ const charticon = card.getElementsByClassName('main-text-chart')[0];
 charticon.addEventListener('click', function () {
   document.querySelector('#graph-overlay').style.display = 'flex';
   if (events.Event_Other_Master_Source_Formula === 'TM') {
-    let dates = [];
+      let dates = [];
     let amounts = [];
     var http = new XMLHttpRequest();
     var url = "https://shibuy.co:8443/142data?eventid=" + events.Other_Master_Site_Event_Id;
