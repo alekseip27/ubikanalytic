@@ -160,7 +160,8 @@ http.onload = function () {
   document.querySelector('#tmerror').style.display = 'none';
     
 };
-  }
+http.send();
+}
 });
         
       if (events.Event_Other_Master_Source_Formula !== 'TM') {
