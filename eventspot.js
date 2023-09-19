@@ -113,8 +113,8 @@ const charticon = card.getElementsByClassName('main-text-chart')[0];
 charticon.addEventListener('click', function () {
     document.querySelector('#graph-overlay').style.display = 'flex';
     if (events.Event_Other_Master_Source_Formula === 'TM') {
-  
-
+    document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/ + evid + "/details/'"
+ 
     let dates = [];
     let amounts = [];
     var http = new XMLHttpRequest();
