@@ -110,57 +110,71 @@ function checkresults() {
 const charticon = card.getElementsByClassName('main-text-chart')[0];
 
 
-charticon.addEventListener('click', function () {
-  document.querySelector('#graph-overlay').style.display = 'flex';
-  if (events.Event_Other_Master_Source_Formula === 'TM') {
-
-let dates = [];
-let amounts = [];
-var http = new XMLHttpRequest();
-var url = "https://shibuy.co:8443/142data?eventid=" + events.Other_Master_Site_Event_Id;
-http.open("GET", url, true);
-http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-
-// Set a timeout for the request (5 seconds)
-const requestTimeout = 5000; // 5 seconds
-
-// Create a timer to log an error if the request takes too long
-const timeoutTimer = setTimeout(() => {
-  document.querySelector('#tmloader').style.display = 'none';
-  document.querySelector('#tmerror').style.display = 'flex';
-  document.querySelector('#tmchart').style.display = 'none';
-  http.abort(); // Abort the request
-}, requestTimeout);
-
-http.onload = function () {
-  // Clear the timeout timer since the request has completed
-  clearTimeout(timeoutTimer);
-
-  let data = JSON.parse(this.response);
-
-  data.forEach(event => {
-    event.summaries.forEach(summary => {
-      const totalAmount = summary.amounts.reduce((accumulator, amount) => accumulator + amount.amount, 0);
-      const formattedDate = summary.scrape_date.replace("T", " ").replace("Z", "").slice(0, 16);
-      dates.push({ date: summary.scrape_date, formattedDate: formattedDate, amount: totalAmount });
-    });
-  });
-
-  // Sort the dates array by ISO date string (oldest to newest)
-  dates.sort((a, b) => a.date.localeCompare(b.date));
-
-  // Extract formatted dates and amounts after sorting
-  const sortedDates = dates.map(item => item.formattedDate);
-  const sortedAmounts = dates.map(item => item.amount);
-
-  chart.data.datasets[0].data = sortedAmounts;
-  chart.config.data.labels = sortedDates;
-  chart.update();
-  document.querySelector('#tmloader').style.display = 'none';
-  document.querySelector('#tmchart').style.display = 'flex';
-  document.querySelector('#tmerror').style.display = 'none';
-};
-http.send();
+    let dates = [];
+    let amounts = [];
+    var http = new XMLHttpRequest();
+    var url = "https://shibuy.co:8443/142data?eventid=" + evid
+    http.open("GET", url, true);
+    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    
+    // Set a timeout for the request (5 seconds)
+    const requestTimeout = 5000; // 5 seconds
+    
+    // Create a timer to log an error if the request takes too long
+    const timeoutTimer = setTimeout(() => {
+      document.querySelector('#tmloader').style.display = 'none';
+      document.querySelector('#tmerror').style.display = 'flex';
+      document.querySelector('#tmchart').style.display = 'none';
+      http.abort(); // Abort the request
+    }, requestTimeout);
+    
+    http.onload = function () {
+      // Clear the timeout timer since the request has completed
+      clearTimeout(timeoutTimer);
+    
+      let data = JSON.parse(this.response);
+    
+      data.forEach(event => {
+        event.summaries.forEach(summary => {
+          // Assuming there is an array called sections, and you want to sum the amount from all sections
+          const totalAmount = summary.sections.reduce((accumulator, section) => accumulator + section.amount, 0);
+    
+          // Parse the date string into components
+          const parts = summary.scrape_date.split(/[-T:Z]/);
+          const year = parseInt(parts[0], 10);
+          const month = parseInt(parts[1] - 1, 10);
+          const day = parseInt(parts[2], 10);
+          const hours = parseInt(parts[3], 10);
+          const minutes = parseInt(parts[4], 10);
+    
+          // Create a Date object with the components and subtract 4 hours
+          const scrapeDate = new Date(year, month, day, hours, minutes);
+          scrapeDate.setHours(scrapeDate.getHours() - 1);
+    
+          // Format the date as a string
+          const formattedDate = scrapeDate.toISOString().slice(0, 16).replace("T", " ");
+    
+          dates.push({ date: scrapeDate.toISOString(), formattedDate: formattedDate, amount: totalAmount });
+        });
+      });
+    
+      // Sort the dates array by ISO date string (oldest to newest)
+      dates.sort((a, b) => a.date.localeCompare(b.date));
+    
+      // Extract formatted dates and amounts after sorting
+      const sortedDates = dates.map(item => item.formattedDate);
+      const sortedAmounts = dates.map(item => item.amount);
+      console.log(sortedAmounts);
+    
+      chart.data.datasets[0].data = sortedAmounts;
+      chart.config.data.labels = sortedDates;
+      chart.update();
+      document.querySelector('#tmloader').style.display = 'none';
+      document.querySelector('#tmchart').style.display = 'flex';
+      document.querySelector('#tmerror').style.display = 'none';
+    };
+    
+    http.send();
 
 
 }
