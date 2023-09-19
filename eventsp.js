@@ -113,7 +113,8 @@ const charticon = card.getElementsByClassName('main-text-chart')[0];
 charticon.addEventListener('click', function () {
   document.querySelector('#graph-overlay').style.display = 'flex';
   if (events.Event_Other_Master_Source_Formula === 'TM') {
-  let dates = [];
+
+let dates = [];
 let amounts = [];
 var http = new XMLHttpRequest();
 var url = "https://shibuy.co:8443/142data?eventid=" + events.Other_Master_Site_Event_Id;
@@ -136,31 +137,32 @@ http.onload = function () {
   clearTimeout(timeoutTimer);
 
   let data = JSON.parse(this.response);
-  let scrapedate = data[0].scrape_date;
 
-   data.forEach(event => {
-
-
+  data.forEach(event => {
     event.summaries.forEach(summary => {
       const totalAmount = summary.amounts.reduce((accumulator, amount) => accumulator + amount.amount, 0);
-
-        console.log(summary.scrape_date)
       const formattedDate = summary.scrape_date.replace("T", " ").replace("Z", "").slice(0, 16);
-
-      dates.push(formattedDate);
-      amounts.push(totalAmount);
+      dates.push({ date: summary.scrape_date, formattedDate: formattedDate, amount: totalAmount });
     });
   });
 
-  chart.data.datasets[0].data = amounts;
-  chart.config.data.labels = dates;
+  // Sort the dates array by ISO date string (oldest to newest)
+  dates.sort((a, b) => a.date.localeCompare(b.date));
+
+  // Extract formatted dates and amounts after sorting
+  const sortedDates = dates.map(item => item.formattedDate);
+  const sortedAmounts = dates.map(item => item.amount);
+
+  chart.data.datasets[0].data = sortedAmounts;
+  chart.config.data.labels = sortedDates;
   chart.update();
   document.querySelector('#tmloader').style.display = 'none';
   document.querySelector('#tmchart').style.display = 'flex';
   document.querySelector('#tmerror').style.display = 'none';
-    
 };
 http.send();
+
+
 }
 });
         
