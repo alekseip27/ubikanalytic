@@ -138,52 +138,26 @@ http.onload = function () {
   let data = JSON.parse(this.response);
   let scrapedate = data[0].scrape_date;
 
-  data.forEach(event => {
+   data.forEach(event => {
+
+
     event.summaries.forEach(summary => {
       const totalAmount = summary.amounts.reduce((accumulator, amount) => accumulator + amount.amount, 0);
 
-    // Convert the date format to Eastern Standard Time (EST)
-const dateObj = new Date(summary.scrape_date);
-const estOffset = -4 * 60; // EST is UTC-5
-dateObj.setTime(dateObj.getTime() + estOffset * 60 * 1000);
-
-const year = dateObj.getFullYear();
-const month = (dateObj.getMonth() + 1).toString().padStart(2, '0');
-const day = dateObj.getDate().toString().padStart(2, '0');
-const hours = dateObj.getHours().toString().padStart(2, '0');
-const minutes = dateObj.getMinutes().toString().padStart(2, '0');
-
-const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}`;
-
+        console.log(summary.scrape_date)
+      const formattedDate = summary.scrape_date.replace("T", " ").replace("Z", "").slice(0, 16);
 
       dates.push(formattedDate);
       amounts.push(totalAmount);
     });
   });
 
-  // Create an array of objects with dates and amounts
-  const dataObjects = dates.map((date, index) => ({
-    date,
-    amount: amounts[index],
-  }));
-
-  // Sort the dataObjects array based on date in ascending order
-  dataObjects.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-  // Extract sorted dates and amounts from dataObjects
-  const sortedDates = dataObjects.map(item => item.date);
-  const sortedAmounts = dataObjects.map(item => item.amount);
-
-  chart.data.datasets[0].data = sortedAmounts;
-  chart.config.data.labels = sortedDates;
+  chart.data.datasets[0].data = amounts;
+  chart.config.data.labels = dates;
   chart.update();
   document.querySelector('#tmloader').style.display = 'none';
-  document.querySelector('#tmerror').style.display = 'none';
   document.querySelector('#tmchart').style.display = 'flex';
 };
-
-http.send();
-
   }
 });
         
