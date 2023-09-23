@@ -90,6 +90,7 @@ $('.main-confirm-button').css('display','flex');
 $('#normalplaceholder').css('display','none');
 $('#adminplaceholder').css('display','block');
 
+document.querySelector('#scrapeurls').style.display = 'flex'
 
 $('#stats').css('display','flex');
 
