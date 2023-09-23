@@ -248,8 +248,9 @@ const scrapetm = (eventid) => {
 scrapeurl(eventid)
     })
     .catch(error => {
-      console.log('Error:', error);
-      // Handle any errors that occurred during the request
+if(error.includes('No amounts available')){
+primrem.textContent = 'unavailable'
+}
     });
 };
   
