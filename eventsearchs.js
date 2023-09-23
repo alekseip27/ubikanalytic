@@ -262,7 +262,7 @@ const scrapetm = (eventid) => {
     
     
     scrapebutton.addEventListener('click',function(){
-    scrapetm("'"+evid+"'")
+    scrapetm(evid)
     primrem.textContent = ''
     dpd.textContent = ''
     })
