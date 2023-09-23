@@ -226,23 +226,33 @@ charticon.style.display = 'none'
   
   
   
-    
-    const scrapetm = async function(){
-    const url = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/142_scrape_event?eventid='+evid
-    
-    const response = await fetch(url, {
+const scrapetm = (eventid) => {
+  const url = 'https://shibuy.co:8443/scrapeurl';
+
+  const data = {
+    eventid: eventid
+  };
+
+  const requestOptions = {
     method: 'POST',
     headers: {
-    'Content-Type': 'application/json'
+      'Content-Type': 'application/json', // Specify the content type as JSON
     },
+    body: JSON.stringify(data) // Convert data to JSON format
+  };
+
+  const request = fetch(url, requestOptions)
+    .then(response => response.json())
+    .then(data => {
+      console.log(data);
+      // Handle the response data here
+    })
+    .catch(error => {
+      console.log('Error:', error);
+      // Handle any errors that occurred during the request
     });
-    
-    const result = await response.json();
-    
-    scrapeurl(evid)
-    
-    }
-    
+};
+  
     
     
     
@@ -252,7 +262,7 @@ charticon.style.display = 'none'
     
     
     scrapebutton.addEventListener('click',function(){
-    scrapetm()
+    scrapetm("'"+evid+"'")
     primrem.textContent = ''
     dpd.textContent = ''
     })
