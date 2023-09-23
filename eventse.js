@@ -245,7 +245,7 @@ const scrapetm = (eventid) => {
     .then(response => response.json())
     .then(data => {
       console.log(data);
-      // Handle the response data here
+scrapeurl(eventid)
     })
     .catch(error => {
       console.log('Error:', error);
