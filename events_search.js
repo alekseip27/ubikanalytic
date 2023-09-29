@@ -338,7 +338,8 @@ primrem.textContent = 'unavailable'
   
         
     const eventdate = card.getElementsByClassName('main-text-date')[0]
-    
+
+        
     var tdate = events.Other_Master_Event_Date.slice(0, 10).replaceAll("-","/")
     tdate = [tdate.slice(5), tdate.slice(0,4)].join('/');
     eventdate.textContent = tdate
