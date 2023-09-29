@@ -43,7 +43,6 @@ function checkresults() {
     });
     
     document.querySelector('#search-button').addEventListener("click", () => {
-  
     cancelFetchRequests();
     document.querySelector('#loading').style.display = "flex";
     document.querySelector('#flexbox').style.display = "none";
@@ -87,6 +86,7 @@ function checkresults() {
     const style = document.getElementById('samplestyle')
     const card = style.cloneNode(true)
     const evid = events.Other_Master_Site_Event_Id
+    const eventdate = card.getElementsByClassName('main-text-date')[0]
     
     card.setAttribute('id', '');
     card.setAttribute('checked','false')
@@ -95,6 +95,11 @@ function checkresults() {
    if(events.Other_Master_Event_Date){
     card.setAttribute('date', events.Other_Master_Event_Date.slice(0, 10).replaceAll("-","/"));
     card.setAttribute('vivid_ed', events.Other_Master_Event_Date.slice(0,10));   
+       
+    var tdate = events.Other_Master_Event_Date.slice(0, 10).replaceAll("-","/")
+    tdate = [tdate.slice(5), tdate.slice(0,4)].join('/');
+    eventdate.textContent = tdate
+    
    }
         
     card.setAttribute('eventid', evid);
@@ -338,14 +343,6 @@ primrem.textContent = 'unavailable'
     txtsource.classList.add("clickable");
     }
   
-        
-    const eventdate = card.getElementsByClassName('main-text-date')[0]
-
-        
-    var tdate = events.Other_Master_Event_Date.slice(0, 10).replaceAll("-","/")
-    tdate = [tdate.slice(5), tdate.slice(0,4)].join('/');
-    eventdate.textContent = tdate
-    
     const eventlocation = card.getElementsByClassName('main-text-location')[0]
     eventlocation.textContent = events.Venue_Master_City
     
@@ -408,18 +405,8 @@ primrem.textContent = 'unavailable'
     getEvents();
     
     })();
-  
-  
     })
     
-    {
-    document.addEventListener("DOMContentLoaded", function(event) {
-    document.getElementById("search-button").click();
-    
-    
-    
-    })
-    }
     
     {
     var intervalId = window.setInterval(function(){
