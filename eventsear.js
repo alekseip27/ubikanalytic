@@ -92,6 +92,7 @@ function checkresults() {
   
    if(events.Other_Master_Event_Date){
     card.setAttribute('date', events.Other_Master_Event_Date.slice(0, 10).replaceAll("-","/"));
+    card.setAttribute('vivid_ed', events.Other_Master_Event_Date.slice(0,10));   
    }
         
     card.setAttribute('eventid', evid);
@@ -105,8 +106,7 @@ function checkresults() {
     card.setAttribute('purchased', events.Purchased_Amount_Alltime);
     
     card.setAttribute('vivid_id', events.Event_Other_Master_Vivid_Venue_Id);
-    card.setAttribute('vivid_ed', events.Other_Master_Event_Date.slice(0,10));
-  
+    
 const charticon = card.getElementsByClassName('main-text-chart')[0];
 
 
