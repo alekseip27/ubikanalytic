@@ -247,7 +247,7 @@ charticon.addEventListener('click', function () {
 }
 });
         
-      if (events.Event_Other_Master_Source_Formula !== 'TM' || events.Event_Other_Master_Vivid_Venue_Id ) {
+      if (events.Event_Other_Master_Source_Formula !== 'TM' || !events.Event_Other_Master_Vivid_Venue_Id ) {
 charticon.style.display = 'none'
       }
           
