@@ -128,6 +128,9 @@ function vschartdata(VDID) {
       document.querySelector('#vserror').style.display = 'none';
         return response.json();
       } else {
+      document.querySelector('#vsloader').style.display = 'none';
+      document.querySelector('#vschart').style.display = 'none';
+      document.querySelector('#vserror').style.display = 'flex';
         throw new Error("Failed to fetch data");
       }
     })
