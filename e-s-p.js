@@ -113,11 +113,63 @@ function checkresults() {
     card.setAttribute('purchased', events.Purchased_Amount_Alltime);
     
     card.setAttribute('vivid_id', events.Event_Other_Master_Vivid_Venue_Id);
-    
+
+
+function scrapevs(VDID) {
+
+  const url = `https://ubik.wiki/api/vividseats/${VDID}/?format=json`;  // Fixed the stray "
+
+  // Use the fetch API to make the GET request
+  fetch(url)
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error("Failed to fetch data");
+      }
+    })
+    .then(data => {
+      const str = data.results[0].data_scrapes;
+      let datas;
+      try {
+        // Replace single quotes with double quotes and try parsing
+        const replacedStr = str.replace(/'/g, '"');
+        datas = JSON.parse(replacedStr);
+      } catch (e) {
+        // If parsing fails, log the error
+        console.error("Parsing failed:", e);
+        datas = str;
+      }
+
+      // Extract chart labels and data from the fetched data
+      const labels = datas.map(item => item.scrape_datetime).reverse();
+      const totalCount = datas.map(item => item.total_count).reverse();
+      const pref1Count = datas.map(item => item.pref1_count).reverse();
+      const pref2Count = datas.map(item => item.pref2_count).reverse();
+      const pref3Count = datas.map(item => item.pref3_count).reverse();
+
+      // Update chart
+      chartvs.data.labels = labels;
+      chartvs.data.datasets[0].data = totalCount;
+      chartvs.data.datasets[1].data = pref1Count;
+      chartvs.data.datasets[2].data = pref2Count;
+      chartvs.data.datasets[3].data = pref3Count;
+      chartvs.update();
+
+      console.log(datas);
+    })
+    .catch(error => {
+      console.error("Error:", error);
+    });
+}
+
+
+
 const charticon = card.getElementsByClassName('main-text-chart')[0];
 
 
 charticon.addEventListener('click', function () {
+    scrapevs(events.Event_Other_Master_Vivid_Venue_Id+events.Other_Master_Event_Date.slice(0,10))
     document.querySelector('#graph-overlay').style.display = 'flex';
     if (events.Event_Other_Master_Source_Formula === 'TM') {
     document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + evid + "/details/"
