@@ -247,11 +247,9 @@ charticon.addEventListener('click', function () {
 }
 });
         
-     /**   
       if (events.Event_Other_Master_Source_Formula !== 'TM' || events.Event_Other_Master_Vivid_Venue_Id.length === 0 ) {
 charticon.style.display = 'none'
       }
-    **/
         
     const primrem = card.getElementsByClassName('main-text-primary')[0]
     const dpd = card.getElementsByClassName('main-text-aday')[0]
