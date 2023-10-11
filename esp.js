@@ -115,7 +115,7 @@ function checkresults() {
     card.setAttribute('vivid_id', events.Event_Other_Master_Vivid_Venue_Id);
 
 
-function scrapevs(VDID) {
+function vschartdata(VDID) {
 
   const url = `https://ubik.wiki/api/vividseats/${VDID}/?format=json`;  // Fixed the stray "
 
@@ -123,6 +123,9 @@ function scrapevs(VDID) {
   fetch(url)
     .then(response => {
       if (response.ok) {
+      document.querySelector('#vsloader').style.display = 'none';
+      document.querySelector('#vschart').style.display = 'flex';
+      document.querySelector('#vserror').style.display = 'none';
         return response.json();
       } else {
         throw new Error("Failed to fetch data");
@@ -169,7 +172,7 @@ const charticon = card.getElementsByClassName('main-text-chart')[0];
 
 
 charticon.addEventListener('click', function () {
-    scrapevs(events.Event_Other_Master_Vivid_Venue_Id+events.Other_Master_Event_Date.slice(0,10))
+    vschartdata(events.Event_Other_Master_Vivid_Venue_Id+events.Other_Master_Event_Date.slice(0,10))
     document.querySelector('#graph-overlay').style.display = 'flex';
     if (events.Event_Other_Master_Source_Formula === 'TM') {
     document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + evid + "/details/"
