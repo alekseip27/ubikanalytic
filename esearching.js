@@ -166,6 +166,9 @@ function vschartdata(VDID) {
     })
     .catch(error => {
       console.error("Error:", error);
+     document.querySelector('#vsloader').style.display = 'none';
+      document.querySelector('#vschart').style.display = 'none';
+      document.querySelector('#vserror').style.display = 'flex';
     });
 }
 
