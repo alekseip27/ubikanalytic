@@ -117,61 +117,71 @@ function checkresults() {
 
 function vschartdata(VDID) {
 
-  const url = `https://ubik.wiki/api/vividseats/${VDID}/?format=json`;  // Fixed the stray "
+const url = `https://ubik.wiki/api/vividseats/${VDID}/?format=json`;  // Fixed the stray "
 
-  // Use the fetch API to make the GET request
-  fetch(url)
-    .then(response => {
-      if (response.ok) {
+
+// Use the fetch API to make the GET request
+fetch(url)
+  .then(response => {
+    if (response.ok) {
       document.querySelector('#vsloader').style.display = 'none';
       document.querySelector('#vschart').style.display = 'flex';
       document.querySelector('#vserror').style.display = 'none';
-        return response.json();
-      } else {
+      return response.json();
+    } else {
       document.querySelector('#vsloader').style.display = 'none';
       document.querySelector('#vschart').style.display = 'none';
       document.querySelector('#vserror').style.display = 'flex';
-        throw new Error("Failed to fetch data");
-      }
-    })
-    .then(data => {
-      const str = data.results[0].data_scrapes;
-      let datas;
-      try {
-        // Replace single quotes with double quotes and try parsing
-        const replacedStr = str.replace(/'/g, '"');
-        datas = JSON.parse(replacedStr);
-      } catch (e) {
-        // If parsing fails, log the error
-        console.error("Parsing failed:", e);
-        datas = str;
-      }
+      throw new Error("Failed to fetch data");
+    }
+  })
+  .then(data => {
+    const str = data.results[0].data_scrapes;
+    
+    // Replace single quotes with double quotes
+    const replacedStr = str.replace(/'/g, '"');
+    
+      const correctedData = replacedStr.replace(/:\s*None,/g, ':"None",');
+    let datas;
 
-      // Extract chart labels and data from the fetched data
-      const labels = datas.map(item => item.scrape_datetime).reverse();
-      const totalCount = datas.map(item => item.total_count).reverse();
-      const pref1Count = datas.map(item => item.pref1_count).reverse();
-      const pref2Count = datas.map(item => item.pref2_count).reverse();
-      const pref3Count = datas.map(item => item.pref3_count).reverse();
+    try {
+      datas = JSON.parse(correctedData);
+    console.log(datas[0])
 
-      // Update chart
-      chartvs.data.labels = labels;
-      chartvs.data.datasets[0].data = totalCount;
-      chartvs.data.datasets[1].data = pref1Count;
-      chartvs.data.datasets[2].data = pref2Count;
-      chartvs.data.datasets[3].data = pref3Count;
-      chartvs.update();
+    } catch (e) {
+      // If parsing fails, log the error
+      console.error("Parsing failed:", e);
+    }
 
-      console.log(datas);
-    })
-    .catch(error => {
-      console.error("Error:", error);
+    // Extract chart labels and data from the fetched data
+    const labels = datas.map(item => item.scrape_datetime).reverse();
+    const totalCount = datas.map(item => item.total_count).reverse();
+    const pref1Count = datas.map(item => item.pref1_count).reverse();
+    const pref2Count = datas.map(item => item.pref2_count).reverse();
+    const pref3Count = datas.map(item => item.pref3_count).reverse();
+    
+    const p1name = datas[0].pref1_title
+    const p2name = datas[0].pref2_title
+    const p3name = datas[0].pref3_title
+
+    // Update chart
+    chartvs.data.labels = labels;
+    chartvs.data.datasets[0].data = totalCount;
+    chartvs.data.datasets[1].data = pref1Count;
+    chartvs.data.datasets[2].data = pref2Count;
+    chartvs.data.datasets[3].data = pref3Count;
+    chartvs.data.datasets[1].label = p1name
+    chartvs.data.datasets[2].label = p2name
+    chartvs.data.datasets[3].label = p3name
+    chartvs.update();
+  })
+  .catch(error => {
+    console.error("Error:", error);
      document.querySelector('#vsloader').style.display = 'none';
       document.querySelector('#vschart').style.display = 'none';
       document.querySelector('#vserror').style.display = 'flex';
-    });
+  });
 }
-
 
 
 const charticon = card.getElementsByClassName('main-text-chart')[0];
