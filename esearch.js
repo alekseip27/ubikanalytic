@@ -184,6 +184,10 @@ fetch(url)
     chartvs.data.datasets[1].label = p1name
     chartvs.data.datasets[2].label = p2name
     chartvs.data.datasets[3].label = p3name
+
+    chartvs.data.datasets[5].label = p1name + 'Lowest Price'
+    chartvs.data.datasets[6].label = p2name + 'Lowest Price'
+    chartvs.data.datasets[7].label = p3name + 'Lowest Price'
       
     chartvs.update();
   })
