@@ -185,10 +185,6 @@ fetch(url)
     chartvs.data.datasets[2].label = p2name
     chartvs.data.datasets[3].label = p3name
       
-    chartvs.data.datasets[5].label = pref1lowest
-    chartvs.data.datasets[6].label = pref2lowest
-    chartvs.data.datasets[7].label = pref3lowest
-      
     chartvs.update();
   })
   .catch(error => {
