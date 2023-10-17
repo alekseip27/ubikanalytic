@@ -159,6 +159,7 @@ fetch(url)
     const pref1Count = datas.map(item => item.pref1_count).reverse();
     const pref2Count = datas.map(item => item.pref2_count).reverse();
     const pref3Count = datas.map(item => item.pref3_count).reverse();
+    const lowestprice = datas.map(item => item.lowest_price).reverse();
     
     const p1name = datas[0].pref1_title
     const p2name = datas[0].pref2_title
@@ -170,6 +171,7 @@ fetch(url)
     chartvs.data.datasets[1].data = pref1Count;
     chartvs.data.datasets[2].data = pref2Count;
     chartvs.data.datasets[3].data = pref3Count;
+    chartvs.data.datasets[4].data = lowestprice;
     chartvs.data.datasets[1].label = p1name
     chartvs.data.datasets[2].label = p2name
     chartvs.data.datasets[3].label = p3name
