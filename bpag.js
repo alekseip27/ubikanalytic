@@ -3,7 +3,7 @@ $("#purchasequantity").attr({"min" : 0});
 var pkid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
  
 var request = new XMLHttpRequest()
-let xanoUrl = new URL('https://shibuy.co:8443/getevent?eventid=' + pkid);
+let xanoUrl = new URL('https://shibuy.co:8443/getevent?eventid=' + encodeURIComponent(pkid));
 
 console.log(xanoUrl.toString())
 request.open('GET', xanoUrl.toString(), true)
