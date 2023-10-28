@@ -1,5 +1,78 @@
+function checkresults() {
+    
+    let results = document.querySelectorAll('.event-box')
+    let count = 0
+    for (let i = 0; i<results.length;i++) {
+    if(results[i].style.display !== 'none') {
+    count++
+    document.querySelector('#counter').textContent = count
+    }
+    if(count<2) {
+    document.querySelector('#countertxt').textContent = 'Result'
+    } else {
+    document.querySelector('#countertxt').textContent = 'Results'
+    }}}
+    
+    let datear = function(){
+    setTimeout(() => {
+    let now = new Date()
+    let date1 = moment(now).format('YYYY/MM/DD')
+    $('.event-box').sort(function(a, b) {
+    if (date1 > $(b).attr('date')) {return 1;}
+    else {return -1;}
+    }).appendTo('#Cards-Container');
+    }, 2500)}
+    
+    var intervalId = window.setInterval(function(){
+    checkresults()
+    }, 100);
+    
+    var input = document.getElementById("searchbar1");
+    input.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+    event.preventDefault();
+    document.getElementById("search-button").click();
+    }
+    });
+    var input = document.getElementById("searchbar2");
+    input.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+    event.preventDefault();
+    document.getElementById("search-button").click();
+    }
+    });
+    
+    document.querySelector('#search-button').addEventListener("click", () => {
+    cancelFetchRequests();
+    document.querySelector('#loading').style.display = "flex";
+    document.querySelector('#flexbox').style.display = "none";
+        
+  var searchbar1 = document.getElementById('searchbar1');
+  searchbar1.value = searchbar1.value.trimEnd();
+  
+  var searchbar2 = document.getElementById('searchbar2');
+  searchbar2.value = searchbar2.value.trimEnd();
 
-        let xanoUrl = new URL('https://ubik.wiki/api/primary-events?limit=100')
+let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
+let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
+$('.event-box').hide()
+
+let baseUrl = 'https://ubik.wiki/api/primary-events?';
+let params = [];
+
+if (keywords1.length > 0) {
+    params.push('name=' + keywords1.replaceAll("'", "''"));
+}
+
+if (keywords2.length > 0) {
+    params.push('venue=' + keywords2.replaceAll("'", "''"));
+}
+
+params.push('limit=100');
+
+let xanoUrl = baseUrl + params.join('&');
+
+
         function getEvents() {
         
         let request = new XMLHttpRequest();
@@ -400,3 +473,4 @@
         }
       
     
+    })
