@@ -57,15 +57,15 @@ let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
 let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
 $('.event-box').hide()
 
-let baseUrl = 'https://ubik.wiki/api/primary-events?';
+let baseUrl = 'https://ubik.wiki/api/event-venue/?';
 let params = [];
 
 if (keywords1.length > 0) {
-    params.push('name=' + keywords1.replaceAll("'", "''"));
+    params.push('event_name__icontains=' + keywords1.replaceAll("'", "''"));
 }
 
 if (keywords2.length > 0) {
-    params.push('venue=' + keywords2.replaceAll("'", "''"));
+    params.push('&?venue_name__icontains=' + keywords2.replaceAll("'", "''"));
 }
 
 params.push('limit=100');
