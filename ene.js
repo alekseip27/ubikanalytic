@@ -362,7 +362,7 @@ let xanoUrl = baseUrl + params.join('&');
         })
         
         
-        if(source_site == 'TM' && !evid.startsWith('Z') && evid.length == 16) {
+        if(events.source_site == 'TM' && !evid.startsWith('Z') && evid.length == 16) {
         primrem.textContent = '0'
         dpd.textContent = '0'
         fetchEventData(events.site_event_id)
@@ -405,7 +405,7 @@ let xanoUrl = baseUrl + params.join('&');
         let txtsource = card.getElementsByClassName('main-textsource')[0]
         txtsource.textContent = events.source_site
         
-        if(source_site == 'TM') {
+        if(events.source_site == 'TM') {
             
         txtsource.addEventListener('click',function(){
         window.open('http://142.93.115.105:8100/event/' + evid +'/details/', "142")
