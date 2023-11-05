@@ -114,6 +114,7 @@ let xanoUrl = baseUrl + params.join('&');
         card.setAttribute('venue', events.venue_name);
         card.setAttribute('source', events.source_site);
         card.setAttribute('vivid_id', events.vdid);
+        card.setAttribute('capacity', events.venue_capacity);
     
     
     function vschartdata(VDID) {
