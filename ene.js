@@ -384,9 +384,9 @@ let xanoUrl = baseUrl + params.join('&');
         });
         
         const eventname = card.getElementsByClassName('main-text-event')[0]
-        eventname.textContent = event_name;
+        eventname.textContent = events.event_name;
         if(eventname.textContent.length>10) {
-        eventname.textContent = event_name.slice(0, 10)+'...'
+        eventname.textContent = events.event_name.slice(0, 10)+'...'
         }
         
          const eventur = card.getElementsByClassName('main-text-url')[0]
@@ -402,6 +402,12 @@ let xanoUrl = baseUrl + params.join('&');
         eventvenue.textContent = events.venue_name.slice(0, 13)+'...'
         }
         
+        const eventlocation = card.getElementsByClassName('main-text-location')[0]
+        eventlocation.textContent = events.city
+        
+        const capacity = card.getElementsByClassName('main-text-capacity')[0]
+        capacity.textContent = events.venue_capacity
+
         let txtsource = card.getElementsByClassName('main-textsource')[0]
         txtsource.textContent = events.source_site
         
