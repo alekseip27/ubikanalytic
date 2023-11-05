@@ -97,7 +97,7 @@ let xanoUrl = baseUrl + params.join('&');
         
         card.setAttribute('id', '');
         card.setAttribute('checked','false')
-        card.setAttribute('name', events.name);
+        card.setAttribute('name', events.event_name);
       
        if(events.date){
         card.setAttribute('date', events.date.slice(0, 10).replaceAll("-","/"));
@@ -112,8 +112,8 @@ let xanoUrl = baseUrl + params.join('&');
         card.setAttribute('eventid', evid);
         
         card.setAttribute('time', events.time.slice(0, 8));
-        card.setAttribute('venue', events.venue);
-        card.setAttribute('source', events.scraper_name);
+        card.setAttribute('venue', events.venue_name);
+        card.setAttribute('source', events.source_site);
         card.setAttribute('vivid_id', events.vdid);
     
     
@@ -208,7 +208,7 @@ let xanoUrl = baseUrl + params.join('&');
     charticon.addEventListener('click', function () {
         vschartdata(events.vdid)
         document.querySelector('#graph-overlay').style.display = 'flex';
-        if (events.scraper_name === 'ticketmaster') {
+        if (events.source_site === 'TM') {
         document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + evid + "/details/"
      
         let dates = [];
@@ -281,7 +281,7 @@ let xanoUrl = baseUrl + params.join('&');
     }
     });
             
-          if (events.scraper_name !== 'ticketmaster' || events.vdid.length === 0 ) {
+          if (events.source_site !== 'TM' || events.vdid.length === 0 ) {
     charticon.style.display = 'none'
           }
             
@@ -362,7 +362,7 @@ let xanoUrl = baseUrl + params.join('&');
         })
         
         
-        if(events.scraper == 'ticketmaster' && !evid.startsWith('Z') && evid.length == 16) {
+        if(source_site == 'TM' && !evid.startsWith('Z') && evid.length == 16) {
         primrem.textContent = '0'
         dpd.textContent = '0'
         fetchEventData(events.site_event_id)
@@ -384,9 +384,9 @@ let xanoUrl = baseUrl + params.join('&');
         });
         
         const eventname = card.getElementsByClassName('main-text-event')[0]
-        eventname.textContent = events.name;
+        eventname.textContent = event_name;
         if(eventname.textContent.length>10) {
-        eventname.textContent = events.name.slice(0, 10)+'...'
+        eventname.textContent = event_name.slice(0, 10)+'...'
         }
         
          const eventur = card.getElementsByClassName('main-text-url')[0]
@@ -397,15 +397,15 @@ let xanoUrl = baseUrl + params.join('&');
         eventtime.textContent = events.time.slice(0, 8)
         
         const eventvenue = card.getElementsByClassName('main-text-venue')[0]
-        eventvenue.textContent = events.venue
+        eventvenue.textContent = events.venue_name
         if(eventvenue.textContent.length>13) {
-        eventvenue.textContent = events.venue.slice(0, 13)+'...'
+        eventvenue.textContent = events.venue_name.slice(0, 13)+'...'
         }
         
         let txtsource = card.getElementsByClassName('main-textsource')[0]
-        txtsource.textContent = events.scraper_name
+        txtsource.textContent = events.source_site
         
-        if(events.scraper == 'ticketmaster') {
+        if(source_site == 'TM') {
             
         txtsource.addEventListener('click',function(){
         window.open('http://142.93.115.105:8100/event/' + evid +'/details/', "142")
