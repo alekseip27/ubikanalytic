@@ -1,6 +1,4 @@
-
-function checkresults() {
-    
+function checkresults() {    
     let results = document.querySelectorAll('.event-box')
     let count = 0
     for (let i = 0; i<results.length;i++) {
