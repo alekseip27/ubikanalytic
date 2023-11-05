@@ -1,3 +1,4 @@
+
 function checkresults() {
     
     let results = document.querySelectorAll('.event-box')
