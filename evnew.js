@@ -64,7 +64,7 @@ if (keywords1.length > 0) {
 }
 
 if (keywords2.length > 0) {
-    params.push('&?venue_name__icontains=' + keywords2.replaceAll("'", "''"));
+    params.push('&venue_name__icontains=' + keywords2.replaceAll("'", "''"));
 }
 
 params.push('limit=100');
@@ -308,9 +308,8 @@ let xanoUrl = baseUrl + params.join('&');
             console.log('Error:', error);
           });
       };
-      
-      
-      
+
+            
     const scrapetm = (eventid) => {
       const url = 'https://shibuy.co:8443/scrapeurl';
     
