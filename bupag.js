@@ -17,7 +17,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     
     const cardContainer = document.getElementById("Cards-Container")
     console.log(request)
-    data.forEach(events => {
+    data.results.forEach(events => {
     
     const style = document.getElementById('samplestyle')
     const card = style.cloneNode(true)
