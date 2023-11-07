@@ -418,15 +418,23 @@ let xanoUrl = baseUrl + params.join('&');
         txtsource.classList.add("clickable");
         }
 
+
+        if(events.hidden === 'true'){
+        card.style.display = "none";
+        }
+
         const eventurl = events.event_url
         
         const hidebtn = card.getElementsByClassName('hidebtn')[0]
         let eventid = evid
         hidebtn.addEventListener('click', function() {
+
+
         var http = new XMLHttpRequest();
-        var url = "https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/hide_event";
+        var url = "https://ubik.wiki/api/update/primary-events/"+evid;
         var params = JSON.stringify({
-        "search-key": eventid
+        "site_event_id": eventid,
+        "hidden": "true"
         })
         http.open("PUT", url, true);
         http.setRequestHeader("Content-type", "application/json; charset=utf-8");
