@@ -65,7 +65,6 @@
     const eventdate = card.getElementsByClassName('main-text-date')[0]
     
     var tdate = events.event_date
-    tdate = [tdate.slice(5), tdate.slice(0,4)].join('/');
     eventdate.textContent = tdate
     
     card.setAttribute('date', tdate)
