@@ -70,7 +70,8 @@
     card.setAttribute('date', tdate)
     
     let purchasequantity = card.getElementsByClassName('main-text-quantity')[0]
-    if(events.purchased_amount.length > 0 && events.purchased_amount !== "null") {
+    if(events.purchased_amount !== null && events.purchased_amount.length > 0) {
+        
     purchasequantity.textContent = events.purchased_amount 
     card.setAttribute('fulfilled', events.purchased_amount)
     }
