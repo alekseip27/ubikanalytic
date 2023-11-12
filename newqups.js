@@ -29,7 +29,7 @@
     
     const buybutton = card.getElementsByClassName('main-buy-button')[0]
     buybutton.addEventListener('click', function() {
-    window.location.assign("https://www.ubikanalytic.com/buy-event?id=" + events.event_id)
+    window.location.assign("https://www.ubikanalytic.com/buy-event?id=" + events.i)
     });
 
     const editbutton = card.getElementsByClassName('main-edit-button')[0]
