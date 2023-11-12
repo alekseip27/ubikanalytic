@@ -648,7 +648,23 @@ getvenuedata()
   //user is "finished typing," do something
   function doneTyping () {
   if(document.querySelector('#vspricing').checked){
-  eventprice.value = Math.round((eventprice.value*1.136)) 
+X_given = Math.round(eventprice)
+
+// Calculating Y using the derived formula
+let Y_predicted = (
+    -0.56 +
+    1.20 * X_given +
+    -0.00 * Math.pow(X_given, 2) +
+    0.00 * Math.pow(X_given, 3) +
+    -0.00 * Math.pow(X_given, 4) +
+    0.00 * Math.pow(X_given, 5)
+);
+
+// Rounding Y to two decimal places
+let Y_predicted_rounded = Y_predicted.toFixed(2);
+  eventprice.value = Y_predicted_rounded
+
+      
   
   }
   }
