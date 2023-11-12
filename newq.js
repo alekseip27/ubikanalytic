@@ -29,13 +29,13 @@
     
     const buybutton = card.getElementsByClassName('main-buy-button')[0]
     buybutton.addEventListener('click', function() {
-    window.location.assign("https://www.ubikanalytic.com/buy-event?id=" + events.i)
+    window.location.assign("https://www.ubikanalytic.com/buy-event?id=" + events.id)
     });
 
     const editbutton = card.getElementsByClassName('main-edit-button')[0]
     editbutton.style.display = 'none'
     editbutton.addEventListener('click', function() {
-    window.location.assign("https://www.ubikanalytic.com/edit-event?id=" + events.event_id)
+    window.location.assign("https://www.ubikanalytic.com/edit-event?id=" + events.id)
     });
         
     let ems = document.querySelector('#email').textContent
