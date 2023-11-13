@@ -647,12 +647,9 @@ getvenuedata()
   
   //user is "finished typing," do something
 function doneTyping() {
-  // Assuming 'eventprice' is the id of an input field, not a variable
-  var eventpriceElement = document.querySelector('#eventprice'); // Correct selector for the input field
-  if (document.querySelector('#vspricing').checked && eventpriceElement) {
-    var X_given = Math.round(Number(eventpriceElement.value)); // Convert the input value to a number before rounding
-
-    // Make sure X_given is a number, otherwise return or handle the error
+  if (document.querySelector('#vspricing').checked && eventprice.value) {
+    var X_given = Math.round(Number(eventprice.value));
+      
     if (isNaN(X_given)) {
       console.error('X_given is not a number');
       return; // Exit the function if X_given is not a number
@@ -667,7 +664,7 @@ function doneTyping() {
 
     // Rounding Y to two decimal places
     let Y_predicted_rounded = Y_predicted.toFixed(2);
-    eventpriceElement.value = Y_predicted_rounded; // Assign the rounded value back to the input field
+    eventprice.value = Y_predicted_rounded; // Assign the rounded value back to the input field
   }
 }
 
