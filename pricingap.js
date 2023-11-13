@@ -646,29 +646,31 @@ getvenuedata()
   });
   
   //user is "finished typing," do something
-  function doneTyping () {
-  if(document.querySelector('#vspricing').checked){
-X_given = Math.round(eventprice)
+function doneTyping() {
+  // Assuming 'eventprice' is the id of an input field, not a variable
+  var eventpriceElement = document.querySelector('#eventprice'); // Correct selector for the input field
+  if (document.querySelector('#vspricing').checked && eventpriceElement) {
+    var X_given = Math.round(Number(eventpriceElement.value)); // Convert the input value to a number before rounding
 
-// Calculating Y using the derived formula
-let Y_predicted = (
-    -0.56 +
-    1.20 * X_given +
-    -0.00 * Math.pow(X_given, 2) +
-    0.00 * Math.pow(X_given, 3) +
-    -0.00 * Math.pow(X_given, 4) +
-    0.00 * Math.pow(X_given, 5)
-);
+    // Make sure X_given is a number, otherwise return or handle the error
+    if (isNaN(X_given)) {
+      console.error('X_given is not a number');
+      return; // Exit the function if X_given is not a number
+    }
 
-// Rounding Y to two decimal places
-let Y_predicted_rounded = Y_predicted.toFixed(2);
-  eventprice.value = Y_predicted_rounded
+    // Calculating Y using the derived formula
+    let Y_predicted = (
+      -0.56 +
+      1.20 * X_given
+      // Removed the zero terms as they don't affect the result
+    );
 
-      
-  
+    // Rounding Y to two decimal places
+    let Y_predicted_rounded = Y_predicted.toFixed(2);
+    eventpriceElement.value = Y_predicted_rounded; // Assign the rounded value back to the input field
   }
-  }
-  
+}
+
       
   const lowerablecheckbox = card.getElementsByClassName('main-checkbox-lowerprice')[0]  
   
