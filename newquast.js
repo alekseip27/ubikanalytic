@@ -30,13 +30,13 @@ card.style.display = 'flex';
 
 const buybutton = card.getElementsByClassName('main-buy-button')[0]
 buybutton.addEventListener('click', function() {
-window.location.assign("https://www.ubikanalytic.com/buy-event?id=" + events.id)
+window.location.assign("https://www.ubikanalytic.com/buy-event-copy?id=" + events.id)
 });
 
 const editbutton = card.getElementsByClassName('main-edit-button')[0]
 editbutton.style.display = 'none'
 editbutton.addEventListener('click', function() {
-window.location.assign("https://www.ubikanalytic.com/edit-event?id=" + events.id)
+window.location.assign("https://www.ubikanalytic.com/edit-event-copy?id=" + events.id)
 });
     
 let ems = document.querySelector('#email').textContent
