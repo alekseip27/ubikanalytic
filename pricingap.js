@@ -796,20 +796,17 @@ function doneTyping() {
     var Xgiven = Math.round(Number(events.listPrice));
       
     if (isNaN(Xgiven)) {
-      console.error('X_given is not a number');
+      console.error('Xgiven is not a number');
       return;
     }
 
     let Ypredicted = (
       -0.56 +
-      1.20 * X_given
+      1.20 * Xgiven
     );
 
     let Ypredictedrounded = Ypredicted.toFixed(2);
-    vwprice.value = Ypredictedrounded;
-
-        
-    vwprice.textContent = Math.round((events.listPrice * 1.136))
+    vwprice.textContent = Ypredictedrounded;
  
     let tixid = events.id
     let usz = datas['Email']
