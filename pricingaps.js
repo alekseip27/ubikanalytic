@@ -665,7 +665,6 @@ function doneTyping() {
     // Rounding Y to two decimal places
     let Y_predicted_rounded = Y_predicted.toFixed(2);
     eventprice.value = Y_predicted_rounded; // Assign the rounded value back to the input field
-console.log(Y_predicted_rounded)
   }
 }
 
@@ -793,8 +792,25 @@ console.log(Y_predicted_rounded)
     lastupdated.textContent = updatedTime.format('MM-DD HH:mm')
     
     const vwprice = card.getElementsByClassName('main-text-vw')[0]
+        
+    var Xgiven = Math.round(Number(events.listPrice));
+      
+    if (isNaN(Xgiven)) {
+      console.error('X_given is not a number');
+      return;
+    }
+
+    let Ypredicted = (
+      -0.56 +
+      1.20 * X_given
+    );
+
+    let Ypredictedrounded = Ypredicted.toFixed(2);
+    vwprice.value = Ypredictedrounded;
+
+        
     vwprice.textContent = Math.round((events.listPrice * 1.136))
-  
+ 
     let tixid = events.id
     let usz = datas['Email']
     var http = new XMLHttpRequest();
