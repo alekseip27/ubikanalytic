@@ -665,6 +665,7 @@ function doneTyping() {
     // Rounding Y to two decimal places
     let Y_predicted_rounded = Y_predicted.toFixed(2);
     eventprice.value = Y_predicted_rounded; // Assign the rounded value back to the input field
+console.log(Y_predicted_rounded)
   }
 }
 
