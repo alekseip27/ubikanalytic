@@ -424,7 +424,7 @@ window.location.assign("https://www.ubikanalytic.com/error-respond?id=" +encodeU
 
 const confirmbutton = card.getElementsByClassName('main-confirm-button')[0]
 const deletebutton = card.getElementsByClassName('main-delete-button-confirm')[0]
-const eventid = encodeURIComponent(events.event_id)
+const eventid = encodeURIComponent(events.id)
 confirmbutton.addEventListener('click', function() {
 confirmbutton.style.display = "none";
 deletebutton.style.display = "flex";
