@@ -431,7 +431,7 @@ let xanoUrl = baseUrl + params.join('&');
 
 
         var http = new XMLHttpRequest();
-        var url = "https://ubik.wiki/api/update/primary-events/"+evid;
+        var url = "https://ubik.wiki/api/update/primary-events/"+evid + "/";
         var params = JSON.stringify({
         "site_event_id": eventid,
         "hidden": "true"
