@@ -790,23 +790,25 @@ function doneTyping() {
     let updatedTime = moment.utc(time1, 'MM-DD HH:mm').subtract(4, 'hours');
       
     lastupdated.textContent = updatedTime.format('MM-DD HH:mm')
-    
-    const vwprice = card.getElementsByClassName('main-text-vw')[0]
-        
-    var Xgiven = Math.round(Number(events.listPrice));
-      
-    if (isNaN(Xgiven)) {
-      console.error('Xgiven is not a number');
-      return;
-    }
+    const vwprice = card.getElementsByClassName('main-text-vw')[0];
 
-    let Ypredicted = (
-      -0.56 +
-      1.20 * Xgiven
-    );
+var Xgiven = Math.round(Number(events.listPrice));
 
-    let Ypredictedrounded = Ypredicted.toFixed(2);
-    vwprice.textContent = Ypredictedrounded;
+if (isNaN(Xgiven)) {
+  console.error('Xgiven is not a number');
+  return;
+}
+
+// Define the coefficients for the linear formula
+const a = 1.3513; // Constant term
+const b = 0.8123; // Coefficient for X
+
+// Calculate Y using the linear formula
+let Ypredicted = a + b * Xgiven;
+
+let Ypredictedrounded = Ypredicted.toFixed(2);
+vwprice.textContent = Ypredictedrounded;
+
  
     let tixid = events.id
     let usz = datas['Email']
