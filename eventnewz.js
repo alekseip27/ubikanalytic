@@ -374,12 +374,12 @@ let xanoUrl = baseUrl + params.join('&');
         
         const buybutton = card.getElementsByClassName('main-buy-button')[0]
         buybutton.addEventListener('click', function() {
-        window.location.assign('https://www.ubikanalytic.com/event?id=' + evid)
+        window.location.assign('https://www.ubikanalytic.com/event-copy?id=' + evid)
         });
         
         const mbutton = card.getElementsByClassName('manualbutton')[0]
         mbutton.addEventListener('click', function() {
-        window.location.assign('https://www.ubikanalytic.com/buy-manual?id=' + evid)
+        window.location.assign('https://www.ubikanalytic.com/buy-manual-copy?id=' + evid)
         });
         
         const eventname = card.getElementsByClassName('main-text-event')[0]
