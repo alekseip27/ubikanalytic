@@ -13,7 +13,33 @@ request.onload = function() {
 if (request.status >= 200 && request.status < 400) {
 const itemContainer = document.getElementById("Item-Container")
 const item = document.getElementById('samplestyle')
+    
+thiseventid = eventdata.event_id
 
+var request = new XMLHttpRequest()
+let xanoUrl = new URL("https://ubik.wiki/api/event-venue/?site_event_id__iexact="+thiseventid)
+
+request.open('GET', xanoUrl.toString(), true)
+
+request.onload = function() {
+
+let data = JSON.parse(request.response) 
+let pam = data.results[0].purchased_amount
+
+if(pam){
+document.querySelector('#purchasetotal').textContent = pam
+} else {
+document.querySelector('#purchasetotal').textContent = '0'
+}
+
+    
+}
+
+request.send()
+
+
+
+    
 document.querySelector('#date').textContent = eventdata.event_date
 document.querySelector('#event').textContent =  eventdata.event_name
 document.querySelector('#venue').textContent =  eventdata.event_venue
