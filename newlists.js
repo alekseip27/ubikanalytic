@@ -1,4 +1,4 @@
-let xanoUrl = new URL('https://ubik.wiki/api/buying-queue/');
+let xanoUrl = new URL('https://ubik.wiki/api/buying-queue/?completed__iexact=false');
 function getEvents() {
 
 let request = new XMLHttpRequest();
@@ -27,11 +27,6 @@ card.setAttribute('venue', events.event_venue)
 card.setAttribute('source', events.event_source)
 
 card.style.display = 'flex';
-
-
-if(events.completed === 'true'){
-card.style.display = 'none'
-}
 
 const buybutton = card.getElementsByClassName('main-buy-button')[0]
 buybutton.addEventListener('click', function() {
