@@ -115,9 +115,14 @@ let xanoUrl = baseUrl + params.join('&');
         card.setAttribute('source', events.source_site);
         card.setAttribute('vivid_id', events.vdid);
         card.setAttribute('capacity', events.venue_capacity);
+
+if (!Number.isNaN(events.purchased_amount)) {
+  card.setAttribute('purchased', parseInt(events.purchased_amount,10)
+} else {
+ card.setAttribute('purchased','0')
+}
+
             
-        card.setAttribute('purchased', isNaN(events.purchased_amount) ? 0 : parseInt(events.purchased_amount, 10));
-    
     function vschartdata(VDID) {
     
     const url = `https://ubik.wiki/api/vividseats/${VDID}/?format=json`;  // Fixed the stray "
@@ -341,8 +346,12 @@ let xanoUrl = baseUrl + params.join('&');
     };
       
  
-        let purchasedamount = card.getElementsByClassName('main-text-purchased')[0]
-        purchasedamount.textContent = isNaN(events.purchased_amount) ? '0' : parseInt(events.purchased_amount, 10).toString();
+if (!Number.isNaN(events.purchased_amount)) {
+  purchasedamount.textContent = parseInt(events.purchased_amount, 10).toString();
+} else {
+  purchasedamount.textContent = '0';
+}
+
         
         let rescrapebutton = card.getElementsByClassName('re-scrape-div')[0]
         
