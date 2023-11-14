@@ -367,7 +367,7 @@ var params = {
   "purchased_amount": combined
 }
 
-if (combined > limit) {
+if (combined >= limit) {
     params["completed"] = 'TRUE'; 
 }
 
