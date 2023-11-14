@@ -11,7 +11,6 @@ function checkresults() {
     } else {
     document.querySelector('#countertxt').textContent = 'Results'
     }}}
-    
     let datear = function(){
     setTimeout(() => {
     let now = new Date()
