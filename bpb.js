@@ -29,7 +29,7 @@ if (data.count === 1) {
 let data = JSON.parse(requestam.response) 
 let pam = data.results[0].purchased_amount
 if(pam){
-document.querySelector('#purchasetotal').textContent = pam
+document.querySelector('#purchasetotal').textContent = parseInt(pam,10)
 } else {
 document.querySelector('#purchasetotal').textContent = '0'
 }}}
