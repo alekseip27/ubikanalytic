@@ -16,26 +16,25 @@ const item = document.getElementById('samplestyle')
     
 thiseventid = eventdata.event_id
 
-var request = new XMLHttpRequest()
-let xanoUrl = new URL("https://ubik.wiki/api/event-venue/?site_event_id__iexact="+thiseventid)
+var requestam = new XMLHttpRequest()
+let xanoUrlam = new URL("https://ubik.wiki/api/event-venue/?site_event_id__iexact="+thiseventid)
 
-request.open('GET', xanoUrl.toString(), true)
+requestam.open('GET', xanoUrlam.toString(), true)
 
-request.onload = function() {
+requestam.onload = function() {
+let data = JSON.parse(requestam.response) 
 
-let data = JSON.parse(request.response) 
+if (data.count === 1) {
+
+let data = JSON.parse(requestam.response) 
 let pam = data.results[0].purchased_amount
-
 if(pam){
 document.querySelector('#purchasetotal').textContent = pam
 } else {
 document.querySelector('#purchasetotal').textContent = '0'
-}
+}}}
 
-    
-}
-
-request.send()
+requestam.send()
 
 
 
