@@ -348,7 +348,7 @@ if (!Number.isNaN(events.purchased_amount)) {
     };
       
  
-if (!Number.isNaN(events.purchased_amount)) {
+if (events.purchased_amount) {
   purchasedamount.textContent = parseInt(events.purchased_amount, 10).toString();
 } else {
   purchasedamount.textContent = '0';
@@ -486,7 +486,7 @@ if (!Number.isNaN(events.purchased_amount)) {
         getEvents();
 
         })();
-        
+ 
         
         {
         var intervalId = window.setInterval(function(){
