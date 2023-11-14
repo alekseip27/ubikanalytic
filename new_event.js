@@ -115,6 +115,9 @@ let xanoUrl = baseUrl + params.join('&');
         card.setAttribute('vivid_id', events.vdid);
         card.setAttribute('capacity', events.venue_capacity);
 
+
+const purchasedamount = card.getElementsByClassName('main-text-purchased')[0];
+    
 if (!Number.isNaN(events.purchased_amount)) {
   card.setAttribute('purchased', parseInt(events.purchased_amount,10))
 } else {
