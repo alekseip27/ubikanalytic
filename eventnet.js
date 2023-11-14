@@ -115,7 +115,8 @@ let xanoUrl = baseUrl + params.join('&');
         card.setAttribute('source', events.source_site);
         card.setAttribute('vivid_id', events.vdid);
         card.setAttribute('capacity', events.venue_capacity);
-        card.setAttribute('purchased', parseInt(events.purchased_amount,10));
+            
+        card.setAttribute('purchased', isNaN(events.purchased_amount) ? 0 : parseInt(events.purchased_amount, 10));
     
     function vschartdata(VDID) {
     
@@ -341,7 +342,7 @@ let xanoUrl = baseUrl + params.join('&');
       
  
         let purchasedamount = card.getElementsByClassName('main-text-purchased')[0]
-        purchasedamount.textContent = parseInt(events.purchased_amount,10)
+        purchasedamount.textContent = isNaN(events.purchased_amount) ? '0' : parseInt(events.purchased_amount, 10).toString();
         
         let rescrapebutton = card.getElementsByClassName('re-scrape-div')[0]
         
