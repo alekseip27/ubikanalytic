@@ -118,7 +118,7 @@ let xanoUrl = baseUrl + params.join('&');
 
 const purchasedamount = card.getElementsByClassName('main-text-purchased')[0];
     
-if (!Number.isNaN(events.purchased_amount)) {
+if (events.purchased_amount) {
   card.setAttribute('purchased', parseInt(events.purchased_amount,10))
 } else {
  card.setAttribute('purchased','0')
