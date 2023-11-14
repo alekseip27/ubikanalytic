@@ -458,9 +458,20 @@ let pdifference = `${hours}:${minutes}:${seconds}`;
 let purchrequest = document.querySelector('#purchaserequest').textContent
 let purchurgency = document.querySelector('#purchasefrequency').textContent
 
+  const prefix = "Oneticket_";
+  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const idLength = 8;
+  let randomId = prefix;
+
+  for (let i = 0; i < idLength; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    randomId += characters.charAt(randomIndex);
+  }
+
+
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event-copy?id=')[1]
 var http = new XMLHttpRequest();
-var endpointUrl = "https://ubik.wiki/api/update/order-history/" + encodeURIComponent(thiseventid) + "/"
+var endpointUrl = "https://ubik.wiki/api/create/order-history/"
 
 var param = {
 "event_name":eventname,
@@ -481,6 +492,7 @@ var param = {
 "p_requested":prequested,
 "purchase_date":purchaseDate,
 "purchase_quantity_alltime":pcombined,
+"one_ticket_id":randomId
 }
 
 fetch(endpointUrl, {
@@ -494,7 +506,7 @@ body: JSON.stringify(param)
 .then(data => {
 
     
-console.log('step 2 completed')
+console.log('step 3 completed')
 
 document.querySelector('#loading').style.display = "flex";
 document.querySelector('#Item-Container').style.display = "none";
@@ -514,6 +526,5 @@ $('#purchaseacc').css('opacity', '0');
 }
 }, 1000);
 }
-
 })
 
