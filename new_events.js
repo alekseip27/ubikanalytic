@@ -116,7 +116,7 @@ let xanoUrl = baseUrl + params.join('&');
         card.setAttribute('capacity', events.venue_capacity);
 
 if (!Number.isNaN(events.purchased_amount)) {
-  card.setAttribute('purchased', parseInt(events.purchased_amount,10)
+  card.setAttribute('purchased', parseInt(events.purchased_amount,10))
 } else {
  card.setAttribute('purchased','0')
 }
