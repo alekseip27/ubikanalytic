@@ -33,7 +33,6 @@ document.querySelector('#amountbought2').textContent =  eventdata.purchase_total
 document.querySelector('#section').textContent =  eventdata.section
 document.querySelector('#purchasefreq').textContent =  eventdata.purchase_frequency
 document.querySelector('#purchaseacc').textContent = eventdata.purchase_account
-document.querySelector('#purchaseemail').value = eventdata.purchase_account
 document.querySelector('#purchasesource').textContent = eventdata.event_source
 document.querySelector('#eventid').textContent = eventdata.event_id
 document.querySelector('#purchasealltime').textContent = eventdata.purchase_total
