@@ -379,7 +379,7 @@ http.onreadystatechange = function() {
 if (http.readyState == 4) {
 if (http.status == 200) { 
 var response = JSON.parse(http.responseText);
-console.log(response)
+console.log('step 1 completed')
 } else {
 
 }
@@ -391,6 +391,7 @@ http.send(JSON.stringify(params));
 
 
 // 2. Update Event
+
 
 {
     let palltime = Number(document.querySelector('#purchasetotal').textContent)
@@ -405,9 +406,21 @@ http.send(JSON.stringify(params));
     }    
     http.open("PUT", urll, true);
     http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-    http.send();
+
+http.onreadystatechange = function() { 
+if (http.readyState == 4) {
+if (http.status == 200) { 
+var response = JSON.parse(http.responseText);
+console.log('step 2 completed')
+} else {
+
 }
- 
+    }
+};
+    
+http.send(JSON.stringify(params));
+    
+}
  
 // 3. Update Order History
 {
@@ -479,6 +492,9 @@ body: JSON.stringify(param)
 })
 .then(response => response.json())
 .then(data => {
+
+    
+console.log('step 2 completed')
 
 document.querySelector('#loading').style.display = "flex";
 document.querySelector('#Item-Container').style.display = "none";
