@@ -511,7 +511,7 @@ console.log('step 3 completed')
 document.querySelector('#loading').style.display = "flex";
 document.querySelector('#Item-Container').style.display = "none";
 setTimeout(() => {
-window.location.href = "/buy-queue";
+window.location.href = "/buy-queue-copy";
 }, 2000);
      
 })
