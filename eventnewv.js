@@ -115,6 +115,7 @@ let xanoUrl = baseUrl + params.join('&');
         card.setAttribute('source', events.source_site);
         card.setAttribute('vivid_id', events.vdid);
         card.setAttribute('capacity', events.venue_capacity);
+        card.setAttribute('purchased', events.purchased_amount);
     
     
     function vschartdata(VDID) {
@@ -339,8 +340,9 @@ let xanoUrl = baseUrl + params.join('&');
         });
     };
       
-        
-        
+ 
+        let purchasedamount = card.getElementsByClassName('main-text-purchased')[0]
+        purchasedamount.textContent = events.purchased_amount
         
         let rescrapebutton = card.getElementsByClassName('re-scrape-div')[0]
         
