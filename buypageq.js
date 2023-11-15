@@ -36,9 +36,6 @@ if (data.count === 1) {
 
 let data = JSON.parse(requestam.response) 
 let pam = data.results[0].purchased_amount
-let evid = data.results[0].site_event_id
-    
-document.querySelector('#evids').value = evid
     
 if(pam){
 document.querySelector('#purchasetotal').textContent = parseInt(pam,10)
@@ -48,6 +45,27 @@ document.querySelector('#purchasetotal').textContent = '0'
 
 requestam.send()
 
+
+{
+var requestam = new XMLHttpRequest()
+let xanoUrlam = new URL("https://ubik.wiki/api/buying-queue/?event_id__iexact="+thiseventid)
+
+requestam.open('GET', xanoUrlam.toString(), true)
+
+requestam.onload = function() {
+let data = JSON.parse(requestam.response) 
+
+if (data.count === 1) {
+
+let data = JSON.parse(requestam.response) 
+let evid = data.results[0].id
+    
+document.querySelector('#evids').value = evid
+
+}}
+
+requestam.send()        
+}
 
 
     
