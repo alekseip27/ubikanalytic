@@ -19,6 +19,7 @@ const itemContainer = document.getElementById("Item-Container")
 const item = document.getElementById('samplestyle')
     
 thiseventid = eventdata.event_id
+document.querySelector('#seid').value = thiseventid
 
 var requestam = new XMLHttpRequest()
 let xanoUrlam = new URL("https://ubik.wiki/api/event-venue/?site_event_id__iexact="+thiseventid)
@@ -439,6 +440,8 @@ function part3(){
     let purchaseDate = moment().tz('America/New_York').format('MM/DD/YYYY, hh:mm A')
     
     const pfilled = moment().tz('America/New_York').format('MM/DD/YYYY HH:mm:ss')
+    document.querySelector('#purchd').value = pfilled
+    
     const prequested = moment(document.querySelector('#purchaserequest').textContent, 'MM/DD/YYYY, h:mm').format('MM/DD/YYYY HH:mm:ss')
     const now = moment(moment().tz('America/New_York').format('MM/DD/YYYY, h:mm:ss A'))
     const then = moment(document.querySelector('#purchaserequest').textContent, 'MM/DD/YYYY, h:mm A')
