@@ -125,6 +125,7 @@ function part1(){
         "event_time":eventtime,
         "purchase_source":eventsource,
         "purchase_quantity":pq,
+        "purchase_quantity_total":pq,
         "purchase_email":pm,
         "confirmation":pc,
         "purchased_by":purchasedby,
@@ -135,8 +136,7 @@ function part1(){
         "p_requested":"manual",
         "p_filled":pfilled,
         "purchase_date":pfilled,
-        "one_ticket_id":randomId,
-        "purchase_quantity_total":"0"
+        "one_ticket_id":randomId
         }
         
         fetch(endpointUrl, {
