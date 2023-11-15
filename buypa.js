@@ -450,6 +450,9 @@ function part3(){
     let purchrequest = document.querySelector('#purchaserequest').textContent
     let purchurgency = document.querySelector('#purchasefrequency').textContent
     
+    let dmatch = document.querySelector('#detailsmatch').checked
+    let selectwc = document.querySelector('#willcall').checked
+    
       const prefix = "Oneticket_";
       const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
       const idLength = 8;
@@ -484,7 +487,9 @@ function part3(){
     "p_requested":prequested,
     "purchase_date":purchaseDate,
     "purchase_quantity_alltime":pcombined,
-    "one_ticket_id":randomId
+    "one_ticket_id":randomId,
+    "details_match":dmatch,
+    "did_not_select_wc":selectwc,
     }
     
     fetch(endpointUrl, {
