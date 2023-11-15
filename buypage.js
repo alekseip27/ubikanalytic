@@ -70,6 +70,7 @@ document.querySelector('#notes').textContent = eventdata.purchase_notes
 
   
 document.querySelector('#purchasefrequency').textContent = eventdata.purchase_frequency
+document.querySelector('#purchaseurgency').textContent = eventdata.buying_urgency
 
 document.querySelector('#purchaserequest').textContent = eventdata.added_timestamp
   
@@ -79,6 +80,7 @@ document.querySelector('#purchasealltime').textContent = '0'
 }
 
 let urgency = eventdata.buying_urgency
+    
 let buytimestamp = eventdata.added_timestamp
 let date = moment(buytimestamp).format('MM/DD/YYYY HH:mm:ss')
 const thnd = new Date();
@@ -448,7 +450,9 @@ function part3(){
     
     let pdifference = `${hours}:${minutes}:${seconds}`;
     let purchrequest = document.querySelector('#purchaserequest').textContent
-    let purchurgency = document.querySelector('#purchasefrequency').textContent
+    
+    let purchfreq = document.querySelector('#purchasefreq').textContent
+    let purchurgency = document.querySelector('#purchaseurgency').textContent
     
     let dmatch = document.querySelector('#detailsmatch').checked
     let selectwc = document.querySelector('#willcall').checked
@@ -481,7 +485,6 @@ function part3(){
     "confirmation":pc,
     "purchased_by":purchasedby,
     "purchase_requested":purchrequest,
-    "purchase_urgency":purchurgency,
     "purchase_difference":pdifference,
     "p_filled":pfilled,
     "p_requested":prequested,
@@ -490,6 +493,8 @@ function part3(){
     "one_ticket_id":randomId,
     "details_match":dmatch,
     "did_not_select_wc":selectwc,
+    "purchase_frequency":purchfreq,
+    "purchase_urgency":purchurgency
     }
     
     fetch(endpointUrl, {
