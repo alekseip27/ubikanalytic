@@ -135,7 +135,8 @@ function part1(){
         "p_requested":"manual",
         "p_filled":pfilled,
         "purchase_date":pfilled,
-        "one_ticket_id":randomId
+        "one_ticket_id":randomId,
+        "purchase_quantity_total":"0"
         }
         
         fetch(endpointUrl, {
