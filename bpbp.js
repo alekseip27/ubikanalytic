@@ -353,7 +353,6 @@ $('#buybtn').css({pointerEvents: "none"})
 
 // 1. Update Buying Queue
 
-
 let bought = Number(document.querySelector('#amountbought1').textContent)
 let cpr = Number(document.querySelector('#purchasequantity').value)
 let combined = bought+cpr
@@ -380,151 +379,147 @@ if (http.readyState == 4) {
 if (http.status == 200) { 
 var response = JSON.parse(http.responseText);
 console.log('step 1 completed')
-} else {
-
-}
-    }
-};
-
-// Send the params object as a JSON string
-http.send(JSON.stringify(params));
-
-
-// 2. Update Event
-
 
 {
-    let palltime = Number(document.querySelector('#purchasetotal').textContent)
-    let pthistime = Number(document.querySelector('#amountbought2').textContent)
-    let pcombined = palltime + pthistime
-    var http = new XMLHttpRequest();
-    var urll = "https://ubik.wiki/api/update/primary-events/" + encodeURIComponent(thiseventid) + "/"
-    
-    var params = {
-    "site_event_id": thiseventid,
-    "purchased_amount": pcombined
-    }    
-    http.open("PUT", urll, true);
-    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+  let palltime = Number(document.querySelector('#purchasetotal').textContent)
+  let pthistime = Number(document.querySelector('#amountbought2').textContent)
+  let pcombined = palltime + pthistime
+  var http = new XMLHttpRequest();
+  var urll = "https://ubik.wiki/api/update/primary-events/" + encodeURIComponent(thiseventid) + "/"
+  
+  var params = {
+  "site_event_id": thiseventid,
+  "purchased_amount": pcombined
+  }    
+  http.open("PUT", urll, true);
+  http.setRequestHeader("Content-type", "application/json; charset=utf-8");
 
 http.onreadystatechange = function() { 
 if (http.readyState == 4) {
 if (http.status == 200) { 
 var response = JSON.parse(http.responseText);
 console.log('step 2 completed')
+
+{
+  let eventname = document.querySelector('#event').textContent
+  let eventdate = document.querySelector('#date').textContent
+  let eventvenue = document.querySelector('#venue').textContent
+  let eventsource = document.querySelector('#purchasesource').textContent
+  
+  let pq = document.querySelector('#purchasequantity').value
+  let pmax = document.querySelector('#amountbought2').textContent
+  let pa = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase();
+  let pm = document.querySelector('#purchaseemail').value
+  let pc = document.querySelector('#purchaseconfirmation').value
+  let purchasedby = document.querySelector('#username').textContent
+  
+  let palltime = Number(document.querySelector('#purchasetotal').textContent)
+  let pthistime = Number(document.querySelector('#amountbought2').textContent)
+  let pcombined = palltime + pthistime
+  
+  let eventtime = document.querySelector('#time').textContent
+  
+  let purchaseDate = moment().tz('America/New_York').format('MM/DD/YYYY, hh:mm A')
+  
+  const pfilled = moment().tz('America/New_York').format('MM/DD/YYYY HH:mm:ss')
+  const prequested = moment(document.querySelector('#purchaserequest').textContent, 'MM/DD/YYYY, h:mm').format('MM/DD/YYYY HH:mm:ss')
+  const now = moment(moment().tz('America/New_York').format('MM/DD/YYYY, h:mm:ss A'))
+  const then = moment(document.querySelector('#purchaserequest').textContent, 'MM/DD/YYYY, h:mm A')
+  
+  let duration = moment.duration(now.diff(then));
+  let hours = Math.round(duration.asHours());
+  let minutes = duration.minutes();
+  let seconds = duration.seconds();
+  
+  let pdifference = `${hours}:${minutes}:${seconds}`;
+  let purchrequest = document.querySelector('#purchaserequest').textContent
+  let purchurgency = document.querySelector('#purchasefrequency').textContent
+  
+    const prefix = "Oneticket_";
+    const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    const idLength = 8;
+    let randomId = prefix;
+  
+    for (let i = 0; i < idLength; i++) {
+      const randomIndex = Math.floor(Math.random() * characters.length);
+      randomId += characters.charAt(randomIndex);
+    }
+  
+  
+  var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event-copy?id=')[1]
+  var http = new XMLHttpRequest();
+  var endpointUrl = "https://ubik.wiki/api/create/order-history/"
+  
+  var param = {
+  "event_name":eventname,
+  "event_date":eventdate,
+  "event_venue":eventvenue,
+  "event_time":eventtime,
+  "purchase_source":eventsource,
+  "purchase_quantity":pq,
+  "purchase_quantity_total":pmax,
+  "purchase_account":pa,
+  "purchase_email":pm,
+  "confirmation":pc,
+  "purchased_by":purchasedby,
+  "purchase_requested":purchrequest,
+  "purchase_urgency":purchurgency,
+  "purchase_difference":pdifference,
+  "p_filled":pfilled,
+  "p_requested":prequested,
+  "purchase_date":purchaseDate,
+  "purchase_quantity_alltime":pcombined,
+  "one_ticket_id":randomId
+  }
+  
+  fetch(endpointUrl, {
+  method: 'POST',
+  headers: {
+  'Content-Type': 'application/json'
+  },
+  body: JSON.stringify(param)
+  })
+  .then(response => response.json())
+  .then(data => {
+  
+      
+  console.log('step 3 completed')
+  
+  document.querySelector('#loading').style.display = "flex";
+  document.querySelector('#Item-Container').style.display = "none";
+  setTimeout(() => {
+  window.location.href = "/buy-queue-copy";
+  }, 2000);
+       
+  })
+  .catch(error => {
+  console.log(error);
+  });
+  
+  setTimeout(() => {
+  if(!!$('#purchaseacc').text() == false) {
+  $('#purchaseacc').text('noaccount')
+  $('#purchaseacc').css('opacity', '0');
+  }
+  }, 1000);
+  }
+  
 } else {
 
 }
-    }
-};
-    
-http.send(JSON.stringify(params));
-    
-}
- 
-// 3. Update Order History
-{
-let eventname = document.querySelector('#event').textContent
-let eventdate = document.querySelector('#date').textContent
-let eventvenue = document.querySelector('#venue').textContent
-let eventsource = document.querySelector('#purchasesource').textContent
-
-let pq = document.querySelector('#purchasequantity').value
-let pmax = document.querySelector('#amountbought2').textContent
-let pa = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase();
-let pm = document.querySelector('#purchaseemail').value
-let pc = document.querySelector('#purchaseconfirmation').value
-let purchasedby = document.querySelector('#username').textContent
-
-let palltime = Number(document.querySelector('#purchasetotal').textContent)
-let pthistime = Number(document.querySelector('#amountbought2').textContent)
-let pcombined = palltime + pthistime
-
-let eventtime = document.querySelector('#time').textContent
-
-let purchaseDate = moment().tz('America/New_York').format('MM/DD/YYYY, hh:mm A')
-
-const pfilled = moment().tz('America/New_York').format('MM/DD/YYYY HH:mm:ss')
-const prequested = moment(document.querySelector('#purchaserequest').textContent, 'MM/DD/YYYY, h:mm').format('MM/DD/YYYY HH:mm:ss')
-const now = moment(moment().tz('America/New_York').format('MM/DD/YYYY, h:mm:ss A'))
-const then = moment(document.querySelector('#purchaserequest').textContent, 'MM/DD/YYYY, h:mm A')
-
-let duration = moment.duration(now.diff(then));
-let hours = Math.round(duration.asHours());
-let minutes = duration.minutes();
-let seconds = duration.seconds();
-
-let pdifference = `${hours}:${minutes}:${seconds}`;
-let purchrequest = document.querySelector('#purchaserequest').textContent
-let purchurgency = document.querySelector('#purchasefrequency').textContent
-
-  const prefix = "Oneticket_";
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  const idLength = 8;
-  let randomId = prefix;
-
-  for (let i = 0; i < idLength; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    randomId += characters.charAt(randomIndex);
   }
-
-
-var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event-copy?id=')[1]
-var http = new XMLHttpRequest();
-var endpointUrl = "https://ubik.wiki/api/create/order-history/"
-
-var param = {
-"event_name":eventname,
-"event_date":eventdate,
-"event_venue":eventvenue,
-"event_time":eventtime,
-"purchase_source":eventsource,
-"purchase_quantity":pq,
-"purchase_quantity_total":pmax,
-"purchase_account":pa,
-"purchase_email":pm,
-"confirmation":pc,
-"purchased_by":purchasedby,
-"purchase_requested":purchrequest,
-"purchase_urgency":purchurgency,
-"purchase_difference":pdifference,
-"p_filled":pfilled,
-"p_requested":prequested,
-"purchase_date":purchaseDate,
-"purchase_quantity_alltime":pcombined,
-"one_ticket_id":randomId
+};
+  
+http.send(JSON.stringify(params));
+  
 }
 
-fetch(endpointUrl, {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json'
-},
-body: JSON.stringify(param)
+} else {
+
+}}
+};
+
+// Send the params object as a JSON string
+http.send(JSON.stringify(params));
+
 })
-.then(response => response.json())
-.then(data => {
-
-    
-console.log('step 3 completed')
-
-document.querySelector('#loading').style.display = "flex";
-document.querySelector('#Item-Container').style.display = "none";
-setTimeout(() => {
-window.location.href = "/buy-queue-copy";
-}, 2000);
-     
-})
-.catch(error => {
-console.log(error);
-});
-
-setTimeout(() => {
-if(!!$('#purchaseacc').text() == false) {
-$('#purchaseacc').text('noaccount')
-$('#purchaseacc').css('opacity', '0');
-}
-}, 1000);
-}
-})
-
