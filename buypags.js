@@ -19,7 +19,10 @@ const itemContainer = document.getElementById("Item-Container")
 const item = document.getElementById('samplestyle')
     
 thiseventid = eventdata.event_id
+    
 document.querySelector('#seid').value = thiseventid
+
+
 
 var requestam = new XMLHttpRequest()
 let xanoUrlam = new URL("https://ubik.wiki/api/event-venue/?site_event_id__iexact="+thiseventid)
@@ -33,6 +36,10 @@ if (data.count === 1) {
 
 let data = JSON.parse(requestam.response) 
 let pam = data.results[0].purchased_amount
+let evid = data.results[0].site_event_id
+    
+document.querySelector('#evids').value = evid
+    
 if(pam){
 document.querySelector('#purchasetotal').textContent = parseInt(pam,10)
 } else {
