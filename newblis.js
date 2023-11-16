@@ -417,7 +417,7 @@ if(card.getAttribute('error') === 'true'){
 const errorbutton = card.getElementsByClassName('main-buy-button')[0]
 errorbutton.textContent = 'Respond'
 errorbutton.addEventListener('click', function() {
-window.location.assign("https://www.ubikanalytic.com/error-respond-copy?id=" +encodeURIComponent(events.event_id).replace('%20','+'));
+window.location.assign("https://www.ubikanalytic.com/error-respond-copy?id=" +encodeURIComponent(events.id).replace('%20','+'));
 })}
 
 const confirmbutton = card.getElementsByClassName('main-confirm-button')[0]
