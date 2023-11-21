@@ -63,6 +63,8 @@ location.href = '/login'
 if(marcus === true){
 document.querySelector('#eventsdropdown').style.display = 'flex'
 document.querySelector('#eventsm').style.display = 'flex'
+document.querySelector('#toolsmarcus').style.display = 'flex'
+document.querySelector('#mlogo').style.display = 'flex'
 }
         
         
