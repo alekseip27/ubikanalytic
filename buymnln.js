@@ -103,6 +103,7 @@ function part1(){
         let eventtime = document.querySelector('#time').textContent
         
         const pfilled = moment().tz('America/New_York').format('MM/DD/YYYY HH:mm:ss')
+        const purchaseDate = moment().tz('America/New_York').format('MM/DD/YYYY, hh:mm A')
         
           const prefix = "Oneticket_";
           const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
@@ -135,7 +136,7 @@ function part1(){
         "purchase_difference":"manual",
         "p_requested":"manual",
         "p_filled":pfilled,
-        "purchase_date":pfilled,
+        "purchase_date":purchaseDate,
         "one_ticket_id":randomId
         }
         
