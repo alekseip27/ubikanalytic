@@ -23,49 +23,72 @@ thiseventid = eventdata.event_id
 document.querySelector('#seid').value = thiseventid
 
 
+function makeRequest(url, successCallback, errorCallback, maxRetries = 3, retryDelay = 1000) {
+  let retries = 0;
 
-var requestam = new XMLHttpRequest()
-let xanoUrlam = new URL("https://ubik.wiki/api/event-venue/?site_event_id__iexact="+thiseventid)
+  function sendRequest() {
+    var request = new XMLHttpRequest();
+    request.open('GET', url, true);
 
-requestam.open('GET', xanoUrlam.toString(), true)
+    request.onload = function () {
+      if (request.status === 200) {
+        successCallback(JSON.parse(request.response));
+      } else {
+        retries++;
+        if (retries < maxRetries) {
+          console.log(`Request failed. Retrying in ${retryDelay / 1000} seconds...`);
+          setTimeout(sendRequest, retryDelay);
+        } else {
+          errorCallback(`Request failed after ${maxRetries} retries.`);
+        }
+      }
+    };
 
-requestam.onload = function() {
-let data = JSON.parse(requestam.response) 
+    request.onerror = function () {
+      retries++;
+      if (retries < maxRetries) {
+        console.log(`Request failed. Retrying in ${retryDelay / 1000} seconds...`);
+        setTimeout(sendRequest, retryDelay);
+      } else {
+        errorCallback(`Request failed after ${maxRetries} retries.`);
+      }
+    };
 
-if (data.count === 1) {
+    request.send();
+  }
 
-let data = JSON.parse(requestam.response) 
-let pam = data.results[0].purchased_amount
-    
-if(pam){
-document.querySelector('#purchasetotal').textContent = parseInt(pam,10)
-} else {
-document.querySelector('#purchasetotal').textContent = '0'
-}}}
-
-requestam.send()
-
-
-{
-var requestam = new XMLHttpRequest()
-let xanoUrlam = new URL("https://ubik.wiki/api/buying-queue/?event_id__iexact="+thiseventid)
-
-requestam.open('GET', xanoUrlam.toString(), true)
-
-requestam.onload = function() {
-let data = JSON.parse(requestam.response) 
-
-if (data.count === 1) {
-
-let data = JSON.parse(requestam.response) 
-let evid = data.results[0].id
-    
-document.querySelector('#evids').value = evid
-
-}}
-
-requestam.send()        
+  sendRequest();
 }
+
+// Example usage for the first request
+const eventVenueUrl = `https://ubik.wiki/api/event-venue/?site_event_id__iexact=${thiseventid}`;
+makeRequest(
+  eventVenueUrl,
+  function (data) {
+    if (data.count === 1) {
+      let pam = data.results[0].purchased_amount;
+      document.querySelector('#purchasetotal').textContent = parseInt(pam || '0', 10);
+    }
+  },
+  function (error) {
+    console.error(`Error: ${error}`);
+  }
+);
+
+// Example usage for the second request
+const buyingQueueUrl = `https://ubik.wiki/api/buying-queue/?event_id__iexact=${thiseventid}`;
+makeRequest(
+  buyingQueueUrl,
+  function (data) {
+    if (data.count === 1) {
+      let evid = data.results[0].id;
+      document.querySelector('#evids').value = evid;
+    }
+  },
+  function (error) {
+    console.error(`Error: ${error}`);
+  }
+);
 
 
     
