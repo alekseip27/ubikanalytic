@@ -228,3 +228,87 @@ document.querySelector('#Item-Container').style.display = "flex";
 });
 })
 
+
+
+document.querySelector('#buybtn2').addEventListener("click", () => {
+
+
+    let venueid = document.querySelector('#venueid').value
+    let venuename = document.querySelector('#venuename').value
+    let venueurl = document.querySelector('#venueurl').value
+    let venuecity = document.querySelector('#venuecity').value
+    let venuestate = document.querySelector('#venuestate').value
+    let venuecountry = document.querySelector('#venuecountry').value
+    let venuetimezone = document.querySelector('#venuetimezone').value
+    let venuecapacity = document.querySelector('#venuecapacity').value
+    let venuezip = document.querySelector('#zipcode').value
+    let stubhuburl = document.querySelector('#stubhuburl').value
+    let vividseatsurl = document.querySelector('#vividseatsurl').value
+    
+    let shid = document.querySelector('#stubhuburl').value.replace(/[^0-9]/g, '');
+    
+    if(document.querySelector('#stubhuburl').value.includes('/venue/')){
+    let shid = document.querySelector('#stubhuburl').value.split('venue/')[1].replace("/", "")}
+    let vsid = document.querySelector('#vividseatsurl').value.replace(/[^0-9]/g, '');
+    
+    if(document.querySelector('#vividseatsurl').value.includes('/venue/')){
+    let vsid = document.querySelector('#vividseatsurl').value.split('venue/')[1].replace("/", "")}
+    
+    else if(document.querySelector('#vividseatsurl').value.includes('/performer/')){
+    let vsid = document.querySelector('#vividseatsurl').value.split('performer/')[1].replace("/", "");
+    }
+
+    var endpointUrl = "https://ubik.wiki/api/create/venues/";
+    
+    var params = {
+        "site_venue_id": venueid,
+        "name":venuename,
+        "venue_url":venueurl,
+        "city":venuecity,
+        "state":venuestate,
+        "country":venuecountry,
+        "timezone":venuetimezone,
+        "capacity":venuecapacity,
+        "zip_code":venuezip,
+        "vivid_url":vividseatsurl,
+        "stubhub_url":stubhuburl,
+        "vivid_venue_id":vsid,
+        "stubhub_venue_id":shid
+    }
+    
+    fetch(endpointUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(params)
+    })
+    .then(response => {
+      if (response.status === 200 || response.status === 201) {
+    document.querySelector('#loading').style.display = "flex";
+    document.querySelector('#Item-Container').style.display = "none";
+    setTimeout(() => {
+    window.location.href = "/add-event-copy";
+    }, 2000);
+    
+    } else {
+    document.querySelector('#loading').style.display = "none";
+    document.querySelector('#Item-Container').style.display = "flex";
+    document.querySelector('#errortext2').style.display = 'flex';
+    document.querySelector('#errortext2').textContent = "Error: Venue Already Exists:";
+    }
+    })
+    .then(data => {
+      // Handle the response data or error message here
+    })
+    .catch(error => {
+    
+      console.log(error);
+      document.querySelector('#loading').style.display = "none";
+      document.querySelector('#Item-Container').style.display = "flex";
+      document.querySelector('#errortext2').style.display = 'flex';
+      document.querySelector('#errortext2').textContent = "Error: Venue Already Exists:"
+    });
+    })
+    
+
