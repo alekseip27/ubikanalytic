@@ -288,7 +288,7 @@ document.querySelector('#buybtn2').addEventListener("click", () => {
     document.querySelector('#loading').style.display = "flex";
     document.querySelector('#Item-Container').style.display = "none";
     setTimeout(() => {
-    window.location.href = "/add-event-copy";
+    window.location.href = "/add-event";
     }, 2000);
     
     } else {
