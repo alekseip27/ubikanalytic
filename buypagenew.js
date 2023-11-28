@@ -4,7 +4,7 @@ $("#purchasequantity").attr({"min" : 0});
 step1 = false
 step2 = false
 step3 = false
-var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event-copy?id=')[1];
+var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1];
 var request = new XMLHttpRequest()
 let xanoUrl = new URL("https://ubik.wiki/api/buying-queue/" + encodeURIComponent(eventid) + "/")
 
@@ -409,7 +409,7 @@ let bought = Number(document.querySelector('#amountbought1').textContent)
 let cpr = Number(document.querySelector('#purchasequantity').value)
 let combined = bought+cpr
 let limit = Number(document.querySelector('#amountbought2').textContent)
-var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event-copy?id=')[1]
+var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
 var urll = "https://ubik.wiki/api/update/buying-queue/" + encodeURIComponent(eventid) + "/"
 
@@ -519,7 +519,7 @@ function part3(){
       }
     
     
-    var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event-copy?id=')[1]
+    var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
     var http = new XMLHttpRequest();
     var endpointUrl = "https://ubik.wiki/api/create/order-history/"
     
@@ -589,7 +589,7 @@ const checkStepsInterval = setInterval(() => {
   if (step1 && step2 && step3) {
     clearInterval(checkStepsInterval);
     setTimeout(() => {
-      window.location.href = "/buy-queue-copy";
+      window.location.href = "/buy-queue";
     }, 2000);
   }
 }, 1000);
