@@ -30,13 +30,13 @@ card.style.display = 'flex';
 
 const buybutton = card.getElementsByClassName('main-buy-button')[0]
 buybutton.addEventListener('click', function() {
-window.location.assign("https://www.ubikanalytic.com/buy-event-copy?id=" + events.id)
+window.location.assign("https://www.ubikanalytic.com/buy-event?id=" + events.id)
 });
 
 const editbutton = card.getElementsByClassName('main-edit-button')[0]
 editbutton.style.display = 'none'
 editbutton.addEventListener('click', function() {
-window.location.assign("https://www.ubikanalytic.com/edit-event-copy?id=" + events.id)
+window.location.assign("https://www.ubikanalytic.com/edit-event?id=" + events.id)
 });
     
 let ems = document.querySelector('#email').textContent
@@ -417,7 +417,7 @@ if(card.getAttribute('error') === 'true'){
 const errorbutton = card.getElementsByClassName('main-buy-button')[0]
 errorbutton.textContent = 'Respond'
 errorbutton.addEventListener('click', function() {
-window.location.assign("https://www.ubikanalytic.com/error-respond-copy?id=" +encodeURIComponent(events.id).replace('%20','+'));
+window.location.assign("https://www.ubikanalytic.com/error-respond?id=" +encodeURIComponent(events.id).replace('%20','+'));
 })}
 
 const confirmbutton = card.getElementsByClassName('main-confirm-button')[0]
