@@ -3,7 +3,7 @@ step2 = false
 
 $("#purchasequantity").attr({"min" : 0});
 {
-event_id = document.location.href.split('https://www.ubikanalytic.com/buy-manual-copy?id=')[1];
+event_id = document.location.href.split('https://www.ubikanalytic.com/buy-manual?id=')[1];
 var request = new XMLHttpRequest()
 let xanoUrl = new URL("https://ubik.wiki/api/event-venue/?site_event_id__iexact="+event_id)
   
@@ -116,7 +116,7 @@ function part1(){
           }
         
         
-        var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-manual-copy?id=')[1]
+        var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-manual?id=')[1]
         var http = new XMLHttpRequest();
         var endpointUrl = "https://ubik.wiki/api/create/order-history/"
         var param = {
@@ -181,7 +181,7 @@ const checkStepsInterval = setInterval(() => {
     if (step1 && step2) {
       clearInterval(checkStepsInterval);
       setTimeout(() => {
-        window.location.href = "/events-new";
+        window.location.href = "/events";
       }, 2000);
     }
   }, 1000);
