@@ -64,7 +64,7 @@ function makeRequest(url, successCallback, errorCallback, maxRetries = 3, retryD
 }
 
 // Example usage for the first request
-const eventVenueUrl = `https://ubik.wiki/api/event-venue/?site_event_id__iequal=${encodedthiseventid}`;
+const eventVenueUrl = `https://ubik.wiki/api/event-venue/?site_event_id__iexact=${encodedthiseventid}`;
 makeRequest(
   eventVenueUrl,
   function (data) {
