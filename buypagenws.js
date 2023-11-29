@@ -440,7 +440,7 @@ http.send(JSON.stringify(params));
 function part2(){
 // 2. Update Event
   let palltime = Number(document.querySelector('#purchasetotal').textContent)
-  let pthistime = Number(document.querySelector('#purchasequantity').textContent)
+  let pthistime = Number(document.querySelector('#purchasequantity').value)
   let pcombined = palltime + pthistime
   var http = new XMLHttpRequest();
   var urll = "https://ubik.wiki/api/update/primary-events/" + encodeURIComponent(thiseventid) + "/"
@@ -483,7 +483,7 @@ function part3(){
     let purchasedby = document.querySelector('#username').textContent
     
   let palltime = Number(document.querySelector('#purchasetotal').textContent)
-  let pthistime = Number(document.querySelector('#purchasequantity').textContent)
+  let pthistime = Number(document.querySelector('#purchasequantity').value)
     let pcombined = palltime + pthistime
     
     let eventtime = document.querySelector('#time').textContent
