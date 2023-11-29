@@ -71,11 +71,11 @@ document.querySelector('#search-buttonvenueid').addEventListener("click", () => 
             let end = JSON.parse(data); // You can access the response text here
             if(end.count>=1){
     $('#search-result2').css({ opacity: 1.0 })
-    $('#search-result2').html('Event ID already exists')
+    $('#search-result2').html('Venue ID already exists')
     $('#search-result2').css('color', 'red')
             } else {
     $('#search-result2').css({ opacity: 1.0 })
-    $('#search-result2').html('Event ID does not exist')
+    $('#search-result2').html('Venue ID does not exist')
     $('#search-result2').css('color', 'green')
             }
         })
