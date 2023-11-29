@@ -19,6 +19,9 @@ const itemContainer = document.getElementById("Item-Container")
 const item = document.getElementById('samplestyle')
     
 thiseventid = eventdata.event_id
+
+encodedthiseventid = encodeURIComponent(eventdata.event_id)
+
     
 document.querySelector('#seid').value = thiseventid
 
@@ -61,7 +64,7 @@ function makeRequest(url, successCallback, errorCallback, maxRetries = 3, retryD
 }
 
 // Example usage for the first request
-const eventVenueUrl = `https://ubik.wiki/api/event-venue/?site_event_id__iexact=${thiseventid}`;
+const eventVenueUrl = `https://ubik.wiki/api/event-venue/?site_event_id__iexact=${encodedthiseventid}`;
 makeRequest(
   eventVenueUrl,
   function (data) {
