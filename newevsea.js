@@ -124,7 +124,13 @@ if (events.purchased_amount) {
  card.setAttribute('purchased','0')
 }
 
-            
+
+const status = card.getElementsByClassName('main-text-status')[0];
+
+if (events.status) {
+status.textContent = events.status
+}
+
     function vschartdata(VDID) {
     
     const url = `https://ubik.wiki/api/vividseats/${VDID}/?format=json`;  // Fixed the stray "
