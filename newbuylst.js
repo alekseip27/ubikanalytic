@@ -51,7 +51,7 @@ let eventtime = card.getElementsByClassName('main-text-time')[0]
 eventtime.textContent = events.event_time
 
 if(eventtime.textContent.length>8) {
-eventtime.textContent = events.event_time.slice(0, 8)+'..'
+eventtime.textContent = events.event_time.slice(0, 8)
 }
 
 
