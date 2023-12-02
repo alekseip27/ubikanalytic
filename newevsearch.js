@@ -118,8 +118,9 @@ let xanoUrl = baseUrl + params.join('&');
 
 const purchasedamount = card.getElementsByClassName('main-text-purchased')[0];
     
-if (events.purchased_amount !== 'null' || events.purchased_amount !== '0') {
+if (events.purchased_amount !== null || events.purchased_amount !== 0) {
   card.setAttribute('purchased', parseInt(events.purchased_amount,10))
+  purchasedamount.textContent = parseInt(events.purchased_amount, 10).toString();
 }
 
 
@@ -351,12 +352,6 @@ status.textContent = events.status
         });
     };
       
- 
-if (events.purchased_amount) {
-  purchasedamount.textContent = parseInt(events.purchased_amount, 10).toString();
-} else {
-  purchasedamount.textContent = '0';
-}
 
         
         let rescrapebutton = card.getElementsByClassName('re-scrape-div')[0]
