@@ -120,8 +120,8 @@ const purchasedamount = card.getElementsByClassName('main-text-purchased')[0];
     
 if (events.purchased_amount) {
   card.setAttribute('purchased', parseInt(events.purchased_amount,10))
-} else {
- card.setAttribute('purchased','0')
+} else if (events.purchased_amount === 'null' || events.purchased_amount === '0') {
+ card.setAttribute('purchased','')
 }
 
 
