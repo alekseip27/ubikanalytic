@@ -50,6 +50,11 @@ eventname.textContent = events.event_name.slice(0, 21)+'...'
 let eventtime = card.getElementsByClassName('main-text-time')[0]
 eventtime.textContent = events.event_time
 
+if(eventtime.textContent.length>8) {
+eventtime.textContent = events.event_time.slice(0, 8)+'..'
+}
+
+
 let eventtl = card.getElementsByClassName("main-text-tl")[0]
 eventtl.textContent = events.added_timestamp
 card.setAttribute('dateposted', events.added_timestamp)
