@@ -294,7 +294,7 @@ status.textContent = events.status
     }
     });
             
-          if (events.source_site !== 'TM' || events.vdid.length === 0 ) {
+          if (events.source_site !== 'TM') {
     charticon.style.display = 'none'
           }
             
