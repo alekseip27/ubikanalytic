@@ -177,6 +177,7 @@ let eventname = document.querySelector('#event_name').value;
 let eventurl = document.querySelector('#event_url').value;
 let eventtime = document.querySelector('#event_time').value;
 let eventdate = document.querySelector('#event_date').value;
+let addedby = document.querySelector('#username').textContent;
 
 var endpointUrl = "https://ubik.wiki/api/create/primary-events/";
 
@@ -187,6 +188,7 @@ var params = {
   "event_url": eventurl,
   "time": eventtime,
   "date": eventdate,
+  "added_by": addedby
 };
 
 fetch(endpointUrl, {
