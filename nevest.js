@@ -90,7 +90,7 @@ let xanoUrl = baseUrl + params.join('&');
         data.results.forEach(events => {
         const style = document.getElementById('samplestyle')
         const card = style.cloneNode(true)
-        const evid = events.site_event_id
+        const evid = encodeURIComponent(events.site_event_id)
         const eventdate = card.getElementsByClassName('main-text-date')[0]
         
         card.setAttribute('id', '');
