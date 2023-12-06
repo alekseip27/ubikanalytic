@@ -96,6 +96,8 @@ let xanoUrl = baseUrl + params.join('&');
         card.setAttribute('id', '');
         card.setAttribute('checked','false')
         card.setAttribute('name', events.event_name);
+            
+        card.setAttribute('country', events.country);
       
        if(events.date){
         card.setAttribute('date', events.date.slice(0, 10).replaceAll("-","/"));
