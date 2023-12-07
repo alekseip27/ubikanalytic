@@ -52,7 +52,7 @@ document.querySelector('#search-buttonvenueid').addEventListener("click", () => 
 
     let venueid = encodeURIComponent(document.querySelector('#venueprefixsearch').value) + encodeURIComponent(document.querySelector('#checkvenueid').value)
 
-    var url = "https://ubik.wiki/api/event-venue/?site_venue_id__iexact=" + venueid
+    var url = "https://ubik.wiki/api/venues/?site_venue_id__iexact=" + venueid
 
     fetch(url, {
         method: "GET",
