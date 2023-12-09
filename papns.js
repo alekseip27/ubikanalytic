@@ -1,5 +1,3 @@
-let controllerChartsd
-
 Webflow.push(function() {
     $('form').submit(function() {
     return false;
@@ -121,6 +119,10 @@ document.getElementById('mainurl').value = ''
     card.setAttribute('id', events.id)
     } else {
     card.setAttribute('id', events.id);
+        
+    card.setAttribute('event', events.name);
+    card.setAttribute('venue', events.venue.name);
+
     document.querySelector('#lowerbox').style.display = 'none'
     document.querySelector('#searchblock').style.display = 'none'
     }
