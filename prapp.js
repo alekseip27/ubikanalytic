@@ -120,13 +120,12 @@ document.getElementById('mainurl').value = ''
     } else {
     card.setAttribute('id', events.id);
         
-    card.setAttribute('event', events.name);
-    card.setAttribute('venue', events.venue.name);
-
     document.querySelector('#lowerbox').style.display = 'none'
     document.querySelector('#searchblock').style.display = 'none'
     }
-
+        
+    card.setAttribute('event', events.name);
+    card.setAttribute('venue', events.venue.name);
     card.setAttribute('date', events.date.slice(0,10))
     const eventname = card.getElementsByClassName('main-text-event')[0]
     eventname.textContent = events.name
