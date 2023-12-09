@@ -126,7 +126,10 @@ document.getElementById('mainurl').value = ''
         
     card.setAttribute('event', events.name);
     card.setAttribute('venue', events.venue.name);
+        
+    card.setAttribute('location', events.venue.city);
     card.setAttribute('date', events.date.slice(0,10))
+
     const eventname = card.getElementsByClassName('main-text-event')[0]
     eventname.textContent = events.name
     if(eventname.textContent.length>10) {
@@ -1230,3 +1233,5 @@ function getpdates() {
 }
 
 document.getElementById('scrapedates').addEventListener('click', getpdates);
+
+
