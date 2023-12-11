@@ -1047,7 +1047,7 @@ async function getpdates() {
         const data = docSnap.data();
         const pauth = data['pyeo'];
         const eventBoxes = document.querySelectorAll('.event-box');
-        const maxConcurrentRequests = 100;
+        const maxConcurrentRequests = 50;
         let concurrentRequestCount = 0;
 
         for (let i = 0; i < eventBoxes.length; i++) {
