@@ -1038,62 +1038,55 @@
     }
 
 
+async function getpdates() {
+    const curUser = firebase.auth().currentUser;
+    const myFS = firebase.firestore();
+    const docRef = myFS.doc("users/" + curUser.uid);
 
-    function getpdates() {
-
-    let curUser = firebase.auth().currentUser;
-    let myFS = firebase.firestore();
-    let docRef = myFS.doc("users/" + curUser.uid);
-    docRef.get().then(async (docSnap) => {
-        let data = docSnap.data();
-        pauth = data['pyeo'];
-
+    try {
+        const docSnap = await docRef.get();
+        const data = docSnap.data();
+        const pauth = data['pyeo'];
         const eventBoxes = document.querySelectorAll('.event-box');
+        const fetchPromises = [];
 
-        // Iterate over the first 5 event boxes
         for (let i = 0; i < eventBoxes.length; i++) {
-        const eventBox = eventBoxes[i];
+            const eventBox = eventBoxes[i];
+            const pdateElement = eventBox.querySelector('.main-text-pdate');
 
-        const pdateElement = eventBox.querySelector('.main-text-pdate');
+            if (pdateElement.textContent || eventBox.id === 'samplestyle') {
+                continue;
+            }
 
-        // Skip if pdateElement already has text content
-        if (pdateElement.textContent || eventBox.id === 'samplestyle') {
-            continue;
-        }
+            const eventId = eventBox.id;
+            const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_inventory_created?searchkey=${eventId}&user=aleksei@ubikanalytic.com`;
 
-        const eventId = eventBox.id;
-        const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_inventory_created?searchkey=${eventId}&user=aleksei@ubikanalytic.com`;
-
-        let success = false;
-        while (!success) {
-            try {
-            // Send the fetch request
-            const response = await fetch(url, {
+            const fetchPromise = fetch(url, {
                 headers: {
-                'Authorization': pauth
+                    'Authorization': pauth
                 }
-            });
-
-            if (response.ok) {
+            })
+            .then(async (response) => {
+                if (!response.ok) {
+                    throw new Error('Response not OK');
+                }
                 const data = await response.text();
                 const formattedDate = data.substring(2, 12);
                 pdateElement.textContent = formattedDate;
                 pdateElement.setAttribute('date', formattedDate);
-                success = true;
-            } else {
-                throw new Error('Response not OK');
-            }
-            } catch (error) {
-            console.error('Error:', error);
-            // Retry until success
-            }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+            fetchPromises.push(fetchPromise);
         }
-        }
-    });
+
+        // Wait for all fetch requests to complete
+        await Promise.all(fetchPromises);
+    } catch (error) {
+        console.error('Error:', error);
     }
+}
 
     document.getElementById('scrapedates').addEventListener('click', getpdates);
-
-
-
-    document.querySelector('#search-button').click()
