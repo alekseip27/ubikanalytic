@@ -210,97 +210,7 @@ function getvenuedata() {
       });
   }
   */
-
-
-  async function getchartsd() {
-    let dates_sd = [];
-    let amounts_sd = [];
-    let prices_sd = [];
-    let rows_sd = [];
-    let sections_sd = [];
-
-    if (!events.stubhubEventUrl) {
-        $('.event-box.pricing').css({ pointerEvents: "auto" });
-        document.querySelector("#chart1").style.display = "none";
-        document.querySelector("#chartloading1").style.display = "flex";
-        document.querySelector("#loading1").style.display = "none";
-        document.querySelector("#loadingfailed1").style.display = "flex";
-        return; // Early return if stubhubEventUrl is not available
-
-    }
-
-    const eventid = events.stubhubEventUrl.slice(-10, -1);
-    const eventurl = events.stubhubEventUrl;
-    const getevent = `https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_0?eventid=${eventid}&Event_Url=${eventurl}`;
-
-    try {
-        const response = await fetch(getevent);
-
-        if (!response.ok) {
-            throw new Error('Network response was not ok.');
-        }
-
-        const commits = await response.json();
-
-        if (!Array.isArray(commits)) {
-            $('.event-box.pricing').css({ pointerEvents: "auto" });
-            document.querySelector("#chart1").style.display = "none";
-            document.querySelector("#chartloading1").style.display = "flex";
-            document.querySelector("#loading1").style.display = "none";
-            document.querySelector("#loadingfailed1").style.display = "flex";
-            throw new Error('Data is not an array.');
-
-        }
-
-        for (const commit of commits) {
-            amounts_sd.push(commit.quantity);
-            prices_sd.push(commit.price);
-            rows_sd.push(commit.row);
-            sections_sd.push(commit.section);
-            dates_sd.push(commit.timestamp);
-        }
-
-        const data = dates_sd.map((timestamp, index) => ({
-            timestamp,
-            price: prices_sd[index],
-            amount: amounts_sd[index],
-            section: sections_sd[index],
-            row: rows_sd[index]
-        }));
-
-        data.sort((a, b) => a.timestamp - b.timestamp);
-
-        updateChartData(data); // Extract chart updating logic into a separate function
-
-        document.querySelector('#chart1').style.display = 'flex';
-        document.querySelector('#chartloading1').style.display = 'none';
-        document.querySelector("#loading1").style.display = "flex";
-        document.querySelector("#loadingfailed1").style.display = "none";
-        $('.event-box.pricing').css({ pointerEvents: "auto" });
-
-    } catch (error) {
-        console.error('An error occurred:', error);
-        document.querySelector("#chart1").style.display = "none";
-        document.querySelector("#chartloading1").style.display = "flex";
-        document.querySelector("#loading1").style.display = "none";
-        document.querySelector("#loadingfailed1").style.display = "flex";
-        $('.event-box.pricing').css({ pointerEvents: "auto" });
-    }
-}
-
-function updateChartData(data) {
-    // Update chart data and labels
-    chart.data.datasets[0].data = data.map(item => item.price);
-    chart.data.datasets[1].data = data.map(item => item.amount);
-    chart.data.datasets[2].data = data.map(item => item.section);
-    chart.data.datasets[3].data = data.map(item => item.row);
-    chart.data.labels = data.map(item => formatTimestamp(item.timestamp));
-    chart.update();
-}
-
-
-
-
+        
   async function getchartvs() {
     let venuecap = 0;
     let datesvs = [];
@@ -633,7 +543,6 @@ eventBox.remove();
     } else {
 
   getchartvs()
-  getchartsd()
   primaryurl()
 //getvenuedata()
   }
