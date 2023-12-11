@@ -1037,7 +1037,6 @@
     })
     }
 
-
 async function getpdates() {
     const curUser = firebase.auth().currentUser;
     const myFS = firebase.firestore();
@@ -1048,7 +1047,8 @@ async function getpdates() {
         const data = docSnap.data();
         const pauth = data['pyeo'];
         const eventBoxes = document.querySelectorAll('.event-box');
-        const fetchPromises = [];
+        const maxConcurrentRequests = 10;
+        let concurrentRequestCount = 0;
 
         for (let i = 0; i < eventBoxes.length; i++) {
             const eventBox = eventBoxes[i];
@@ -1061,7 +1061,12 @@ async function getpdates() {
             const eventId = eventBox.id;
             const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_inventory_created?searchkey=${eventId}&user=aleksei@ubikanalytic.com`;
 
-            const fetchPromise = fetch(url, {
+            if (concurrentRequestCount >= maxConcurrentRequests) {
+                // Wait for some requests to complete before sending more
+                await sleep(1000); // You can adjust the sleep duration as needed
+            }
+
+            fetch(url, {
                 headers: {
                     'Authorization': pauth
                 }
@@ -1077,16 +1082,21 @@ async function getpdates() {
             })
             .catch(error => {
                 console.error('Error:', error);
+            })
+            .finally(() => {
+                concurrentRequestCount--;
             });
 
-            fetchPromises.push(fetchPromise);
+            concurrentRequestCount++;
         }
-
-        // Wait for all fetch requests to complete
-        await Promise.all(fetchPromises);
     } catch (error) {
         console.error('Error:', error);
     }
 }
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
     document.getElementById('scrapedates').addEventListener('click', getpdates);
