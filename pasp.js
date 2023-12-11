@@ -30,13 +30,8 @@ Webflow.push(function() {
     document.querySelector('#fwicon5').textContent = ''
     document.querySelector('#selectedevent').setAttribute('lastfetched','')
     document.querySelector('#fwicon5').textContent = ''
-    document.querySelector('#chart1').style.display = 'none'
     document.querySelector('#chart2').style.display = 'none'
-    document.querySelector('#chartloading1').style.display = 'none'
     document.querySelector('#chartloading2').style.display = 'none'
-
-    document.querySelector("#loading1").style.display = "flex";
-    document.querySelector("#loadingfailed1").style.display = "none";
 
     document.querySelector("#loading2").style.display = "flex";
     document.querySelector("#loadingfailed2").style.display = "none";
@@ -376,14 +371,7 @@ const primaryurl = async function(){
   document.querySelector('#urlmainmobile').setAttribute('url','')
   document.querySelector('#sdatacount').textContent = '0'
 
-  document.querySelector('#chart1').style.display = 'none'
   document.querySelector('#chart2').style.display = 'none'
-  document.querySelector('#chartloading1').style.display = 'flex'
-  document.querySelector('#chartloading2').style.display = 'flex'
-
-  document.querySelector("#loading1").style.display = "flex";
-  document.querySelector("#loadingfailed1").style.display = "none";
-
   document.querySelector("#loading2").style.display = "flex";
   document.querySelector("#loadingfailed2").style.display = "none";
 
@@ -516,10 +504,6 @@ eventBox.remove();
     document.querySelector('#fwicon5').textContent = ''
     document.querySelector('#selectedevent').setAttribute('lastfetched','')
     document.querySelector('#fwicon5').textContent = ''
-    //document.querySelector('#chart1').style.display = 'none'
-    //document.querySelector('#chart2').style.display = 'none'
-    //document.querySelector('#chartloading1').style.display = 'flex'
-    //document.querySelector('#chartloading2').style.display = 'flex'
     document.querySelector('#lowerable').checked = false
     document.querySelector('#urlmain').style.display = 'none'
     document.querySelector('#changedata').style.display = 'none'
