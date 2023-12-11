@@ -51,10 +51,6 @@ Webflow.push(function() {
 document.getElementById('mainurl').value = ''
 
     $('.event-box-pricing').hide()
-    chart.data.datasets[1].data = ''
-    chart.data.datasets[0].data = ''
-    chart.config.data.labels =  ''
-    chart.update();
 
     chartvs.data.datasets[0].data = ''
     chartvs.data.datasets[1].data = ''
@@ -380,11 +376,6 @@ const primaryurl = async function(){
 
 document.getElementById('mainurl').value = ''
 
-  chart.data.datasets[1].data = ''
-  chart.data.datasets[0].data = ''
-  chart.config.data.labels =  ''
-  chart.update();
-
 
   chartvs.data.datasets[0].data = ''
   chartvs.data.datasets[1].data = ''
@@ -514,11 +505,6 @@ eventBox.remove();
     document.querySelector('#urlmainmobile').setAttribute('url','')
 
     $('.event-box-pricing').hide()
-    chart.data.datasets[1].data = ''
-    chart.data.datasets[0].data = ''
-    chart.config.data.labels =  ''
-    chart.update();
-
     chartvs.data.datasets[0].data = ''
     chartvs.data.datasets[1].data = ''
     chartvs.config.data.labels = ''
