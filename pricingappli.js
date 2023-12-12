@@ -940,8 +940,11 @@ document.querySelector('#lowerable').checked = true
     http2.onload = function() {
         if(this.status>201){
             document.querySelector('.locked-content').style.display = 'flex'
+            document.querySelector('.pageloading').style.display = 'flex'
             } else {
                 document.querySelector('.locked-content').style.display = 'none'
+                document.querySelector('.pageloading').style.display = 'none'
+
             }
     let resp = http2.response
     if(resp>=1 ) {
