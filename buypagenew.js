@@ -70,7 +70,16 @@ makeRequest(
   function (data) {
     if (data.count === 1) {
       let pam = data.results[0].purchased_amount;
-      document.querySelector('#purchasetotal').textContent = parseInt(pam || '0', 10);
+      let evname = data.results[0].event_name;
+      let vename = data.results[0].venue_name;
+      let evdate = data.results[0].date;
+      let evtime = data.results[0].time;
+    document.querySelector('#purchasetotal').textContent = parseInt(pam || '0', 10);
+        
+    document.querySelector('#evname').textContent = evname
+    document.querySelector('#vename').textContent = vename
+    document.querySelector('#evdate').textContent = evdate
+    document.querySelector('#evtime').textContent = evtime
     }
   },
   function (error) {
@@ -86,6 +95,7 @@ makeRequest(
     if (data.count === 1) {
       let evid = data.results[0].id;
       document.querySelector('#evids').value = evid;
+      document.querySelector('#queueid').value = evid;
     }
   },
   function (error) {
