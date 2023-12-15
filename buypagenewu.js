@@ -74,12 +74,15 @@ makeRequest(
       let vename = data.results[0].venue_name;
       let evdate = data.results[0].date;
       let evtime = data.results[0].time;
+      let evurl = data.results[0].event_url
     document.querySelector('#purchasetotal').textContent = parseInt(pam || '0', 10);
         
     document.querySelector('#evname').textContent = evname
-    document.querySelector('#vename').textContent = vename
     document.querySelector('#evdate').textContent = evdate
+    document.querySelector('#evurl').textContent = evurl
     document.querySelector('#evtime').textContent = evtime
+    document.querySelector('#vename').textContent = vename
+        
     }
   },
   function (error) {
