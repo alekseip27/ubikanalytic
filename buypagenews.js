@@ -77,11 +77,11 @@ makeRequest(
       let evurl = data.results[0].event_url
     document.querySelector('#purchasetotal').textContent = parseInt(pam || '0', 10);
         
-    document.querySelector('#evname').textContent = evname
-    document.querySelector('#evdate').textContent = evdate
-    document.querySelector('#evurl').textContent = evurl
-    document.querySelector('#evtime').textContent = evtime
-    document.querySelector('#vename').textContent = vename
+    document.querySelector('#evname').value = evname
+    document.querySelector('#evdate').value = evdate
+    document.querySelector('#evurl').value = evurl
+    document.querySelector('#evtime').value = evtime
+    document.querySelector('#vename').value = vename
         
     }
   },
