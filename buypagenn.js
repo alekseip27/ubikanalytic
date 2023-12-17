@@ -5,8 +5,8 @@ step1 = false
 step2 = false
 step3 = false
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1];
-document.querySelector('#evids').value = evid;
-document.querySelector('#queueid').value = evid;
+document.querySelector('#evids').value = eventid;
+document.querySelector('#queueid').value = eventid;
 var request = new XMLHttpRequest()
 let xanoUrl = new URL("https://ubik.wiki/api/buying-queue/" + encodeURIComponent(eventid) + "/")
 
