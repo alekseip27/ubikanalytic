@@ -23,7 +23,7 @@ thiseventid = eventdata.event_id
 encodedthiseventid = encodeURIComponent(eventdata.event_id)
 
     
-document.querySelector('#seid').value = thiseventid
+document.querySelector('#seid').value = encodedthiseventid
 
 
 function makeRequest(url, successCallback, errorCallback, maxRetries = 3, retryDelay = 1000) {
