@@ -5,6 +5,8 @@ step1 = false
 step2 = false
 step3 = false
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1];
+document.querySelector('#evids').value = evid;
+document.querySelector('#queueid').value = evid;
 var request = new XMLHttpRequest()
 let xanoUrl = new URL("https://ubik.wiki/api/buying-queue/" + encodeURIComponent(eventid) + "/")
 
@@ -83,22 +85,6 @@ makeRequest(
     document.querySelector('#evtime').value = evtime
     document.querySelector('#vename').value = vename
         
-    }
-  },
-  function (error) {
-    console.error(`Error: ${error}`);
-  }
-);
-
-// Example usage for the second request
-const buyingQueueUrl = `https://ubik.wiki/api/buying-queue/?event_id__iexact=${thiseventid}`;
-makeRequest(
-  buyingQueueUrl,
-  function (data) {
-    if (data.count === 1) {
-      let evid = data.results[0].id;
-      document.querySelector('#evids').value = evid;
-      document.querySelector('#queueid').value = evid;
     }
   },
   function (error) {
