@@ -401,7 +401,7 @@ chartvs.update();
     card.classList.add("selected");
 
     setTimeout(() => {
-    if(events.stubhubEventUrl !== null && events.stubhubEventUrl.length>0 && events.stubhubEventUrl.includes('viagogo')){
+    if(events.stubhubEventUrl !== null && events.stubhubEventUrl.length>0){
     let stubhubid = events.stubhubEventUrl.slice(-9)
     document.querySelector("#refreshstub").click()
     document.querySelector('#selectedevent').setAttribute('stubhub-id',stubhubid);
