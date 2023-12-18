@@ -401,16 +401,15 @@ chartvs.update();
     card.classList.add("selected");
 
     setTimeout(() => {
-    if (events.stubhubEventUrl !== null && events.stubhubEventUrl.length>0 && !events.stubhubEventUrl.includes('viagogo')) {
-    let stubhubid = events.stubhubEventUrl.slice(-9).replace('/','')
-    document.querySelector("#refreshstub").click()
-    document.querySelector('#selectedevent').setAttribute('stubhub-id',stubhubid);
-    }
-
     if(events.stubhubEventUrl !== null && events.stubhubEventUrl.length>0 && events.stubhubEventUrl.includes('viagogo')){
     let stubhubid = events.stubhubEventUrl.slice(-9)
     document.querySelector("#refreshstub").click()
     document.querySelector('#selectedevent').setAttribute('stubhub-id',stubhubid);
+    document.querySelector('#shubcross').style.display = 'none'
+    document.querySelector("#shub").style.pointerEvents = "auto";
+    } else {
+    document.querySelector('#shubcross').style.display = 'flex'
+    document.querySelector("#shub").style.pointerEvents = "none";
     }
 
     }, 500);
@@ -440,6 +439,7 @@ fetch(urlon).then(response => response.text()
     document.querySelector('#eventtime').textContent = events.date.slice(11, 16)
     document.querySelector('#eventlocation').textContent = events.venue.city + ", " + events.venue.state
     document.querySelector('#shub').setAttribute('url', events.stubhubEventUrl);
+    document.querySelector('#shubcross').style.display = 'flex'
 
 
     document.querySelector('#vseats').setAttribute('url', events.vividSeatsEventUrl);
