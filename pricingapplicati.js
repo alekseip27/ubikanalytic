@@ -369,6 +369,7 @@ document.querySelector('#urlmain').setAttribute('url','')
 document.querySelector('#selectedevent').setAttribute('VDID','')
 document.querySelector('#urlmainmobile').setAttribute('url','')
 document.querySelector('#sdatacount').textContent = '0'
+document.querySelector('#shubcross').style.display = 'none'
 
 document.querySelector('#chart2').style.display = 'none'
 document.querySelector("#loading2").style.display = "flex";
@@ -402,7 +403,10 @@ chartvs.update();
 
     setTimeout(() => {
     if(events.stubhubEventUrl !== null && events.stubhubEventUrl.length>0){
-    let stubhubid = events.stubhubEventUrl.slice(-9)
+    let stuburl = events.stubhubEventUrl
+    const regex = /event\/(\d+)/;
+    const match = stuburl.match(regex);
+    const stubhubid = match ? match[1] : null;
     document.querySelector("#refreshstub").click()
     document.querySelector('#selectedevent').setAttribute('stubhub-id',stubhubid);
     document.querySelector('#shubcross').style.display = 'none'
