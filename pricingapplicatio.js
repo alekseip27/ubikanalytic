@@ -443,8 +443,6 @@ fetch(urlon).then(response => response.text()
     document.querySelector('#eventtime').textContent = events.date.slice(11, 16)
     document.querySelector('#eventlocation').textContent = events.venue.city + ", " + events.venue.state
     document.querySelector('#shub').setAttribute('url', events.stubhubEventUrl);
-    document.querySelector('#shubcross').style.display = 'flex'
-
 
     document.querySelector('#vseats').setAttribute('url', events.vividSeatsEventUrl);
     document.querySelector('#shubmobile').setAttribute('url', events.stubhubEventUrl);
