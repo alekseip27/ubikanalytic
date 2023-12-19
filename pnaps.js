@@ -292,7 +292,7 @@ http.send();
 
 const primaryurl = async function(){
     
-let abortControllers = []; // Array to hold all AbortControllers
+ abortControllers = []; // Array to hold all AbortControllers
 
     const controller = new AbortController();
     abortControllers.push(controller); // Add controller to the array
