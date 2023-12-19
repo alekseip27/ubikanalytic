@@ -290,7 +290,7 @@ http.send();
 
 
 const primaryurl = async function(){
-    
+document.querySelector('#urlmain').setAttribute('url','');
  abortControllers = []; // Array to hold all AbortControllers
 
     const controller = new AbortController();
@@ -301,20 +301,19 @@ const primaryurl = async function(){
     let commits = await response.json();
 
     if(commits.length>0) {
-        let url = commits[0].Event_Url;
-        
+        document.querySelector('#urlmain').setAttribute('url', commits[0].Event_Url);
         document.querySelector('#mainurl').value = commits[0].Event_Url;
         document.querySelector('#urlmain').style.display = 'flex';
         document.querySelector('#changedata').style.display = 'flex';
         document.querySelector('#urlmainmobile').setAttribute('url', commits[0].Event_Url);
         document.querySelector('#urlmainmobile').style.display = 'flex';
-
+        
+        let url = document.querySelector('#urlmain').getAttribute('url')
         document.querySelector('#urlmain').addEventListener('click', function() {
-            if(url !== 'null') {
-                window.open(url, 'urlmain');
-                $('#urlmain').css('cursor', 'pointer');
-            }
-        });
+        if(commits[0].Event_Url !== 'null') {
+        window.open(url, 'urlmain');
+        $('#urlmain').css('cursor', 'pointer');
+        }});
 
         document.querySelector('#fwicon6').textContent = '';
 
@@ -362,6 +361,7 @@ const cancelFetch = function() {
 
 card.addEventListener('click', function() {
     cancelFetch(); 
+document.querySelector('#mainurl').value = ''
 document.querySelector('#urlmain').style.display = 'none'
 document.querySelector('#changedata').style.display = 'none'
 document.querySelector('#urlmainmobile').style.display = 'none'
