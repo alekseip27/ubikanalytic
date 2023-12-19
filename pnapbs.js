@@ -288,8 +288,6 @@ http.send();
 
 
 
-
-
 const primaryurl = async function(){
     
  abortControllers = []; // Array to hold all AbortControllers
@@ -362,7 +360,7 @@ const cancelFetch = function() {
 
 
 card.addEventListener('click', function() {
-    controller = new AbortController();
+    let abortControllers
     cancelFetch(); 
 document.querySelector('#urlmain').style.display = 'none'
 document.querySelector('#changedata').style.display = 'none'
