@@ -299,68 +299,79 @@ http.send();
 
 
 const primaryurl = async function(){
-    let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/getevent_primaryurl?search-key='+events.venue.id+events.date.slice(0,10)+'&search-key2='+events.name+'&search-key3='+events.date.slice(0,10)
-    let response = await fetch(getevent);
-    let commits = await response.json()
+    
+let abortControllers = []; // Array to hold all AbortControllers
 
-    if(commits.length>0){
-    let url = commits[0].Event_Url
+    const controller = new AbortController();
+    abortControllers.push(controller); // Add controller to the array
+
+    let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/getevent_primaryurl?search-key='+events.venue.id+events.date.slice(0,10)+'&search-key2='+events.name+'&search-key3='+events.date.slice(0,10);
+    let response = await fetch(getevent, { signal: controller.signal });
+    let commits = await response.json();
+
+    if(commits.length>0) {
+        let url = commits[0].Event_Url;
         
-    document.querySelector('#mainurl').value = commits[0].Event_Url
+        document.querySelector('#mainurl').value = commits[0].Event_Url;
+        document.querySelector('#urlmain').style.display = 'flex';
+        document.querySelector('#changedata').style.display = 'flex';
+        document.querySelector('#urlmainmobile').setAttribute('url', commits[0].Event_Url);
+        document.querySelector('#urlmainmobile').style.display = 'flex';
 
-    document.querySelector('#urlmain').style.display = 'flex'
-    document.querySelector('#changedata').style.display = 'flex'
-    document.querySelector('#urlmainmobile').setAttribute('url',commits[0].Event_Url)
-    document.querySelector('#urlmainmobile').style.display = 'flex'
+        document.querySelector('#urlmain').addEventListener('click', function() {
+            if(url !== 'null') {
+                window.open(url, 'urlmain');
+                $('#urlmain').css('cursor', 'pointer');
+            }
+        });
 
-    document.querySelector('#urlmain').addEventListener('click',function(){
-    if(url !== 'null') {
-    window.open(url,'urlmain')
-    $('#urlmain').css('cursor', 'pointer');
+        document.querySelector('#fwicon6').textContent = '';
+
+        if(url.includes('ticketmaster') || url.includes('livenation')) {
+            document.getElementById('142box').style.display = 'flex';
+            document.getElementById('142boxmobile').style.display = 'flex';
+            let onefourtwo = 'http://142.93.115.105:8100/event/' + url.split('/event/')[1] + '/details/';
+
+            const tmcount = async function() {
+                const tmController = new AbortController();
+                abortControllers.push(tmController); // Add controller to the array
+
+                let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/tmcount?eventid=' + url.split('/event/')[1];
+                let response = await fetch(getevent, { signal: tmController.signal });
+                let commits = await response.json();
+                if(commits.count) {
+                    document.getElementById('tmcount').textContent = commits.count;
+                }
+            };
+
+            tmcount();
+
+            document.getElementById('142box').addEventListener('click', function() {
+                window.open(onefourtwo, 'onefourtwo');
+            });
+
+            document.getElementById('142boxmobile').addEventListener('click', function() {
+                window.open(onefourtwo, 'onefourtwomobile');
+            });
+
+        } else if(url === 'null') {
+            $('#urlmain').css('cursor', 'default');
+            document.getElementById('142box').style.display = 'none';
+            document.getElementById('142boxmobile').style.display = 'none';
+        }
     }
-    })
+};
 
-
-    document.querySelector('#fwicon6').textContent = ''
-
-
-    if(url.includes('ticketmaster') || url.includes('livenation')){
-    document.getElementById('142box').style.display = 'flex'
-    document.getElementById('142boxmobile').style.display = 'flex'
-    let onefourtwo = 'http://142.93.115.105:8100/event/' + url.split('/event/')[1] + '/details/'
-
-
-    const tmcount = async function(){
-    let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/tmcount?eventid=' + url.split('/event/')[1]
-    let response = await fetch(getevent);
-    let commits = await response.json()
-    if(commits.count){
-    document.getElementById('tmcount').textContent = commits.count
-    }}
-
-    tmcount()
-
-    document.getElementById('142box').addEventListener('click',function(){
-    window.open(onefourtwo,'onefourtwo')
-    })
-
-    document.getElementById('142boxmobile').addEventListener('click',function(){
-    window.open(onefourtwo,'onefourtwomobile')
-    })
-
-    } else if(url === 'null') {
-    $('#urlmain').css('cursor', 'default');
-    document.getElementById('142box').style.display = 'none'
-    document.getElementById('142boxmobile').style.display = 'none'
-    }
-
-}}
-
+// Function to cancel all fetch requests
+const cancelFetch = function() {
+    abortControllers.forEach(controller => controller.abort());
+    abortControllers = []; // Clear the array after aborting all requests
+};
 
 
 card.addEventListener('click', function() {
     controller = new AbortController();
-
+    cancelFetch(); 
 document.querySelector('#urlmain').style.display = 'none'
 document.querySelector('#changedata').style.display = 'none'
 document.querySelector('#urlmainmobile').style.display = 'none'
@@ -382,7 +393,7 @@ chartvs.data.datasets[1].data = ''
 chartvs.config.data.labels = ''
 chartvs.update();
 
-
+ 
     $('#mainpricing').hide()
     $('#loadingpricing').css("display", "flex");
     $(this).closest('div').find(".main-field-price").prop("readonly", true);
