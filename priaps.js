@@ -304,6 +304,8 @@ const primaryurl = async function(){
     let commits = await response.json()
 
     if(commits.length>0){
+    let url = commits[0].Event_Url
+        
     document.querySelector('#mainurl').value = commits[0].Event_Url
 
     document.querySelector('#urlmain').style.display = 'flex'
@@ -320,7 +322,6 @@ const primaryurl = async function(){
 
 
     document.querySelector('#fwicon6').textContent = ''
-    let url = commits[0].Event_Url
 
 
     if(url.includes('ticketmaster') || url.includes('livenation')){
@@ -374,11 +375,6 @@ document.querySelector('#shubcross').style.display = 'none'
 document.querySelector('#chart2').style.display = 'none'
 document.querySelector("#loading2").style.display = "flex";
 document.querySelector("#loadingfailed2").style.display = "none";
-
-
-
-
-document.getElementById('mainurl').value = ''
 
 
 chartvs.data.datasets[0].data = ''
