@@ -208,7 +208,7 @@ let lowestpricepref = [];
 let evurl = events.vividSeatsEventUrl;
 
 var http = new XMLHttpRequest();
-var url = "https://ubik.wiki/api/sbox-data/?vividseats_event_url__icontains=" + evurl + "&limit=1000";
+var url = "https://ubik.wiki/api/sbox-data/?limit=1000&vividseats_event_url__icontains=" + evurl
 http.open("GET", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
 
