@@ -334,8 +334,8 @@ const primaryurl = async function(){
     let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/tmcount?eventid=' + url.split('/event/')[1]
     let response = await fetch(getevent);
     let commits = await response.json()
-    if(typeof commits === 'number'){
-    document.getElementById('tmcount').textContent = commits
+    if(commits.count){
+    document.getElementById('tmcount').textContent = commits.count
     }}
 
     tmcount()
