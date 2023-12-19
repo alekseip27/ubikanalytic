@@ -85,12 +85,11 @@ function part1(){
     }
     
     function part2(){
-    
         let eventname = document.querySelector('#event').textContent
         let eventdate = document.querySelector('#date').textContent
         let eventvenue = document.querySelector('#venue').textContent
         let eventsource = document.querySelector('#purchasesource').textContent
-        
+ 
         let pq = document.querySelector('#purchasequantity').value
         let pm = document.querySelector('#purchaseemail').value
         let pc = document.querySelector('#purchaseconfirmation').value
@@ -124,6 +123,7 @@ function part1(){
         "event_date":eventdate,
         "event_venue":eventvenue,
         "event_time":eventtime,
+        "event_id":event_id,
         "purchase_source":eventsource,
         "purchase_quantity":pq,
         "purchase_quantity_total":pq,
