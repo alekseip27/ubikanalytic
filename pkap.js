@@ -1,3 +1,4 @@
+let abortControllers = []
 Webflow.push(function() {
     $('form').submit(function() {
     return false;
@@ -360,7 +361,6 @@ const cancelFetch = function() {
 
 
 card.addEventListener('click', function() {
-    let abortControllers
     cancelFetch(); 
 document.querySelector('#urlmain').style.display = 'none'
 document.querySelector('#changedata').style.display = 'none'
