@@ -137,14 +137,6 @@ this.remove()
     const eventcost = card.getElementsByClassName('main-text-cost')[0]
     eventcost.textContent = '$' + events.cost
 
-    function cancelFetch() {
-        if (controller) {
-            controller.abort();
-            controller = null; // Reset controller after aborting
-            console.log('abort')
-        }
-    }
-
 
 
 function formatTimestamp(unixTimestamp) {
