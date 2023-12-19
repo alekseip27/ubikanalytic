@@ -127,6 +127,7 @@ function part1(){
         "purchase_source":eventsource,
         "purchase_quantity":pq,
         "purchase_quantity_total":pq,
+        "purchase_quantity_alltime":pcombined,
         "purchase_email":pm,
         "confirmation":pc,
         "purchased_by":purchasedby,
