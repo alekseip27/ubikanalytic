@@ -200,6 +200,11 @@ $('#event_date').datepicker({
     })
     .then(response => {
 
+        response.text().then(text => {
+            error = text
+            document.querySelector('#errortext').textContent = "Error: " + error
+          });
+
       if (response.status === 200 || response.status === 201) {
     document.querySelector('#loading').style.display = "flex";
     document.querySelector('#Item-Container').style.display = "none";
@@ -209,15 +214,9 @@ $('#event_date').datepicker({
     
       } else {
 
-        response.text().then(text => {
-            error = text
-          });
-
     document.querySelector('#loading').style.display = "none";
     document.querySelector('#Item-Container').style.display = "flex";
       document.querySelector('#errortext').style.display = 'flex';
-    
-      document.querySelector('#errortext').textContent = "Error: " + error
     
       }
     })
@@ -359,6 +358,10 @@ $('#event_date').datepicker({
           body: JSON.stringify(params)
         })
         .then(response => {
+            response.text().then(text => {
+            document.querySelector('#errortext2').textContent = "Error: " + text;
+            });
+            
           if (response.status === 200 || response.status === 201) {
         document.querySelector('#loading').style.display = "flex";
         document.querySelector('#Item-Container').style.display = "none";
@@ -368,14 +371,9 @@ $('#event_date').datepicker({
         
         } else {
 
-            response.text().then(text => {
-                error2 = text
-              });
-
         document.querySelector('#loading').style.display = "none";
         document.querySelector('#Item-Container').style.display = "flex";
         document.querySelector('#errortext2').style.display = 'flex';
-        document.querySelector('#errortext2').textContent = "Error: " + error2;
         }
         })
         .then(data => {
