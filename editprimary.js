@@ -39,8 +39,17 @@ function checkresults() {
             
       var searchbar1 = document.getElementById('searchbar1');
       searchbar1.value = searchbar1.value.trimEnd();
+      var searchbar2 = document.getElementById('searchbar2');
+      searchbar2.value = searchbar2.value.trimEnd();
+      var searchbar3 = document.getElementById('searchbar3');
+      searchbar3.value = searchbar3.value.trimEnd();
+      var searchbar4 = document.getElementById('searchbar4');
+      searchbar4.value = searchbar4.value.trimEnd();
       
     let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
+    let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
+    let keywords3 = encodeURIComponent(document.getElementById('searchbar3').value)
+    let keywords4 = encodeURIComponent(document.getElementById('searchbar4').value)
     $('.event-box').hide()
     
     let baseUrl = 'https://ubik.wiki/api/primary-events/?';
@@ -49,6 +58,18 @@ function checkresults() {
     if (keywords1.length > 0) {
         params.push('name__icontains=' + keywords1.replaceAll("'", "''"));
     }
+
+    if (keywords2.length > 0) {
+        params.push('site_event_id__icontains=' + keywords2.replaceAll("'", "''"));
+    }
+
+    if (keywords3.length > 0) {
+        params.push('venue__icontains=' + keywords3.replaceAll("'", "''"));
+    }
+    if (keywords4.length > 0) {
+        params.push('site_venue_id__icontains=' + keywords4.replaceAll("'", "''"));
+    }
+
 
     params.push('limit=100');
     
@@ -97,9 +118,7 @@ function checkresults() {
             card.setAttribute('source', events.scraper_name);
             card.setAttribute('vivid_id', events.vdid);
     
-
-            const editbutton = card.getElementsByClassName('main-edit-button')[0]
-            editbutton.addEventListener('click', function(){
+            card.addEventListener('click', function(){
             document.querySelector(".edit-wrapper").style.display = 'flex'
             document.querySelector('#editname').value = events.name
             document.querySelector('#editdate').value = events.date
@@ -110,9 +129,7 @@ function checkresults() {
             document.querySelector('#editsource').value = events.scraper_name
             })
 
-
             card.style.display = 'flex';
-
             
             const eventname = card.getElementsByClassName('main-text-event')[0]
             eventname.textContent = events.name;
@@ -120,7 +137,25 @@ function checkresults() {
             eventname.textContent = events.name.slice(0, 10)+'..'
             }
             
-             const eventur = card.getElementsByClassName('main-text-url')[0]
+            const eventur = card.getElementsByClassName('main-text-urls')[0]
+            eventur.textContent = events.event_url;
+
+            if(eventur.textContent.length>15) {
+            eventur.textContent = events.event_url.slice(0, 15)+'..'
+            }
+            
+            const eventid = card.getElementsByClassName('main-text-event-id')[0]
+            eventid.textContent = events.site_event_id;
+
+            const venue = card.getElementsByClassName('main-text-venue')[0]
+            venue.textContent = events.venue;
+
+            if(eventid.textContent.length>10) {
+            eventid.textContent = events.site_event_id.slice(0, 10)+'..'
+            }
+
+            const venueid = card.getElementsByClassName('main-text-venue-id')[0]
+            venueid.textContent = events.site_venue_id;
              
             let eventtime = card.getElementsByClassName('main-text-time')[0]
             eventtime.textContent = events.time.slice(0, 8)
@@ -128,28 +163,10 @@ function checkresults() {
         
             let txtsource = card.getElementsByClassName('main-textsource')[0]
             txtsource.textContent = events.scraper_name
-        
-
-            if(events.hidden === 'true'){
-            card.style.display = "none";
-            }
-    
-            const eventurl = events.event_url
-                
             
-            function copyToClipboard(text) {
-            var $temp = $("<input>");
-            $("body").append($temp);
-            $temp.val(text).select();
-            document.execCommand("copy");
-            $temp.remove();
-            }
-            
-            eventname.addEventListener('click', function() { copyToClipboard(eventurl); });
-            
-            
-            cardContainer.appendChild(card);
-            })
+           cardContainer.appendChild(card);
+           })
+           
            searchcompleted = true
                 
             } else if(request.status>400){
