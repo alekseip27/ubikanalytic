@@ -127,6 +127,7 @@ card.setAttribute('eventid', evid);
 card.setAttribute('source', events.source_site);
 
 card.addEventListener('click', function(){
+document.querySelector('#errortext').textContent = ''
 document.querySelector(".edit-wrapper").style.display = 'flex'
 
 document.querySelector('#editvenueid').value = events.site_venue_id
