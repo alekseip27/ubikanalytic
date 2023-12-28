@@ -119,6 +119,7 @@ function checkresults() {
             card.setAttribute('vivid_id', events.vdid);
     
             card.addEventListener('click', function(){
+            document.querySelector('#errortext').textContent = ''
             document.querySelector(".edit-wrapper").style.display = 'flex'
             document.querySelector('#editname').value = events.name
             document.querySelector('#editdate').value = events.date
