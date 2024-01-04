@@ -122,6 +122,7 @@ function checkresults() {
     card.setAttribute('source', events.purchase_source);
     
     card.addEventListener('click', function(){
+    cardid = events.id
     document.querySelector('#errortext').textContent = ''
     document.querySelector(".edit-wrapper").style.display = 'flex'
     document.querySelector('#editid').value = events.event_id
