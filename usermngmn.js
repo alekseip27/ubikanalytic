@@ -134,7 +134,7 @@ $('#errorlog').css('display','flex');
 
 $('#142scraping').css('display','none');
 $('#datalabeling').css('display','none');
-$('#datalabeling').css('display','none');
+$('#datacleaning').css('display','none');
 $('#ptool').css('display','none');
 $('#scrapeurls').css('display','flex');
 $('#editevents').css('display','flex');
