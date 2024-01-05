@@ -20,7 +20,7 @@ function checkresults() {
         else {return -1;}
         }).appendTo('#Cards-Container');
         }, 2500)}
-        
+  
         var intervalId = window.setInterval(function(){
         checkresults()
         }, 100);
@@ -53,9 +53,7 @@ function checkresults() {
     
     let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
     let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
-
-    let checkbox1 = document.getElementById('uscanada').checked
-    let checkbox2 = document.getElementById('international').checked
+    let keywords3 = document.getElementById('countryselect').value
 
 
     $('.event-box').hide()
@@ -71,11 +69,11 @@ function checkresults() {
         params.push('venue_name__icontains=' + keywords2.replaceAll("'", "''"));
     }
 
-    if (checkbox1 === true) {
+    if (keywords3 === 'uscanada') {
         params.push('country__icontains=USA&country__icontains=Canada');
     }
 
-    if (checkbox2 === true) {
+    if (keywords3 === 'international') {
         params.push('country__idoesnotcontain=USA&country__idoesnotcontain=Canada');
     }
 
@@ -437,6 +435,10 @@ function checkresults() {
     
             let txtsource = card.getElementsByClassName('main-textsource')[0]
             txtsource.textContent = events.source_site
+
+            
+            const primam = card.getElementsByClassName('main-text-primary')[0]
+            primam.textContent = 'D'
             
             if(events.source_site == 'TM') {
                 
