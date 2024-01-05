@@ -131,6 +131,17 @@ $('#emaildropdown').css('display','flex');
 $('#queue').css('display','flex');
 $('#history').css('display','flex');
 $('#errorlog').css('display','flex');
+
+$('#142scraping').css('display','none');
+$('#datalabeling').css('display','none');
+$('#ptool').css('display','none');
+$('#scrapeurls').css('display','flex');
+$('#editevents').css('display','flex');
+$('#editvenues').css('display','flex');
+$('#edithistory').css('display','flex');
+  
+
+  
 }
 
 if(!!entry) {
