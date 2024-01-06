@@ -24,7 +24,7 @@ function checkresults() {
         var intervalId = window.setInterval(function(){
         checkresults()
         }, 100);
-        
+    
         var input = document.getElementById("searchbar1");
         input.addEventListener("keyup", function(event) {
         if (event.keyCode === 13) {
@@ -55,9 +55,8 @@ function checkresults() {
     let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
     let keywords3 = document.getElementById('countryselect').value
 
-
     $('.event-box').hide()
-    
+
     let baseUrl = 'https://ubik.wiki/api/event-venue/?';
     let params = [];
     
@@ -166,8 +165,7 @@ function checkresults() {
           })
           .then(data => {
             const str = data.results[0].data_scrapes;
-            
-            // Replace single quotes with double quotes
+        
             const replacedStr = str.replace(/'/g, '"');
             
               const correctedData = replacedStr.replace(/:\s*None,/g, ':"None",');
@@ -230,8 +228,7 @@ function checkresults() {
         
         
         const charticon = card.getElementsByClassName('main-text-chart')[0];
-        
-        
+    
         charticon.addEventListener('click', function () {
             vschartdata(events.vdid)
             document.querySelector('#graph-overlay').style.display = 'flex';
@@ -367,12 +364,12 @@ function checkresults() {
         };
           
     
-            
             let rescrapebutton = card.getElementsByClassName('re-scrape-div')[0]
             
             let scrapebutton = card.getElementsByClassName('scrape-div-fresh')[0]
             
-            
+    
+
             scrapebutton.addEventListener('click',function(){
             scrapetm(evid)
             primrem.textContent = ''
@@ -395,7 +392,6 @@ function checkresults() {
             scrapebutton.style.display = 'flex'
             }
             
-        
             card.style.display = 'flex';
             
             const buybutton = card.getElementsByClassName('main-buy-button')[0]
@@ -416,8 +412,47 @@ function checkresults() {
             
              const eventur = card.getElementsByClassName('main-text-url')[0]
              eventur.textContent = events.event_url
-             
-             
+
+             const counts = events.counts
+             const source = events.source_site.toLowerCase()
+
+             function getTwoLatestCounts(counts) {
+                // Parsing dates and sorting the array in descending order by date
+                counts.sort((a, b) => {
+                    const dateA = new Date(a.scrape_date);
+                    const dateB = new Date(b.scrape_date);
+                    return dateB - dateA; // For descending order
+                });
+            
+                // Returning the first two elements of the sorted array
+                return counts.slice(0, 2);
+            }
+
+             function getLatestCount(counts) {
+                // Parsing dates and sorting the array in descending order by date
+                counts.sort((a, b) => {
+                    const dateA = new Date(a.scrape_date);
+                    const dateB = new Date(b.scrape_date);
+                    return dateB - dateA; // For descending order
+                });
+            
+                // Returning the first element of the sorted array
+                return counts[0];
+            }
+
+             if(counts && source !== 'tm' && source !== 'ticketmaster'){
+            const latestCount = getLatestCount(counts)
+            const primamount = card.getElementsByClassName('main-text-primary')[0]
+            primamount.textContent = parseFloat(latestCount.primary_amount)
+            const aday = card.getElementsByClassName('main-text-aday')[0]
+ 
+            if(counts.length>1){
+            let twolatest = getTwoLatestCounts(counts)
+            let difference = Math.abs(parseFloat(twolatest[0].primary_amount) - parseFloat(twolatest[1].primary_amount));
+            aday.textContent = difference
+            }
+            }
+
             let eventtime = card.getElementsByClassName('main-text-time')[0]
             eventtime.textContent = events.time.slice(0, 8)
             
@@ -436,10 +471,7 @@ function checkresults() {
             let txtsource = card.getElementsByClassName('main-textsource')[0]
             txtsource.textContent = events.source_site
 
-            
-            const primam = card.getElementsByClassName('main-text-primary')[0]
-            primam.textContent = 'D'
-            
+ 
             if(events.source_site == 'TM') {
                 
             txtsource.addEventListener('click',function(){
@@ -447,7 +479,6 @@ function checkresults() {
             });
             txtsource.classList.add("clickable");
             }
-    
     
             if(events.hidden === 'true'){
             card.style.display = "none";
@@ -482,7 +513,6 @@ function checkresults() {
             }
             
             eventname.addEventListener('click', function() { copyToClipboard(eventurl); });
-            
             
             cardContainer.appendChild(card);
             })
