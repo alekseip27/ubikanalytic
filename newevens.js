@@ -451,7 +451,7 @@ function checkresults() {
             let twolatest = getTwoLatestCounts(counts)
             let difference = Math.abs(parseFloat(twolatest[0].primary_amount) - parseFloat(twolatest[1].primary_amount));
             aday.textContent = difference
-            card.setAttribute('aday',difference)
+            card.setAttribute('perday',difference)
             }
             }
  
