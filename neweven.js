@@ -444,15 +444,17 @@ function checkresults() {
             const latestCount = getLatestCount(counts)
             const primamount = card.getElementsByClassName('main-text-primary')[0]
             primamount.textContent = parseFloat(latestCount.primary_amount)
+            card.setAttribute('primaryamount',parseFloat(latestCount.primary_amount))
             const aday = card.getElementsByClassName('main-text-aday')[0]
  
             if(counts.length>1){
             let twolatest = getTwoLatestCounts(counts)
             let difference = Math.abs(parseFloat(twolatest[0].primary_amount) - parseFloat(twolatest[1].primary_amount));
             aday.textContent = difference
+            card.setAttribute('aday',difference)
             }
             }
-
+ 
             let eventtime = card.getElementsByClassName('main-text-time')[0]
             eventtime.textContent = events.time.slice(0, 8)
             
