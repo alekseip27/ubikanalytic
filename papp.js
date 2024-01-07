@@ -31,11 +31,18 @@ Webflow.push(function() {
     document.querySelector('#fwicon5').textContent = ''
     document.querySelector('#selectedevent').setAttribute('lastfetched','')
     document.querySelector('#fwicon5').textContent = ''
+
     document.querySelector('#chart2').style.display = 'none'
     document.querySelector('#chartloading2').style.display = 'none'
-
     document.querySelector("#loading2").style.display = "flex";
     document.querySelector("#loadingfailed2").style.display = "none";
+
+    document.querySelector('#chart3').style.display = 'none'
+    document.querySelector('#chartloading3').style.display = 'none'
+
+    document.querySelector("#loading3").style.display = "flex";
+    document.querySelector("#loadingfailed3").style.display = "none";
+
 
 
     document.querySelector('#pricingpart1').style.display = 'none'
@@ -106,14 +113,14 @@ this.remove()
     card.setAttribute('id', events.id)
     } else {
     card.setAttribute('id', events.id);
-        
+
     document.querySelector('#lowerbox').style.display = 'none'
     document.querySelector('#searchblock').style.display = 'none'
     }
-        
+
     card.setAttribute('event', events.name);
     card.setAttribute('venue', events.venue.name);
-        
+
     card.setAttribute('location', events.venue.city);
     card.setAttribute('date', events.date.slice(0,10))
 
@@ -139,59 +146,120 @@ this.remove()
     const eventcost = card.getElementsByClassName('main-text-cost')[0]
     eventcost.textContent = '$' + events.cost
 
+async function getchartprimary(){
 
 
-function formatTimestamp(unixTimestamp) {
-    const date = new Date(unixTimestamp * 1000); // Convert Unix timestamp to JavaScript timestamp
-    const formattedDate = `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()} ${date.getHours()}:${date.getMinutes()}`;
-    return formattedDate;
-}
+    let mainurl = document.querySelector('#urlmain').getAttribute('url');
+    let amountsprimary = [];
+    let datesprimary = [];
 
-/**
-function getvenuedata() {
-    document.getElementById('venueresale').textContent = '';
-    document.getElementById('venuecap').textContent = '';
-    document.getElementById('venuename').textContent = '';
-    document.getElementById('fwicon').textContent = '';
-    document.getElementById('lowcaptext').textContent = '';
+    fetch(`https://ubik.wiki/api/primary-events/?event_url__icontains=${mainurl}`)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        let event = data.results[0];
+        let counts = event.counts;
+        let source = event.scraper_name.toLowerCase()
+        chartprimary.data.datasets[0].label = source.toUpperCase() + ' Primary'
+        evids = event.site_event_id
+        console.log(counts)
+        console.log(source)
+        if (counts && counts.length > 0 && !source.includes('tm')) {
 
-    let getevent = 'https://ubik.wiki/api/event-venue/?vdid__iexact=' + events.venue.id + events.date.slice(0, 10);
+            for (var i = 0; i < counts.length; i++) {
+                    amountsprimary.push(Math.round(counts[i].primary_amount));
+                    datesprimary.push(counts[i].scrape_date);
+            }
 
-    fetch(getevent)
-    .then(response => response.json())
-    .then(commits => {
-        try {
-        if (commits.results.length > 0) {
-            document.getElementById('fwicon').textContent = '';
-            document.getElementById('lowcaptext').textContent = '/';
-            document.getElementById('venuebox').style.display = 'flex';
-            let venuecap = commits.results[0].venue_capacity;
-            document.getElementById('venuename').textContent = commits.results[0].venue_name;
+            // Sorting dates and corresponding amounts
+            const indices = Array.from({ length: datesprimary.length }, (_, i) => i);
+            indices.sort((a, b) => new Date(datesprimary[a]) - new Date(datesprimary[b]));
+            amountsprimary = indices.map(i => amountsprimary[i]);
+            datesprimary = indices.map(i => datesprimary[i]);
 
-            let geteventparttwo = 'https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/vividseats_data?id=' + card.getAttribute('id');
-            fetch(geteventparttwo)
-            .then(response => response.json())
-            .then(commits => {
-                if (commits.length>1) {
-                let lastCommit = commits[commits.length - 1];
-                console.log(lastCommit)+"lastcom";
-                document.getElementById('venueresale').textContent = Math.round(lastCommit.ticket_count / venuecap * 100) + '%';
-                document.getElementById('venuecap').textContent = venuecap;
-                } else if (commits.length === 0) {
-                    let lastCommit = commits[0]+"lastcom";
-                    console.log(lastCommit)
-                    document.getElementById('venueresale').textContent = Math.round(lastCommit.ticket_count / venuecap * 100) + '%';
-                    document.getElementById('venuecap').textContent = venuecap;
-                }
+            // Update chart data
+            chartprimary.data.datasets[0].data = amountsprimary;
+            chartprimary.config.data.labels = datesprimary;
+            chartprimary.update();
+
+            // Update display elements
+            document.querySelector("#chart3").style.display = "flex";
+            document.querySelector("#chartloading3").style.display = "none";
+            document.querySelector("#loading3").style.display = "flex";
+            document.querySelector("#loadingfailed3").style.display = "none";
+
+        } else if(source === 'tm' || source === 'ticketmaster'){
+console.log(evids)
+        let dates = [];
+        var http = new XMLHttpRequest();
+        var url = "https://shibuy.co:8443/142data?eventid=" + evids
+        http.open("GET", url, true);
+        http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+
+
+        http.onload = function () {
+
+        let data = JSON.parse(this.response);
+
+        data.forEach(event => {
+        event.summaries.forEach(summary => {
+
+            const totalAmount = summary.sections.reduce((accumulator, section) => accumulator + section.amount, 0);
+
+              const parts = summary.scrape_date.split(/[-T:Z]/);
+              const year = parseInt(parts[0], 10);
+              const month = parseInt(parts[1] - 1, 10);
+              const day = parseInt(parts[2], 10);
+              const hours = parseInt(parts[3], 10);
+              const minutes = parseInt(parts[4], 10);
+
+              const scrapeDate = new Date(year, month, day, hours, minutes);
+              scrapeDate.setHours(scrapeDate.getHours() - 1);
+
+              const formattedDate = scrapeDate.toISOString().slice(0, 16).replace("T", " ");
+
+              dates.push({ date: scrapeDate.toISOString(), formattedDate: formattedDate, amount: totalAmount });
             });
+          });
+
+          dates.sort((a, b) => a.date.localeCompare(b.date));
+
+          const sortedDates = dates.map(item => item.formattedDate);
+          const sortedAmounts = dates.map(item => item.amount);
+          console.log(sortedAmounts);
+            chartprimary.data.datasets[0].label
+            chartprimary.data.datasets[0].data = sortedAmounts;
+            chartprimary.config.data.labels = sortedDates;
+            chartprimary.update();
+
+            document.querySelector("#chart3").style.display = "flex";
+            document.querySelector("#chartloading3").style.display = "none";
+            document.querySelector("#loading3").style.display = "flex";
+            document.querySelector("#loadingfailed3").style.display = "none";
+
+    };
+
+    http.send();
+
+        } else {
+
+            document.querySelector("#loading3").style.display = "none";
+            document.querySelector("#loadingfailed3").style.display = "flex";
+            document.querySelector("#chart3").style.display = "none";
+            document.querySelector("#chartloading3").style.display = "flex";
         }
-        } catch (error) {
-        console.error('An error occurred:', error);
-        }
+    })
+    .catch(error => {
+        console.error('There was an error fetching the data:', error);
     });
+
 }
-*/
-        
+
+
 async function getchartvs() {
 let venuecap = 0;
 let datesvs = [];
@@ -288,8 +356,6 @@ http.send();
 }
 
 
-
-
 const primaryurl = async function(){
 document.querySelector('#urlmain').setAttribute('url','');
  abortControllers = []; // Array to hold all AbortControllers
@@ -308,7 +374,7 @@ document.querySelector('#urlmain').setAttribute('url','');
         document.querySelector('#changedata').style.display = 'flex';
         document.querySelector('#urlmainmobile').setAttribute('url', commits[0].Event_Url);
         document.querySelector('#urlmainmobile').style.display = 'flex';
-        
+
         let url = document.querySelector('#urlmain').getAttribute('url')
         document.querySelector('#urlmain').addEventListener('click', function() {
         if(commits[0].Event_Url !== 'null') {
@@ -351,6 +417,8 @@ document.querySelector('#urlmain').setAttribute('url','');
             document.getElementById('142boxmobile').style.display = 'none';
         }
     }
+
+getchartprimary()
 };
 
 // Function to cancel all fetch requests
@@ -361,7 +429,7 @@ const cancelFetch = function() {
 
 
 card.addEventListener('click', function() {
-    cancelFetch(); 
+cancelFetch();
 document.querySelector('#mainurl').value = ''
 document.querySelector('#urlmain').style.display = 'none'
 document.querySelector('#changedata').style.display = 'none'
@@ -375,8 +443,16 @@ document.querySelector('#sdatacount').textContent = '0'
 document.querySelector('#shubcross').style.display = 'none'
 
 document.querySelector('#chart2').style.display = 'none'
+document.querySelector('#chartloading2').style.display = 'flex'
 document.querySelector("#loading2").style.display = "flex";
 document.querySelector("#loadingfailed2").style.display = "none";
+
+document.querySelector('#chart3').style.display = 'none'
+document.querySelector('#chartloading3').style.display = 'flex'
+
+document.querySelector("#loading3").style.display = "flex";
+document.querySelector("#loadingfailed3").style.display = "none";
+
 
 
 chartvs.data.datasets[0].data = ''
@@ -384,7 +460,13 @@ chartvs.data.datasets[1].data = ''
 chartvs.config.data.labels = ''
 chartvs.update();
 
- 
+
+chartprimary.data.datasets[0].data = ''
+chartprimary.config.data.labels = ''
+chartprimary.data.datasets[0].label = ''
+chartprimary.update();
+
+
     $('#mainpricing').hide()
     $('#loadingpricing').css("display", "flex");
     $(this).closest('div').find(".main-field-price").prop("readonly", true);
@@ -512,11 +594,9 @@ $('#search-button').css({pointerEvents: "none"})
     chartvs.config.data.labels = ''
     chartvs.update();
 
-    } else {
-
-getchartvs()
+} else {
 primaryurl()
-//getvenuedata()
+getchartvs()
 }
 
     if((request.status === 429) || (request.status === 500)){
