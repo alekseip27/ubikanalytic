@@ -166,8 +166,6 @@ async function getchartprimary(){
         let source = event.scraper_name.toLowerCase()
         chartprimary.data.datasets[0].label = source.toUpperCase() + ' Primary'
         evids = event.site_event_id
-        console.log(counts)
-        console.log(source)
         if (counts && counts.length > 0 && !source.includes('tm')) {
 
             for (var i = 0; i < counts.length; i++) {
@@ -193,7 +191,6 @@ async function getchartprimary(){
             document.querySelector("#loadingfailed3").style.display = "none";
 
         } else if(source === 'tm' || source === 'ticketmaster'){
-console.log(evids)
         let dates = [];
         var http = new XMLHttpRequest();
         var url = "https://shibuy.co:8443/142data?eventid=" + evids
@@ -205,6 +202,7 @@ console.log(evids)
 
         let data = JSON.parse(this.response);
 
+        if(data.length>0) {
         data.forEach(event => {
         event.summaries.forEach(summary => {
 
@@ -227,10 +225,8 @@ console.log(evids)
           });
 
           dates.sort((a, b) => a.date.localeCompare(b.date));
-
           const sortedDates = dates.map(item => item.formattedDate);
           const sortedAmounts = dates.map(item => item.amount);
-          console.log(sortedAmounts);
             chartprimary.data.datasets[0].label
             chartprimary.data.datasets[0].data = sortedAmounts;
             chartprimary.config.data.labels = sortedDates;
@@ -241,6 +237,17 @@ console.log(evids)
             document.querySelector("#loading3").style.display = "flex";
             document.querySelector("#loadingfailed3").style.display = "none";
 
+        } else {
+
+            document.querySelector("#loading3").style.display = "none";
+            document.querySelector("#loadingfailed3").style.display = "flex";
+            document.querySelector("#chart3").style.display = "none";
+            document.querySelector("#chartloading3").style.display = "flex";
+
+
+        }
+    
+    
     };
 
     http.send();
