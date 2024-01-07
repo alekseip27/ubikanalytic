@@ -164,10 +164,10 @@ function checkresults() {
             let txtsource = card.getElementsByClassName('main-textsource')[0]
             txtsource.textContent = events.scraper_name
 
-            let addedby = card.getElementsByClassName('main-text-addedby')[0]
+            let addedby = card.getElementsByClassName('main-addedby')[0]
             addedby.textContent = events.added_by
 
-            let timeadded = card.getElementsByClassName('main-text-timeadded')[0]
+            let timeadded = card.getElementsByClassName('main-timeadded')[0]
             timeadded.textContent = events.date_created
                 
            cardContainer.appendChild(card);
