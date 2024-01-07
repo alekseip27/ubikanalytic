@@ -160,11 +160,16 @@ function checkresults() {
              
             let eventtime = card.getElementsByClassName('main-text-time')[0]
             eventtime.textContent = events.time.slice(0, 8)
-            
         
             let txtsource = card.getElementsByClassName('main-textsource')[0]
             txtsource.textContent = events.scraper_name
-            
+
+            let addedby = card.getElementsByClassName('main-text-addedby')[0]
+            addedby.textContent = events.added_by
+
+            let timeadded = card.getElementsByClassName('main-text-timeadded')[0]
+            timeadded.textContent = events.date_created
+                
            cardContainer.appendChild(card);
            })
            
