@@ -73,7 +73,7 @@ function checkresults() {
     }
 
     if (keywords3 === 'international') {
-        params.push('country__idoesnotcontain=USA&country__idoesnotcontain=Canada');
+        params.push('country__idoesnotcontains=USA&country__idoesnotcontains=Canada');
     }
 
     
