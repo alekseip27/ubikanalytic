@@ -179,7 +179,7 @@ function checkresults() {
               // If parsing fails, log the error
               console.error("Parsing failed:", e);
             }
-        
+            
             // Extract chart labels and data from the fetched data
             const labels = datas.map(item => item.scrape_datetime).reverse();
             const totalCount = datas.map(item => item.total_count).reverse();
@@ -228,10 +228,62 @@ function checkresults() {
         
         
         const charticon = card.getElementsByClassName('main-text-chart')[0];
+
+        async function getchartprimary(){
+            let mainurl = events.event_url
+            let amountsprimary = [];
+            let datesprimary = [];
+            fetch(`https://ubik.wiki/api/primary-events/?event_url__icontains=${mainurl}`)
+            .then(response => {
+            if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            return response.json();
+            })
+            .then(data => {
+                let event = data.results[0];
+                let counts = event.counts;
+                let source = event.scraper_name.toLowerCase()
+                chart.data.datasets[0].label = source.toUpperCase() + ' Primary'
+                evids = event.site_event_id
+                if (counts && counts.length > 0 && !source.includes('tm')) {
+                document.querySelector('#tmurl').style.display = 'none'
+                for (var i = 0; i < counts.length; i++) {
+                amountsprimary.push(Math.round(counts[i].primary_amount));
+                datesprimary.push(counts[i].scrape_date);
+                }
+                    // Sorting dates and corresponding amounts
+                    const indices = Array.from({ length: datesprimary.length }, (_, i) => i);
+                    indices.sort((a, b) => new Date(datesprimary[a]) - new Date(datesprimary[b]));
+                    amountsprimary = indices.map(i => amountsprimary[i]);
+                    datesprimary = indices.map(i => datesprimary[i]);
+        
+                    // Update chart data
+                    chart.data.datasets[0].data = amountsprimary;
+                    chart.config.data.labels = datesprimary;
+                    chart.update();
+
+                    // Update display elements
+                    document.querySelector('#tmloader').style.display = 'none';
+                    document.querySelector('#tmerror').style.display = 'none';
+                    document.querySelector('#tmchart').style.display = 'flex';
+        
+                } else {
+                    document.querySelector('#tmloader').style.display = 'none';
+                    document.querySelector('#tmerror').style.display = 'flex';
+                    document.querySelector('#tmchart').style.display = 'none';
+        }
+        })
+        .catch(error => {
+        console.error('There was an error fetching the data:', error);
+        });
+        }
+
     
         charticon.addEventListener('click', function () {
             vschartdata(events.vdid)
             document.querySelector('#graph-overlay').style.display = 'flex';
+            document.querySelector('#closecharts').style.display = 'flex'
             if (events.source_site === 'TM') {
             document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + evid + "/details/"
          
@@ -290,7 +342,7 @@ function checkresults() {
               const sortedDates = dates.map(item => item.formattedDate);
               const sortedAmounts = dates.map(item => item.amount);
               console.log(sortedAmounts);
-            
+              chart.data.datasets[0].label = 'TM Total'
               chart.data.datasets[0].data = sortedAmounts;
               chart.config.data.labels = sortedDates;
               chart.update();
@@ -302,12 +354,26 @@ function checkresults() {
             http.send();
         
         
-        }
-        });
+        } else {
+
+
+getchartprimary()
+
+
+}
+});
                 
-              if (events.source_site !== 'TM') {
-        charticon.style.display = 'none'
-              }
+if (events.source_site !== 'TM') {
+charticon.style.display = 'none'
+}
+
+let count = events.counts
+let src = events.source_site
+if (count && count.length > 0 && !src.includes('tm')) {
+charticon.style.display = 'flex'
+}
+
+              
                 
             const primrem = card.getElementsByClassName('main-text-primary')[0]
             const dpd = card.getElementsByClassName('main-text-aday')[0]
