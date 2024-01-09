@@ -144,7 +144,28 @@ function checkresults() {
     }
     
         function vschartdata(VDID) {
-        
+
+                    chartvs.data.datasets[0].data = []
+                    chartvs.data.datasets[1].data = []
+                    chartvs.data.datasets[2].data = []
+                    chartvs.data.datasets[3].data = []
+                    chartvs.data.datasets[4].data = []
+                    chartvs.data.datasets[5].data = []
+                    chartvs.data.datasets[6].data = []
+                    chartvs.data.datasets[7].data = []
+                    chartvs.data.datasets[1].label = ""
+                    chartvs.data.datasets[2].label = ""
+                    chartvs.data.datasets[3].label = ""
+                    chartvs.data.datasets[4].label = ""
+                    chartvs.data.datasets[5].label = ""
+                    chartvs.data.datasets[6].label = ""
+                    chartvs.data.datasets[7].label = ""
+                    chartvs.config.data.labels = []
+                    chartvs.update();
+                    document.querySelector('#vsloader').style.display = 'flex';
+                    document.querySelector('#vserror').style.display = 'none';
+                    document.querySelector('#vschart').style.display = 'none';
+            
         const url = `https://ubik.wiki/api/vividseats/${VDID}/?format=json`;  // Fixed the stray "
         
         
@@ -194,7 +215,8 @@ function checkresults() {
             const p1name = datas[0].pref1_title
             const p2name = datas[0].pref2_title
             const p3name = datas[0].pref3_title
-        
+
+              
             // Update chart
             chartvs.data.labels = labels;
             chartvs.data.datasets[0].data = totalCount;
@@ -288,6 +310,14 @@ function checkresults() {
 
     
         charticon.addEventListener('click', function () {
+                    chart.data.datasets[0].label = ''
+                    chart.data.datasets[0].data = []
+                    chart.config.data.labels = []
+                    chart.update();
+                    document.querySelector('#tmloader').style.display = 'flex';
+                    document.querySelector('#tmerror').style.display = 'none';
+                    document.querySelector('#tmchart').style.display = 'none';
+            
             vschartdata(events.vdid)
             document.querySelector('#graph-overlay').style.display = 'flex';
             document.querySelector('#closecharts').style.display = 'flex'
