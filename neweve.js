@@ -230,6 +230,13 @@ function checkresults() {
         const charticon = card.getElementsByClassName('main-text-chart')[0];
 
         async function getchartprimary(){
+                    chart.data.datasets[0].label = ''
+                    chart.data.datasets[0].data = []
+                    chart.config.data.labels = []
+                    chart.update();
+                    document.querySelector('#tmloader').style.display = 'flex';
+                    document.querySelector('#tmerror').style.display = 'none';
+                    document.querySelector('#tmchart').style.display = 'none';
             let mainurl = events.event_url
             let amountsprimary = [];
             let datesprimary = [];
