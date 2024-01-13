@@ -426,6 +426,7 @@ if (combined >= limit) {
 
 http.open("PUT", urll, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+http.setRequestHeader('Authorization', `Bearer ${token}`);
 
 // Add response and error handling
 http.onreadystatechange = function() { 
@@ -450,6 +451,7 @@ function part2(){
   }    
   http.open("PUT", urll, true);
   http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+  http.setRequestHeader('Authorization', `Bearer ${token}`);
 
 http.onreadystatechange = function() { 
 if (http.readyState == 4) {
@@ -553,7 +555,8 @@ function part3(){
     fetch(endpointUrl, {
     method: 'POST',
     headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
     },
     body: JSON.stringify(param)
     })
