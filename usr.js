@@ -53,7 +53,7 @@ const firebaseConfig = {
           let pricing = data['pricing']
   
 
-  if(!email.includes('@ubikanalytic.com')){
+  if(email.includes('@ubikanalytic.com')){
     token = data["token"]
   }
 
