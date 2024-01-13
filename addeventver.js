@@ -20,6 +20,7 @@ $('#event_date').datepicker({
             method: "GET",
             headers: {
                 "Content-type": "application/json; charset=utf-8",
+                'Authorization': `Bearer ${token}`,
             },
         })
             .then(function (response) {
@@ -58,6 +59,8 @@ $('#event_date').datepicker({
             method: "GET",
             headers: {
                 "Content-type": "application/json; charset=utf-8",
+                'Authorization': `Bearer ${token}`,
+
             },
         })
             .then(function (response) {
@@ -194,7 +197,8 @@ $('#event_date').datepicker({
     fetch(endpointUrl, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
       },
       body: JSON.stringify(params)
     })
@@ -353,7 +357,8 @@ $('#event_date').datepicker({
         fetch(endpointUrl, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
           },
           body: JSON.stringify(params)
         })
