@@ -89,7 +89,8 @@ function checkresults() {
             let url = xanoUrl
             
             request.open('GET', url, true)
-            
+            request.setRequestHeader('Authorization', `Bearer ${token}`);
+
             request.onload = function() {
             let data = JSON.parse(this.response)
             
