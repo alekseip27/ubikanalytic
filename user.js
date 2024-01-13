@@ -40,7 +40,6 @@ const firebaseConfig = {
         let myFS = firebase.firestore();
         let docRef = myFS.doc("users/" + curUser.uid);
         docRef.get().then((docSnap) => {
-          token = data["token"]
           let data = docSnap.data();
           let name = data["Name"];
           let email = data["Email"];
