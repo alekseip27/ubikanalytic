@@ -78,7 +78,8 @@ function checkresults() {
             let url = xanoUrl
             
             request.open('GET', url, true)
-            
+            request.setRequestHeader('Authorization', `Bearer ${token}`);
+            request.setRequestHeader("Content-type", "application/json; charset=utf-8");
             request.onload = function() {
             let data = JSON.parse(this.response)
             
@@ -125,7 +126,12 @@ function checkresults() {
         
         
         // Use the fetch API to make the GET request
-        fetch(url)
+  fetch(url, {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
           .then(response => {
             if (response.ok) {
               document.querySelector('#vsloader').style.display = 'none';
