@@ -6,7 +6,8 @@ let request = new XMLHttpRequest();
 let url = xanoUrl.toString()
 
 request.open('GET', url, true)
-
+request.setRequestHeader('Authorization', `Bearer ${token}`);
+request.setRequestHeader("Content-type", "application/json; charset=utf-8");
 request.onload = function() {
 
     
@@ -440,6 +441,7 @@ deletebutton.addEventListener('click', function() {
     "id": eventid
     })
     http.open("DELETE", url, true);
+    http.setRequestHeader('Authorization', `Bearer ${token}`);
     http.setRequestHeader("Content-type", "application/json; charset=utf-8");
     http.send(params);
     card.style.display = "none";
