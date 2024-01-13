@@ -8,6 +8,7 @@ var request = new XMLHttpRequest()
 let xanoUrl = new URL("https://ubik.wiki/api/event-venue/?site_event_id__iexact="+event_id)
   
 request.open('GET', xanoUrl.toString(), true)
+request.setRequestHeader('Authorization', `Bearer ${token}`);
 
 request.onload = function() {
 var event = JSON.parse(this.response)
@@ -67,7 +68,8 @@ function part1(){
       }    
       http.open("PUT", urll, true);
       http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-    
+      http.setRequestHeader('Authorization', `Bearer ${token}`);
+
     http.onreadystatechange = function() { 
     if (http.readyState == 4) {
     if (http.status == 200) { 
@@ -144,7 +146,8 @@ function part1(){
         fetch(endpointUrl, {
         method: 'POST',
         headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(param)
         })
