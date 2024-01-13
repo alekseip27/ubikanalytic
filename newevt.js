@@ -81,14 +81,13 @@ function checkresults() {
     
     let xanoUrl = baseUrl + params.join('&');
     
-    
             function getEvents() {
             
             let request = new XMLHttpRequest();
-            
             let url = xanoUrl
             
             request.open('GET', url, true)
+            request.setRequestHeader("Content-type", "application/json; charset=utf-8");
             request.setRequestHeader('Authorization', `Bearer ${token}`);
 
             request.onload = function() {
@@ -168,7 +167,18 @@ function checkresults() {
                     document.querySelector('#vschart').style.display = 'none';
             
         const url = `https://ubik.wiki/api/vividseats/${VDID}/?format=json`;  // Fixed the stray "
+
         
+        const headers = new Headers({
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json; charset=utf-8',
+        });
+        
+          // Create the request object
+          const request = new Request(url, {
+            method: 'GET',
+            headers: headers
+          });
         
         // Use the fetch API to make the GET request
         fetch(url)
@@ -263,8 +273,20 @@ function checkresults() {
             let mainurl = events.event_url
             let amountsprimary = [];
             let datesprimary = [];
-            fetch(`https://ubik.wiki/api/primary-events/?event_url__icontains=${mainurl}`)
+
+            const headers = new Headers({
+            'Authorization': `Bearer ${token}`
+              });
+            
+              fetch(`https://ubik.wiki/api/primary-events/?event_url__icontains=${mainurl}`, {
+                method: 'GET',
+                headers: {
+                  'Authorization': `Bearer ${token}`
+                }
+              })
+              
             .then(response => {
+            
             if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
             }
@@ -331,6 +353,8 @@ function checkresults() {
             var url = "https://shibuy.co:8443/142data?eventid=" + evid
             http.open("GET", url, true);
             http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+            http.setRequestHeader('Authorization', `Bearer ${token}`);
+            
             
             // Set a timeout for the request (5 seconds)
             const requestTimeout = 5000; // 5 seconds
@@ -445,11 +469,13 @@ charticon.style.display = 'flex'
           const data = {
             eventid: eventid
           };
-        
+          
           const requestOptions = {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json', // Specify the content type as JSON
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+
             },
             body: JSON.stringify(data) // Convert data to JSON format
           };
@@ -605,6 +631,7 @@ charticon.style.display = 'flex'
             })
             http.open("PUT", url, true);
             http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+            http.setRequestHeader('Authorization', `Bearer ${token}`);
             http.send(params);
             card.style.display = "none";
             });
