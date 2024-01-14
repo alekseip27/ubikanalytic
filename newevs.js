@@ -650,19 +650,6 @@ charticon.style.display = 'flex'
             cardContainer.appendChild(card);
             })
 
-            
-            let intervalId;
-
-            function retryClickingSearchBar() {
-                if (token.length === 40) {
-                    document.getElementById("search-button").click();
-                    searchcompleted = true
-                clearInterval(intervalId);
-                } else {
-              }}
- 
-              intervalId = setInterval(retryClickingSearchBar, 1000);
-              
                 
             } else if(request.status>400){
             document.querySelector('#loading').style.display = "none";
