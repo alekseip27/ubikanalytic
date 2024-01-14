@@ -652,6 +652,7 @@ charticon.style.display = 'flex'
 
             function retryClickingSearchBar() {
                 if (token.length === 40) {
+                    document.getElementById("search-button").click();
                     searchcompleted = true
                 } 
               }
