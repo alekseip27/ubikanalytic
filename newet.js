@@ -649,7 +649,15 @@ charticon.style.display = 'flex'
             
             cardContainer.appendChild(card);
             })
-           searchcompleted = true
+
+            function retryClickingSearchBar() {
+                if (token.length !== 40) {
+                    searchcompleted = true
+                }
+              }
+              
+              setInterval(retryClickingSearchBar, 1000);
+              
                 
             } else if(request.status>400){
             document.querySelector('#loading').style.display = "none";
