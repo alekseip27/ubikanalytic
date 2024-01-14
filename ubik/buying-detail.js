@@ -1,6 +1,5 @@
 $("#purchasequantity").attr({"min" : 0});
 {
-
     let intervalIds;
     step1 = false
     step2 = false
