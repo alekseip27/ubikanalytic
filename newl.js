@@ -453,6 +453,17 @@ request.send();
 
 
 }
+            
+let intervalIds;
+
+function retryClickingSearchBar() {
+    if (token.length === 40) {
+getEvents()
+    clearInterval(intervalIds);
+    }}
+
+  intervalIds = setInterval(retryClickingSearchBar, 1000);
+  
 
 setTimeout(() => {
 
@@ -507,10 +518,6 @@ return +a.getAttribute("timeleft") - +b.getAttribute("timeleft")
 
 }, 3500);
 
-
-(function() {
-getEvents();
-})();
 
 
 setTimeout(() => {
