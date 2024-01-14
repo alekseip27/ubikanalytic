@@ -651,9 +651,9 @@ charticon.style.display = 'flex'
             })
 
             function retryClickingSearchBar() {
-                if (token.length !== 40) {
+                if (token.length === 40) {
                     searchcompleted = true
-                }
+                } 
               }
               
               setInterval(retryClickingSearchBar, 1000);
