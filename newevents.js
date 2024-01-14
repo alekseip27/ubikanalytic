@@ -657,8 +657,8 @@ charticon.style.display = 'flex'
                 if (token.length === 40) {
                     document.getElementById("search-button").click();
                     searchcompleted = true
-                } else {
                 clearInterval(intervalId);
+                } else {
               }}
  
               intervalId = setInterval(retryClickingSearchBar, 1000);
