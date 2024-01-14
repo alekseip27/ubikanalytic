@@ -663,9 +663,6 @@ charticon.style.display = 'flex'
  
               intervalId = setInterval(retryClickingSearchBar, 1000);
               
-              
-              setInterval(retryClickingSearchBar, 1000);
-              
                 
             } else if(request.status>400){
             document.querySelector('#loading').style.display = "none";
