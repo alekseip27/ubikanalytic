@@ -208,7 +208,7 @@ function checkresults() {
     
 let intervalIds;
 
-intervalIds = setInterval(retryClickingSearchBar, 1000);
+intervalIds = setInterval(retryClickingSearchBar, 250);
 
 function retryClickingSearchBar() {
 if (token.length === 40) {
