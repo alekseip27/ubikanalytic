@@ -153,7 +153,12 @@ async function getchartprimary(){
     let amountsprimary = [];
     let datesprimary = [];
 
-    fetch(`https://ubik.wiki/api/primary-events/?event_url__icontains=${mainurl}`)
+    fetch(`https://ubik.wiki/api/primary-events/?event_url__icontains=${mainurl}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
     .then(response => {
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -280,7 +285,7 @@ var http = new XMLHttpRequest();
 var url = "https://ubik.wiki/api/sbox-data/?limit=1000&vividseats_event_url__icontains=" + evurl
 http.open("GET", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-
+http.setRequestHeader('Authorization', `Bearer ${token}`);
 http.onload = function () {
     vividresponse = JSON.parse(this.response);
     commits = vividresponse.results;
