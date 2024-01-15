@@ -102,7 +102,8 @@ let request = new XMLHttpRequest();
 let url = xanoUrl
 
 request.open('GET', url, true)
-
+request.setRequestHeader('Authorization', `Bearer ${token}`);
+request.setRequestHeader("Content-type", "application/json; charset=utf-8");
 request.onload = function() {
 let data = JSON.parse(this.response)
 
@@ -217,7 +218,7 @@ request.send();
 
 let intervalIds;
 
-intervalIds = setInterval(retryClickingSearchBar, 1000);
+intervalIds = setInterval(retryClickingSearchBar, 250);
 
 function retryClickingSearchBar() {
 if (token.length === 40) {
