@@ -205,10 +205,17 @@ function checkresults() {
     
     }
     
-    (function() {
-    getEvents();
-    
-    })();
+let intervalIds;
+
+intervalIds = setInterval(retryClickingSearchBar, 1000);
+
+function retryClickingSearchBar() {
+if (token.length === 40) {
+getEvents()
+clearInterval(intervalIds);
+}}
+     
+        
     
     
     {
