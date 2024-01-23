@@ -134,6 +134,8 @@ document.querySelector(".edit-wrapper").style.display = 'flex'
 document.querySelector('#editvenueid').value = events.site_venue_id
 document.querySelector('#editvenueidvs').value = events.vivid_venue_id
 document.querySelector('#editvenueidsh').value = events.stubhub_venue_id
+     
+document.querySelector('#editwarning').value = events.warning
 
 document.querySelector('#editurl').value = events.venue_url
 document.querySelector('#editurlsh').value = events.stubhub_url
