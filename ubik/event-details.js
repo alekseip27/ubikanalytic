@@ -55,7 +55,11 @@ fetch('https://ubik.wiki/api/event-venue/?site_event_id__iexact=' + encodeURICom
             document.getElementById('source').textContent = eventData.source_site;
             document.getElementById('date').textContent = eventData.date;
             document.getElementById('time').textContent = eventData.time;
-  
+
+    
+            if(eventData.warning){
+            document.getElementById('warning').textContent = eventData.warning;
+            }
   const now = new Date();
   
   const estOffset = -5 * 60; // EST is UTC-5 hours
