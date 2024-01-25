@@ -124,6 +124,11 @@ function checkresults() {
             card.setAttribute('vivid_id', events.vdid);
     
             card.addEventListener('click', function(){
+
+            if (event.target.closest('.main-edit-button')) {
+            return;
+            }
+            
             document.querySelector('#errortext').textContent = ''
             document.querySelector(".edit-wrapper").style.display = 'flex'
             document.querySelector('#editname').value = events.name
@@ -161,28 +166,25 @@ function checkresults() {
             }
 
 
-            const deletebutton = card.getElementsByClassName('main-edit-button')[0]
-            const evids = card.getAttribute('eventid');
-            deletebutton.addEventListener('click',function(){
-            document.querySelector('.edit-wrapper').style.display = 'none'
-                
-                const url = `https://ubik.wiki/api/delete/primary-events/${evids}`+"/";
+const deletebutton = card.getElementsByClassName('main-edit-button')[0];
+const evids = card.getAttribute('eventid');
+deletebutton.addEventListener('click', function() {
+    document.querySelector('.edit-wrapper').style.display = 'none';
 
-                fetch(url, {
-                    method: 'DELETE',
-                    headers: {
-                        'Authorization': 'Bearer acf84a57bf2522fe825ea158d1dc38ef9c9a41e6',
-                        'Content-Type': 'application/json',
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                card.style.display = 'none';
-                })
-                .catch((error) => {
-                    console.error('Error:', error);
-                });
-            })
+    const url = `https://ubik.wiki/api/delete/primary-events/${evids}/`;
+
+    fetch(url, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': 'Bearer acf84a57bf2522fe825ea158d1dc38ef9c9a41e6',
+            'Content-Type': 'application/json',
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        card.style.display = 'none';
+    });
+});
 
 
 
