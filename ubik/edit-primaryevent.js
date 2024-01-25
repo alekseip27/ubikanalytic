@@ -114,6 +114,9 @@ function checkresults() {
             eventdate.textContent = tdate
             
            }
+
+
+
                 
             card.setAttribute('eventid', evid);
             card.setAttribute('time', events.time.slice(0, 8));
@@ -156,6 +159,33 @@ function checkresults() {
             if(eventid.textContent.length>10) {
             eventid.textContent = events.site_event_id.slice(0, 10)+'..'
             }
+
+
+            const deletebutton = card.getElementsByClassName('main-edit-button')[0]
+
+            deletebutton.addEventListener('click',function(){
+            document.querySelector('.edit-wrapper').style.display = 'none'
+                
+                const url = `https://ubik.wiki/api/delete/primary-events/${eventid}`;
+
+                fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer acf84a57bf2522fe825ea158d1dc38ef9c9a41e6',
+                        'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => response.json())
+                .then(data => {
+                card.style.display = 'none';
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+            })
+
+
+
 
             const venueid = card.getElementsByClassName('main-text-venue-id')[0]
             venueid.textContent = events.site_venue_id;
