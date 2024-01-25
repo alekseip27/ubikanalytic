@@ -179,12 +179,10 @@ deletebutton.addEventListener('click', function() {
             'Authorization': 'Bearer acf84a57bf2522fe825ea158d1dc38ef9c9a41e6',
             'Content-Type': 'application/json',
         },
-    })
-    .then(response => response.json())
-    .then(data => {
-        card.style.display = 'none';
     });
+    card.style.display = 'none';
 });
+
 
 
 
