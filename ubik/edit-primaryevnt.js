@@ -162,11 +162,11 @@ function checkresults() {
 
 
             const deletebutton = card.getElementsByClassName('main-edit-button')[0]
-
+            const evids = card.getAttribute('eventid');
             deletebutton.addEventListener('click',function(){
             document.querySelector('.edit-wrapper').style.display = 'none'
                 
-                const url = `https://ubik.wiki/api/delete/primary-events/${eventid}`;
+                const url = `https://ubik.wiki/api/delete/primary-events/${evids}`;
 
                 fetch(url, {
                     method: 'DELETE',
