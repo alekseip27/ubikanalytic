@@ -123,6 +123,11 @@ function checkresults() {
     card.setAttribute('source', events.purchase_source);
     
     card.addEventListener('click', function(){
+
+    if (event.target.closest('.main-edit-button')) {
+    return;
+    }
+        
     cardid = events.id
     document.querySelector('#errortext').textContent = ''
     document.querySelector(".edit-wrapper").style.display = 'flex'
@@ -141,7 +146,28 @@ function checkresults() {
     })
  
     card.style.display = 'flex';
-    
+
+
+const deletebutton = card.getElementsByClassName('main-edit-button')[0];
+const evids = card.getAttribute('eventid');
+deletebutton.addEventListener('click', function() {
+    document.querySelector('.edit-wrapper').style.display = 'none';
+
+    const url = `https://ubik.wiki/api/delete/order-history/${evids}/`;
+
+    fetch(url, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': 'Bearer acf84a57bf2522fe825ea158d1dc38ef9c9a41e6',
+            'Content-Type': 'application/json',
+        },
+    });
+
+    card.style.display = 'none';
+});
+
+
+        
     const evname = card.getElementsByClassName('main-text-enm')[0]
     evname.textContent = events.event_name;
     
