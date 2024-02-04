@@ -158,7 +158,7 @@ deletebutton.addEventListener('click', function() {
     fetch(url, {
         method: 'DELETE',
         headers: {
-            'Authorization': 'Bearer acf84a57bf2522fe825ea158d1dc38ef9c9a41e6',
+            'Authorization', `Bearer ${token}`,
             'Content-Type': 'application/json',
         },
     });
