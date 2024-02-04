@@ -97,6 +97,8 @@ const firebaseConfig = {
   $('#emaildropdown').css('display','flex');
   $('#create-emails').css('display','flex');
   $('#manage-emails').css('display','flex');
+  $('#email-types').css('display','flex');
+      
   
   
   }
