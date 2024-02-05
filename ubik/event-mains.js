@@ -24,7 +24,7 @@ function checkresults() {
       var intervalId = window.setInterval(function(){
       checkresults()
       }, 100);
-  
+   
       var input = document.getElementById("searchbar1");
       input.addEventListener("keyup", function(event) {
       if (event.keyCode === 13) {
@@ -55,6 +55,8 @@ function checkresults() {
   let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
   let keywords3 = document.getElementById('countryselect').value
 
+  let favoritecbox = document.getElementById('favorite').checked
+
   $('.event-box').hide()
 
   let baseUrl = 'https://ubik.wiki/api/event-venue/?';
@@ -75,6 +77,10 @@ function checkresults() {
   if (keywords3 === 'international') {
       params.push('country__idoesnotcontains=USA&country__idoesnotcontains=Canada');
   }
+
+  if (favoritecbox.checked === true) {
+    params.push('&favorite=true');
+}
 
   
   params.push('limit=100');
