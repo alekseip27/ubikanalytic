@@ -78,7 +78,7 @@ function checkresults() {
       params.push('country__idoesnotcontains=USA&country__idoesnotcontains=Canada');
   }
 
-  if (favoritecbox.checked === true) {
+  if (favoritecbox) {
     params.push('&favorite=true');
 }
 
