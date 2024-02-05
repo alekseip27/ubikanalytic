@@ -1,5 +1,4 @@
 
-
     let intervalIds;
 
     function retryClickingSearchBar() {
@@ -115,24 +114,33 @@ fetch('https://ubik.wiki/api/event-venue/?site_event_id__iexact=' + encodeURICom
         this.style.pointerEvents = 'none';
         var pkid = new URLSearchParams(window.location.search).get('id');
         const url = 'https://ubik.wiki/api/create/buying-queue/';
-        const requestData = {
-            purchase_total: document.getElementById('purchasetotal').value,
-            quantity_per: document.getElementById('quantityper').value,
-            section: document.getElementById('section').value,
-            buying_urgency: document.getElementById('buyingurgency').value,
-            purchase_frequency: document.getElementById('purchasefreq').value,
-            purchase_account: document.getElementById('purchaseacc').value,
-            presale_code: document.getElementById('presalecode').value,
-            purchase_notes: document.getElementById('notes').value,
-            added_timestamp: dategoal,
-            event_name: document.getElementById('event').textContent,
-            event_id: pkid,
-            event_venue: document.getElementById('venue').textContent,
-            event_date: document.getElementById('date').textContent,
-            event_url: document.getElementById('url').textContent,
-            event_time: document.getElementById('time').textContent,
-            event_source: document.getElementById('source').textContent,
-        };
+const requestData = {
+  purchase_total: document.getElementById('purchasetotal').value,
+  quantity_per: document.getElementById('quantityper').value,
+  section: document.getElementById('section').value,
+  buying_urgency: document.getElementById('buyingurgency').value,
+  purchase_frequency: document.getElementById('purchasefreq').value,
+  presale_code: document.getElementById('presalecode').value,
+  purchase_notes: document.getElementById('notes').value,
+  added_timestamp: dategoal,
+  event_name: document.getElementById('event').textContent,
+  event_id: pkid,
+  event_venue: document.getElementById('venue').textContent,
+  event_date: document.getElementById('date').textContent,
+  event_url: document.getElementById('url').textContent,
+  event_time: document.getElementById('time').textContent,
+  event_source: document.getElementById('source').textContent,
+};
+
+const purchaseAccValue = document.getElementById('purchaseacc').value;
+const purchaseAccsValue = document.getElementById('purchaseaccs').value;
+
+if (purchaseAccValue.trim() !== "") {
+  requestData.purchase_account = purchaseAccValue;
+} else if (purchaseAccsValue.trim() !== "") {
+  requestData.purchase_account = purchaseAccsValue;
+}
+
   
         fetch(url, {
             method: 'POST',
@@ -167,4 +175,63 @@ fetch('https://ubik.wiki/api/event-venue/?site_event_id__iexact=' + encodeURICom
   console.log(error)
         });
     });
+
+
+
+function getaccounts() {
+  let url = new URL('https://ubik.wiki/api/email-types/');
+  let request = new XMLHttpRequest();
+  request.open('GET', url, true);
+  request.setRequestHeader("Content-type", "application/json; charset=utf-8");
+  request.setRequestHeader('Authorization', `Bearer ${token}`);
+  request.onload = function() {
+    let data = JSON.parse(this.response);
+
+    if (request.status >= 200 && request.status < 400) {
+      const selectDropdown = document.getElementById("purchaseaccs");
+      const purchaseAcc = document.getElementById("purchaseacc");
+
+      selectDropdown.innerHTML = "";
+
+      data.results.forEach(event => {
+        const option = document.createElement("option");
+        option.value = event.accounts; // Set the value to event's ID or any unique identifier
+        option.textContent = event.type; // Set the text content to event's name or description
+        selectDropdown.appendChild(option);
+      });
+
+      // Add "manual" option
+      const manualOption = document.createElement("option");
+      manualOption.value = "manual";
+      manualOption.textContent = "Manual";
+      selectDropdown.appendChild(manualOption);
+
+      // Event listener to handle the "manual" option
+      selectDropdown.addEventListener("change", function() {
+        if (this.value === "manual") {
+          purchaseAcc.style.display = "block";
+          selectDropdown.style.display = "none";
+        } else {
+          purchaseAcc.style.display = "none";
+          selectDropdown.style.display = "block";
+        }
+      });
+    }
+  };
   
+  request.send();
+}
+
+
+
+
+let intervalIdtwo;
+
+function retryaccounts() {
+  if (token.length === 40) {
+getaccounts()
+  clearInterval(intervalIdtwo);
+  }}
+
+intervalIdtwo = setInterval(retryaccounts, 1000);
+
