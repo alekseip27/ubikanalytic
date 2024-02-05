@@ -79,7 +79,7 @@ function checkresults() {
   }
 
   if (favoritecbox) {
-    params.push('&favorite=true');
+    params.push('&favorites__iexact=true');
 }
 
   
