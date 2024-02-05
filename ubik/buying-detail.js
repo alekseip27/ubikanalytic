@@ -118,8 +118,7 @@ document.querySelector('#amountbought1').textContent = "0"
 
 document.querySelector('#amountbought2').textContent =  eventdata.purchase_total 
 document.querySelector('#section').textContent =  eventdata.section
-document.querySelector('#purchasefreq').textContent =  eventdata.purchase_frequency
-document.querySelector('#purchaseacc').textContent = eventdata.purchase_account
+document.querySelector('#purchasefreq').textContent =  eventdata.purchase_frequency                                  
 document.querySelector('#purchasesource').textContent = eventdata.event_source
 document.querySelector('#eventid').textContent = eventdata.event_id
 document.querySelector('#purchasealltime').textContent = eventdata.purchase_total
@@ -584,13 +583,6 @@ function part3(){
     .catch(error => {
     console.log(error);
     });
-    
-    setTimeout(() => {
-    if(!!$('#purchaseacc').text() == false) {
-    $('#purchaseacc').text('noaccount')
-    $('#purchaseacc').css('opacity', '0');
-    }
-    }, 1000);
 }
 
 
@@ -611,3 +603,37 @@ const checkStepsInterval = setInterval(() => {
     }, 2000);
   }
 }, 1000);
+
+
+function getaccounts() {
+  let url = new URL('https://ubik.wiki/api/buyer-emails/?one1ticket_add__iexact=true&tm_added__iexact=true&one1ticket_verify__iexact=true&second_forward_verify__iexact=true&retired__iexact=false&email_suspended__iexact=false');
+  let request = new XMLHttpRequest();
+  request.open('GET', url, true);
+  request.setRequestHeader("Content-type", "application/json; charset=utf-8");
+  request.setRequestHeader('Authorization', `Bearer ${token}`);
+  request.onload = function() {
+  let data = JSON.parse(this.response);
+
+  if (request.status >= 200 && request.status < 400) {
+  const selectDropdown = document.getElementById("purchaseaccounts");
+  const purchaseAcc = document.getElementById("purchaseaccounts");
+  selectDropdown.innerHTML = "";
+  data.results.forEach(event => {
+  const option = document.createElement("option");
+  option.value = event.email; 
+  option.textContent = event.email;
+  selectDropdown.appendChild(option);
+  });
+  }}; 
+  request.send();
+  }
+
+let intervalIdtwo;
+
+function retryaccounts() {
+  if (token.length === 40) {
+getaccounts()
+  clearInterval(intervalIdtwo);
+  }}
+
+intervalIdtwo = setInterval(retryaccounts, 1000);
