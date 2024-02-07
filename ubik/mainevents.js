@@ -148,79 +148,9 @@ function checkresults() {
   if (events.status) {
   status.textContent = events.status
   }
-  function vschartdata(VDID) {
-    // Reset chart data and labels
-    chartvs.data.datasets.forEach(dataset => {
-        dataset.data = [];
-        dataset.label = "";
-    });
-    chartvs.config.data.labels = [];
-    
-    // UI elements visibility
-    document.querySelector('#vsloader').style.display = 'flex';
-    document.querySelector('#vserror').style.display = 'none';
-    document.querySelector('#vschart').style.display = 'none';
 
-    // Fetch configuration
-    const url = `https://ubik.wiki/api/vividseats/${VDID}/?format=json`;
-    const headers = {
-        'Authorization': `Bearer ${token}`,
-        'Content-Type': 'application/json; charset=utf-8',
-    };
 
-    fetch(url, { method: 'GET', headers: headers })
-        .then(response => {
-            if (!response.ok) throw new Error("Network response was not ok.");
-            return response.json();
-        })
-        .then(data => {
-            // Assuming data.results is always an array
-            if (!data.results.length) throw new Error("No results available.");
-
-            let detailsData = data.results[0].details ? JSON.parse(data.results[0].details) : null;
-            let dataScrapes = data.results[0].data_scrapes ? JSON.parse(data.results[0].data_scrapes.replace(/'/g, '"').replace(/:\s*None,/g, ':"None",')) : null;
-
-            if (!dataScrapes && !detailsData) throw new Error("No data available for chart.");
-
-            // Prepare data for chart (this is simplified and should be adjusted based on your actual data structure and requirements)
-            let chartData = [];
-            if (dataScrapes) {
-                // Process dataScrapes if available
-                chartData = dataScrapes.map(item => {
-                    return {
-                        // Assuming structure of item here, adjust as necessary
-                        label: item.scrape_datetime,
-                        totalCount: item.total_count,
-                        // Add more fields as needed
-                    };
-                });
-            } else if (detailsData) {
-                // Use detailsData if dataScrapes is not available
-                chartData.push({
-                    label: detailsData.event_date,
-                    totalCount: detailsData.ticket_count,
-                    // Add more fields based on detailsData structure
-                });
-            }
-
-            // Update chart data (simplified, adjust according to your actual requirements)
-            chartvs.data.labels = chartData.map(item => item.label);
-            chartvs.data.datasets[0].data = chartData.map(item => item.totalCount);
-            // Update more datasets as necessary
-
-            chartvs.update();
-
-            // Update UI to show chart
-            document.querySelector('#vsloader').style.display = 'none';
-            document.querySelector('#vschart').style.display = 'flex';
-        })
-        .catch(error => {
-            console.error("Error:", error);
-            document.querySelector('#vsloader').style.display = 'none';
-            document.querySelector('#vserror').style.display = 'flex';
-        });
-}
-
+          function vschartdata(VDID){}
       
       
       const charticon = card.getElementsByClassName('main-text-chart')[0];
