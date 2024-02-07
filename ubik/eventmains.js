@@ -187,7 +187,7 @@ function checkresults() {
         });
       
       // Use the fetch API to make the GET request
-      fetch(url)
+      fetch(request)
         .then(response => {
           if (response.ok) {
             document.querySelector('#vsloader').style.display = 'none';
