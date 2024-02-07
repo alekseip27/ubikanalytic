@@ -432,10 +432,7 @@ getchartprimary()
 
 }
 });
-              
-if (events.source_site !== 'TM') {
-charticon.style.display = 'none'
-}
+          
 
 let count = events.counts
 let src = events.source_site
