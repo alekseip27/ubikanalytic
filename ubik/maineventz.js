@@ -39,7 +39,6 @@ function checkresults() {
       document.getElementById("search-button").click();
       }
       });
-      
       document.querySelector('#search-button').addEventListener("click", () => {
       cancelFetchRequests();
       document.querySelector('#loading').style.display = "flex";
