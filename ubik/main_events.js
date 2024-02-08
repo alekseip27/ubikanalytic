@@ -148,126 +148,131 @@ function checkresults() {
   status.textContent = events.status
   }
 
-
 function vschartdata(VDID) {
 
-                  chartvs.data.datasets[0].data = []
-                  chartvs.data.datasets[1].data = []
-                  chartvs.data.datasets[2].data = []
-                  chartvs.data.datasets[3].data = []
-                  chartvs.data.datasets[4].data = []
-                  chartvs.data.datasets[5].data = []
-                  chartvs.data.datasets[6].data = []
-                  chartvs.data.datasets[7].data = []
-                  chartvs.data.datasets[1].label = ""
-                  chartvs.data.datasets[2].label = ""
-                  chartvs.data.datasets[3].label = ""
-                  chartvs.data.datasets[4].label = ""
-                  chartvs.data.datasets[5].label = ""
-                  chartvs.data.datasets[6].label = ""
-                  chartvs.data.datasets[7].label = ""
-                  chartvs.config.data.labels = []
-                  chartvs.update();
-                  document.querySelector('#vsloader').style.display = 'flex';
-                  document.querySelector('#vserror').style.display = 'none';
-                  document.querySelector('#vschart').style.display = 'none';
-          
-      const url = `https://ubik.wiki/api/vividseats/${VDID}/?format=json`;  // Fixed the stray "
+  chartvs.data.datasets[0].data = []
+  chartvs.data.datasets[1].data = []
+  chartvs.data.datasets[2].data = []
+  chartvs.data.datasets[3].data = []
+  chartvs.data.datasets[4].data = []
+  chartvs.data.datasets[5].data = []
+  chartvs.data.datasets[6].data = []
+  chartvs.data.datasets[7].data = []
+  chartvs.data.datasets[0].label = "Total"
+  chartvs.data.datasets[1].label = ""
+  chartvs.data.datasets[2].label = ""
+  chartvs.data.datasets[3].label = ""
+  chartvs.data.datasets[4].label = "Lowest Price"
+  chartvs.data.datasets[5].label = ""
+  chartvs.data.datasets[6].label = ""
+  chartvs.data.datasets[7].label = ""
+  chartvs.config.data.labels = []
+  chartvs.update();
+  document.querySelector('#vsloader').style.display = 'flex';
+  document.querySelector('#vserror').style.display = 'none';
+  document.querySelector('#vschart').style.display = 'none';
 
-      
-      const headers = new Headers({
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json; charset=utf-8',
-      });
-      
-        // Create the request object
-        const request = new Request(url, {
-          method: 'GET',
-          headers: headers
-        });
-      
-      // Use the fetch API to make the GET request
-      fetch(request)
-        .then(response => {
-          if (response.ok) {
-            document.querySelector('#vsloader').style.display = 'none';
-            document.querySelector('#vschart').style.display = 'flex';
-            document.querySelector('#vserror').style.display = 'none';
-            return response.json();
-          } else {
-            document.querySelector('#vsloader').style.display = 'none';
-            document.querySelector('#vschart').style.display = 'none';
-            document.querySelector('#vserror').style.display = 'flex';
-            throw new Error("Failed to fetch data");
-          }
-        })
-        .then(data => {
-          const str = data.results[0].data_scrapes;
-      
-          const replacedStr = str.replace(/'/g, '"');
-          
-            const correctedData = replacedStr.replace(/:\s*None,/g, ':"None",');
-          let datas;
-      
-          try {
-            datas = JSON.parse(correctedData);
-          console.log(datas[0])
-      
-          } catch (e) {
-            // If parsing fails, log the error
-            console.error("Parsing failed:", e);
-          }
-          
-          // Extract chart labels and data from the fetched data
-          const labels = datas.map(item => item.scrape_datetime).reverse();
-          const totalCount = datas.map(item => item.total_count).reverse();
-          const pref1Count = datas.map(item => item.pref1_count).reverse();
-          const pref2Count = datas.map(item => item.pref2_count).reverse();
-          const pref3Count = datas.map(item => item.pref3_count).reverse();
-          const lowestprice = datas.map(item => item.lowest_price).reverse();
-          const pref1lowest = datas.map(item => item.pref1_lowest).reverse();
-          const pref2lowest = datas.map(item => item.pref2_lowest).reverse();
-          const pref3lowest = datas.map(item => item.pref3_lowest).reverse();
-          
-          const p1name = datas[0].pref1_title
-          const p2name = datas[0].pref2_title
-          const p3name = datas[0].pref3_title
+const url = `https://ubik.wiki/api/vividseats/${VDID}/?format=json`;  // Fixed the stray "
 
-            
-          // Update chart
-          chartvs.data.labels = labels;
-          chartvs.data.datasets[0].data = totalCount;
-          chartvs.data.datasets[1].data = pref1Count;
-          chartvs.data.datasets[2].data = pref2Count;
-          chartvs.data.datasets[3].data = pref3Count;
-            
-          chartvs.data.datasets[4].data = lowestprice;
-            
-          chartvs.data.datasets[5].data = pref1lowest;
-          chartvs.data.datasets[6].data = pref2lowest;
-          chartvs.data.datasets[7].data = pref3lowest;
-          
-          chartvs.data.datasets[1].label = p1name
-          chartvs.data.datasets[2].label = p2name
-          chartvs.data.datasets[3].label = p3name
-      
-          chartvs.data.datasets[5].label = p1name + ' Lowest Price'
-          chartvs.data.datasets[6].label = p2name + ' Lowest Price'
-          chartvs.data.datasets[7].label = p3name + ' Lowest Price'
-            
-          chartvs.update();
-        })
-        .catch(error => {
-          console.error("Error:", error);
-           document.querySelector('#vsloader').style.display = 'none';
-            document.querySelector('#vschart').style.display = 'none';
-            document.querySelector('#vserror').style.display = 'flex';
-        });
-      }
-      
 
-      
-      
+const headers = new Headers({
+'Authorization': `Bearer ${token}`,
+'Content-Type': 'application/json; charset=utf-8',
+});
+
+// Create the request object
+const request = new Request(url, {
+method: 'GET',
+headers: headers
+});
+
+// Use the fetch API to make the GET request
+fetch(request)
+.then(response => {
+if (response.ok) {
+document.querySelector('#vsloader').style.display = 'none';
+document.querySelector('#vschart').style.display = 'flex';
+document.querySelector('#vserror').style.display = 'none';
+return response.json();
+} else {
+document.querySelector('#vsloader').style.display = 'none';
+document.querySelector('#vschart').style.display = 'none';
+document.querySelector('#vserror').style.display = 'flex';
+throw new Error("Failed to fetch data");
+}
+})
+.then(data => {
+
+const str = data.results[0].data_scrapes;
+
+if(str){
+
+const replacedStr = str.replace(/'/g, '"');
+
+const correctedData = replacedStr.replace(/:\s*None,/g, ':"None",');
+let datas;
+
+try {
+
+  
+datas = JSON.parse(correctedData);
+console.log(datas[0])
+
+} catch (e) {
+// If parsing fails, log the error
+console.error("Parsing failed:", e);
+}
+
+// Extract chart labels and data from the fetched data
+const labels = datas.map(item => item.scrape_datetime).reverse();
+const totalCount = datas.map(item => item.total_count).reverse();
+const pref1Count = datas.map(item => item.pref1_count).reverse();
+const pref2Count = datas.map(item => item.pref2_count).reverse();
+const pref3Count = datas.map(item => item.pref3_count).reverse();
+const lowestprice = datas.map(item => item.lowest_price).reverse();
+const pref1lowest = datas.map(item => item.pref1_lowest).reverse();
+const pref2lowest = datas.map(item => item.pref2_lowest).reverse();
+const pref3lowest = datas.map(item => item.pref3_lowest).reverse();
+
+const p1name = datas[0].pref1_title
+const p2name = datas[0].pref2_title
+const p3name = datas[0].pref3_title
+
+
+// Update chart
+chartvs.data.labels = labels;
+chartvs.data.datasets[0].data = totalCount;
+chartvs.data.datasets[1].data = pref1Count;
+chartvs.data.datasets[2].data = pref2Count;
+chartvs.data.datasets[3].data = pref3Count;
+
+chartvs.data.datasets[4].data = lowestprice;
+
+chartvs.data.datasets[5].data = pref1lowest;
+chartvs.data.datasets[6].data = pref2lowest;
+chartvs.data.datasets[7].data = pref3lowest;
+
+chartvs.data.datasets[1].label = p1name
+chartvs.data.datasets[2].label = p2name
+chartvs.data.datasets[3].label = p3name
+
+chartvs.data.datasets[5].label = p1name + ' Lowest Price'
+chartvs.data.datasets[6].label = p2name + ' Lowest Price'
+chartvs.data.datasets[7].label = p3name + ' Lowest Price'
+
+chartvs.update();
+
+
+
+}})
+.catch(error => {
+console.error("Error:", error);
+document.querySelector('#vsloader').style.display = 'none';
+document.querySelector('#vschart').style.display = 'none';
+document.querySelector('#vserror').style.display = 'flex';
+});
+}
+
       const charticon = card.getElementsByClassName('main-text-chart')[0];
 
       async function getchartprimary(){
