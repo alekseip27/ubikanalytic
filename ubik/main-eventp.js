@@ -610,7 +610,10 @@ const scrapetm = (eventid) => {
            eventur.textContent = events.event_url
 
            const counts = events.counts
+          let source = ''
+          if(events.source_site){
            const source = events.source_site.toLowerCase()
+          }
 
            function getTwoLatestCounts(counts) {
               // Parsing dates and sorting the array in descending order by date
