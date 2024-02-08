@@ -129,7 +129,7 @@ function checkresults() {
           
           card.setAttribute('time', events.time.slice(0, 8));
           card.setAttribute('venue', events.venue_name);
-          card.setAttribute('source', events.source_site);
+          card.setAttribute('source', events.scraper_name);
           card.setAttribute('vivid_id', events.vdid);
           card.setAttribute('capacity', events.venue_capacity);
   
@@ -368,7 +368,7 @@ document.querySelector('#vserror').style.display = 'flex';
           vschartdata(events.vdid)
           document.querySelector('#graph-overlay').style.display = 'flex';
           document.querySelector('#closecharts').style.display = 'flex'
-          if (events.source_site === 'TM') {
+          if (events.scraper_name === 'ticketmaster') {
           document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + evid + "/details/"
        
           let dates = [];
@@ -451,8 +451,8 @@ getchartprimary()
           
 
 let count = events.counts
-let src = events.source_site
-if (count && count.length > 0 && !src.includes('tm')) {
+let src = events.scraper_name
+if (count && count.length > 0 && !src.includes('ticketmaster')) {
 charticon.style.display = 'flex'
 }
 
@@ -581,7 +581,7 @@ const scrapetm = (eventid) => {
           })
           
           
-          if(events.source_site == 'TM' && !evid.startsWith('Z') && evid.length == 16) {
+          if(events.scraper_name === 'ticketmaster' && !evid.startsWith('Z') && evid.length == 16) {
           primrem.textContent = '0'
           dpd.textContent = '0'
           fetchEventData(events.site_event_id)
@@ -612,8 +612,8 @@ const scrapetm = (eventid) => {
 
            const counts = events.counts
           let source = ''
-          if(events.source_site){
-           const source = events.source_site.toLowerCase()
+          if(events.scraper_name){
+           const source = events.scraper_name.toLowerCase()
           }
 
            function getTwoLatestCounts(counts) {
@@ -671,10 +671,10 @@ const scrapetm = (eventid) => {
           capacity.textContent = events.venue_capacity
   
           let txtsource = card.getElementsByClassName('main-textsource')[0]
-          txtsource.textContent = events.source_site
+          txtsource.textContent = events.scraper_name
 
 
-          if(events.source_site == 'TM') {
+          if(events.scraper_name === 'ticketmaster') {
               
           txtsource.addEventListener('click',function(){
           window.open('http://142.93.115.105:8100/event/' + evid +'/details/', "142")
