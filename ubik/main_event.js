@@ -147,7 +147,6 @@ function checkresults() {
   if (events.status) {
   status.textContent = events.status
   }
-
 function vschartdata(VDID) {
 
   chartvs.data.datasets[0].data = []
@@ -264,7 +263,16 @@ chartvs.update();
 
 
 
-}})
+} else {
+  document.querySelector('#vsloader').style.display = 'none';
+  document.querySelector('#vschart').style.display = 'none';
+  document.querySelector('#vserror').style.display = 'flex';
+
+
+}
+
+
+})
 .catch(error => {
 console.error("Error:", error);
 document.querySelector('#vsloader').style.display = 'none';
