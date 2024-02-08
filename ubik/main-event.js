@@ -480,37 +480,84 @@ charticon.style.display = 'flex'
             });
         };
   
-              
-      const scrapetm = (eventid) => {
-        const url = 'https://shibuy.co:8443/scrapeurl';
-      
-        const data = {
-          eventid: eventid
-        };
-        
-        const requestOptions = {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+function updatedata(eventid){
+  const url = 'https://ubik.wiki/api/update/primary-events/'+eventid+'/';
+  
+  const date1 = new Date();
+  let date2 = 
+  date1.toLocaleString('en-US', {
+  timeZone: 'America/New_York',
+  year: 'numeric',
+  month: '2-digit',
+  day: '2-digit',
+  hour: '2-digit',
+  minute: '2-digit',
+  })
+  
+let currentdate = date2.replace(',','')
 
-          },
-          body: JSON.stringify(data) // Convert data to JSON format
-        };
-      
-        const request = fetch(url, requestOptions)
-          .then(response => response.json())
-          .then(data => {
-            console.log(data);
+  const options = {
+    method: 'PUT',
+    headers: {
+      'Authorization': `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+    "site_event_id":eventid,
+    "status":"sold out",
+    "previous_status":currentdate
+    })
+  };
+
+  fetch(url, options)
+    .then(response => response.json())
+    .then(data => {
+      // Handle the response of the PUT request
+      console.log(data);
+    })
+    .catch(error => {
+      // Handle errors from the PUT request
+      console.error('Error:', error);
+    });
+
+
+}
+
+const scrapetm = (eventid) => {
+  const url = 'https://shibuy.co:8443/scrapeurl'; 
+
+  const data = {
+    eventid: eventid
+  };
+  
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(data) // Convert data to JSON format
+  };
+
+  const request = fetch(url, requestOptions)
+    .then(response => response.json())
+    .then(data => {
       scrapeurl(eventid)
-          })
-          .catch(error => {
-      if(error.includes('No amounts available')){
-      primrem.textContent = 'unavailable'
+      console.log(data);
+      const checktrue = data.amounts.some(item => item.amount === undefined || item.amount < 50);
+      if(checktrue){
+      updatedata(eventid)
+    }})
+    .catch(error => {
+      const searchText = 'No amounts available';
+      const includesText = Object.keys(data).some(key => key.includes(searchText));
+      if(includesText){
+        console.log(error)
+        updatedata(eventid)
+        primrem.textContent = 'unavailable';
       }
-          });
-      };
-        
+    });
+};
   
           let rescrapebutton = card.getElementsByClassName('re-scrape-div')[0]
           
