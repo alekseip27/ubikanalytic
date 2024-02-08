@@ -316,10 +316,9 @@ document.querySelector('#vserror').style.display = 'flex';
           .then(data => {
               let event = data.results[0];
               let counts = event.counts;
-            let source; 
-            if(event.scraper_name){
-              let source = event.scraper_name.toLowerCase()
-            }
+
+              let source = event.scraper_name
+            
               chart.data.datasets[0].label = source.toUpperCase() + ' Primary'
               evids = event.site_event_id
               if (counts && counts.length > 0 && !source.includes('tm')) {
