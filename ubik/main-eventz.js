@@ -316,6 +316,7 @@ document.querySelector('#vserror').style.display = 'flex';
           .then(data => {
               let event = data.results[0];
               let counts = event.counts;
+            let source; 
             if(event.scraper_name){
               let source = event.scraper_name.toLowerCase()
             }
@@ -670,7 +671,7 @@ const scrapetm = (eventid) => {
           capacity.textContent = events.venue_capacity
   
           let txtsource = card.getElementsByClassName('main-textsource')[0]
-          txtsource.textContent = events.source_site
+          txtsource.textContent = events.scraper_name
 
 
           if(events.source_site == 'TM') {
