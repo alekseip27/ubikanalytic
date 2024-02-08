@@ -14,7 +14,7 @@ $('#event_date').datepicker({
     
         let eventid = encodeURIComponent(document.querySelector('#prefix-event').value) + encodeURIComponent(document.querySelector('#checkeventid').value)
     
-        var url = "https://ubik.wiki/api/primary-events/?site_event_id__iexact=" + eventid
+        var url = "https://ubik.wiki/api/primary-events/?site_event_id__icontains=" + eventid
     
         fetch(url, {
             method: "GET",
