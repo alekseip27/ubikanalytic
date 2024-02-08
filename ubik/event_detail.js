@@ -179,7 +179,7 @@ if (purchaseAccValue.trim() !== "") {
 
 
 function getaccounts() {
-  let url = new URL('https://ubik.wiki/api/email-types/');
+  let url = new URL('https://ubik.wiki/api/email-types/?limit=1000');
   let request = new XMLHttpRequest();
   request.open('GET', url, true);
   request.setRequestHeader("Content-type", "application/json; charset=utf-8");
