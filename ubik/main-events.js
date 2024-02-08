@@ -553,7 +553,6 @@ const scrapetm = (eventid) => {
       const includesText = Object.keys(data).some(key => key.includes(searchText));
       if(includesText){
         console.log(error)
-        updatedata(eventid)
         primrem.textContent = 'unavailable';
       }
     });
