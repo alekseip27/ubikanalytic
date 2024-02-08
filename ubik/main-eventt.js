@@ -671,7 +671,7 @@ const scrapetm = (eventid) => {
           capacity.textContent = events.venue_capacity
   
           let txtsource = card.getElementsByClassName('main-textsource')[0]
-          txtsource.textContent = events.scraper_name
+          txtsource.textContent = events.source_site
 
 
           if(events.source_site == 'TM') {
