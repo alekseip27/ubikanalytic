@@ -606,7 +606,7 @@ const checkStepsInterval = setInterval(() => {
 
 
 function getaccounts() {
-  let url = new URL('https://ubik.wiki/api/buyer-emails/?one1ticket_add__iexact=true&tm_added__iexact=true&one1ticket_verify__iexact=true&second_forward_verify__iexact=true&retired__iexact=false&email_suspended__iexact=false');
+  let url = new URL('https://ubik.wiki/api/buyer-emails/?one1ticket_add__iexact=true&tm_added__iexact=true&one1ticket_verify__iexact=true&second_forward_verify__iexact=true&retired__iexact=false&email_suspended__iexact=false&limit=1000');
   let request = new XMLHttpRequest();
   request.open('GET', url, true);
   request.setRequestHeader("Content-type", "application/json; charset=utf-8");
