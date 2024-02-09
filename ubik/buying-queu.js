@@ -67,7 +67,6 @@ eventsrc.textContent = events.event_source
 let txtsource = card.getElementsByClassName('main-textsource')[0];
 let eventUrl = events.scraper_name
 
-txtsource.textContent = scrpr;
  
 switch(true) {
   case eventUrl.includes('ticketmaster'):
