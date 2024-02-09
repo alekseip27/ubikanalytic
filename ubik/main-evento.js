@@ -672,6 +672,87 @@ const scrapetm = (eventid) => {
           let txtsource = card.getElementsByClassName('main-textsource')[0]
           txtsource.textContent = events.scraper_name
 
+          let eventUrl = events.scraper_name
+          
+          switch(true) {
+            case eventUrl.includes('ticketmaster'):
+              txtsource.textContent = 'TM';
+              break;
+            case eventUrl.includes('livenation'):
+              txtsource.textContent = 'TM';
+              break;
+            case eventUrl.includes('24tix'):
+              txtsource.textContent = '24TIX';
+              break;
+            case eventUrl.includes('admitone'):
+              txtsource.textContent = 'ADMIT1';
+              break;
+            case eventUrl.includes('axs'):
+              txtsource.textContent = 'AXS';
+              break;
+            case eventUrl.includes('dice'):
+              txtsource.textContent = 'DICE';
+              break;
+            case eventUrl.includes('etix'):
+              txtsource.textContent = 'ETIX';
+              break;
+            case eventUrl.includes('eventbrite'):
+              txtsource.textContent = 'EBRITE';
+              break;
+            case eventUrl.includes('freshtix'):
+              txtsource.textContent = 'FRESH';
+              break;
+            case eventUrl.includes('frontgate'):
+              txtsource.textContent = 'FGATE';
+              break;
+            case eventUrl.includes('holdmyticket'):
+              txtsource.textContent = 'HOLDMT';
+              break;
+            case eventUrl.includes('prekindle'):
+              txtsource.textContent = 'PRE';
+              break;
+            case eventUrl.includes('seetickets'):
+              txtsource.textContent = 'SEETIX';
+              break;
+              case eventUrl.includes('showclix'):
+              txtsource.textContent = 'SHOW';
+              break;
+            case eventUrl.includes('ticketweb'):
+              txtsource.textContent = 'TWEB';
+              break;
+            case eventUrl.includes('ticketswest'):
+              txtsource.textContent = 'TWEST';
+              break;
+            case eventUrl.includes('tixr'):
+              txtsource.textContent = 'TIXR';
+              break;
+            case eventUrl.includes('stubwire'):
+              txtsource.textContent = 'STUBW';
+              break;
+            case eventUrl.includes('fgtix'):
+              txtsource.textContent = 'FGATE';
+              break;
+            case eventUrl.includes('evenue'):
+              txtsource.textContent = 'EVENUE';
+              break;
+            case eventUrl.includes('gruenehall'):
+              txtsource.textContent = 'gruenehall';
+              break;
+            case eventUrl.includes('meowwolf'):
+              txtsource.textContent = 'MEOW';
+              break;
+            case eventUrl.includes('thevogue.com'):
+              txtsource.textContent = 'thevogue';
+              break;
+            default:
+              txtsource.textContent = 'OTHER';
+              break;
+          }
+          
+          // Uncomment and add your logic for updateColumnButton2 here if needed
+          // updateColumnButton2();
+          
+          //
 
           if(events.scraper_name === 'ticketmaster') {
               
