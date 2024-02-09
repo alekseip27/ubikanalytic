@@ -621,7 +621,6 @@ function getaccounts(account) {
   if (request.status >= 200 && request.status < 400) {
   const selectDropdown = document.getElementById("purchaseaccounts");
   const purchaseAcc = document.getElementById("purchaseaccounts");
-  selectDropdown.innerHTML = "";
   data.results.forEach(event => {
   const option = document.createElement("option");
   option.value = event.email; 
