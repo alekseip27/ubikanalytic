@@ -60,11 +60,8 @@ let eventtl = card.getElementsByClassName("main-text-tl")[0]
 eventtl.textContent = events.added_timestamp
 card.setAttribute('dateposted', events.added_timestamp)
 
-let eventsrc = card.getElementsByClassName('main-text-src')[0]
-eventsrc.textContent = events.event_source
+let txtsource = card.getElementsByClassName('main-text-src')[0]
 
-//
-let txtsource = card.getElementsByClassName('main-textsource')[0];
 let eventUrl = events.event_source
 
  
