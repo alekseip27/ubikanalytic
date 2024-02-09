@@ -635,8 +635,8 @@ function getaccounts(account) {
 let intervalIdtwo;
 
 function retryaccounts() {
-  if (token.length === 40) {
 const letters = purchaseaccounts.split(',');
+  if (token.length === 40 && letters) {
 letters.forEach(letter => {
     getaccounts(letter.trim())
 });
