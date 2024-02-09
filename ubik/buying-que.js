@@ -65,10 +65,13 @@ eventsrc.textContent = events.event_source
 
 //
 let txtsource = card.getElementsByClassName('main-textsource')[0];
-let eventUrl = events.scraper_name
+let eventUrl = events.event_source
 
  
 switch(true) {
+  case eventUrl.includes('TM'):
+    txtsource.textContent = 'TM';
+    break;
   case eventUrl.includes('ticketmaster'):
     txtsource.textContent = 'TM';
     break;
