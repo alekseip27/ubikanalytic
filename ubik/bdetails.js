@@ -28,6 +28,9 @@ const item = document.getElementById('samplestyle')
     
 thiseventid = eventdata.event_id
 
+    purchaseaccounts = eventdata.purchase_account
+
+    
 encodedthiseventid = encodeURIComponent(eventdata.event_id)
 
     
