@@ -608,8 +608,9 @@ const checkStepsInterval = setInterval(() => {
 }, 1000);
 
 
-function getaccounts() {
-  let url = new URL('https://ubik.wiki/api/buyer-emails/?one1ticket_add__iexact=true&tm_added__iexact=true&one1ticket_verify__iexact=true&second_forward_verify__iexact=true&retired__iexact=false&email_suspended__iexact=false&limit=1000');
+
+function getaccounts(account) {
+  let url = new URL('https://ubik.wiki/api/buyer-emails/?one1ticket_add__iexact=true&tm_added__iexact=true&one1ticket_verify__iexact=true&second_forward_verify__iexact=true&retired__iexact=false&email_suspended__iexact=false&istartswith=' +account +  "&limit=1000");
   let request = new XMLHttpRequest();
   request.open('GET', url, true);
   request.setRequestHeader("Content-type", "application/json; charset=utf-8");
@@ -635,8 +636,13 @@ let intervalIdtwo;
 
 function retryaccounts() {
   if (token.length === 40) {
-getaccounts()
+const letters = purchaseaccounts.split(',');
+letters.forEach(letter => {
+    getaccounts(letter.trim())
+});
+
   clearInterval(intervalIdtwo);
   }}
 
 intervalIdtwo = setInterval(retryaccounts, 1000);
+
