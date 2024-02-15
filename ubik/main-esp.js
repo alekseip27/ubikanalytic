@@ -580,7 +580,7 @@ const scrapetm = (eventid) => {
           })
           
           
-          if(events.event_url.includes('ticketmaster') || events.event_url.includes('livenation')) && !evid.startsWith('Z') && evid.length == 16) {
+          if((events.event_url.includes('ticketmaster') || events.event_url.includes('livenation')) && !evid.startsWith('Z') && evid.length == 16) {
           primrem.textContent = '0'
           dpd.textContent = '0'
           fetchEventData(events.site_event_id)
