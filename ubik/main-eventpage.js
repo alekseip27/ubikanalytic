@@ -672,7 +672,7 @@ const scrapetm = (eventid) => {
           let txtsource = card.getElementsByClassName('main-textsource')[0]
           txtsource.textContent = events.scraper_name
 
-          let eventUrl = events.scraper_name
+          let eventUrl = events.event_url
           
           switch(true) {
             case eventUrl.includes('ticketmaster'):
@@ -749,12 +749,8 @@ const scrapetm = (eventid) => {
               break;
           }
           
-          // Uncomment and add your logic for updateColumnButton2 here if needed
-          // updateColumnButton2();
-          
-          //
 
-          if(events.scraper_name === 'ticketmaster') {
+          if(events.event_url.includes('ticketmaster') || events.event_url.includes('livenation')) {
               
           txtsource.addEventListener('click',function(){
           window.open('http://142.93.115.105:8100/event/' + evid +'/details/', "142")
