@@ -450,8 +450,8 @@ getchartprimary()
           
 
 let count = events.counts
-let src = events.scraper_name
-if (count && count.length > 0 && !src.includes('ticketmaster')) {
+let src = events.event_url
+if (count && count.length > 0 && (src.includes('ticketmaster') || src.includes('livenation'))) {
 charticon.style.display = 'flex'
 }
 
@@ -750,7 +750,7 @@ const scrapetm = (eventid) => {
           }
           
 
-          if(events.scraper_name.includes('ticketmaster') || events.scraper_name.includes('livenation')) {
+          if(events.event_url.includes('ticketmaster') || events.event_url.includes('livenation')) {
               
           txtsource.addEventListener('click',function(){
           window.open('http://142.93.115.105:8100/event/' + evid +'/details/', "142")
