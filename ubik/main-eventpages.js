@@ -750,7 +750,7 @@ const scrapetm = (eventid) => {
           }
           
 
-          if(events.event_url.includes('ticketmaster') || events.event_url.includes('livenation')) {
+          if(events.scraper_name.includes('ticketmaster') || events.scraper_name.includes('livenation')) {
               
           txtsource.addEventListener('click',function(){
           window.open('http://142.93.115.105:8100/event/' + evid +'/details/', "142")
