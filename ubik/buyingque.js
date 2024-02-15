@@ -62,7 +62,7 @@ card.setAttribute('dateposted', events.added_timestamp)
 
 let txtsource = card.getElementsByClassName('main-text-src')[0]
 
-let eventUrl = events.event_source
+let eventUrl = events.event_url
 
  
 switch(true) {
