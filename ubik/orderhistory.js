@@ -176,7 +176,7 @@ document.addEventListener("DOMContentLoaded", function(){
     selector.addEventListener('change', function (event) {
     const errorid = encodeURIComponent(events.id);
     var http = new XMLHttpRequest();
-    var url = "https://ubik.wiki/api/update/order-history/" + errorid + "/";
+    var url = "https://ubik.wiki/api/update/order-history/"
     
     var params = {
     "id": errorid,
@@ -195,7 +195,7 @@ document.addEventListener("DOMContentLoaded", function(){
     selector2.addEventListener('change', function (event) {
     const errorid = encodeURIComponent(events.id);
     var http = new XMLHttpRequest();
-    var url = "https://ubik.wiki/api/update/order-history/" + errorid + "/";
+    var url = "https://ubik.wiki/api/update/order-history/"
     
     var paramst = {
     "id": errorid,
