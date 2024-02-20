@@ -74,7 +74,7 @@ function part1(){
       let pthistime = Number(document.querySelector('#purchasequantity').value)
       let pcombined = palltime + pthistime
       var http = new XMLHttpRequest();
-      var urll = "https://ubik.wiki/api/update/primary-events/" + encodeURIComponent(event_id) + "/"
+      var urll = "https://ubik.wiki/api/update/primary-events/"
       
       var params = {
       "site_event_id": event_id,
