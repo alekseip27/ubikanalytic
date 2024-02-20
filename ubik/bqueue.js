@@ -518,7 +518,7 @@ deletebutton.style.display = "flex";
  
 deletebutton.addEventListener('click', function() {
     var http = new XMLHttpRequest();
-    var url = "https://ubik.wiki/api/delete/buying-queue/" + eventid + "/"
+    var url = "https://ubik.wiki/api/delete/buying-queue/"
     var params = JSON.stringify({
     "id": eventid
     })
