@@ -73,7 +73,7 @@ request.send();
 }
 
 var eventid = document.location.href.split('https://www.ubikanalytic.com/edit-event?id=')[1];
-var urltwo = "https://ubik.wiki/api/update/buying-queue/" + encodeURIComponent(eventid) + "/";
+var urltwo = "https://ubik.wiki/api/update/buying-queue/"
 
 document.querySelector('#buybtn').addEventListener("click", () => {
     $('#buybtn').css({pointerEvents: "none"});
