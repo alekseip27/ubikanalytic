@@ -153,7 +153,7 @@ const evids = card.getAttribute('eventid');
 deletebutton.addEventListener('click', function() {
     document.querySelector('.edit-wrapper').style.display = 'none';
 
-    const url = `https://ubik.wiki/api/delete/order-history/
+    const url = `https://ubik.wiki/api/delete/order-history/`
 
     fetch(url, {
         method: 'DELETE',
