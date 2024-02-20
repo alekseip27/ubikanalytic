@@ -213,7 +213,7 @@ function checkresults() {
     deletebutton.addEventListener('click', function() {
     document.querySelector('.edit-wrapper').style.display = 'none';
 
-    const url = `https://ubik.wiki/api/delete/venues/${evids}/`;
+    const url = `https://ubik.wiki/api/delete/venues/
 
     fetch(url, {
         method: 'DELETE',
