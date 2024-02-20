@@ -483,7 +483,7 @@ charticon.style.display = 'flex'
         };
   
 function updatedata(eventid){
-  const url = 'https://ubik.wiki/api/update/primary-events/'+eventid+'/';
+  const url = 'https://ubik.wiki/api/update/primary-events/'
   
   const date1 = new Date();
   let date2 = 
@@ -770,7 +770,7 @@ const scrapetm = (eventid) => {
   
   
           var http = new XMLHttpRequest();
-          var url = "https://ubik.wiki/api/update/primary-events/"+evid + "/";
+          var url = "https://ubik.wiki/api/update/primary-events/"
           var params = JSON.stringify({
           "site_event_id": eventid,
           "hidden": "true"
@@ -797,7 +797,7 @@ checkbox.addEventListener('click', function() {
 
 
 var http = new XMLHttpRequest();
-var url = "https://ubik.wiki/api/update/primary-events/"+evid + "/";
+var url = "https://ubik.wiki/api/update/primary-events/"
 var params = JSON.stringify({
 "site_event_id": eventids,
 "favorites": checkbox.checked
