@@ -171,7 +171,7 @@ const evids = card.getAttribute('eventid');
 deletebutton.addEventListener('click', function() {
     document.querySelector('.edit-wrapper').style.display = 'none';
 
-    const url = `https://ubik.wiki/api/delete/primary-events/
+    const url = `https://ubik.wiki/api/delete/primary-events/`
 
     fetch(url, {
         method: 'DELETE',
