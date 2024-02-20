@@ -207,13 +207,14 @@ function checkresults() {
     addedtime.textContent = events.created_date;
     
 
-
-    const deletebutton = card.getElementsByClassName('main-edit-button')[0];
-    const evids = card.getAttribute('eventid');
-    deletebutton.addEventListener('click', function() {
+const deletebutton = card.getElementsByClassName('main-edit-button')[0];
+const evids = card.getAttribute('eventid');
+deletebutton.addEventListener('click', function() {
     document.querySelector('.edit-wrapper').style.display = 'none';
-
-    const url = `https://ubik.wiki/api/delete/venues/`
+    const url = `https://ubik.wiki/api/delete/venues/`;
+    const bodyData = JSON.stringify({
+        id: evids
+    });
 
     fetch(url, {
         method: 'DELETE',
@@ -221,6 +222,7 @@ function checkresults() {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
         },
+        body: bodyData 
     });
 
     card.style.display = 'none';
