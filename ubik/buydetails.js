@@ -428,7 +428,7 @@ let combined = bought+cpr
 let limit = Number(document.querySelector('#amountbought2').textContent)
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
-var urll = "https://ubik.wiki/api/update/buying-queue/" + encodeURIComponent(eventid) + "/"
+var urll = "https://ubik.wiki/api/update/buying-queue/"
 
 var params = {
   "id": eventid,
@@ -458,7 +458,7 @@ function part2(){
   let pthistime = Number(document.querySelector('#purchasequantity').value)
   let pcombined = palltime + pthistime
   var http = new XMLHttpRequest();
-  var urll = "https://ubik.wiki/api/update/primary-events/" + encodeURIComponent(thiseventid) + "/"
+  var urll = "https://ubik.wiki/api/update/primary-events/"
   
   var params = {
   "site_event_id": thiseventid,
