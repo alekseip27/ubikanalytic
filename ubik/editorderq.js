@@ -147,13 +147,14 @@ function checkresults() {
  
     card.style.display = 'flex';
 
-
 const deletebutton = card.getElementsByClassName('main-edit-button')[0];
 const evids = card.getAttribute('eventid');
 deletebutton.addEventListener('click', function() {
     document.querySelector('.edit-wrapper').style.display = 'none';
-
-    const url = `https://ubik.wiki/api/delete/order-history/`
+    const url = `https://ubik.wiki/api/delete/order-history/`;
+    const bodyData = JSON.stringify({
+        id: evids
+    });
 
     fetch(url, {
         method: 'DELETE',
@@ -161,11 +162,11 @@ deletebutton.addEventListener('click', function() {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'application/json',
         },
+        body: bodyData // Include the body in the DELETE request
     });
 
     card.style.display = 'none';
 });
-
 
         
     const evname = card.getElementsByClassName('main-text-enm')[0]
