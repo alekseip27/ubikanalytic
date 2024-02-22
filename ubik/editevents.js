@@ -106,8 +106,10 @@ document.querySelector('#buybtn').addEventListener("click", () => {
     let purchaseacc = document.querySelector('#purchaseacc').value;
     let presale = document.querySelector('#presalecode').value;
     let note = document.querySelector('#notes').value;
+    let queueid = location.href.split('id=')[1]
 
     let params = JSON.stringify({
+        "id":queueid,
         "purchase_total": purchasetotal,
         "quantity_per": quantityper,
         "section": section,
