@@ -657,6 +657,7 @@ function getaccounts(account) {
 
 
 let intervalIdtwo;
+let intervalthree;
 
 function retryaccounts() {
 const letters = purchaseaccounts.split(',');
@@ -664,9 +665,9 @@ const letters = purchaseaccounts.split(',');
 letters.forEach(letter => {
     getaccounts(letter.trim())
 });
-sortoptions()
   clearInterval(intervalIdtwo);
   }}
 
 intervalIdtwo = setInterval(retryaccounts, 1000);
+intervalthree = setInterval(sortoptions, 1000);
 
