@@ -211,9 +211,12 @@ function getaccounts() {
         if (this.value === "manual") {
           purchaseAcc.style.display = "block";
           selectDropdown.style.display = "none";
+          document.querySelector('.returnbtn').style.display = 'flex'
         } else {
           purchaseAcc.style.display = "none";
           selectDropdown.style.display = "block";
+          document.querySelector('.returnbtn').style.display = 'none'
+            
         }
       });
     }
