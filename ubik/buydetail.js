@@ -610,26 +610,32 @@ const checkStepsInterval = setInterval(() => {
 
 
 function getaccounts(account) {
-  let url = new URL('https://ubik.wiki/api/buyer-emails/?one1ticket_add__iexact=true&tm_added__iexact=true&one1ticket_verify__iexact=true&second_forward_verify__iexact=true&retired__iexact=false&email_suspended__iexact=false&account__istartswith=' +account +  "&limit=1000");
+  let url = new URL('https://ubik.wiki/api/buyer-emails/?one1ticket_add__iexact=true&tm_added__iexact=true&one1ticket_verify__iexact=true&second_forward_verify__iexact=true&retired__iexact=false&email_suspended__iexact=false&account__istartswith=' + account + "&limit=1000");
   let request = new XMLHttpRequest();
   request.open('GET', url, true);
   request.setRequestHeader("Content-type", "application/json; charset=utf-8");
   request.setRequestHeader('Authorization', `Bearer ${token}`);
   request.onload = function() {
-  let data = JSON.parse(this.response);
+    let data = JSON.parse(this.response);
 
-  if (request.status >= 200 && request.status < 400) {
-  const selectDropdown = document.getElementById("purchaseaccounts");
-  const purchaseAcc = document.getElementById("purchaseaccounts");
-  data.results.forEach(event => {
-  const option = document.createElement("option");
-  option.value = event.email; 
-  option.textContent = event.email;
-  selectDropdown.appendChild(option);
-  });
-  }}; 
+    if (request.status >= 200 && request.status < 400) {
+      const selectDropdown = document.getElementById("purchaseaccounts");
+
+      // Extract emails and sort them alphabetically
+      const emails = data.results.map(event => event.email).sort();
+
+      // Add sorted emails as options to the dropdown
+      emails.forEach(email => {
+        const option = document.createElement("option");
+        option.value = email; 
+        option.textContent = email;
+        selectDropdown.appendChild(option);
+      });
+    }
+  }; 
   request.send();
-  }
+}
+
 
 let intervalIdtwo;
 
