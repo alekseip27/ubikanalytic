@@ -607,6 +607,25 @@ const checkStepsInterval = setInterval(() => {
   }
 }, 1000);
 
+function sortoptions() {
+  const select = document.getElementById('purchaseaccounts');
+  if (!select) {
+    console.error('Select element not found');
+    return;
+  }
+
+  const optionsArray = Array.from(select.options);
+
+  optionsArray.sort((a, b) => a.text.toLowerCase().localeCompare(b.text.toLowerCase()));
+
+  while (select.firstChild) {
+    select.removeChild(select.firstChild);
+  }
+
+  optionsArray.forEach(option => {
+    select.appendChild(option);
+  });
+}
 
 
 function getaccounts(account) {
@@ -645,7 +664,7 @@ const letters = purchaseaccounts.split(',');
 letters.forEach(letter => {
     getaccounts(letter.trim())
 });
-
+sortoptions()
   clearInterval(intervalIdtwo);
   }}
 
