@@ -88,11 +88,11 @@ if (keywords5 === 'axs' || keywords5 === 'seetickets' || keywords5 === 'ticketma
 }
 
 if (keywords5 === 'nontm') {
-  params.push(`scraper_name__idoescontains=tm`);
+  params.push(`scraper_name__idoesnotcontains=ticketmaster`);
 }
 
 if (keywords5 === 'nontmaxs') {
-  params.push(`scraper_name__idoescontains=tm&scraper_name__idoescontains=axs`);
+  params.push(`scraper_name__idoesnotcontains=ticketmaster&scraper_name__idoesnotcontains=axs`);
 }
 
 if (favoritecbox) {
