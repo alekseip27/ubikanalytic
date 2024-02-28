@@ -53,6 +53,8 @@ function checkresults() {
   let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
   let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
   let keywords3 = document.getElementById('countryselect').value
+  let keywords4 = document.querySelector('#categoryselect').value
+  let keywords5 = document.querySelector('#sourceselect').value
 
   let favoritecbox = document.getElementById('favorite').checked
 
@@ -77,10 +79,25 @@ function checkresults() {
       params.push('country__idoesnotcontains=USA&country__idoesnotcontains=Canada');
   }
 
-  if (favoritecbox) {
-    params.push('&favorites__iexact=true');
+  if (keywords4) {
+    params.push(`category__iexact=${keywords4}`);
 }
 
+if (keywords5 === 'axs' || keywords5 === 'seetickets' || keywords5 === 'ticketmaster') {
+  params.push(`scraper_name__icontains=${keywords5}`);
+}
+
+if (keywords5 === 'nontm') {
+  params.push(`scraper_name__idoescontains=tm`);
+}
+
+if (keywords5 === 'nontmaxs') {
+  params.push(`scraper_name__idoescontains=tm&scraper_name__idoescontains=axs`);
+}
+
+if (favoritecbox) {
+  params.push('&favorites__iexact=true');
+}
   
   params.push('limit=100');
   
