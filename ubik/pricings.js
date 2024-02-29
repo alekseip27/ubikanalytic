@@ -271,101 +271,84 @@ async function getchartprimary(){
 
 }
 
-
 async function getchartvs() {
-let venuecap = 0;
-let datesvs = [];
-let amountsvs = [];
-let prefvs = [];
-let lowestprice = [];
-let lowestpricepref = [];
-let evurl = events.vividSeatsEventUrl;
+    let venuecap = 0;
+    let dataEntries = []; // Array to hold combined data entries
+    let evurl = events.vividSeatsEventUrl;
 
-var http = new XMLHttpRequest();
-var url = "https://ubik.wiki/api/sbox-data/?limit=1000&vividseats_event_url__icontains=" + evurl
-http.open("GET", url, true);
-http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-http.setRequestHeader('Authorization', `Bearer ${token}`);
-http.onload = function () {
-    vividresponse = JSON.parse(this.response);
-    commits = vividresponse.results;
+    var http = new XMLHttpRequest();
+    var url = "https://ubik.wiki/api/sbox-data/?limit=1000&vividseats_event_url__icontains=" + evurl;
+    http.open("GET", url, true);
+    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    http.setRequestHeader('Authorization', `Bearer ${token}`);
+    http.onload = function () {
+        var vividresponse = JSON.parse(this.response);
+        var commits = vividresponse.results;
 
-    if (commits.length > 0) {
-        for (var i = 0; i < commits.length; i++) {
-            if (commits[i].ticket_count > 0) {
-                amountsvs.push(Math.round(commits[i].ticket_count));
-                prefvs.push(Math.round(commits[i].preferred_count));
-                datesvs.push(commits[i].date_scraped);
-
-                lowestprice.push(Math.round(commits[i].lowest_price));
-                lowestpricepref.push(Math.round(commits[i].lowest_preferred_price));
+        if (commits.length > 0) {
+            for (var i = 0; i < commits.length; i++) {
+                if (commits[i].ticket_count > 0) {
+                    dataEntries.push({
+                        date: commits[i].date_scraped,
+                        amount: Math.round(commits[i].ticket_count),
+                        pref: Math.round(commits[i].preferred_count),
+                        lowestPrice: Math.round(commits[i].lowest_price),
+                        lowestPricePref: Math.round(commits[i].lowest_preferred_price)
+                    });
+                }
             }
+
+            // Sort the combined data array by date
+            dataEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            // Extract the sorted data into separate arrays
+            const datesvs = dataEntries.map(entry => entry.date);
+            const amountsvs = dataEntries.map(entry => entry.amount);
+            const prefvs = dataEntries.map(entry => entry.pref);
+            const lowestprice = dataEntries.map(entry => entry.lowestPrice);
+            const lowestpricepref = dataEntries.map(entry => entry.lowestPricePref);
+
+            const lastCommit = commits[commits.length - 1];
+            document.getElementById("venueresale").textContent =
+                Math.round((lastCommit.ticket_count / venuecap) * 100) + "%";
+            document.getElementById("venuecap").textContent = venuecap.toString();
+
+            let threeDaysAgoIndex = Math.max(0, amountsvs.length - 4); // Ensuring non-negative index
+            let todayIndex = Math.max(0, amountsvs.length - 1); // Ensuring non-negative index
+            let movingAverage = (amountsvs[threeDaysAgoIndex] - amountsvs[todayIndex]) / 3;
+            let movingAveragePref = (prefvs[threeDaysAgoIndex] - prefvs[todayIndex]) / 3;
+
+            document.getElementById("fwicontotal3day").textContent = "";
+            document.getElementById("total3daytext").textContent = "Total 3 Day:";
+            document.getElementById("total3dayamount").textContent = movingAverage.toFixed(2);
+
+            document.getElementById("fwiconpreferred3day").textContent = "";
+            document.getElementById("preferred3daytext").textContent = "Preferred 3 Day:";
+            document.getElementById("preferred3dayamount").textContent = movingAveragePref.toFixed(2);
+
+            // Assuming 'chartvs' is already defined and is a Chart.js instance
+            chartvs.data.datasets[0].data = amountsvs;
+            chartvs.data.datasets[1].data = prefvs;
+            chartvs.data.datasets[2].data = lowestprice;
+            chartvs.data.datasets[3].data = lowestpricepref;
+            chartvs.config.data.labels = datesvs;
+            chartvs.update();
+
+            document.querySelector("#chart2").style.display = "flex";
+            document.querySelector("#chartloading2").style.display = "none";
+            document.querySelector("#loading2").style.display = "flex";
+            document.querySelector("#loadingfailed2").style.display = "none";
+        } else {
+            document.querySelector("#loading2").style.display = "none";
+            document.querySelector("#loadingfailed2").style.display = "flex";
+            document.querySelector("#chart2").style.display = "none";
+            document.querySelector("#chartloading2").style.display = "flex";
         }
+    };
 
-        // Sort the dates in ascending order
-        datesvs.sort((a, b) => {
-            const dateA = new Date(a);
-            const dateB = new Date(b);
-            return dateA - dateB;
-        });
-
-        // Create an array of indices to sort all data arrays together
-        const indices = Array.from({ length: datesvs.length }, (_, i) => i);
-
-        // Sort the indices array based on datesvs
-        indices.sort((a, b) => {
-            const dateA = new Date(datesvs[a]);
-            const dateB = new Date(datesvs[b]);
-            return dateA - dateB;
-        });
-
-        // Sort all data arrays based on the sorted indices
-        amountsvs = indices.map(i => amountsvs[i]);
-        prefvs = indices.map(i => prefvs[i]);
-        lowestprice = indices.map(i => lowestprice[i]);
-        lowestpricepref = indices.map(i => lowestpricepref[i]);
-
-        const lastCommit = commits[commits.length - 1];
-        document.getElementById("venueresale").textContent =
-            Math.round((lastCommit.ticket_count / venuecap) * 100) + "%";
-        document.getElementById("venuecap").textContent = venuecap;
-
-        let threeDaysAgoCount = amountsvs[amountsvs.length - 4]; // 3 days ago count
-        let todayCount = amountsvs[amountsvs.length - 1]; // Today's count
-        let movingAverage = (threeDaysAgoCount - todayCount) / 3;
-
-        let threeDaysAgoCountpref = prefvs[prefvs.length - 4]; // 3 days ago count
-        let todayCountpref = prefvs[prefvs.length - 1]; // Today's count
-        let movingAveragepref = (threeDaysAgoCountpref - todayCountpref) / 3;
-
-        document.getElementById("fwicontotal3day").textContent = "";
-        document.getElementById("total3daytext").textContent = "Total 3 Day:";
-        document.getElementById("total3dayamount").textContent = movingAverage.toFixed(2);
-
-        document.getElementById("fwiconpreferred3day").textContent = "";
-        document.getElementById("preferred3daytext").textContent = "Preferred 3 Day:";
-        document.getElementById("preferred3dayamount").textContent = movingAveragepref.toFixed(2);
-
-        chartvs.data.datasets[0].data = amountsvs;
-        chartvs.data.datasets[1].data = prefvs;
-        chartvs.data.datasets[2].data = lowestprice;
-        chartvs.data.datasets[3].data = lowestpricepref;
-        chartvs.config.data.labels = datesvs;
-        chartvs.update();
-        document.querySelector("#chart2").style.display = "flex";
-        document.querySelector("#chartloading2").style.display = "none";
-        document.querySelector("#loading2").style.display = "flex";
-        document.querySelector("#loadingfailed2").style.display = "none";
-    } else {
-        document.querySelector("#loading2").style.display = "none";
-        document.querySelector("#loadingfailed2").style.display = "flex";
-        document.querySelector("#chart2").style.display = "none";
-        document.querySelector("#chartloading2").style.display = "flex";
-    }
-};
-
-http.send();
+    http.send();
 }
+
 
 
 const primaryurl = async function(){
