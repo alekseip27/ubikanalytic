@@ -55,6 +55,7 @@ function checkresults() {
   let keywords3 = document.getElementById('countryselect').value
   let keywords4 = document.querySelector('#categoryselect').value
   let keywords5 = document.querySelector('#sourceselect').value
+  let keywords6 = document.querySelector('#sortby').value
 
   let favoritecbox = document.getElementById('favorite').checked
 
@@ -94,6 +95,21 @@ if (keywords5 === 'nontm') {
 if (keywords5 === 'nontmaxs') {
   params.push(`scraper_name__idoesnotcontains=ticketmaster&scraper_name__idoesnotcontains=axs`);
 }
+
+
+if (keywords6 === 'recentlyadded') {
+  params.push(`app_142_scrape_date__sort=-1`);
+}
+
+if (keywords6 === 'lowestamount') {
+  params.push(`app_142_primary_amount__sort=1`);
+}
+
+if (keywords6 === 'lowestamount') {
+  params.push(`app_142_difference_per_day__sort=1`);
+}
+
+
 
 if (favoritecbox) {
   params.push('&favorites__iexact=true');
