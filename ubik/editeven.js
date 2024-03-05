@@ -11,7 +11,7 @@ request.setRequestHeader('Authorization', `Bearer ${token}`);
 
 request.onload = function() {
     var event = JSON.parse(this.response);
-    let events = event.results[0];
+    let events = event
     if (request.status >= 200 && request.status < 400) {
 
         const itemContainer = document.getElementById("Item-Container");
