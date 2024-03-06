@@ -98,7 +98,7 @@ if (keywords5 === 'nontmaxs') {
 
 
 if (keywords6 === 'recentlyadded') {
-  params.push(`app_142_scrape_date__sort=-1`);
+  params.push(`date_created__sort=-1`);
 }
 
 if (keywords6 === 'lowestamount') {
