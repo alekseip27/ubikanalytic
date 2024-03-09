@@ -687,6 +687,16 @@ const scrapetm = (eventid) => {
           }
           }
 
+        if(events.app_142_primary_amount){
+        primamount.textContent = events.app_142_primary_amount
+        card.setAttribute('primaryamount',parseFloat(events.app_142_primary_amount))
+        }
+
+        if(events.app_142_difference_per_day){
+        aday.textContent = events.app_142_difference_per_day
+        card.setAttribute('perday',events.app_142_difference_per_day)
+        }
+
           let eventtime = card.getElementsByClassName('main-text-time')[0]
           eventtime.textContent = events.time.slice(0, 8)
           
