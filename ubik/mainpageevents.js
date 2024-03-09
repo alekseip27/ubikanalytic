@@ -688,11 +688,13 @@ const scrapetm = (eventid) => {
           }
 
         if(events.app_142_primary_amount){
+        const primamount = card.getElementsByClassName('main-text-primary')[0]
         primamount.textContent = events.app_142_primary_amount
         card.setAttribute('primaryamount',parseFloat(events.app_142_primary_amount))
         }
 
         if(events.app_142_difference_per_day){
+        const aday = card.getElementsByClassName('main-text-aday')[0]
         aday.textContent = events.app_142_difference_per_day
         card.setAttribute('perday',events.app_142_difference_per_day)
         }
