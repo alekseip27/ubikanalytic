@@ -59,26 +59,26 @@ fetch('https://ubik.wiki/api/event-venue/?site_event_id__iexact=' + encodeURICom
             if(eventData.warning){
             document.getElementById('warning').textContent = eventData.warning;
             }
-  const now = new Date();
-  
-  const estOffset = -4 * 60; // EST is UTC-5 hours
-  const utc = now.getTime() + (now.getTimezoneOffset() * 60000); // Convert local time to UTC
-  const estDate = new Date(utc + (estOffset * 60000)); // Convert UTC to EST
-  
-  const year = estDate.getFullYear();
-  const month = (estDate.getMonth() + 1).toString().padStart(2, '0');
-  const day = estDate.getDate().toString().padStart(2, '0');
-  const hours24 = estDate.getHours();
-  const minutes = estDate.getMinutes().toString().padStart(2, '0');
-  
-  // Convert hours from 24h to 12h format and set AM or PM
-  const hours = hours24 % 12 || 12; // convert to 12 hour AM PM format, making sure 0 is represented as 12
-  const amPm = hours24 >= 12 ? 'PM' : 'AM';
-  const formattedHours = hours.toString().padStart(2, '0'); // Ensure two digits
-  
-  // Construct the date string
-  dategoal = `${month}/${day}/${year}, ${formattedHours}:${minutes} ${amPm}`;
-  
+ 
+// Get the current time in Eastern Time, accounting for daylight saving automatically
+const nowInEastern = moment().tz("America/New_York");
+
+const year = nowInEastern.year();
+const month = nowInEastern.format('MM'); // Zero-padded month
+const day = nowInEastern.format('DD'); // Zero-padded day
+const hours24 = nowInEastern.hours();
+const minutes = nowInEastern.format('mm'); // Zero-padded minutes
+
+// Convert hours from 24h to 12h format and set AM or PM
+const hours = hours24 % 12 || 12; // Convert to 12 hour format, making sure 0 is represented as 12
+const amPm = hours24 >= 12 ? 'PM' : 'AM';
+const formattedHours = nowInEastern.format('hh'); // Zero-padded hour in 12h format
+
+// Construct the date string
+const dategoal = `${month}/${day}/${year}, ${formattedHours}:${minutes} ${amPm}`;
+
+console.log(dategoal);
+
   
       estdates = `${month}/${day}/${year} ${hours}:${minutes}`;
   
