@@ -61,7 +61,7 @@ fetch('https://ubik.wiki/api/event-venue/?site_event_id__iexact=' + encodeURICom
             }
   const now = new Date();
   
-  const estOffset = -5 * 60; // EST is UTC-5 hours
+  const estOffset = -4 * 60; // EST is UTC-5 hours
   const utc = now.getTime() + (now.getTimezoneOffset() * 60000); // Convert local time to UTC
   const estDate = new Date(utc + (estOffset * 60000)); // Convert UTC to EST
   
@@ -78,7 +78,6 @@ fetch('https://ubik.wiki/api/event-venue/?site_event_id__iexact=' + encodeURICom
   
   // Construct the date string
   dategoal = `${month}/${day}/${year}, ${formattedHours}:${minutes} ${amPm}`;
-  
   
   
       estdates = `${month}/${day}/${year} ${hours}:${minutes}`;
