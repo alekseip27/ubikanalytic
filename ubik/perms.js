@@ -94,6 +94,8 @@ const firebaseConfig = {
   
   $('#stats').css('display','flex');
   
+  $('#dropchecking').css('display','flex');
+      
   $('#emaildropdown').css('display','flex');
   $('#create-emails').css('display','flex');
   $('#manage-emails').css('display','flex');
