@@ -75,9 +75,8 @@ const amPm = hours24 >= 12 ? 'PM' : 'AM';
 const formattedHours = nowInEastern.format('hh'); // Zero-padded hour in 12h format
 
 // Construct the date string
-const dategoal = `${month}/${day}/${year}, ${formattedHours}:${minutes} ${amPm}`;
+ dategoal = `${month}/${day}/${year}, ${formattedHours}:${minutes} ${amPm}`;
 
-console.log(dategoal);
 
   
       estdates = `${month}/${day}/${year} ${hours}:${minutes}`;
