@@ -720,6 +720,9 @@ const scrapetm = (eventid) => {
           let eventUrl = events.event_url
           
           switch(true) {
+              case eventUrl.includes('thecomplexslc'):
+              txtsource.textContent = 'showclix';
+              break;
             case eventUrl.includes('ticketmaster'):
               txtsource.textContent = 'TM';
               break;
