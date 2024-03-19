@@ -65,11 +65,11 @@ function checkresults() {
   let params = [];
   
   if (keywords1.length > 0) {
-      params.push('event_name__icontains=' + keywords1.replaceAll("'", "''"));
+      params.push('event_name__icontains=' + keywords1
   }
   
   if (keywords2.length > 0) {
-      params.push('venue_name__icontains=' + keywords2.replaceAll("'", "''"));
+      params.push('venue_name__icontains=' + keywords2
   }
 
   if (keywords3 === 'uscanada') {
