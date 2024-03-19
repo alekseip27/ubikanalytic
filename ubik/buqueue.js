@@ -67,10 +67,10 @@ let eventUrl = events.event_url
  
 switch(true) {
   case eventUrl.includes('showclix'):
-  txtsource.textContent = 'showclix';
+  txtsource.textContent = 'SHOW';
   break;
   case eventUrl.includes('thecomplexslc'):
-  txtsource.textContent = 'showclix';
+  txtsource.textContent = 'SHOW';
   break;
   case eventUrl.includes('TM'):
     txtsource.textContent = 'TM';
