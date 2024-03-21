@@ -274,7 +274,9 @@ $('#event_date').datepicker({
     ) {
         result = "ADMIT1";
     } else if (venueUrl.includes("axs")) {
-        result = "AXS";
+        result = "axs";
+    } else if (venueUrl.includes("ticketmaster")) {
+        result = "tm";
     } else if (venueUrl.includes("dice")) {
         result = "DICE";
     } else if (venueUrl.includes("etix.com/ticket/")) {
@@ -309,9 +311,11 @@ $('#event_date').datepicker({
         result = "OTHER";
     }
     
-        let venueprefix = document.querySelector('#prefixevent').value 
         let venueid = document.querySelector('#venueid').value
-        let prefixvenueid = venueprefix + venueid
+    if(result === 'axs' || result === 'tm'){
+    venueid = result + document.querySelector('#venueid').value
+    }
+        
         let venuename = document.querySelector('#venuename').value
         let venueurl = document.querySelector('#venueurl').value
         let venuecity = document.querySelector('#venuecity').value
@@ -339,7 +343,7 @@ $('#event_date').datepicker({
         var endpointUrl = "https://ubik.wiki/api/create/venues/";
         
         var params = {
-            "site_venue_id": prefixvenueid,
+            "site_venue_id": venueid,
             "name":venuename,
             "venue_url":venueurl,
             "city":venuecity,
