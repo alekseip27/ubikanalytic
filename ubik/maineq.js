@@ -413,7 +413,7 @@ document.querySelector('#vserror').style.display = 'flex';
        
           let dates = [];
           let amounts = [];
-          let evidp = events.site_event_id.substring(2)
+          let evidp = events.site_event_id.split('tm')[1]
           var http = new XMLHttpRequest();
           var url = "https://shibuy.co:8443/142data?eventid=" + evidp
           http.open("GET", url, true);
