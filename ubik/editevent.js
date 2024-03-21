@@ -78,25 +78,19 @@ var urltwo = "https://ubik.wiki/api/update/buying-queue/"
 document.querySelector('#buybtn').addEventListener("click", () => {
     $('#buybtn').css({pointerEvents: "none"});
 
-    const now = new Date();
+const nowInEastern = moment().tz("America/New_York");
 
-    const estOffset = -5 * 60; // EST is UTC-5 hours
-    const utc = now.getTime() + (now.getTimezoneOffset() * 60000); // Convert local time to UTC
-    const estDate = new Date(utc + (estOffset * 60000)); // Convert UTC to EST
+const year = nowInEastern.year();
+const month = nowInEastern.format('MM'); 
+const day = nowInEastern.format('DD'); 
+const hours24 = nowInEastern.hours();
+const minutes = nowInEastern.format('mm'); 
 
-    const year = estDate.getFullYear();
-    const month = (estDate.getMonth() + 1).toString().padStart(2, '0');
-    const day = estDate.getDate().toString().padStart(2, '0');
-    const hours24 = estDate.getHours();
-    const minutes = estDate.getMinutes().toString().padStart(2, '0');
+const hours = hours24 % 12 || 12; 
+const amPm = hours24 >= 12 ? 'PM' : 'AM';
+const formattedHours = nowInEastern.format('hh'); 
 
-    // Convert hours from 24h to 12h format and set AM or PM
-    const hours = hours24 % 12 || 12; // convert to 12 hour AM PM format, making sure 0 is represented as 12
-    const amPm = hours24 >= 12 ? 'PM' : 'AM';
-    const formattedHours = hours.toString().padStart(2, '0'); // Ensure two digits
-
-    // Construct the date string
-    dategoal = `${month}/${day}/${year}, ${formattedHours}:${minutes} ${amPm}`;
+ dategoal = `${month}/${day}/${year}, ${formattedHours}:${minutes} ${amPm}`;
 
     let purchasetotal = document.querySelector('#purchasetotal').value;
     let quantityper = document.querySelector('#quantityper').value;
