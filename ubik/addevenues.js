@@ -310,10 +310,12 @@ $('#event_date').datepicker({
     } else {
         result = "OTHER";
     }
-    
+    venueids = ''
         let venueid = document.querySelector('#venueid').value
     if(result === 'axs' || result === 'tm'){
     venueids = result + document.querySelector('#venueid').value
+    } else {
+    venueids = document.querySelector('#venueid').value
     }
         
         let venuename = document.querySelector('#venuename').value
