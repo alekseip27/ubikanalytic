@@ -414,6 +414,14 @@ document.querySelector('#vserror').style.display = 'flex';
        
           let dates = [];
           let amounts = [];
+console.log(events.site_event_id); // Check the value
+if (events.site_event_id && events.site_event_id.includes('tm')) {
+    let evidp = events.site_event_id.split('tm')[1];
+    console.log(evidp); // Check the split result
+} else {
+    console.log("The site_event_id is either undefined or does not contain 'tm'");
+}
+
           let evidp = events.site_event_id.split('tm')[1]
           var http = new XMLHttpRequest();
           var url = "https://shibuy.co:8443/142data?eventid=" + evidp
