@@ -174,7 +174,7 @@ $('#event_date').datepicker({
     var formattedValue = inputValue.replace(/\//g, '-');
     inputElement.value = formattedValue;
     
-    let eventid = document.querySelector('#prefix-event-2').value + document.querySelector('#site_event_id').value;
+    let eventid = document.querySelector('#prefixevent').value + document.querySelector('#site_event_id').value;
     let venueid = document.querySelector('#site_venue_id').value;
     let eventname = document.querySelector('#event_name').value;
     let eventurl = document.querySelector('#event_url').value;
@@ -309,8 +309,9 @@ $('#event_date').datepicker({
         result = "OTHER";
     }
     
-        
+        let venueprefix = document.querySelector('#prefixevent').value 
         let venueid = document.querySelector('#venueid').value
+        let prefixvenueid = venueprefix + venueid
         let venuename = document.querySelector('#venuename').value
         let venueurl = document.querySelector('#venueurl').value
         let venuecity = document.querySelector('#venuecity').value
@@ -338,7 +339,7 @@ $('#event_date').datepicker({
         var endpointUrl = "https://ubik.wiki/api/create/venues/";
         
         var params = {
-            "site_venue_id": venueid,
+            "site_venue_id": prefixvenueid,
             "name":venuename,
             "venue_url":venueurl,
             "city":venuecity,
