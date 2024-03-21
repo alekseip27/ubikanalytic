@@ -822,7 +822,7 @@ const scrapetm = (eventid) => {
           if(events.event_url.includes('ticketmaster') || events.event_url.includes('livenation')) {
               
           txtsource.addEventListener('click',function(){
-          window.open('http://142.93.115.105:8100/event/' + evid +'/details/', "142")
+          window.open('http://142.93.115.105:8100/event/' + evid.substring(2) +'/details/', "142")
           });
           txtsource.classList.add("clickable");
           }
