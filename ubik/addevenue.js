@@ -248,7 +248,7 @@ $('#event_date').datepicker({
     var result = "";
     
     if (venueUrl.includes("ticketmaster") || venueUrl.includes("livenation")) {
-        result = "TM";
+        result = "tm";
     } else if (venueUrl.includes("24tix")) {
         result = "24TIX";
     } else if (
@@ -275,8 +275,6 @@ $('#event_date').datepicker({
         result = "ADMIT1";
     } else if (venueUrl.includes("axs")) {
         result = "axs";
-    } else if (venueUrl.includes("ticketmaster")) {
-        result = "tm";
     } else if (venueUrl.includes("dice")) {
         result = "DICE";
     } else if (venueUrl.includes("etix.com/ticket/")) {
@@ -328,7 +326,7 @@ $('#event_date').datepicker({
         let venuezip = document.querySelector('#zipcode').value
         let stubhuburl = document.querySelector('#stubhuburl').value
         let vividseatsurl = document.querySelector('#vividseatsurl').value
-        
+        let addedbyt = document.querySelector('#username').textContent
         let shid = document.querySelector('#stubhuburl').value.replace(/[^0-9]/g, '');
         
         if(document.querySelector('#stubhuburl').value.includes('/venue/')){
@@ -346,6 +344,7 @@ $('#event_date').datepicker({
         
         var params = {
             "site_venue_id": venueids,
+            "added_by":addedbyt,
             "name":venuename,
             "venue_url":venueurl,
             "city":venuecity,
