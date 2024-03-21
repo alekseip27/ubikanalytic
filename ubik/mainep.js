@@ -140,6 +140,10 @@ if (favoritecbox) {
           const style = document.getElementById('samplestyle')
           const card = style.cloneNode(true)
           const evid = encodeURIComponent(events.site_event_id)
+          if(evid.startsWith('tm')){
+          const evid = encodeURIComponent(events.site_event_id).substring(2)
+          }
+
           const eventdate = card.getElementsByClassName('main-text-date')[0]
           
           card.setAttribute('id', '');
@@ -357,7 +361,7 @@ document.querySelector('#vserror').style.display = 'flex';
               let source = event.scraper_name
             
               chart.data.datasets[0].label = source.toUpperCase() + ' Primary'
-              evids = event.site_event_id
+              evids = event.site_event_id.substring(2)
               if (counts && counts.length > 0 && !source.includes('tm')) {
               document.querySelector('#tmurl').style.display = 'none'
               for (var i = 0; i < counts.length; i++) {
