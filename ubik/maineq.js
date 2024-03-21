@@ -414,7 +414,7 @@ document.querySelector('#vserror').style.display = 'flex';
           let dates = [];
           let amounts = [];
           var http = new XMLHttpRequest();
-          var url = "https://shibuy.co:8443/142data?eventid=" + evid
+          var url = "https://shibuy.co:8443/142data?eventid=" + evids
           http.open("GET", url, true);
           http.setRequestHeader("Content-type", "application/json; charset=utf-8");
           http.setRequestHeader('Authorization', `Bearer ${token}`);
