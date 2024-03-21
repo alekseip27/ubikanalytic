@@ -313,7 +313,7 @@ $('#event_date').datepicker({
     
         let venueid = document.querySelector('#venueid').value
     if(result === 'axs' || result === 'tm'){
-    venueid = result + document.querySelector('#venueid').value
+    venueids = result + document.querySelector('#venueid').value
     }
         
         let venuename = document.querySelector('#venuename').value
@@ -343,7 +343,7 @@ $('#event_date').datepicker({
         var endpointUrl = "https://ubik.wiki/api/create/venues/";
         
         var params = {
-            "site_venue_id": venueid,
+            "site_venue_id": venueids,
             "name":venuename,
             "venue_url":venueurl,
             "city":venuecity,
