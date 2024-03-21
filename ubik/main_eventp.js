@@ -159,6 +159,10 @@ if (favoritecbox) {
          }
               
           card.setAttribute('eventid', evid);
+
+    if (eventid.startsWith("tm")) {
+          card.setAttribute('eventid', evid.substring(2));
+    }
           
           card.setAttribute('time', events.time.slice(0, 8));
           card.setAttribute('venue', events.venue_name);
@@ -401,7 +405,7 @@ document.querySelector('#vserror').style.display = 'flex';
           document.querySelector('#graph-overlay').style.display = 'flex';
           document.querySelector('#closecharts').style.display = 'flex'
           if (events.scraper_name === 'ticketmaster') {
-          document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + evid + "/details/"
+          document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + evid.substring(2) + "/details/"
        
           let dates = [];
           let amounts = [];
