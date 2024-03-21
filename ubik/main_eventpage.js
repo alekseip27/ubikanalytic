@@ -160,7 +160,7 @@ if (favoritecbox) {
               
           card.setAttribute('eventid', evid);
 
-    if (eventid.startsWith("tm")) {
+    if (evid.startsWith("tm")) {
           card.setAttribute('eventid', evid.substring(2));
     }
           
