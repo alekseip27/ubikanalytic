@@ -612,7 +612,7 @@ const scrapetm = (eventid) => {
 };
   
           let rescrapebutton = card.getElementsByClassName('re-scrape-div')[0]
-          
+          let topbox = card.getElementsByClassName('topbox')[0]
           let scrapebutton = card.getElementsByClassName('scrape-div-fresh')[0]
           
   
@@ -635,6 +635,7 @@ const scrapetm = (eventid) => {
           primrem.textContent = '0'
           dpd.textContent = '0'
           fetchEventData(events.site_event_id)
+          topbox.style.display = 'flex'
           rescrapebutton.style.display = 'flex'
           scrapebutton.style.display = 'flex'
           }
