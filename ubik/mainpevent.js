@@ -634,6 +634,10 @@ const scrapetm = (eventid) => {
           topbox.style.display = 'flex'
           rescrapebutton.style.display = 'flex'
           scrapebutton.style.display = 'flex'
+          } else {
+          topbox.style.display = 'flex'
+          rescrapebutton.style.display = 'none'
+          scrapebutton.style.display = 'none'
           }
             
           if((events.event_url.includes('ticketmaster') || events.event_url.includes('livenation')) && !evid.startsWith('Z') && evid.length == 16) {
