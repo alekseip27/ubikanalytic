@@ -615,7 +615,6 @@ const scrapetm = (eventid) => {
           let topbox = card.getElementsByClassName('topbox')[0]
           let scrapebutton = card.getElementsByClassName('scrape-div-fresh')[0]
           
-  
 
           scrapebutton.addEventListener('click',function(){
           scrapetm(evid.substring(2))
