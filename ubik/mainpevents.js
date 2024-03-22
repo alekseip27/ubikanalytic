@@ -618,7 +618,7 @@ const scrapetm = (eventid) => {
   
 
           scrapebutton.addEventListener('click',function(){
-          scrapetm(evid)
+          scrapetm(evid.substring(2))
           primrem.textContent = ''
           dpd.textContent = ''
           })
@@ -627,7 +627,7 @@ const scrapetm = (eventid) => {
           rescrapebutton.addEventListener('click',function(){
           primrem.textContent = ''
           dpd.textContent = ''
-          scrapeurl(evid)
+          scrapeurl(evid.substring(2))
           })
           
           if(events.scraper_name === 'ticketmaster'){
