@@ -578,9 +578,12 @@ let currentdate = date2.replace(',','')
 
 const scrapetm = (eventid) => {
   const url = 'https://shibuy.co:8443/scrapeurl'; 
-
+  let eventidscrape = eventid
+  if(eventidscrape.startsWith('tm')){
+  let eventidscrape = eventid.substring(2)
+  }
   const data = {
-    eventid: eventid
+    eventid: eventidscrape
   };
   
   const requestOptions = {
