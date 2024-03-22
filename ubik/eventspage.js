@@ -506,7 +506,8 @@ if (count && count.length > 0 && (src.includes('ticketmaster') || src.includes('
 charticon.style.display = 'flex'
 }
 
-            
+          const timezone = card.getElementsByClassName('main-text-timezone')[0]
+          timezone.textContent = data.timezone
               
           const primrem = card.getElementsByClassName('main-text-primary')[0]
           const dpd = card.getElementsByClassName('main-text-aday')[0]
