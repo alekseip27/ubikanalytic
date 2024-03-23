@@ -103,7 +103,7 @@ if (keywords6 === 'recentlyadded') {
 }
 
 if (keywords6 === 'lowestamount') {
-  params.push(`app_142_primary_amount__sort=1`);
+  params.push(`app_142_primary_amount__sort=-1`);
 }
 
 if (keywords6 === 'fastmovement') {
