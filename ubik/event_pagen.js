@@ -730,6 +730,7 @@ const scrapetm = (eventid) => {
         const aday = card.getElementsByClassName('main-text-aday')[0]
         aday.textContent = events.app_142_difference_per_day
         card.setAttribute('perday',events.app_142_difference_per_day)
+        card.setAttribute('checked','true')
         }
 
           let eventtime = card.getElementsByClassName('main-text-time')[0]
