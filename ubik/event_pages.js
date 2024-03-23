@@ -723,6 +723,7 @@ const scrapetm = (eventid) => {
         const primamount = card.getElementsByClassName('main-text-primary')[0]
         primamount.textContent = events.app_142_primary_amount
         card.setAttribute('primaryamount',parseFloat(events.app_142_primary_amount))
+        card.setAttribute('checked','true')
         }
 
         if(events.app_142_difference_per_day){
