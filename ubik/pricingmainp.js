@@ -217,7 +217,7 @@ async function getchartprimary(){
         const nonResaleSections = summary.sections.filter(section => section.type !== 'resale');
 
 
-            const totalAmount = nonResaleSections.sections.reduce((accumulator, section) => accumulator + section.amount, 0);
+            const totalAmount = nonResaleSections.reduce((accumulator, section) => accumulator + section.amount, 0);
 
               const parts = nonResaleSections.scrape_date.split(/[-T:Z]/);
               const year = parseInt(parts[0], 10);
