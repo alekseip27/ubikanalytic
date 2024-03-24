@@ -215,7 +215,7 @@ async function getchartprimary(){
         event.summaries.forEach(summary => {
 
         const nonResaleSections = summary.sections.filter(section => section.type !== 'resale');
-
+        console.log(nonResaleSections)
 
             const totalAmount = nonResaleSections.reduce((accumulator, section) => accumulator + section.amount, 0);
 
