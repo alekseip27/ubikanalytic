@@ -171,6 +171,9 @@ async function getchartprimary(){
         let source = event.scraper_name.toLowerCase()
         chartprimary.data.datasets[0].label = source.toUpperCase() + ' Primary'
         evids = event.site_event_id
+        if(evids.includes('tm')){
+        evids = evids.substring(2)
+        }
         if (counts && counts.length > 0 && !source.includes('tm')) {
 
             for (var i = 0; i < counts.length; i++) {
