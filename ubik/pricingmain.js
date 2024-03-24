@@ -213,6 +213,10 @@ async function getchartprimary(){
         if(data.length>0) {
         data.forEach(event => {
         event.summaries.forEach(summary => {
+            
+  if (summary.type !== 'resale') {
+        return;
+    }
 
             const totalAmount = summary.sections.reduce((accumulator, section) => accumulator + section.amount, 0);
 
