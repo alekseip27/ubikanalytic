@@ -199,69 +199,75 @@ async function getchartprimary(){
             document.querySelector("#loadingfailed3").style.display = "none";
 
         } else if(source === 'tm' || source === 'ticketmaster'){
-        let dates = [];
-        var http = new XMLHttpRequest();
-        var url = "https://shibuy.co:8443/142data?eventid=" + evids
-        http.open("GET", url, true);
-        http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+       let dates = [];
+var http = new XMLHttpRequest();
+var url = "https://shibuy.co:8443/142data?eventid=" + evids
+http.open("GET", url, true);
+http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+
+http.onload = function () {
+
+let data = JSON.parse(this.response);
 
 
-        http.onload = function () {
+if (data.length > 0) {
+    // Assuming dates is already declared somewhere above this code block
+    data.forEach(event => {
+      event.summaries.forEach(summary => {
 
-        let data = JSON.parse(this.response);
+        const filteredSections = summary.sections.filter(section => section.type !== 'resale');
+  
 
-        if(data.length>0) {
-        data.forEach(event => {
-        event.summaries.forEach(summary => {
+        const totalAmount = filteredSections.reduce((accumulator, section) => accumulator + section.amount, 0);
+  
 
-        const nonResaleSections = summary.sections.filter(section => section.type !== 'resale');
-        console.log(nonResaleSections)
+        const parts = summary.scrape_date.split(/[-T:Z]/);
+        const year = parseInt(parts[0], 10);
+        const month = parseInt(parts[1] - 1, 10); // month is 0-indexed in JavaScript Date
+        const day = parseInt(parts[2], 10);
+        const hours = parseInt(parts[3], 10);
+        const minutes = parseInt(parts[4], 10);
+  
+        const scrapeDate = new Date(year, month, day, hours, minutes);
+        scrapeDate.setHours(scrapeDate.getHours() - 1);
+  
+        const formattedDate = scrapeDate.toISOString().slice(0, 16).replace("T", " ");
+  
+        dates.push({
+          date: scrapeDate.toISOString(),
+          formattedDate: formattedDate,
+          amount: totalAmount
+        });
+      });
+    });
 
-            const totalAmount = nonResaleSections.reduce((accumulator, section) => accumulator + section.amount, 0);
+  dates.sort((a, b) => a.date.localeCompare(b.date));
+  const sortedDates = dates.map(item => item.formattedDate);
+  const sortedAmounts = dates.map(item => item.amount);
+    chartprimary.data.datasets[0].label
+    chartprimary.data.datasets[0].data = sortedAmounts;
+    chartprimary.config.data.labels = sortedDates;
+    chartprimary.update();
 
-              const parts = nonResaleSections.scrape_date.split(/[-T:Z]/);
-              const year = parseInt(parts[0], 10);
-              const month = parseInt(parts[1] - 1, 10);
-              const day = parseInt(parts[2], 10);
-              const hours = parseInt(parts[3], 10);
-              const minutes = parseInt(parts[4], 10);
+    document.querySelector("#chart3").style.display = "flex";
+    document.querySelector("#chartloading3").style.display = "none";
+    document.querySelector("#loading3").style.display = "flex";
+    document.querySelector("#loadingfailed3").style.display = "none";
 
-              const scrapeDate = new Date(year, month, day, hours, minutes);
-              scrapeDate.setHours(scrapeDate.getHours() - 1);
+} else {
 
-              const formattedDate = scrapeDate.toISOString().slice(0, 16).replace("T", " ");
-
-              dates.push({ date: scrapeDate.toISOString(), formattedDate: formattedDate, amount: totalAmount });
-            });
-          });
-
-          dates.sort((a, b) => a.date.localeCompare(b.date));
-          const sortedDates = dates.map(item => item.formattedDate);
-          const sortedAmounts = dates.map(item => item.amount);
-            chartprimary.data.datasets[0].label
-            chartprimary.data.datasets[0].data = sortedAmounts;
-            chartprimary.config.data.labels = sortedDates;
-            chartprimary.update();
-
-            document.querySelector("#chart3").style.display = "flex";
-            document.querySelector("#chartloading3").style.display = "none";
-            document.querySelector("#loading3").style.display = "flex";
-            document.querySelector("#loadingfailed3").style.display = "none";
-
-        } else {
-
-            document.querySelector("#loading3").style.display = "none";
-            document.querySelector("#loadingfailed3").style.display = "flex";
-            document.querySelector("#chart3").style.display = "none";
-            document.querySelector("#chartloading3").style.display = "flex";
+    document.querySelector("#loading3").style.display = "none";
+    document.querySelector("#loadingfailed3").style.display = "flex";
+    document.querySelector("#chart3").style.display = "none";
+    document.querySelector("#chartloading3").style.display = "flex";
 
 
-        }
-    
-    
-    };
+}
 
-    http.send();
+};
+
+http.send();
+
 
         } else {
 
