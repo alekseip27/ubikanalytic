@@ -213,14 +213,13 @@ async function getchartprimary(){
         if(data.length>0) {
         data.forEach(event => {
         event.summaries.forEach(summary => {
-            
-  if (summary.sections.type !== 'resale') {
-        return;
-    }
 
-            const totalAmount = summary.sections.reduce((accumulator, section) => accumulator + section.amount, 0);
+        const nonResaleSections = summary.sections.filter(section => section.type !== 'resale');
 
-              const parts = summary.scrape_date.split(/[-T:Z]/);
+
+            const totalAmount = nonResaleSections.sections.reduce((accumulator, section) => accumulator + section.amount, 0);
+
+              const parts = nonResaleSections.scrape_date.split(/[-T:Z]/);
               const year = parseInt(parts[0], 10);
               const month = parseInt(parts[1] - 1, 10);
               const day = parseInt(parts[2], 10);
