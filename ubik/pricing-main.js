@@ -214,7 +214,7 @@ async function getchartprimary(){
         data.forEach(event => {
         event.summaries.forEach(summary => {
             
-  if (summary.type !== 'resale') {
+  if (summary.sections.type !== 'resale') {
         return;
     }
 
