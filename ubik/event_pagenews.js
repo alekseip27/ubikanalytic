@@ -358,7 +358,13 @@ document.querySelector('#vserror').style.display = 'flex';
           .then(data => {
               let event = data.results[0];
               let counts = event.counts;
-
+let lastItem = counts[0].primary_amount;
+if(String(lastItem).includes('-')){
+    document.querySelector('#tmloader').style.display = 'none';
+    document.querySelector('#tmerror').style.display = 'flex';
+    document.querySelector('#tmchart').style.display = 'none';
+    return;
+}
               let source = event.scraper_name
             
               chart.data.datasets[0].label = source.toUpperCase() + ' Primary'
