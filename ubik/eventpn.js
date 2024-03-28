@@ -713,6 +713,7 @@ const scrapetm = (eventid) => {
            if(counts && source !== 'tm' && source !== 'ticketmaster'){
           const latestCount = getLatestCount(counts)
           const primamount = card.getElementsByClassName('main-text-primary')[0]
+          if(latestCount.primary_amount){
           primamount.textContent = parseFloat(latestCount.primary_amount)
           card.setAttribute('primaryamount',parseFloat(latestCount.primary_amount))
           const aday = card.getElementsByClassName('main-text-aday')[0]
@@ -723,7 +724,7 @@ const scrapetm = (eventid) => {
           aday.textContent = difference
           card.setAttribute('perday',difference)
           }
-          }
+          }}
 
         if(events.app_142_primary_amount){
         const primamount = card.getElementsByClassName('main-text-primary')[0]
