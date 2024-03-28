@@ -709,22 +709,27 @@ const scrapetm = (eventid) => {
               // Returning the first element of the sorted array
               return counts[0];
           }
+if (counts && source !== 'tm' && source !== 'ticketmaster') {
+    const latestCount = getLatestCount(counts);
+    const primamount = card.getElementsByClassName('main-text-primary')[0];
 
-           if(counts && source !== 'tm' && source !== 'ticketmaster'){
-          const latestCount = getLatestCount(counts)
-          const primamount = card.getElementsByClassName('main-text-primary')[0]
-          if(latestCount.primary_amount){
-          primamount.textContent = parseFloat(latestCount.primary_amount)
-          card.setAttribute('primaryamount',parseFloat(latestCount.primary_amount))
-          const aday = card.getElementsByClassName('main-text-aday')[0]
+    if (latestCount && latestCount.primary_amount !== undefined) {
+        primamount.textContent = parseFloat(latestCount.primary_amount);
+        card.setAttribute('primaryamount', parseFloat(latestCount.primary_amount));
 
-          if(counts.length>1){
-          let twolatest = getTwoLatestCounts(counts)
-          let difference = Math.abs(parseFloat(twolatest[0].primary_amount) - parseFloat(twolatest[1].primary_amount));
-          aday.textContent = difference
-          card.setAttribute('perday',difference)
-          }
-          }}
+        const aday = card.getElementsByClassName('main-text-aday')[0];
+
+        if (counts.length > 1) {
+            let twolatest = getTwoLatestCounts(counts);
+            if (twolatest[0] && twolatest[1] && twolatest[0].primary_amount !== undefined && twolatest[1].primary_amount !== undefined) {
+                let difference = Math.abs(parseFloat(twolatest[0].primary_amount) - parseFloat(twolatest[1].primary_amount));
+                aday.textContent = difference;
+                card.setAttribute('perday', difference);
+            }
+        }
+    }
+}
+
 
         if(events.app_142_primary_amount){
         const primamount = card.getElementsByClassName('main-text-primary')[0]
