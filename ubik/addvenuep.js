@@ -175,7 +175,13 @@ $('#event_date').datepicker({
     inputElement.value = formattedValue;
     
     let eventid = document.querySelector('#prefixevent').value + document.querySelector('#site_event_id').value;
-    let venueid = document.querySelector('#prefixevent').value + document.querySelector('#site_venue_id').value;
+        
+    if(document.querySelector('#prefixevent').value === 'etix'){
+    const venueid = document.querySelector('#site_venue_id').value;
+    } else {
+    const venueid = document.querySelector('#prefixevent').value + document.querySelector('#site_venue_id').value;
+    }
+        
     let eventname = document.querySelector('#event_name').value;
     let eventurl = document.querySelector('#event_url').value;
     let eventtime = document.querySelector('#event_time').value;
