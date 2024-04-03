@@ -1,4 +1,5 @@
 
+
 $('#event_date').datepicker({
     dateFormat: 'yy-mm-dd'
     });
@@ -173,16 +174,149 @@ $('#event_date').datepicker({
     var inputValue = inputElement.value;
     var formattedValue = inputValue.replace(/\//g, '-');
     inputElement.value = formattedValue;
-    
-    let eventid = document.querySelector('#prefixevent').value + document.querySelector('#site_event_id').value;
-    let venueid = document.querySelector('#prefixevent').value + document.querySelector('#site_venue_id').value;
-    if(document.querySelector('#prefixevent').value === 'etix'){
-    console.log('etix')
-    venueid = document.querySelector('#site_venue_id').value;
-    }
-        
-    let eventname = document.querySelector('#event_name').value;
     let eventurl = document.querySelector('#event_url').value;
+    let prefix;
+    let venueprefix;
+
+if(eventurl.includes('ticketmaster.com' || eventurl.includes('livenation.com'))){
+prefix = 'tm'
+venueprefix = 'tm'
+}
+
+if(eventurl.includes('axs.com')){
+prefix = 'axs'
+venueprefix = 'tm'
+}
+
+
+if(eventurl.includes('24tix')){
+prefix = '24tix'
+venueprefix = ''
+}
+
+if(eventurl.includes('admitone')){
+prefix = 'admit'
+venueprefix = ''
+}
+
+if(eventurl.includes('dice.fm')){
+prefix = ''
+venueprefix = ''
+}
+
+if(eventurl.includes('etix.com')){
+prefix = 'etix'
+venueprefix = 'etix'
+}
+
+if(eventurl.includes('eventbrite')){
+prefix = 'ebrite'
+venueprefix = 'ebrite'
+}
+
+if(eventurl.includes('evenue')){
+prefix = 'evenue'
+venueprefix = ''
+}
+
+if(eventurl.includes('freshtix')){
+prefix = ''
+venueprefix = ''
+}
+
+
+if(eventurl.includes('holdmyticket')){
+prefix = 'hold'
+venueprefix = ''
+}
+
+
+if(eventurl.includes('prekindle')){
+prefix = 'pre'
+venueprefix = ''
+}
+
+if(eventurl.includes('showclix')){
+prefix = 'show'
+venueprefix = 'show'
+}
+
+if(eventurl.includes('ticketweb')){
+prefix = 'tweb'
+venueprefix = 'tweb'
+}
+
+if(eventurl.includes('ticketswest')){
+prefix = ''
+venueprefix = ''
+}
+
+if(eventurl.includes('tixr')){
+prefix = 'tixr'
+venueprefix = 'tixr'
+}
+
+
+if(eventurl.includes('gruenehall')){
+prefix = ''
+venueprefix = ''
+}
+
+
+if(eventurl.includes('meowwolf')){
+prefix = ''
+venueprefix = ''
+}
+
+
+if(eventurl.includes('stubs.net')){
+prefix = 'stubs'
+venueprefix = 'stubs'
+}
+
+
+if(eventurl.includes('stubwire')){
+prefix = 'stub'
+venueprefix = ''
+}
+
+if(eventurl.includes('universe.com')){
+prefix = 'unv'
+venueprefix = ''
+}
+
+if(eventurl.includes('thevogue')){
+prefix = ''
+venueprefix = ''
+}
+
+if(eventurl.includes('mpv.tickets')){
+prefix = 'mpv'
+venueprefix = ''
+}
+
+if(eventurl.includes('frontgatetickets')){
+prefix = ''
+venueprefix = ''
+}
+
+
+if(eventurl.includes('amptickets')){
+prefix = 'amp'
+venueprefix = ''
+}
+
+
+if(eventurl.includes('zoukgrouplv')){
+prefix = 'zouk-'
+venueprefix = 'zouk-'
+}
+
+
+    let venueid =  document.querySelector('#site_venue_id').value;
+    let eventid =  document.querySelector('#site_event_id').value;
+
+    let eventname = document.querySelector('#event_name').value;
     let eventtime = document.querySelector('#event_time').value;
     let eventdate = document.querySelector('#event_date').value;
     let addedby = document.querySelector('#username').textContent;
@@ -190,8 +324,8 @@ $('#event_date').datepicker({
     var endpointUrl = "https://ubik.wiki/api/create/primary-events/";
     
     var params = {
-      "site_event_id": eventid,
-      "site_venue_id": venueid,
+      "site_event_id": prefix + eventid,
+      "site_venue_id": venueprefix + venueid,
       "name": eventname,
       "event_url": eventurl,
       "time": eventtime,
@@ -313,6 +447,8 @@ $('#event_date').datepicker({
     } else {
         result = "OTHER";
     }
+
+    
     venueids = ''
         let venueid = document.querySelector('#venueid').value
     if(result === 'axs' || result === 'tm'){
@@ -407,3 +543,4 @@ $('#event_date').datepicker({
         
     
     
+
