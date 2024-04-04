@@ -313,6 +313,13 @@ venueprefix = 'zouk-'
 }
 
 
+if(eventurl.includes('seetickets.us')){
+prefix = 'see'
+venueprefix = ''
+}
+
+
+
     let venueid =  document.querySelector('#site_venue_id').value;
     let eventid =  document.querySelector('#site_event_id').value;
 
