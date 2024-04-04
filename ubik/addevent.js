@@ -178,7 +178,7 @@ $('#event_date').datepicker({
     let prefix;
     let venueprefix;
 
-if(eventurl.includes('ticketmaster.com' || eventurl.includes('livenation.com'))){
+if(eventurl.includes('ticketmaster.com') || eventurl.includes('livenation.com')){
 prefix = 'tm'
 venueprefix = 'tm'
 }
