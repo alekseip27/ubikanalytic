@@ -213,7 +213,7 @@ function checkresults() {
     document.querySelector('#vserror').style.display = 'none';
     document.querySelector('#vschart').style.display = 'none';
   
-  const url = `https://ubik.wiki/api/vividseats/${VDID}/?format=json`;  // Fixed the stray "
+  const url = `https://ubik.wiki/api/vividseats?vdid__iexact=${VDID}&format=json`;
   
   
   const headers = new Headers({
