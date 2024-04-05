@@ -393,27 +393,27 @@ venueprefix = ''
     var result = "";
     
     if (venueUrl.includes("ticketmaster.com") || venueUrl.includes("livenation.com")) {
-            result = "tm";
+    result = "tm";
     }
-    if (venueUrl.includes("axs.com")) {
+    else if (venueUrl.includes("axs.com")) {
         result = "axs";
     }
-     if (venueUrl.includes("etix.com")) {
+    else if (venueUrl.includes("etix.com")) {
         result = "etix";
      }
-     if (venueUrl.includes("eventbrite")) {
+     else if (venueUrl.includes("eventbrite")) {
         result = "ebrite";
      }
-     if (venueUrl.includes("showclix")) {
+     else if (venueUrl.includes("showclix")) {
         result = "show";
      }
-     if (venueUrl.includes("ticketweb")) {
+     else if (venueUrl.includes("ticketweb")) {
         result = "tweb";
      }
-     if (venueUrl.includes("tixr")) {
+     else if (venueUrl.includes("tixr")) {
         result = "tixr";
      }
-     if (venueUrl.includes("zoukgrouplv")) {
+     else if (venueUrl.includes("zoukgrouplv")) {
         result = "zouk-";
      } else {
         result = "";
