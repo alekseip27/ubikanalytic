@@ -391,7 +391,11 @@ venueprefix = ''
      }
      else if (venueUrl.includes("zoukgrouplv")) {
         result = "zouk-";
-     } else {
+     }
+     else if (venueUrl.includes("stubs.net")) {
+        result = "stubs";
+     } 
+     else {
         result = "";
      }
 
