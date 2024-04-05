@@ -390,83 +390,37 @@ venueprefix = ''
     document.querySelector('#buybtn2').addEventListener("click", () => {
     
     var venueUrl = document.querySelector('#venueurl').value
-    var siteVenueId = document.querySelector('#venueid').value
     var result = "";
     
-    if (venueUrl.includes("ticketmaster") || venueUrl.includes("livenation")) {
+    if (venueUrl.includes("ticketmaster.com") || venueUrl.includes("livenation.com")) {
         result = "tm";
-    } else if (venueUrl.includes("24tix")) {
-        result = "24TIX";
-    } else if (
-        venueUrl.includes("Vogue Theatre") ||
-        venueUrl.includes("Biltmore Cabaret") ||
-        venueUrl.includes("Capital Ballroom") ||
-        venueUrl.includes("Imperial") ||
-        venueUrl.includes("Queen Elizabeth Theatre") ||
-        venueUrl.includes("Adelaide Hall") ||
-        venueUrl.includes("Rickshaw Theatre") ||
-        venueUrl.includes("Phoenix Concert Theatre") ||
-        venueUrl.includes("The Axis Club") ||
-        venueUrl.includes("Kelowna Community Theatre") ||
-        venueUrl.includes("The Drake") ||
-        venueUrl.includes("Commonwealth Bar & Stage") ||
-        venueUrl.includes("The Opera House") ||
-        venueUrl.includes("Lees Palace") ||
-        venueUrl.includes("meowwolf") ||
-        siteVenueId.includes("the-palace-theatre") ||
-        siteVenueId.includes("hollywood-theatre") ||
-        siteVenueId.includes("rialto-theatre") ||
-        siteVenueId.includes("thevogue.com")
-    ) {
-        result = "ADMIT1";
-    } else if (venueUrl.includes("axs")) {
+
+    if (venueUrl.includes("axs.com")) {
         result = "axs";
-    } else if (venueUrl.includes("dice")) {
-        result = "DICE";
-    } else if (venueUrl.includes("etix.com/ticket/")) {
-        result = "ETIX";
-    } else if (venueUrl.includes("stubs.net")) {
-        result = "STUBS";
-    } else if (venueUrl.includes("zoukgrouplv")) {
+    }
+     if (venueUrl.includes("etix.com")) {
+        result = "etix";
+     }
+     if (venueUrl.includes("eventbrite")) {
+        result = "ebrite";
+     }
+     if (venueUrl.includes("showclix")) {
+        result = "show";
+     }
+     if (venueUrl.includes("ticketweb")) {
+        result = "tweb";
+     }
+     if (venueUrl.includes("tixr")) {
+        result = "tixr";
+     }
+     if (venueUrl.includes("zoukgrouplv")) {
         result = "zouk-";
-    } else if (venueUrl.includes("eventbrite")) {
-        result = "EBRITE";
-    } else if (venueUrl.includes("freshtix")) {
-        result = "FRESH";
-    } else if (venueUrl.includes("frontgate") || venueUrl.includes("fgtix")) {
-        result = "FGATE";
-    } else if (venueUrl.includes("holdmyticket")) {
-        result = "HOLDMT";
-    } else if (venueUrl.includes("prekindle")) {
-        result = "PRE";
-    } else if (venueUrl.includes("seetickets.us")) {
-        result = "SEETIX";
-    } else if (venueUrl.includes("showclix")) {
-        result = "SHOW";
-    } else if (venueUrl.includes("ticketweb")) {
-        result = "TWEB";
-    } else if (venueUrl.includes("ticketswest")) {
-        result = "TWEST";
-    } else if (venueUrl.includes("tixr")) {
-        result = "TIXR";
-    } else if (venueUrl.includes("stubwire")) {
-        result = "STUBW";
-    } else if (venueUrl.includes("evenue")) {
-        result = "EVENUE";
-    } else if (siteVenueId.includes("thevogue.com")) {
-        result = "thevogue";
+     }
     } else {
-        result = "OTHER";
+        result = "";
     }
 
-    
-    venueids = ''
-        let venueid = document.querySelector('#venueid').value
-    if(result.length>1){
-    venueids = result + document.querySelector('#venueid').value
-    } else {
-    venueids = document.querySelector('#venueid').value
-    }
+        venueids = result + document.querySelector('#venueid').value    
         
         let venuename = document.querySelector('#venuename').value
         let venueurl = document.querySelector('#venueurl').value
