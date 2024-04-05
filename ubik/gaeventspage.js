@@ -393,8 +393,8 @@ venueprefix = ''
     var result = "";
     
     if (venueUrl.includes("ticketmaster.com") || venueUrl.includes("livenation.com")) {
-        result = "tm";
-
+            result = "tm";
+    }
     if (venueUrl.includes("axs.com")) {
         result = "axs";
     }
@@ -415,10 +415,9 @@ venueprefix = ''
      }
      if (venueUrl.includes("zoukgrouplv")) {
         result = "zouk-";
-     }
-    } else {
+     } else {
         result = "";
-    }
+     }
 
         venueids = result + document.querySelector('#venueid').value    
         
