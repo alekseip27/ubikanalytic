@@ -451,6 +451,8 @@ venueprefix = ''
         result = "EVENUE";
     } else if (siteVenueId.includes("thevogue.com")) {
         result = "thevogue";
+    } else if (){
+        
     } else {
         result = "OTHER";
     }
@@ -458,7 +460,7 @@ venueprefix = ''
     
     venueids = ''
         let venueid = document.querySelector('#venueid').value
-    if(result === 'axs' || result === 'tm'){
+    if(result === 'axs' || result === 'tm' || result === 'ETIX'){
     venueids = result + document.querySelector('#venueid').value
     } else {
     venueids = document.querySelector('#venueid').value
