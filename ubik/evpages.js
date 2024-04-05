@@ -189,6 +189,7 @@ function checkresults() {
     if (events.status) {
     status.textContent = events.status
     }
+
   function vschartdata(VDID) {
   
     chartvs.data.datasets[0].data = []
@@ -213,7 +214,7 @@ function checkresults() {
     document.querySelector('#vserror').style.display = 'none';
     document.querySelector('#vschart').style.display = 'none';
   
-  const url = `https://ubik.wiki/api/vividseats/?vdid__iexact=${VDID}&format=json`;
+  const url = `https://ubik.wiki/api/vividseats?vdid__iexact=${VDID}&format=json`;
   
   
   const headers = new Headers({
@@ -323,6 +324,7 @@ function checkresults() {
   });
   }
   
+  
         const charticon = card.getElementsByClassName('main-text-chart')[0];
   
         function ticketmasterchart(){
@@ -405,37 +407,51 @@ function checkresults() {
             http.send();
         }
 
-        async function getchartprimary(){
-                    chart.data.datasets[0].label = ''
-                    chart.data.datasets[0].data = []
-                    chart.config.data.labels = []
-                    chart.update();
-                    document.querySelector('#tmloader').style.display = 'flex';
-                    document.querySelector('#tmerror').style.display = 'none';
-                    document.querySelector('#tmchart').style.display = 'none';
-            let mainurl = events.event_url
+        async function getchartprimary() {
+            chart.data.datasets[0].label = '';
+            chart.data.datasets[0].data = [];
+            chart.config.data.labels = [];
+            chart.update();
+            document.querySelector('#tmloader').style.display = 'flex';
+            document.querySelector('#tmerror').style.display = 'none';
+            document.querySelector('#tmchart').style.display = 'none';
+            let mainurl = events.event_url;
             let amountsprimary = [];
             let datesprimary = [];
-  
-            const headers = new Headers({
-            'Authorization': `Bearer ${token}`
-              });
-            
-              fetch(`https://ubik.wiki/api/primary-events/?event_url__icontains=${mainurl}`, {
+        
+            // Set a timeout for the request (5 seconds)
+            const requestTimeout = 5000; // 5 seconds
+        
+            // Initialize an AbortController
+            const controller = new AbortController();
+            const signal = controller.signal;
+        
+            // Create a promise that rejects after 5 seconds (timeout)
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => {
+                    reject(new Error('Request timed out'));
+                    controller.abort(); // Abort the fetch request
+                }, requestTimeout);
+            });
+        
+            const fetchPromise = fetch(`https://ubik.wiki/api/primary-events/?event_url__icontains=${mainurl}`, {
                 method: 'GET',
                 headers: {
-                  'Authorization': `Bearer ${token}`
-                }
-              })
-              
-            .then(response => {
-            
-            if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-            }
-            return response.json();
-            })
-            
+                    'Authorization': `Bearer ${token}`
+                },
+                signal // Pass the abort signal to the fetch request
+            });
+        
+            // Use Promise.race to handle the fetch request and the timeout
+            Promise.race([fetchPromise, timeoutPromise])
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+
+                
             .then(data => {
                 let event = data.results[0];
                 let counts = event.counts;
