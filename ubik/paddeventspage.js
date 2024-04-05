@@ -462,7 +462,7 @@ venueprefix = ''
     
     venueids = ''
         let venueid = document.querySelector('#venueid').value
-    if(result === 'axs' || result === 'tm' || result === 'ETIX'){
+    if(result.length>1){
     venueids = result + document.querySelector('#venueid').value
     } else {
     venueids = document.querySelector('#venueid').value
