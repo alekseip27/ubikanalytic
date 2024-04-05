@@ -185,7 +185,7 @@ venueprefix = 'tm'
 
 if(eventurl.includes('axs.com')){
 prefix = 'axs'
-venueprefix = 'tm'
+venueprefix = 'axs'
 }
 
 
@@ -215,7 +215,7 @@ venueprefix = 'ebrite'
 }
 
 if(eventurl.includes('evenue')){
-prefix = 'evenue'
+prefix = ''
 venueprefix = ''
 }
 
