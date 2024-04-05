@@ -325,6 +325,86 @@ function checkresults() {
   
         const charticon = card.getElementsByClassName('main-text-chart')[0];
   
+        function ticketmasterchart(){
+       
+            let dates = [];
+            let amounts = [];
+        
+            //let evidp = events.site_event_id.split('tm')[1]
+            var http = new XMLHttpRequest();
+            let evidp = events.site_event_id.split('tm')[1];
+            var url = "https://shibuy.co:8443/142data?eventid="+evidp
+            http.open("GET", url, true);
+            http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+            http.setRequestHeader('Authorization', `Bearer ${token}`);
+            
+            
+            // Set a timeout for the request (5 seconds)
+            const requestTimeout = 5000; // 5 seconds
+            
+            // Create a timer to log an error if the request takes too long
+            const timeoutTimer = setTimeout(() => {
+              document.querySelector('#tmloader').style.display = 'none';
+              document.querySelector('#tmerror').style.display = 'flex';
+              document.querySelector('#tmchart').style.display = 'none';
+              http.abort(); // Abort the request
+            }, requestTimeout);
+            
+            http.onload = function () {
+              // Clear the timeout timer since the request has completed
+              clearTimeout(timeoutTimer);
+            
+              let data = JSON.parse(this.response);
+            
+              data.forEach(event => {
+                event.summaries.forEach(summary => {
+        
+                    if (summary.type === 'resale') {
+                        return; 
+                      }
+        
+                  const totalAmount = summary.sections.reduce((accumulator, section) => {
+                    return accumulator + (section.type !== 'resale' ? section.amount : 0);
+                  }, 0);
+            
+                  // Parse the date string into components
+                  const parts = summary.scrape_date.split(/[-T:Z]/);
+                  const year = parseInt(parts[0], 10);
+                  const month = parseInt(parts[1] - 1, 10);
+                  const day = parseInt(parts[2], 10);
+                  const hours = parseInt(parts[3], 10);
+                  const minutes = parseInt(parts[4], 10);
+            
+                  // Create a Date object with the components and subtract 4 hours
+                  const scrapeDate = new Date(year, month, day, hours, minutes);
+                  scrapeDate.setHours(scrapeDate.getHours() - 1);
+            
+                  // Format the date as a string
+                  const formattedDate = scrapeDate.toISOString().slice(0, 16).replace("T", " ");
+            
+                  dates.push({ date: scrapeDate.toISOString(), formattedDate: formattedDate, amount: totalAmount });
+                });
+              });
+            
+              // Sort the dates array by ISO date string (oldest to newest)
+              dates.sort((a, b) => a.date.localeCompare(b.date));
+            
+              // Extract formatted dates and amounts after sorting
+              const sortedDates = dates.map(item => item.formattedDate);
+              const sortedAmounts = dates.map(item => item.amount);
+              console.log(sortedAmounts);
+              chart.data.datasets[0].label = 'TM Total'
+              chart.data.datasets[0].data = sortedAmounts;
+              chart.config.data.labels = sortedDates;
+              chart.update();
+              document.querySelector('#tmloader').style.display = 'none';
+              document.querySelector('#tmchart').style.display = 'flex';
+              document.querySelector('#tmerror').style.display = 'none';
+            };
+            
+            http.send();
+        }
+
         async function getchartprimary(){
                     chart.data.datasets[0].label = ''
                     chart.data.datasets[0].data = []
@@ -407,6 +487,81 @@ function checkresults() {
         });
         }
   
+        function ticketmasterchart(){
+       
+    let dates = [];
+    let amounts = [];
+
+    var http = new XMLHttpRequest();
+    let evidp = events.site_event_id.split('tm')[1];
+    var url = "https://shibuy.co:8443/142data?eventid="+evidp
+    http.open("GET", url, true);
+    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    http.setRequestHeader('Authorization', `Bearer ${token}`);
+    
+    
+    // Set a timeout for the request (5 seconds)
+    const requestTimeout = 5000; // 5 seconds
+    
+    // Create a timer to log an error if the request takes too long
+    const timeoutTimer = setTimeout(() => {
+      document.querySelector('#tmloader').style.display = 'none';
+      document.querySelector('#tmerror').style.display = 'flex';
+      document.querySelector('#tmchart').style.display = 'none';
+      http.abort(); // Abort the request
+    }, requestTimeout);
+    
+    http.onload = function () {
+      // Clear the timeout timer since the request has completed
+      clearTimeout(timeoutTimer);
+    
+      let data = JSON.parse(this.response);
+    
+      data.forEach(event => {
+        event.summaries.forEach(summary => {
+
+
+          const totalAmount = summary.sections.reduce((accumulator, section) => {
+            return accumulator + (section.type !== 'resale' ? section.amount : 0);
+          }, 0);
+    
+          // Parse the date string into components
+          const parts = summary.scrape_date.split(/[-T:Z]/);
+          const year = parseInt(parts[0], 10);
+          const month = parseInt(parts[1] - 1, 10);
+          const day = parseInt(parts[2], 10);
+          const hours = parseInt(parts[3], 10);
+          const minutes = parseInt(parts[4], 10);
+    
+          // Create a Date object with the components and subtract 4 hours
+          const scrapeDate = new Date(year, month, day, hours, minutes);
+          scrapeDate.setHours(scrapeDate.getHours() - 1);
+    
+          // Format the date as a string
+          const formattedDate = scrapeDate.toISOString().slice(0, 16).replace("T", " ");
+    
+          dates.push({ date: scrapeDate.toISOString(), formattedDate: formattedDate, amount: totalAmount });
+        });
+      });
+    
+      // Sort the dates array by ISO date string (oldest to newest)
+      dates.sort((a, b) => a.date.localeCompare(b.date));
+    
+      // Extract formatted dates and amounts after sorting
+      const sortedDates = dates.map(item => item.formattedDate);
+      const sortedAmounts = dates.map(item => item.amount);
+      console.log(sortedAmounts);
+      chart.data.datasets[0].label = 'TM Total'
+      chart.data.datasets[0].data = sortedAmounts;
+      chart.config.data.labels = sortedDates;
+      chart.update();
+      document.querySelector('#tmloader').style.display = 'none';
+      document.querySelector('#tmchart').style.display = 'flex';
+      document.querySelector('#tmerror').style.display = 'none';
+    };
+    
+    http.send();
+}
     
         charticon.addEventListener('click', function () {
                     chart.data.datasets[0].label = ''
@@ -420,93 +575,13 @@ function checkresults() {
             vschartdata(events.vdid)
             document.querySelector('#graph-overlay').style.display = 'flex';
             document.querySelector('#closecharts').style.display = 'flex'
-            if (events.scraper_name === 'ticketmaster') {
-            document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + evid.substring(2) + "/details/"
-         
-            let dates = [];
-            let amounts = [];
-  console.log(events.site_event_id); // Check the value
-  if (events.site_event_id && events.site_event_id.includes('tm')) {
-      let evidp = events.site_event_id.split('tm')[1];
-      console.log(evidp); // Check the split result
+
+            
+if (events.scraper_name === 'ticketmaster') {
+document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + evid.substring(2) + "/details/"
+ticketmasterchart()
   } else {
-      console.log("The site_event_id is either undefined or does not contain 'tm'");
-  }
-  
-            let evidp = events.site_event_id.split('tm')[1]
-            var http = new XMLHttpRequest();
-            var url = "https://shibuy.co:8443/142data?eventid=" + evidp
-            http.open("GET", url, true);
-            http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-            http.setRequestHeader('Authorization', `Bearer ${token}`);
-            
-            
-            // Set a timeout for the request (5 seconds)
-            const requestTimeout = 5000; // 5 seconds
-            
-            // Create a timer to log an error if the request takes too long
-            const timeoutTimer = setTimeout(() => {
-              document.querySelector('#tmloader').style.display = 'none';
-              document.querySelector('#tmerror').style.display = 'flex';
-              document.querySelector('#tmchart').style.display = 'none';
-              http.abort(); // Abort the request
-            }, requestTimeout);
-            
-            http.onload = function () {
-              // Clear the timeout timer since the request has completed
-              clearTimeout(timeoutTimer);
-            
-              let data = JSON.parse(this.response);
-            
-              data.forEach(event => {
-                event.summaries.forEach(summary => {
-                  // Assuming there is an array called sections, and you want to sum the amount from all sections
-                  const totalAmount = summary.sections.reduce((accumulator, section) => accumulator + section.amount, 0);
-            
-                  // Parse the date string into components
-                  const parts = summary.scrape_date.split(/[-T:Z]/);
-                  const year = parseInt(parts[0], 10);
-                  const month = parseInt(parts[1] - 1, 10);
-                  const day = parseInt(parts[2], 10);
-                  const hours = parseInt(parts[3], 10);
-                  const minutes = parseInt(parts[4], 10);
-            
-                  // Create a Date object with the components and subtract 4 hours
-                  const scrapeDate = new Date(year, month, day, hours, minutes);
-                  scrapeDate.setHours(scrapeDate.getHours() - 1);
-            
-                  // Format the date as a string
-                  const formattedDate = scrapeDate.toISOString().slice(0, 16).replace("T", " ");
-            
-                  dates.push({ date: scrapeDate.toISOString(), formattedDate: formattedDate, amount: totalAmount });
-                });
-              });
-            
-              // Sort the dates array by ISO date string (oldest to newest)
-              dates.sort((a, b) => a.date.localeCompare(b.date));
-            
-              // Extract formatted dates and amounts after sorting
-              const sortedDates = dates.map(item => item.formattedDate);
-              const sortedAmounts = dates.map(item => item.amount);
-              console.log(sortedAmounts);
-              chart.data.datasets[0].label = 'TM Total'
-              chart.data.datasets[0].data = sortedAmounts;
-              chart.config.data.labels = sortedDates;
-              chart.update();
-              document.querySelector('#tmloader').style.display = 'none';
-              document.querySelector('#tmchart').style.display = 'flex';
-              document.querySelector('#tmerror').style.display = 'none';
-            };
-            
-            http.send();
-        
-        
-        } else {
-  
-  
   getchartprimary()
-  
-  
   }
   });
             
@@ -538,7 +613,7 @@ function checkresults() {
                 }
                   
                 if (typeof data.diffperday === 'number') {
-                  dpd.textContent = data.diffperday;
+                  dpd.textContent = parseInt(data.diffperday);
                 }
               })
               .catch(error => {
@@ -719,17 +794,17 @@ function checkresults() {
       const primamount = card.getElementsByClassName('main-text-primary')[0];
   
       if (latestCount && latestCount.primary_amount !== undefined) {
-          primamount.textContent = parseFloat(latestCount.primary_amount);
-          card.setAttribute('primaryamount', parseFloat(latestCount.primary_amount));
+          primamount.textContent = parseInt(latestCount.primary_amount);
+          card.setAttribute('primaryamount', parseInt(latestCount.primary_amount));
   
           const aday = card.getElementsByClassName('main-text-aday')[0];
   
           if (counts.length > 1) {
               let twolatest = getTwoLatestCounts(counts);
               if (twolatest[0] && twolatest[1] && twolatest[0].primary_amount !== undefined && twolatest[1].primary_amount !== undefined) {
-                  let difference = Math.abs(parseFloat(twolatest[0].primary_amount) - parseFloat(twolatest[1].primary_amount));
+                  let difference = Math.abs(parseInt(twolatest[0].primary_amount) - parseInt(twolatest[1].primary_amount));
                   aday.textContent = difference;
-                  card.setAttribute('perday', difference);
+                  card.setAttribute('perday', parseInt(difference));
               }
           }
       }
@@ -738,15 +813,15 @@ function checkresults() {
   
           if(events.app_142_primary_amount){
           const primamount = card.getElementsByClassName('main-text-primary')[0]
-          primamount.textContent = events.app_142_primary_amount
-          card.setAttribute('primaryamount',parseFloat(events.app_142_primary_amount))
+          primamount.textContent = parseInt(events.app_142_primary_amount)
+          card.setAttribute('primaryamount',parseInt(events.app_142_primary_amount))
           card.setAttribute('checked','true')
           }
   
           if(events.app_142_difference_per_day){
           const aday = card.getElementsByClassName('main-text-aday')[0]
-          aday.textContent = events.app_142_difference_per_day
-          card.setAttribute('perday',events.app_142_difference_per_day)
+          aday.textContent = parseInt(events.app_142_difference_per_day)
+          card.setAttribute('perday',parseInt(events.app_142_difference_per_day))
           card.setAttribute('checked','true')
           }
   
