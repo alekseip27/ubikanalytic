@@ -213,7 +213,7 @@ function checkresults() {
     document.querySelector('#vserror').style.display = 'none';
     document.querySelector('#vschart').style.display = 'none';
   
-  const url = `https://ubik.wiki/api/vividseats?vdid__iexact=${VDID}&format=json`;
+  const url = `https://ubik.wiki/api/vividseats/?vdid__iexact=${VDID}&format=json`;
   
   
   const headers = new Headers({
