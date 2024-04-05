@@ -451,8 +451,6 @@ venueprefix = ''
         result = "EVENUE";
     } else if (siteVenueId.includes("thevogue.com")) {
         result = "thevogue";
-    } else if (){
-        
     } else {
         result = "OTHER";
     }
