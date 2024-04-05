@@ -141,31 +141,7 @@ $('#event_date').datepicker({
     
     let venueid = document.querySelector('#venueid');
     let venueurl = document.querySelector('#venueurl');
-    venueid.addEventListener('input', function() {
-    setTimeout(function() {
-    updateVenueId();
-    }, 2000);
-    });
-    venueurl.addEventListener('input', function() {
-    setTimeout(function() {
-    updateVenueId();
-    }, 2000);
-    });
-    function updateVenueId() {
-    let currentVenueId = venueid.value;
-    let currentVenueUrl = venueurl.value;
-    if (currentVenueUrl.includes('tixr') && !currentVenueId.includes('tixr')) {
-    venueid.value = 'tixr' + currentVenueId;
-    }
-    if (currentVenueUrl.includes('showclix') && !currentVenueId.includes('show')) {
-    venueid.value = 'show' + currentVenueId;
-    }
-    if (currentVenueUrl.includes('eventbrite') && !currentVenueId.includes('ebrite')) {
-    venueid.value = 'ebrite' + currentVenueId;
-    }
-    if (currentVenueUrl.includes('ticketweb') && !currentVenueId.includes('tweb')) {
-    venueid.value = 'tweb' + currentVenueId;
-    }}
+
     
     document.querySelector('#buybtn').addEventListener("click", () => {
     
