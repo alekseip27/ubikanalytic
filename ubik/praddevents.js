@@ -425,6 +425,10 @@ venueprefix = ''
         result = "DICE";
     } else if (venueUrl.includes("etix.com/ticket/")) {
         result = "ETIX";
+    } else if (venueUrl.includes("stubs.net")) {
+        result = "STUBS";
+    } else if (venueUrl.includes("zoukgrouplv")) {
+        result = "zouk-";
     } else if (venueUrl.includes("eventbrite")) {
         result = "EBRITE";
     } else if (venueUrl.includes("freshtix")) {
