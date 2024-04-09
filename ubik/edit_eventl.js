@@ -97,7 +97,7 @@ function checkresults() {
             data.results.forEach(events => {
             const style = document.getElementById('samplestyle')
             const card = style.cloneNode(true)
-            const evid = encodeURIComponent(events.site_event_id)
+            const evid =  events.site_event_id
             const eventdate = card.getElementsByClassName('main-text-date')[0]
             
             card.setAttribute('id', '');
