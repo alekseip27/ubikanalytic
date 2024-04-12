@@ -168,8 +168,9 @@ function checkresults() {
       if (evid.startsWith("tm")) {
             card.setAttribute('eventid', evid.substring(2));
       }
-            
+            if(events.time){
             card.setAttribute('time', events.time.slice(0, 8));
+            }
             card.setAttribute('venue', events.venue_name);
             card.setAttribute('source', events.scraper_name);
             card.setAttribute('vivid_id', events.vdid);
@@ -840,10 +841,10 @@ ticketmasterchart()
           card.setAttribute('perday',parseInt(events.app_142_difference_per_day))
           card.setAttribute('checked','true')
           }
-  
+            if(events.time){
             let eventtime = card.getElementsByClassName('main-text-time')[0]
             eventtime.textContent = events.time.slice(0, 8)
-            
+            }
             const eventvenue = card.getElementsByClassName('main-text-venue')[0]
             eventvenue.textContent = events.venue_name
             if(eventvenue.textContent.length>13) {
