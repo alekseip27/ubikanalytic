@@ -119,7 +119,9 @@ function checkresults() {
 
                 
             card.setAttribute('eventid', evid);
+            if(events.time){
             card.setAttribute('time', events.time.slice(0, 8));
+            }
             card.setAttribute('source', events.scraper_name);
             card.setAttribute('vivid_id', events.vdid);
     
@@ -193,10 +195,10 @@ deletebutton.addEventListener('click', function() {
 
             const venueid = card.getElementsByClassName('main-text-venue-id')[0]
             venueid.textContent = events.site_venue_id;
-             
+            if(events.time){
             let eventtime = card.getElementsByClassName('main-text-time')[0]
             eventtime.textContent = events.time.slice(0, 8)
-        
+            }
             let txtsource = card.getElementsByClassName('main-textsource')[0]
             txtsource.textContent = events.scraper_name
 
