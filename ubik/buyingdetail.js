@@ -4,6 +4,7 @@ $("#purchasequantity").attr({"min" : 0});
     step1 = false
     step2 = false
     step3 = false
+    emailchecked = false
 
     function retryClickingSearchBar() {
         if (token.length === 40) {
@@ -418,6 +419,86 @@ intervalIds = setInterval(retryClickingSearchBar, 1000);
 
 }
 
+function emailpart1() {
+  let emailused = document.getElementById('purchaseemail').value;
+  const emailurl = 'https://ubik.wiki/api/buyer-emails/?email__iexact=' + emailused;
+  let http = new XMLHttpRequest();
+
+  http.open("GET", emailurl, true);
+  http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+  http.setRequestHeader('Authorization', `Bearer ${token}`);
+
+  http.onreadystatechange = function() {
+    if (http.readyState == 4) {
+      if (http.status == 200) {
+        let data = JSON.parse(http.responseText);
+        emailid = data.results[0].id;
+        openpurchases = data.results[0].open_purchases;
+        email1 = true;
+        // Call emailpart2() after emailpart1() has run
+        emailpart2();
+      }
+    }
+  };
+
+  http.send();
+}
+
+function emailpart2() {
+  let bought = Number(document.querySelector('#amountbought1').textContent);
+  let cpr = Number(document.querySelector('#purchasequantity').value);
+  let combined = bought + cpr;
+  let limit = Number(document.querySelector('#amountbought2').textContent);
+
+  if (combined >= limit) {
+    const emailurl2 = 'https://ubik.wiki/api/update/buyer-emails/';
+
+    if (openpurchases) {
+      openpurchases++;
+
+      var params = {
+        "id": emailid,
+        "open_purchases": openpurchases
+      };
+
+      
+    } else {
+
+      var params = {
+        "id": emailid,
+        "open_purchases": 1
+      };
+
+      
+    }
+      let http = new XMLHttpRequest();
+
+      http.open("PUT", emailurl2, true);
+      http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+      http.setRequestHeader('Authorization', `Bearer ${token}`);
+
+      http.onreadystatechange = function() {
+        if (http.readyState == 4) {
+          if (http.status == 200) {
+            emailchecked = true;
+          }
+        }
+      };
+
+      http.send(JSON.stringify(params));
+    
+  } else {
+    emailchecked = true;
+    console.log('nothing');
+  }
+}
+
+
+
+
+
+
+
 
 function part1(){
 
@@ -595,11 +676,12 @@ $('#buybtn').css({pointerEvents: "none"})
 part1()
 part2()
 part3()
+emailpart1()
 
 })
 
 const checkStepsInterval = setInterval(() => {
-  if (step1 && step2 && step3) {
+  if (step1 && step2 && step3 && emailchecked) {
     clearInterval(checkStepsInterval);
     setTimeout(() => {
       window.location.href = "/buy-queue";
@@ -670,4 +752,3 @@ letters.forEach(letter => {
 
 intervalIdtwo = setInterval(retryaccounts, 1000);
 intervalthree = setInterval(sortoptions, 1000);
-
