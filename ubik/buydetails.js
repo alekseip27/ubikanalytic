@@ -452,7 +452,7 @@ function emailpart2() {
 
     const emailurl2 = 'https://ubik.wiki/api/update/buyer-emails/';
 
-    if (openpurchases) {
+    if (openpurchases>0) {
       openpurchases++;
 
       var params = {
