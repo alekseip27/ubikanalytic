@@ -450,7 +450,6 @@ function emailpart2() {
   let combined = bought + cpr;
   let limit = Number(document.querySelector('#amountbought2').textContent);
 
-  if (combined >= limit) {
     const emailurl2 = 'https://ubik.wiki/api/update/buyer-emails/';
 
     if (openpurchases) {
@@ -487,10 +486,7 @@ function emailpart2() {
 
       http.send(JSON.stringify(params));
     
-  } else {
-    emailchecked = true;
-    console.log('nothing');
-  }
+
 }
 
 
