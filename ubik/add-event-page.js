@@ -1,4 +1,18 @@
 
+  let currentDate = new Date();
+
+  // Adjust date to EST timezone
+  let estOffset = -5 * 60 * 60 * 1000; // EST is UTC-5
+  let estDate = new Date(currentDate.getTime() + estOffset);
+
+  // Get year, month, and day
+  let year = estDate.getFullYear();
+  let month = (estDate.getMonth() + 1).toString().padStart(2, '0'); // Months are 0-indexed
+  let day = estDate.getDate().toString().padStart(2, '0');
+
+  // Format date as YYYY-MM-DD
+   formattedDate = `${year}-${month}-${day}`;
+
 
 $('#event_date').datepicker({
     dateFormat: 'yy-mm-dd'
@@ -318,7 +332,8 @@ venueprefix = 'other'
       "event_url": eventurl,
       "time": eventtime,
       "date": eventdate,
-      "added_by": addedby
+      "added_by": addedby,
+      "date_created": formattedDate
     };
     
     fetch(endpointUrl, {
@@ -435,6 +450,7 @@ venueprefix = 'other'
         var params = {
             "site_venue_id": venueids,
             "added_by":addedbyt,
+            "created_date":formattedDate,
             "name":venuename,
             "venue_url":venueurl,
             "city":venuecity,
