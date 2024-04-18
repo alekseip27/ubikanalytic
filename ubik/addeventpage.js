@@ -159,139 +159,144 @@ prefix = 'tm'
 venueprefix = 'tm'
 }
 
-if(eventurl.includes('axs.com')){
+else if(eventurl.includes('axs.com')){
 prefix = 'axs'
 venueprefix = 'axs'
 }
 
 
-if(eventurl.includes('24tix')){
+else if(eventurl.includes('24tix')){
 prefix = '24tix'
 venueprefix = ''
 }
 
-if(eventurl.includes('admitone')){
+else if(eventurl.includes('admitone')){
 prefix = 'admit'
 venueprefix = ''
 }
 
-if(eventurl.includes('dice.fm')){
+else if(eventurl.includes('dice.fm')){
 prefix = ''
 venueprefix = ''
 }
 
-if(eventurl.includes('etix.com')){
+else if(eventurl.includes('etix.com')){
 prefix = 'etix'
 venueprefix = 'etix'
 }
 
-if(eventurl.includes('eventbrite')){
+else if(eventurl.includes('eventbrite')){
 prefix = 'ebrite'
 venueprefix = 'ebrite'
 }
 
-if(eventurl.includes('evenue')){
+else if(eventurl.includes('evenue')){
 prefix = ''
 venueprefix = ''
 }
 
-if(eventurl.includes('freshtix')){
+else if(eventurl.includes('freshtix')){
 prefix = ''
 venueprefix = ''
 }
 
 
-if(eventurl.includes('holdmyticket')){
+else if(eventurl.includes('holdmyticket')){
 prefix = 'hold'
 venueprefix = ''
 }
 
 
-if(eventurl.includes('prekindle')){
+else if(eventurl.includes('prekindle')){
 prefix = 'pre'
 venueprefix = ''
 }
 
-if(eventurl.includes('showclix')){
+else if(eventurl.includes('showclix')){
 prefix = 'show'
 venueprefix = 'show'
 }
 
-if(eventurl.includes('ticketweb')){
+else if(eventurl.includes('ticketweb')){
 prefix = 'tweb'
 venueprefix = 'tweb'
 }
 
-if(eventurl.includes('ticketswest')){
+else if(eventurl.includes('ticketswest')){
 prefix = ''
 venueprefix = ''
 }
 
-if(eventurl.includes('tixr')){
+else if(eventurl.includes('tixr')){
 prefix = 'tixr'
 venueprefix = 'tixr'
 }
 
 
-if(eventurl.includes('gruenehall')){
+else if(eventurl.includes('gruenehall')){
 prefix = ''
 venueprefix = ''
 }
 
 
-if(eventurl.includes('meowwolf')){
+else if(eventurl.includes('meowwolf')){
 prefix = ''
 venueprefix = ''
 }
 
 
-if(eventurl.includes('stubs.net')){
+else if(eventurl.includes('stubs.net')){
 prefix = 'stubs'
 venueprefix = 'stubs'
 }
 
 
-if(eventurl.includes('stubwire')){
+else if(eventurl.includes('stubwire')){
 prefix = 'stub'
 venueprefix = ''
 }
 
-if(eventurl.includes('universe.com')){
+else if(eventurl.includes('universe.com')){
 prefix = 'unv'
 venueprefix = ''
 }
 
-if(eventurl.includes('thevogue')){
+else if(eventurl.includes('thevogue')){
 prefix = ''
 venueprefix = ''
 }
 
-if(eventurl.includes('mpv.tickets')){
+else if(eventurl.includes('mpv.tickets')){
 prefix = 'mpv'
 venueprefix = ''
 }
 
-if(eventurl.includes('frontgatetickets')){
+else if(eventurl.includes('frontgatetickets')){
 prefix = ''
 venueprefix = ''
 }
 
 
-if(eventurl.includes('amptickets')){
+else if(eventurl.includes('amptickets')){
 prefix = 'amp'
 venueprefix = ''
 }
 
 
-if(eventurl.includes('zoukgrouplv')){
+else if(eventurl.includes('zoukgrouplv')){
 prefix = 'zouk-'
 venueprefix = 'zouk-'
 }
 
 
-if(eventurl.includes('seetickets.us')){
+else if(eventurl.includes('seetickets.us')){
 prefix = 'see'
 venueprefix = ''
+}
+
+else {
+prefix = 'other'
+venueprefix = 'other'
 }
 
 
@@ -396,7 +401,7 @@ venueprefix = ''
         result = "stubs";
      } 
      else {
-        result = "";
+        result = "other";
      }
 
         venueids = result + document.querySelector('#venueid').value    
@@ -487,4 +492,3 @@ venueprefix = ''
         
     
     
-
