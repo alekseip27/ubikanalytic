@@ -433,7 +433,6 @@ document.querySelector('#vserror').style.display = 'flex';
           };
           
           http.send();
-      processEvents();
       }
 
       async function getchartprimary() {
