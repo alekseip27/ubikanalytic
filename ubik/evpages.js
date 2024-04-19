@@ -14,7 +14,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
   
 
     function constructURL(next) {
-      cancelFetchRequests();
+      //cancelFetchRequests();
       document.querySelector('#loading').style.display = "flex";
       document.querySelector('#flexbox').style.display = "none";
           
