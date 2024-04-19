@@ -14,9 +14,6 @@ document.getElementById('rightarrow').addEventListener('click', function() {
   
 
     function constructURL(next) {
-      cancelFetchRequests();
-      
-      processEvents();
       document.querySelector('#loading').style.display = "flex";
       document.querySelector('#flexbox').style.display = "none";
           
@@ -118,7 +115,7 @@ if (favoritecbox) {
 
 
           function getEvents(fetchurl) {
-          
+              cancelFetchRequests();
           let request = new XMLHttpRequest();
           
           request.open('GET', fetchurl, true)
@@ -436,6 +433,7 @@ document.querySelector('#vserror').style.display = 'flex';
           };
           
           http.send();
+      processEvents();
       }
 
       async function getchartprimary() {
