@@ -168,7 +168,7 @@ $('#event_date').datepicker({
     let prefix;
     let venueprefix;
 
-if(eventurl.includes('ticketmaster.com') || eventurl.includes('livenation.com')){
+if(eventurl.includes('ticketmaster.com') || eventurl.includes('ticketmaster.ca') || eventurl.includes('livenation.com')){
 prefix = 'tm'
 venueprefix = 'tm'
 }
@@ -388,7 +388,7 @@ venueprefix = 'other'
     var venueUrl = document.querySelector('#venueurl').value
     var result = "";
     
-    if (venueUrl.includes("ticketmaster.com") || venueUrl.includes("livenation.com")) {
+    if (venueUrl.includes("ticketmaster.com") || eventurl.includes('ticketmaster.ca') || venueUrl.includes("livenation.com")) {
     result = "tm";
     }
     else if (venueUrl.includes("axs.com")) {
