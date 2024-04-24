@@ -388,7 +388,7 @@ venueprefix = 'other'
     var venueUrl = document.querySelector('#venueurl').value
     var result = "";
     
-    if (venueUrl.includes("ticketmaster.com") || venueurl.includes('ticketmaster.ca') || venueUrl.includes("livenation.com")) {
+    if (venueUrl.includes("ticketmaster.com") || venueUrl.includes('ticketmaster.ca') || venueUrl.includes("livenation.com")) {
     result = "tm";
     }
     else if (venueUrl.includes("axs.com")) {
