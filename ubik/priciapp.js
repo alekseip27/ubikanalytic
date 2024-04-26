@@ -283,6 +283,62 @@ http.send();
 
 }
 
+
+
+
+
+function vividsections() {
+    document.querySelector('#vividevent').textContent = ''
+    document.querySelector('#vividlocation').textContent = ''
+    document.querySelector('#vividdate').textContent = ''
+    document.querySelector('#vividtime').textContent = ''
+
+    let vivid_id = document.querySelector('#vseats').getAttribute('url').split('productionId=')[1];
+    let url = 'https://x828-xess-evjx.n7.xano.io/api:ee160HbH/getdata?id=' + vivid_id;
+    var request = new XMLHttpRequest();
+
+    request.open('GET', url.toString(), true);
+    request.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    request.setRequestHeader('Authorization', `Bearer ${token}`);
+
+    request.onload = function() {
+        if (request.status >= 200 && request.status < 400) {
+            vividinfo = JSON.parse(this.response);
+            processPreferredInfo(vividinfo.sections, vividinfo.prices);
+            document.querySelector('#sampleitem').style.display = 'none';
+
+        }
+    };
+
+    request.send();
+}
+
+function processPreferredInfo(sections, prices) {
+    document.querySelector('#vividevent').textContent = document.querySelector('#selectedevent').textContent;
+    document.querySelector('#vividlocation').textContent = document.querySelector('#eventlocation').textContent;
+    document.querySelector('#vividdate').textContent = document.querySelector('#eventdate').textContent;
+    document.querySelector('#vividtime').textContent = document.querySelector('#eventtime').textContent;
+
+    let container = document.querySelector('.sections-wrapper');
+
+    sections.forEach((info, index) => {
+        let sectionParts = info.split('|');
+        let priceParts = prices[index].split('|');
+
+        let quantity = sectionParts[0];
+        let section = sectionParts[1];
+        let price = priceParts[0]; // Assuming the price information is correctly aligned.
+
+        let clone = document.querySelector('.top-part-section').cloneNode(true);
+        clone.querySelector('.main-text-vivid-section').textContent = section;
+        clone.querySelector('.main-text-vivid-quantity').textContent = quantity;
+        clone.querySelector('.main-text-vivid-price').textContent = '$'+price;
+        container.appendChild(clone);
+    });
+}
+
+
+        
 async function getchartvs() {
     let venuecap = 0;
     let dataEntries = []; // Array to hold combined data entries
@@ -604,6 +660,7 @@ $('#search-button').css({pointerEvents: "none"})
 } else {
 primaryurl()
 getchartvs()
+vividsections()
 }
 
     if((request.status === 429) || (request.status === 500)){
