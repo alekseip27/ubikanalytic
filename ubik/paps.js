@@ -306,6 +306,7 @@ function vividsections() {
             vividinfo = JSON.parse(this.response);
             processPreferredInfo(vividinfo.sections, vividinfo.prices);
             document.querySelector('#sampleitem').style.display = 'none';
+            document.querySelector('#vividclick').style.display = 'flex';
 
         }
     };
@@ -493,6 +494,7 @@ const cancelFetch = function() {
 
 card.addEventListener('click', function() {
 cancelFetch();
+document.querySelector('#vividclick').style.display = 'none';
 document.querySelector('#mainurl').value = ''
 document.querySelector('#urlmain').style.display = 'none'
 document.querySelector('#changedata').style.display = 'none'
