@@ -294,7 +294,7 @@ function vividsections() {
     document.querySelector('#vividtime').textContent = ''
 
     let vivid_id = document.querySelector('#vseats').getAttribute('url').split('productionId=')[1];
-    let url = 'https://x828-xess-evjx.n7.xano.io/api:ee160HbH/getdata?id=' + vivid_id;
+    let url = 'https://x828-xess-evjx.n7.xano.io/api:ee160HbH/vividinfo?id=' + vivid_id;
     var request = new XMLHttpRequest();
 
     request.open('GET', url.toString(), true);
