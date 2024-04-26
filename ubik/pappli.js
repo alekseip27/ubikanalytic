@@ -296,6 +296,8 @@ let elements = document.querySelectorAll('.top-part-section');
 elements.forEach(element => {
 if (element.id !== 'sampleitem') {
 element.parentNode.removeChild(element);
+} else if(element.id === 'sampleitem'){
+element.style.display ='flex'
 }
 });
     let vivid_id = document.querySelector('#vseats').getAttribute('url').split('productionId=')[1];
