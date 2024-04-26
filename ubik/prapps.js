@@ -287,7 +287,7 @@
 
 
 
-   var activeRequests = [];
+    activeRequests = [];
 
 function vividsections() {
     // Clear UI and previous sections
