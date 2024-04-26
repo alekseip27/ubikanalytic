@@ -529,6 +529,7 @@ const cancelFetch = function() {
 
 
 card.addEventListener('click', function() {
+cancelRequest()
 cancelFetch();
 document.querySelector('#vividclick').style.display = 'none';
 document.querySelector('#mainurl').value = ''
@@ -696,7 +697,6 @@ $('#search-button').css({pointerEvents: "none"})
     chartvs.update();
 
 } else {
-cancelRequest()
 primaryurl()
 getchartvs()
 vividsections()
