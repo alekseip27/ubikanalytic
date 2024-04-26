@@ -282,27 +282,29 @@ http.send();
     });
 
 }
+ 
+ 
 
-
-
-
+var request;
 
 function vividsections() {
-    document.querySelector('#vividevent').textContent = ''
-    document.querySelector('#vividlocation').textContent = ''
-    document.querySelector('#vividdate').textContent = ''
-    document.querySelector('#vividtime').textContent = ''
-let elements = document.querySelectorAll('.top-part-section');
-elements.forEach(element => {
-if (element.id !== 'sampleitem') {
-element.parentNode.removeChild(element);
-} else if(element.id === 'sampleitem'){
-element.style.display ='flex'
-}
-});
+    document.querySelector('#vividevent').textContent = '';
+    document.querySelector('#vividlocation').textContent = '';
+    document.querySelector('#vividdate').textContent = '';
+    document.querySelector('#vividtime').textContent = '';
+    
+    let elements = document.querySelectorAll('.top-part-section');
+    elements.forEach(element => {
+        if (element.id !== 'sampleitem') {
+            element.parentNode.removeChild(element);
+        } else if (element.id === 'sampleitem') {
+            element.style.display = 'flex';
+        }
+    });
+
     let vivid_id = document.querySelector('#vseats').getAttribute('url').split('productionId=')[1];
     let url = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/vividinfo?id=' + vivid_id;
-    var request = new XMLHttpRequest();
+    request = new XMLHttpRequest();  // Use the global request variable
 
     request.open('GET', url.toString(), true);
     request.setRequestHeader("Content-type", "application/json; charset=utf-8");
@@ -314,12 +316,25 @@ element.style.display ='flex'
             processPreferredInfo(vividinfo.sections, vividinfo.prices);
             document.querySelector('#sampleitem').style.display = 'none';
             document.querySelector('#vividclick').style.display = 'flex';
-
         }
+    };
+
+    request.onerror = function() {
+        // Handle network errors
+        console.error("Request failed");
     };
 
     request.send();
 }
+
+// Function to cancel the request
+function cancelRequest() {
+    if (request) {
+        request.abort();
+        console.log('Request cancelled.');
+    }
+}
+
 
 function processPreferredInfo(sections, prices) {
     document.querySelector('#vividevent').textContent = document.querySelector('#selectedevent').textContent;
@@ -668,6 +683,7 @@ $('#search-button').css({pointerEvents: "none"})
     chartvs.update();
 
 } else {
+cancelRequest()
 primaryurl()
 getchartvs()
 vividsections()
