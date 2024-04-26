@@ -332,6 +332,19 @@ function cancelRequest() {
     if (request) {
         request.abort();
         console.log('Request cancelled.');
+        document.querySelector('#vividevent').textContent = '';
+        document.querySelector('#vividlocation').textContent = '';
+        document.querySelector('#vividdate').textContent = '';
+        document.querySelector('#vividtime').textContent = '';
+        
+        let elements = document.querySelectorAll('.top-part-section');
+        elements.forEach(element => {
+            if (element.id !== 'sampleitem') {
+                element.parentNode.removeChild(element);
+            } else if (element.id === 'sampleitem') {
+                element.style.display = 'flex';
+            }
+        });
     }
 }
 
