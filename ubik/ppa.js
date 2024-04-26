@@ -292,7 +292,12 @@ function vividsections() {
     document.querySelector('#vividlocation').textContent = ''
     document.querySelector('#vividdate').textContent = ''
     document.querySelector('#vividtime').textContent = ''
-
+let elements = document.querySelectorAll('.top-part-section');
+elements.forEach(element => {
+if (element.id !== 'sampleitem') {
+element.parentNode.removeChild(element);
+}
+});
     let vivid_id = document.querySelector('#vseats').getAttribute('url').split('productionId=')[1];
     let url = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/vividinfo?id=' + vivid_id;
     var request = new XMLHttpRequest();
@@ -331,6 +336,7 @@ function processPreferredInfo(sections, prices) {
         let price = priceParts[0]; // Assuming the price information is correctly aligned.
 
         let clone = document.querySelector('.top-part-section').cloneNode(true);
+        clone.id = ''
         clone.querySelector('.main-text-vivid-section').textContent = section;
         clone.querySelector('.main-text-vivid-quantity').textContent = quantity;
         clone.querySelector('.main-text-vivid-price').textContent = '$'+price;
