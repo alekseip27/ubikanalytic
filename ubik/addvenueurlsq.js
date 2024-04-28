@@ -209,7 +209,7 @@ prefix = 'ebrite'
 venueprefix = 'ebrite'
 }
 
-else if(eventurl.includes('evenue')){
+else if(eventurl.includes('evenue.net')){
 prefix = ''
 venueprefix = ''
 }
