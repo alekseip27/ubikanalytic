@@ -178,6 +178,11 @@ prefix = 'axs'
 venueprefix = 'axs'
 }
 
+else if(eventurl.includes('seetickets.us')){
+prefix = 'see'
+venueprefix = ''
+}
+
 
 else if(eventurl.includes('24tix')){
 prefix = '24tix'
@@ -402,6 +407,9 @@ venueprefix = 'other'
      }
      else if (venueUrl.includes("showclix")) {
         result = "show";
+     }
+     else if (venueUrl.includes("seetickets.us")) {
+        result = "";
      }
      else if (venueUrl.includes("ticketweb")) {
         result = "tweb";
