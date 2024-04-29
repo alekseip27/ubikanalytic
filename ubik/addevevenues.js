@@ -167,62 +167,62 @@ $('#event_date').datepicker({
   let eventurl = document.querySelector('#event_url').value;
   let prefix;
   let venueprefix;
+  let source;
 
 if(eventurl.includes('ticketmaster.com') || eventurl.includes('ticketmaster.ca') || eventurl.includes('livenation.com')){
 prefix = 'tm'
 venueprefix = 'tm'
+source = 'TM'
 }
 
 else if(eventurl.includes('axs.com')){
 prefix = 'axs'
 venueprefix = 'axs'
+source = 'AXS'
+
 }
 
 else if(eventurl.includes('24tix')){
 prefix = '24tix'
 venueprefix = ''
-}
-
-else if(eventurl.includes('admitone')){
-prefix = 'admit'
-venueprefix = ''
+source = '24tix'
 }
 
 else if(eventurl.includes('dice.fm')){
 prefix = ''
 venueprefix = ''
+source = 'dice'
 }
 
 else if(eventurl.includes('etix.com')){
 prefix = 'etix'
 venueprefix = 'etix'
+source = 'etix'
 }
-
 
 else if(eventurl.includes('seetickets.us')){
 prefix = 'see'
 venueprefix = ''
+source = 'seetickets'
 }
 
 else if(eventurl.includes('evenue.net')){
 prefix = ''
 venueprefix = ''
+source = "evenue";
 }
 
 
 else if(eventurl.includes('admitone')){
 prefix = 'admit'
 venueprefix = ''
-}
-
-else if(eventurl.includes('dice.fm')){
-prefix = ''
-venueprefix = ''
+source = 'admitone'
 }
 
 else if(eventurl.includes('eventbrite')){
 prefix = 'ebrite'
 venueprefix = 'ebrite'
+source = "eventbrite";
 }
 
 
@@ -230,97 +230,115 @@ venueprefix = 'ebrite'
 else if(eventurl.includes('freshtix')){
 prefix = ''
 venueprefix = ''
+source = 'freshtix'
 }
 
 
 else if(eventurl.includes('holdmyticket')){
 prefix = 'hold'
 venueprefix = ''
+source = 'holdmyticket'
 }
 
 
 else if(eventurl.includes('prekindle')){
 prefix = 'pre'
 venueprefix = ''
+source = 'prekindle'
 }
 
 else if(eventurl.includes('showclix')){
 prefix = 'show'
 venueprefix = 'show'
+source = 'showclix'
 }
 
 else if(eventurl.includes('ticketweb')){
 prefix = 'tweb'
 venueprefix = 'tweb'
+source = "ticketweb";
 }
 
 else if(eventurl.includes('ticketswest')){
 prefix = ''
 venueprefix = ''
+source = "ticketwest";
 }
 
 else if(eventurl.includes('tixr')){
 prefix = 'tixr'
 venueprefix = 'tixr'
+source = 'tixr'
 }
 
 
 else if(eventurl.includes('gruenehall')){
 prefix = ''
 venueprefix = ''
+source = "gruenehall"
 }
 
 
 else if(eventurl.includes('meowwolf')){
 prefix = ''
 venueprefix = ''
+source = 'MEOW'
 }
 
 else if(eventurl.includes('stubs.net')){
 prefix = 'stubs'
 venueprefix = 'stubs'
+source = 'stubs'
 }
 
 
 else if(eventurl.includes('stubwire')){
 prefix = 'stub'
 venueprefix = ''
+source = 'stubwire'
 }
 
 
 else if(eventurl.includes('universe.com')){
 prefix = 'unv'
 venueprefix = ''
+source = 'universe'
 }
 
 else if(eventurl.includes('thevogue')){
 prefix = ''
 venueprefix = ''
+source = 'vogue'
 }
 
 else if(eventurl.includes('mpv.tickets')){
 prefix = 'mpv'
 venueprefix = ''
+source = 'mpv'
 }
 
 else if(eventurl.includes('frontgatetickets')){
 prefix = ''
 venueprefix = ''
+source = 'frontgate'
 }
 
 else if(eventurl.includes('amptickets')){
 prefix = 'amp'
 venueprefix = ''
+source = 'amptickets'
 }
 
 else if(eventurl.includes('zoukgrouplv')){
 prefix = 'zouk-'
 venueprefix = 'zouk-'
+source = 'zouk'
 }
 
 else {
 prefix = 'other'
 venueprefix = 'other'
+source = 'other'
 }
 
  
@@ -343,7 +361,8 @@ venueprefix = 'other'
     "time": eventtime,
     "date": eventdate,
     "added_by": addedby,
-    "date_created": formattedDate
+    "date_created": formattedDate,
+    "scraper_name": source
   };
   
   fetch(endpointUrl, {
@@ -397,126 +416,157 @@ venueprefix = 'other'
   
   var venueUrl = document.querySelector('#venueurl').value
   var result = "";
+  var result2 = "";
   
   if (venueUrl.includes("ticketmaster.com") || venueUrl.includes('ticketmaster.ca') || venueUrl.includes("livenation.com")) {
   result = "tm";
+  result2 = "TM";
   }
 
   else if (venueUrl.includes("axs.com")) {
       result = "axs";
+      result2 = "AXS";
   }
 
   else if (venueUrl.includes("24tix")) {
     result = "";
+    result2 = "24TIX";
    }
 
    else if (venueUrl.includes("admitone")) {
     result = "";
+    result2 = "ADMIT1";
    }
 
    else if (venueUrl.includes("dice.fm")) {
     result = "";
+    result2 = "DICE";
+
    }
 
 
    else if (venueUrl.includes("etix.com")) {
       result = "etix";
+      result2 = "ETIX";
    }
-
 
    else if (venueUrl.includes("eventbrite")) {
       result = "ebrite";
+      result2 = "EBRITE";
    }   
 
 
    else if (venueUrl.includes("evenue.net")) {
     result = "";
+    result2 = "EVENUE";
+
    }
 
 
    else if (venueUrl.includes("freshtix")) {
     result = "";
+    result2 = "FRESH";
    }
 
 
    else if (venueUrl.includes("holdmyticket")) {
     result = "";
+    result2 = "HOLDMT";
    }
 
 
    else if (venueUrl.includes("prekindle")) {
     result = "";
+    result2 = "PRE";
+
    }
 
 
    else if (venueUrl.includes("seetickets.us")) {
     result = "";
+    result2 = "SEETIX";
    }
 
    else if (venueUrl.includes("showclix")) {
       result = "show";
+      result2 = "SHOW";
+
    }
 
    else if (venueUrl.includes("ticketweb")) {
       result = "tweb";
+      result2 = "TWEB";
    }
    
    
    else if (venueUrl.includes("ticketswest")) {
       result = "";
+      result2 = "TWEST";
    }
    
    
    else if (venueUrl.includes("tixr")) {
       result = "tixr";
-   }
+      result2 = "TIXR";
 
+   }
 
    else if (venueUrl.includes("gruenehall")) {
     result = "";
+    result2 = "gruenehall"
    }
 
 
    else if (venueUrl.includes("meowwolf")) {
     result = "";
+    result2 = "MEOW";
    }
 
    else if (venueUrl.includes("stubs.net")) {
     result = "stubs";
+    result2 = "stubs";
    }
 
    else if (venueUrl.includes("stubwire")) {
    result = "";
+   result2 = "STUBW";
    
    }
    else if (venueUrl.includes("universe.com")) {
     result = "";
+    result2 = "universe";
    }
 
    else if (venueUrl.includes("thevogue")) {
     result = "";
+    result2 = "vogue";
    }
 
    else if (venueUrl.includes("mpv.tickets")) {
     result = "";
+    result2 = "mpv";
    }
 
    else if (venueUrl.includes("frontgatetickets")) {
     result = "";
+    result2 = "frontgate";
    }
 
    else if (venueUrl.includes("amptickets")) {
     result = "";
+    result2 = "amptickets";
    }
 
 
    else if (venueUrl.includes("zoukgrouplv")) {
       result = "zouk-";
+      result2 = "zouk";
    }
 
 
    else {
       result = "other";
+      result2 = "other";
    }
 
       venueids = result + document.querySelector('#venueid').value    
@@ -563,7 +613,7 @@ venueprefix = 'other'
           "stubhub_url":stubhuburl,
           "vivid_venue_id":vsid,
           "stubhub_venue_id":shid,
-          "source_site":result
+          "source_site":result2
       }
       
       fetch(endpointUrl, {
