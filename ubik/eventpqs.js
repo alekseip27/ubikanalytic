@@ -115,7 +115,7 @@ if (favoritecbox) {
 
 
           function getEvents(fetchurl) {
-              cancelFetchRequests();
+
           let request = new XMLHttpRequest();
           
           request.open('GET', fetchurl, true)
