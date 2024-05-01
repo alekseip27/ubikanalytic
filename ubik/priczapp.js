@@ -349,7 +349,6 @@ activeRequests.forEach(req => {
 activeRequests = [];  // Clear the array after cancelling all requests
 }
 
-
 function processPreferredInfo(sections, prices) {
     document.querySelector('#vividevent').textContent = document.querySelector('#selectedevent').textContent;
     document.querySelector('#vividlocation').textContent = document.querySelector('#eventlocation').textContent;
@@ -357,6 +356,14 @@ function processPreferredInfo(sections, prices) {
     document.querySelector('#vividtime').textContent = document.querySelector('#eventtime').textContent;
 
     let container = document.querySelector('.sections-wrapper');
+    let template = document.querySelector('.top-part-section');
+
+    // Check if the template element exists
+    if (!template) {
+        console.error('Template element not found.');
+        return; // Exit the function if no template found
+    }
+
     container.innerHTML = '';  // Clear previous entries
     let allPrices = [];
     let totalQuantity = 0;
@@ -372,7 +379,7 @@ function processPreferredInfo(sections, prices) {
         totalQuantity += quantity;
         allPrices.push(price);
 
-        let clone = document.querySelector('.top-part-section').cloneNode(true);
+        let clone = template.cloneNode(true);
         clone.id = '';
         clone.setAttribute('section', section);
         clone.querySelector('.main-text-vivid-section').textContent = section;
@@ -387,7 +394,7 @@ function processPreferredInfo(sections, prices) {
     let medianPrice = calculateMedian(allPrices);
     let averagePrice = allPrices.reduce((acc, cur) => acc + cur, 0) / allPrices.length;
 
-//    document.querySelector('#vivid-tix').textContent = totalQuantity;
+    document.querySelector('#vivid-tix').textContent = totalQuantity;
     document.querySelector('#vivid-min').textContent = `$${lowestPrice.toFixed(2)}`;
     document.querySelector('#vivid-max').textContent = `$${highestPrice.toFixed(2)}`;
     document.querySelector('#vivid-median').textContent = `$${medianPrice.toFixed(2)}`;
