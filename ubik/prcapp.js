@@ -288,14 +288,18 @@ http.send();
 
 
 activeRequests = [];
-
+ 
 function vividsections() {
-// Clear UI and previous sections
+
 document.querySelector('#vividevent').textContent = '';
 document.querySelector('#vividlocation').textContent = '';
 document.querySelector('#vividdate').textContent = '';
 document.querySelector('#vividtime').textContent = '';
-
+document.querySelector('#vivid-tix').textContent = ''
+document.querySelector('#vivid-min').textContent = '';
+document.querySelector('#vivid-max').textContent = '';
+document.querySelector('#vivid-median').textContent = '';
+document.querySelector('#vivid-avg').textContent = '';
 // Remove other sections
 let elements = document.querySelectorAll('.top-part-section');
 elements.forEach(element => {
@@ -355,6 +359,8 @@ function processPreferredInfo(sections, prices) {
 
     let container = document.querySelector('.sections-wrapper');
     let allPrices = [];
+    let totalQuantity = 0;
+
 
     sections.forEach((info, index) => {
         let sectionParts = info.split('|');
@@ -363,24 +369,25 @@ function processPreferredInfo(sections, prices) {
         let quantity = sectionParts[0];
         let section = sectionParts[1];
         let price = parseFloat(priceParts[0]); // Assuming the price information is correctly aligned.
-
+        
+        totalQuantity += quantity;
         allPrices.push(price);
 
         let clone = document.querySelector('.top-part-section').cloneNode(true);
         clone.id = ''
+        clone.setAttribute('section',section)
         clone.querySelector('.main-text-vivid-section').textContent = section;
         clone.querySelector('.main-text-vivid-quantity').textContent = quantity;
         clone.querySelector('.main-text-vivid-price').textContent = '$' + price.toFixed(2);
         container.appendChild(clone);
     });
 
-    // Calculating prices statistics
     let lowestPrice = Math.min(...allPrices);
     let highestPrice = Math.max(...allPrices);
     let medianPrice = calculateMedian(allPrices);
     let averagePrice = allPrices.reduce((acc, cur) => acc + cur, 0) / allPrices.length;
 
-    // Displaying the prices
+    document.querySelector('#vivid-tix').textContent = totalQuantity
     document.querySelector('#vivid-min').textContent = `$${lowestPrice.toFixed(2)}`;
     document.querySelector('#vivid-max').textContent = `$${highestPrice.toFixed(2)}`;
     document.querySelector('#vivid-median').textContent = `$${medianPrice.toFixed(2)}`;
