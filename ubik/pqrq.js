@@ -304,7 +304,7 @@ document.querySelector('#vivid-avg').textContent = '';
 let elements = document.querySelectorAll('.top-part-section');
 elements.forEach(element => {
     if (element.id !== 'sampleitem') {
-        element.parentNode.removeChild(element);
+        element.style.display = 'none';
     } else if (element.id === 'sampleitem') {
         element.style.display = 'flex';
     }
@@ -356,11 +356,10 @@ function processPreferredInfo(sections, prices) {
 
     let container = document.querySelector('.sections-wrapper');
     let template = document.querySelector('.top-part-section');
-    template.id = 'sampleitem'
-    // Check if the template element exists
+
     if (!template) {
         console.error('Template element not found.');
-        return; // Exit the function if no template found
+        return; 
     }
 
     container.innerHTML = '';  // Clear previous entries
