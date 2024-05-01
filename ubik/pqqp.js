@@ -323,7 +323,6 @@ request.onload = function() {
     if (request.status >= 200 && request.status < 400) {
         let vividinfo = JSON.parse(this.response);
         processPreferredInfo(vividinfo.sections, vividinfo.prices);
-        document.querySelector('#sampleitem').style.display = 'none';
         document.querySelector('#vividclick').style.display = 'flex';
     }
     // Remove request from activeRequests when done
