@@ -386,8 +386,7 @@ function processPreferredInfo(sections, prices) {
     let highestPrice = Math.max(...allPrices);
     let medianPrice = calculateMedian(allPrices);
     let averagePrice = allPrices.reduce((acc, cur) => acc + cur, 0) / allPrices.length;
-
-    document.querySelector('#vivid-tix').textContent = totalQuantity
+    
     document.querySelector('#vivid-min').textContent = `$${lowestPrice.toFixed(2)}`;
     document.querySelector('#vivid-max').textContent = `$${highestPrice.toFixed(2)}`;
     document.querySelector('#vivid-median').textContent = `$${medianPrice.toFixed(2)}`;
