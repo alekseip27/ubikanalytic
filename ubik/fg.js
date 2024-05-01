@@ -304,7 +304,9 @@ document.querySelector('#vivid-avg').textContent = '';
 let elements = document.querySelectorAll('.top-part-section');
 elements.forEach(element => {
     if (element.id !== 'sampleitem') {
-        element.style.display = 'none';
+        element.parentNode.removeChild(element);
+    } else if (element.id === 'sampleitem') {
+        element.style.display = 'flex';
     }
 });
 
@@ -321,6 +323,7 @@ request.onload = function() {
     if (request.status >= 200 && request.status < 400) {
         let vividinfo = JSON.parse(this.response);
         processPreferredInfo(vividinfo.sections, vividinfo.prices);
+        document.querySelector('#sampleitem').style.display = 'none';
         document.querySelector('#vividclick').style.display = 'flex';
     }
     // Remove request from activeRequests when done
@@ -346,6 +349,8 @@ activeRequests.forEach(req => {
 activeRequests = [];  // Clear the array after cancelling all requests
 }
 
+
+
 function processPreferredInfo(sections, prices) {
     document.querySelector('#vividevent').textContent = document.querySelector('#selectedevent').textContent;
     document.querySelector('#vividlocation').textContent = document.querySelector('#eventlocation').textContent;
@@ -353,44 +358,36 @@ function processPreferredInfo(sections, prices) {
     document.querySelector('#vividtime').textContent = document.querySelector('#eventtime').textContent;
 
     let container = document.querySelector('.sections-wrapper');
-    let template = document.querySelector('.top-part-section');
-
-    if (!template) {
-        console.error('Template element not found.');
-        return; 
-    }
-
-    container.innerHTML = '';  // Clear previous entries
     let allPrices = [];
     let totalQuantity = 0;
+
 
     sections.forEach((info, index) => {
         let sectionParts = info.split('|');
         let priceParts = prices[index].split('|');
 
-        let quantity = parseInt(sectionParts[0], 10);  // Convert string to integer
+        let quantity = sectionParts[0];
         let section = sectionParts[1];
-        let price = parseFloat(priceParts[0]);  // Assuming the price information is correctly aligned.
+        let price = parseFloat(priceParts[0]); // Assuming the price information is correctly aligned.
         
         totalQuantity += quantity;
         allPrices.push(price);
 
-        let clone = template.cloneNode(true);
-        clone.id = section;
-        clone.setAttribute('section', section);
+        let clone = document.querySelector('.top-part-section').cloneNode(true);
+        clone.id = ''
+        clone.setAttribute('section',section)
         clone.querySelector('.main-text-vivid-section').textContent = section;
         clone.querySelector('.main-text-vivid-quantity').textContent = quantity;
         clone.querySelector('.main-text-vivid-price').textContent = '$' + price.toFixed(2);
         container.appendChild(clone);
     });
 
-    // Calculate and display statistics
     let lowestPrice = Math.min(...allPrices);
     let highestPrice = Math.max(...allPrices);
     let medianPrice = calculateMedian(allPrices);
     let averagePrice = allPrices.reduce((acc, cur) => acc + cur, 0) / allPrices.length;
 
-    document.querySelector('#vivid-tix').textContent = totalQuantity;
+    document.querySelector('#vivid-tix').textContent = totalQuantity
     document.querySelector('#vivid-min').textContent = `$${lowestPrice.toFixed(2)}`;
     document.querySelector('#vivid-max').textContent = `$${highestPrice.toFixed(2)}`;
     document.querySelector('#vivid-median').textContent = `$${medianPrice.toFixed(2)}`;
@@ -402,6 +399,8 @@ function calculateMedian(arr) {
     const nums = [...arr].sort((a, b) => a - b);
     return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
 }
+
+
 
         
 async function getchartvs() {
