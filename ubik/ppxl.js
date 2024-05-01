@@ -356,7 +356,7 @@ function processPreferredInfo(sections, prices) {
 
     let container = document.querySelector('.sections-wrapper');
     let template = document.querySelector('.top-part-section');
-
+    template.id = 'sampleitem'
     // Check if the template element exists
     if (!template) {
         console.error('Template element not found.');
@@ -379,7 +379,7 @@ function processPreferredInfo(sections, prices) {
         allPrices.push(price);
 
         let clone = template.cloneNode(true);
-        clone.id = '';
+        clone.id = section;
         clone.setAttribute('section', section);
         clone.querySelector('.main-text-vivid-section').textContent = section;
         clone.querySelector('.main-text-vivid-quantity').textContent = quantity;
