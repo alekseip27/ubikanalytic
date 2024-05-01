@@ -632,8 +632,10 @@ getchartprimary()
 
 let count = events.counts
 let src = events.event_url
-if (count && count.length > 0 && (src.includes('ticketmaster') || src.includes('livenation'))) {
+if (count && count.length > 0) {
 charticon.style.display = 'flex'
+} else {
+charticon.style.display = 'none'
 }
 
           const timezone = card.getElementsByClassName('main-text-timezone')[0]
