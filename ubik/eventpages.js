@@ -858,14 +858,14 @@ if (counts && source !== 'tm' && source !== 'ticketmaster') {
         const primamount = card.getElementsByClassName('main-text-primary')[0]
         primamount.textContent = parseInt(events.app_142_primary_amount)
         card.setAttribute('primaryamount',parseInt(events.app_142_primary_amount))
-        card.setAttribute('checked','true')
+        //card.setAttribute('checked','true')
         }
 
         if(events.app_142_difference_per_day){
         const aday = card.getElementsByClassName('main-text-aday')[0]
         aday.textContent = parseInt(events.app_142_difference_per_day)
         card.setAttribute('perday',parseInt(events.app_142_difference_per_day))
-        card.setAttribute('checked','true')
+       // card.setAttribute('checked','true')
         }
           if(events.time){
           let eventtime = card.getElementsByClassName('main-text-time')[0]
