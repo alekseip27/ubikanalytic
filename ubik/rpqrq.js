@@ -305,8 +305,6 @@ let elements = document.querySelectorAll('.top-part-section');
 elements.forEach(element => {
     if (element.id !== 'sampleitem') {
         element.style.display = 'none';
-    } else if (element.id === 'sampleitem') {
-        element.style.display = 'flex';
     }
 });
 
