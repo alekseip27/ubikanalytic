@@ -509,7 +509,7 @@ document.querySelector('#vserror').style.display = 'flex';
                   indices.sort((a, b) => new Date(datesprimary[a]) - new Date(datesprimary[b]));
                   amountsprimary = indices.map(i => amountsprimary[i]);
                   datesprimary = indices.map(i => datesprimary[i]);
-      
+
                   // Update chart data
                   chart.data.datasets[0].data = amountsprimary;
                   chart.config.data.labels = datesprimary;
@@ -528,6 +528,9 @@ document.querySelector('#vserror').style.display = 'flex';
       })
       .catch(error => {
       console.error('There was an error fetching the data:', error);
+                  document.querySelector('#tmloader').style.display = 'none';
+                  document.querySelector('#tmerror').style.display = 'flex';
+                  document.querySelector('#tmchart').style.display = 'none';
       });
       }
 
