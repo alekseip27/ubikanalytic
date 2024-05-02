@@ -296,6 +296,7 @@ document.querySelector('#vividlocation').textContent = '';
 document.querySelector('#vividdate').textContent = '';
 document.querySelector('#vividtime').textContent = '';
 document.querySelector('#vivid-tix').textContent = ''
+document.querySelector('#vivid-tl').textContent = ''
 document.querySelector('#vivid-min').textContent = '';
 document.querySelector('#vivid-max').textContent = '';
 document.querySelector('#vivid-median').textContent = '';
@@ -361,12 +362,11 @@ function processPreferredInfo(sections, prices) {
     let allPrices = [];
     let totalQuantity = 0;
 
-
     sections.forEach((info, index) => {
         let sectionParts = info.split('|');
         let priceParts = prices[index].split('|');
 
-        let quantity = sectionParts[0];
+        let quantity = parseInt(sectionParts[0], 10);  // Convert string to integer
         let section = sectionParts[1];
         let price = parseFloat(priceParts[0]); // Assuming the price information is correctly aligned.
         
@@ -374,10 +374,10 @@ function processPreferredInfo(sections, prices) {
         allPrices.push(price);
 
         let clone = document.querySelector('.top-part-section').cloneNode(true);
-        clone.id = ''
-        clone.setAttribute('section',section)
+        clone.id = '';
+        clone.setAttribute('section', section);
         clone.querySelector('.main-text-vivid-section').textContent = section;
-        clone.querySelector('.main-text-vivid-quantity').textContent = quantity;
+        clone.querySelector('.main-text-vivid-quantity').textContent = quantity.toString();
         clone.querySelector('.main-text-vivid-price').textContent = '$' + price.toFixed(2);
         container.appendChild(clone);
     });
@@ -386,7 +386,10 @@ function processPreferredInfo(sections, prices) {
     let highestPrice = Math.max(...allPrices);
     let medianPrice = calculateMedian(allPrices);
     let averagePrice = allPrices.reduce((acc, cur) => acc + cur, 0) / allPrices.length;
-    
+
+    document.querySelector('#vivid-tl').textContent = sections.length;
+    document.querySelector('#vivid-tix').textContent = totalQuantity;
+
     document.querySelector('#vivid-min').textContent = `$${lowestPrice.toFixed(2)}`;
     document.querySelector('#vivid-max').textContent = `$${highestPrice.toFixed(2)}`;
     document.querySelector('#vivid-median').textContent = `$${medianPrice.toFixed(2)}`;
@@ -398,7 +401,6 @@ function calculateMedian(arr) {
     const nums = [...arr].sort((a, b) => a - b);
     return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
 }
-
 
 
         
