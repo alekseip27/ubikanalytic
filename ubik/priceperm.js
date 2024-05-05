@@ -77,7 +77,7 @@
               
               
       if(pricing === true){
-      document.querySelector('#adminlogo').style.display = 'flex'
+      document.querySelector('#pricingslogo').style.display = 'flex'
       }
       
               
