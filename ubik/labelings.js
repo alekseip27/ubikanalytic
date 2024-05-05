@@ -282,3 +282,5 @@ updatecolumnbtn.style.pointerEvents = "none";
 cloneColumn.addEventListener('input', updatePointerEvents);
 cloneWhen.addEventListener('input', updatePointerEvents);
 cloneContains.addEventListener('input', updatePointerEvents);
+
+}}})
