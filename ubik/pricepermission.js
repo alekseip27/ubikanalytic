@@ -85,6 +85,7 @@
       
               
       if(!!admin) {
+      document.querySelector('#pricingslogo').style.display = 'none'
       $('#adminlogo').show()
       $('#eventsdropdown').css('display','flex');
       $('#events').css('display','flex');
