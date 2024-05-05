@@ -283,73 +283,78 @@ http.send();
 
 }
 
-
-
-
-
 activeRequests = [];
- 
-function vividsections() {
 
-document.querySelector('#vividevent').textContent = '';
-document.querySelector('#vividlocation').textContent = '';
-document.querySelector('#vividdate').textContent = '';
-document.querySelector('#vividtime').textContent = '';
-document.querySelector('#vivid-tix').textContent = ''
-document.querySelector('#vivid-tl').textContent = ''
-document.querySelector('#vivid-min').textContent = '';
-document.querySelector('#vivid-max').textContent = '';
-document.querySelector('#vivid-median').textContent = '';
-document.querySelector('#vivid-avg').textContent = '';
-// Remove other sections
-let elements = document.querySelectorAll('.top-part-section');
-elements.forEach(element => {
-    if (element.id !== 'sampleitem') {
-        element.parentNode.removeChild(element);
-    } else if (element.id === 'sampleitem') {
-        element.style.display = 'flex';
+async function vividsections() {
+
+    document.querySelector('#vividevent').textContent = '';
+    document.querySelector('#vividlocation').textContent = '';
+    document.querySelector('#vividdate').textContent = '';
+    document.querySelector('#vividtime').textContent = '';
+    document.querySelector('#vivid-tix').textContent = '';
+    document.querySelector('#vivid-tl').textContent = '';
+    document.querySelector('#vivid-min').textContent = '';
+    document.querySelector('#vivid-max').textContent = '';
+    document.querySelector('#vivid-median').textContent = '';
+    document.querySelector('#vivid-avg').textContent = '';
+    
+    let elements = document.querySelectorAll('.top-part-section');
+    elements.forEach(element => {
+        if (element.id !== 'sampleitem') {
+            element.parentNode.removeChild(element);
+        } else if (element.id === 'sampleitem') {
+            element.style.display = 'flex';
+        }
+    });
+
+    let vivid_id = document.querySelector('#vseats').getAttribute('url').split('productionId=')[1];
+    const csvUrl = `https://ubikdata.wiki:3000/listing/${vivid_id}`;
+
+    try {
+        const controller = new AbortController();
+        const signal = controller.signal;
+        activeRequests.push(controller);
+
+        const response = await fetch(csvUrl, { signal });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const csvText = await response.text();
+
+        Papa.parse(csvText, {
+            header: true,
+            dynamicTyping: true,
+            skipEmptyLines: true,
+            complete: (results) => {
+                 prices = [];
+                 sections = [];
+
+                for (let i = 1; i < results.data.length; i++) {
+                    const item = results.data[i];
+
+                        let priceValue = `${item.price}|${item.section}`;
+                        let sectionValue = `${item.amount}|${item.section}`;
+                        prices.push(priceValue);
+                        sections.push(sectionValue);
+                    
+                }
+            }
+        });
+
+        processPreferredInfo(sections,prices)
+
+    } catch (error) {
+        console.error("Error fetching data: ", error);
     }
-});
-
-// Get the vivid_id and create a new request
-let vivid_id = document.querySelector('#vseats').getAttribute('url').split('productionId=')[1];
-let url = `https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/vividinfo?id=${vivid_id}`;
-let request = new XMLHttpRequest();
-
-request.open('GET', url, true);
-request.setRequestHeader("Content-type", "application/json; charset=utf-8");
-request.setRequestHeader('Authorization', `Bearer ${token}`);
-
-request.onload = function() {
-    if (request.status >= 200 && request.status < 400) {
-        let vividinfo = JSON.parse(this.response);
-        processPreferredInfo(vividinfo.sections, vividinfo.prices);
-        document.querySelector('#sampleitem').style.display = 'none';
-        document.querySelector('#vividclick').style.display = 'flex';
-    }
-    // Remove request from activeRequests when done
-    activeRequests = activeRequests.filter(item => item !== request);
-};
-
-request.onerror = function() {
-    // Remove request from activeRequests on error
-    activeRequests = activeRequests.filter(item => item !== request);
-    console.error("Request failed");
-};
-
-request.send();
-activeRequests.push(request);  // Add this request to the array of active requests
 }
-
 
 function cancelAllRequests() {
-activeRequests.forEach(req => {
-    req.abort();
-    console.log('Cancelled a request.');
-});
-activeRequests = [];  // Clear the array after cancelling all requests
+    activeRequests.forEach(req => {
+        req.abort();
+        console.log('Cancelled a request.');
+    });
+    activeRequests = [];  // Clear the array after cancelling all requests
 }
-
 
 
 function processPreferredInfo(sections, prices) {
@@ -401,7 +406,6 @@ function calculateMedian(arr) {
     const nums = [...arr].sort((a, b) => a - b);
     return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
 }
-
 
         
 async function getchartvs() {
