@@ -342,7 +342,9 @@ async function vividsections() {
         });
 
         processPreferredInfo(sections,prices)
-
+        document.querySelector('#sampleitem').style.display = 'none';
+        document.querySelector('#vividclick').style.display = 'flex';
+        
     } catch (error) {
         console.error("Error fetching data: ", error);
     }
