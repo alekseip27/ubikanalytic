@@ -110,6 +110,8 @@ this.remove()
 
     if(datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com'){
     document.querySelector('.totalcounts').style.display = 'flex'
+    document.querySelector('#lowerbox').style.display = 'flex'
+    document.querySelector('#searchblock').style.display = 'flex'
     card.setAttribute('id', events.id)
     } else {
     card.setAttribute('id', events.id);
