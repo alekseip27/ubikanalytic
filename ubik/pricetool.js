@@ -145,7 +145,7 @@ async function getchartprimary(){
     let amountsprimary = [];
     let datesprimary = [];
 
-    fetch(`https://ubik.wiki/api/primary-events/?event_url__icontains=${mainurl}`, {
+    fetch(`https://ubik.wiki/api/primary-events/?vdid__iexact=${mainurl}`, {
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`
