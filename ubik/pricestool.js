@@ -271,6 +271,11 @@ http.send();
     })
     .catch(error => {
         console.error('There was an error fetching the data:', error);
+
+        document.querySelector("#loading3").style.display = "none";
+        document.querySelector("#loadingfailed3").style.display = "flex";
+        document.querySelector("#chart3").style.display = "none";
+        document.querySelector("#chartloading3").style.display = "flex";
     });
 
 }
