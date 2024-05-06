@@ -141,7 +141,7 @@ this.remove()
 async function getchartprimary(){
 
 
-    let mainurl = document.querySelector('#urlmain').getAttribute('url');
+    let mainurl = document.querySelector('#selectedevent').getAttribute('vdid');
     let amountsprimary = [];
     let datesprimary = [];
 
