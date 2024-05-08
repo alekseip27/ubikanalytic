@@ -858,20 +858,32 @@ if (counts && source !== 'tm' && source !== 'ticketmaster') {
     }
 }
 
+if(events.app_142_scrape_date){
+let oldDate = events.app_142_scrape_date
+let estDate = moment().tz('America/New_York').format('YYYY-MM-DD');
+            
+let mOldDate = moment(oldDate);
+let mEstDate = moment(estDate);
 
-        if(events.app_142_primary_amount){
-        const primamount = card.getElementsByClassName('main-text-primary')[0]
-        primamount.textContent = parseInt(events.app_142_primary_amount)
-        card.setAttribute('primaryamount',parseInt(events.app_142_primary_amount))
-        //card.setAttribute('checked','true')
-        }
+let differenceInDays = mEstDate.diff(mOldDate, 'days');
 
-        if(events.app_142_difference_per_day){
-        const aday = card.getElementsByClassName('main-text-aday')[0]
-        aday.textContent = parseInt(events.app_142_difference_per_day)
-        card.setAttribute('perday',parseInt(events.app_142_difference_per_day))
-       // card.setAttribute('checked','true')
-        }
+if (differenceInDays >= 14) {
+    console.log("The difference is 14 days or older.");
+} else {
+
+if(events.app_142_primary_amount){
+const primamount = card.getElementsByClassName('main-text-primary')[0]
+primamount.textContent = parseInt(events.app_142_primary_amount)
+card.setAttribute('primaryamount',parseInt(events.app_142_primary_amount))
+}
+
+if(events.app_142_difference_per_day){
+const aday = card.getElementsByClassName('main-text-aday')[0]
+aday.textContent = parseInt(events.app_142_difference_per_day)
+card.setAttribute('perday',parseInt(events.app_142_difference_per_day))
+}}
+}
+            
           if(events.time){
           let eventtime = card.getElementsByClassName('main-text-time')[0]
           eventtime.textContent = events.time.slice(0, 8)
