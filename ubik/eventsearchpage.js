@@ -858,7 +858,7 @@ if (counts && source !== 'tm' && source !== 'ticketmaster') {
     }
 }
 
-if(events.app_142_scrape_date){
+if(events.app_142_scrape_date && events.scraper_name !== 'ticketmaster'){
 let oldDate = events.app_142_scrape_date
 let estDate = moment().tz('America/New_York').format('YYYY-MM-DD');
             
@@ -868,7 +868,6 @@ let mEstDate = moment(estDate);
 let differenceInDays = mEstDate.diff(mOldDate, 'days');
 
 if (differenceInDays >= 14) {
-    console.log("The difference is 14 days or older.");
 } else {
 
 if(events.app_142_primary_amount){
