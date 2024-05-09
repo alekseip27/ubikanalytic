@@ -1,3 +1,6 @@
+
+
+
 let abortControllers = []
 Webflow.push(function() {
     $('form').submit(function() {
@@ -316,29 +319,29 @@ async function vividsections() {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        const csvText = await response.text();
+        
+        const data = await response.text();
+        const evd = JSON.parse(data)
+        const eventDetails = evd[0]
+        
+        
+        const globalDetails = eventDetails.global[0];
+        const ticketsDetails = eventDetails.tickets;
+        let tickets = [];
 
-        Papa.parse(csvText, {
-            header: true,
-            dynamicTyping: true,
-            skipEmptyLines: true,
-            complete: (results) => {
-                 prices = [];
-                 sections = [];
+//        let eventid = globalDetails.productionId;
+//        let eventname = globalDetails.productionName;
+//        let venuename = globalDetails.mapTitle;
 
-                for (let i = 1; i < results.data.length; i++) {
-                    const item = results.data[i];
-
-                        let priceValue = `${item.price}|${item.section}`;
-                        let sectionValue = `${item.amount}|${item.section}`;
-                        prices.push(priceValue);
-                        sections.push(sectionValue);
-                    
-                }
-            }
+        ticketsDetails.forEach(ticket => {
+        tickets.push({
+            "section": ticket.s,
+            "price": ticket.p,
+            "quantity": ticket.q
         });
-
-        processPreferredInfo(sections,prices)
+        });
+        
+        processPreferredInfo(tickets)
         document.querySelector('#sampleitem').style.display = 'none';
         document.querySelector('#vividclick').style.display = 'flex';
         
@@ -354,9 +357,7 @@ function cancelAllRequests() {
     });
     activeRequests = [];  // Clear the array after cancelling all requests
 }
-
-
-function processPreferredInfo(sections, prices) {
+function processPreferredInfo(tickets) {
     document.querySelector('#vividevent').textContent = document.querySelector('#selectedevent').textContent;
     document.querySelector('#vividlocation').textContent = document.querySelector('#eventlocation').textContent;
     document.querySelector('#vividdate').textContent = document.querySelector('#eventdate').textContent;
@@ -366,13 +367,11 @@ function processPreferredInfo(sections, prices) {
     let allPrices = [];
     let totalQuantity = 0;
 
-    sections.forEach((info, index) => {
-        let sectionParts = info.split('|');
-        let priceParts = prices[index].split('|');
+    tickets.forEach((ticket) => {
 
-        let quantity = parseInt(sectionParts[0], 10);  // Convert string to integer
-        let section = sectionParts[1];
-        let price = parseFloat(priceParts[0]); // Assuming the price information is correctly aligned.
+        let quantity = parseInt(ticket.quantity, 10);
+        let section = ticket.section
+        let price = parseFloat(ticket.price);
         
         totalQuantity += quantity;
         allPrices.push(price);
@@ -384,20 +383,21 @@ function processPreferredInfo(sections, prices) {
         clone.querySelector('.main-text-vivid-quantity').textContent = quantity.toString();
         clone.querySelector('.main-text-vivid-price').textContent = '$' + price.toFixed(2);
         container.appendChild(clone);
-    });
+})
 
     let lowestPrice = Math.min(...allPrices);
     let highestPrice = Math.max(...allPrices);
     let medianPrice = calculateMedian(allPrices);
     let averagePrice = allPrices.reduce((acc, cur) => acc + cur, 0) / allPrices.length;
 
-    document.querySelector('#vivid-tl').textContent = sections.length;
+    document.querySelector('#vivid-tl').textContent = tickets.length;
     document.querySelector('#vivid-tix').textContent = totalQuantity;
 
     document.querySelector('#vivid-min').textContent = `$${lowestPrice.toFixed(2)}`;
     document.querySelector('#vivid-max').textContent = `$${highestPrice.toFixed(2)}`;
     document.querySelector('#vivid-median').textContent = `$${medianPrice.toFixed(2)}`;
     document.querySelector('#vivid-avg').textContent = `$${averagePrice.toFixed(2)}`;
+    
 }
 
 function calculateMedian(arr) {
