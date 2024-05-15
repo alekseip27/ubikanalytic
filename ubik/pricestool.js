@@ -286,7 +286,7 @@ http.send();
 activeRequests = [];
 
 async function vividsections() {
-
+    
     document.querySelector('#vividevent').textContent = '';
     document.querySelector('#vividlocation').textContent = '';
     document.querySelector('#vividdate').textContent = '';
@@ -297,7 +297,9 @@ async function vividsections() {
     document.querySelector('#vivid-max').textContent = '';
     document.querySelector('#vivid-median').textContent = '';
     document.querySelector('#vivid-avg').textContent = '';
-    
+    document.querySelector('#vivid-capacity').textContent = ''
+    document.querySelector('#vivid-dow').textContent = ''
+ 
     let elements = document.querySelectorAll('.top-part-section');
     elements.forEach(element => {
         if (element.id !== 'sampleitem') {
@@ -324,14 +326,13 @@ async function vividsections() {
         const evd = JSON.parse(data)
         const eventDetails = evd[0]
         
-        
         const globalDetails = eventDetails.global[0];
         const ticketsDetails = eventDetails.tickets;
         let tickets = [];
 
 //        let eventid = globalDetails.productionId;
 //        let eventname = globalDetails.productionName;
-//        let venuename = globalDetails.mapTitle;
+          vdcapacity = globalDetails.venueCapacity
 
         ticketsDetails.forEach(ticket => {
         tickets.push({
@@ -357,10 +358,14 @@ function cancelAllRequests() {
     });
     activeRequests = [];  // Clear the array after cancelling all requests
 }
+
 function processPreferredInfo(tickets) {
+    let eventdate = document.querySelector('#eventdate').textContent;
     document.querySelector('#vividevent').textContent = document.querySelector('#selectedevent').textContent;
     document.querySelector('#vividlocation').textContent = document.querySelector('#eventlocation').textContent;
-    document.querySelector('#vividdate').textContent = document.querySelector('#eventdate').textContent;
+    document.querySelector('#vividdate').textContent = eventdate
+    document.querySelector('#vivid-dow').textContent = getDayOfWeek(eventdate);
+    document.querySelector('#vivid-capacity').textContent = vdcapacity
     document.querySelector('#vividtime').textContent = document.querySelector('#eventtime').textContent;
 
     let container = document.querySelector('.sections-wrapper');
@@ -406,8 +411,15 @@ function calculateMedian(arr) {
     return arr.length % 2 !== 0 ? nums[mid] : (nums[mid - 1] + nums[mid]) / 2;
 }
 
-        
-async function getchartvs() {
+
+function getDayOfWeek(dateString) {
+    const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const date = new Date(dateString);
+    const dayIndex = date.getDay();
+    return daysOfWeek[dayIndex];
+}
+
+    async function getchartvs() {
     let venuecap = 0;
     let dataEntries = []; // Array to hold combined data entries
     let evurl = events.vividSeatsEventUrl;
@@ -446,7 +458,7 @@ async function getchartvs() {
 
             const lastCommit = commits[commits.length - 1];
             document.getElementById("venueresale").textContent =
-                Math.round((lastCommit.ticket_count / venuecap) * 100) + "%";
+            Math.round((lastCommit.ticket_count / venuecap) * 100) + "%";
             document.getElementById("venuecap").textContent = venuecap.toString();
 
             let threeDaysAgoIndex = Math.max(0, amountsvs.length - 4); // Ensuring non-negative index
@@ -640,7 +652,7 @@ chartprimary.update();
     document.querySelector('#lowerbox').style.display = 'none'
     document.querySelector('#searchblock').style.display = 'none'
     }
-    
+
 let shubid = events.stubhubEventId
 
 if(shubid !== 0){
