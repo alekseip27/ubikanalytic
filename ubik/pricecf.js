@@ -286,7 +286,7 @@ http.send();
 activeRequests = [];
 
 async function vividsections() {
-    
+    document.querySelector('#seatinghide').style.display = 'none'
     document.querySelector('#vividevent').textContent = '';
     document.querySelector('#vividlocation').textContent = '';
     document.querySelector('#vividdate').textContent = '';
@@ -299,7 +299,7 @@ async function vividsections() {
     document.querySelector('#vivid-avg').textContent = '';
     document.querySelector('#vivid-capacity').textContent = ''
     document.querySelector('#vivid-dow').textContent = ''
- 
+    document.querySelector('.seatingmap').src = '' 
     let elements = document.querySelectorAll('.top-part-section');
     elements.forEach(element => {
         if (element.id !== 'sampleitem') {
@@ -333,7 +333,8 @@ async function vividsections() {
 //        let eventid = globalDetails.productionId;
 //        let eventname = globalDetails.productionName;
           vdcapacity = globalDetails.venueCapacity
-
+          seatchart = globalDetails.staticMapUrl
+        
         ticketsDetails.forEach(ticket => {
         tickets.push({
             "section": ticket.s,
@@ -367,6 +368,8 @@ function processPreferredInfo(tickets) {
     document.querySelector('#vivid-dow').textContent = getDayOfWeek(eventdate);
     document.querySelector('#vivid-capacity').textContent = 'Capacity: ' + vdcapacity
     document.querySelector('#vividtime').textContent = document.querySelector('#eventtime').textContent;
+    document.querySelector('.seatingmap').src = seatchart
+    document.querySelector('#seatinghide').style.display = 'flex'
 
     let container = document.querySelector('.sections-wrapper');
     let allPrices = [];
