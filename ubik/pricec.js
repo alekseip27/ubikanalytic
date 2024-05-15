@@ -365,7 +365,7 @@ function processPreferredInfo(tickets) {
     document.querySelector('#vividlocation').textContent = document.querySelector('#eventlocation').textContent;
     document.querySelector('#vividdate').textContent = eventdate
     document.querySelector('#vivid-dow').textContent = getDayOfWeek(eventdate);
-    document.querySelector('#vivid-capacity').textContent = 'capacity: ' + vdcapacity
+    document.querySelector('#vivid-capacity').textContent = 'Capacity: ' + vdcapacity
     document.querySelector('#vividtime').textContent = document.querySelector('#eventtime').textContent;
 
     let container = document.querySelector('.sections-wrapper');
