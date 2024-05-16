@@ -283,6 +283,50 @@ http.send();
 
 }
 
+async function fetchWeatherData(q, dt) {
+
+    document.querySelector('#vivid-weather').textContent = ''
+    document.querySelector('#vivid-weathericon').src = ''
+    document.querySelector('#vivid-weathericon').style.display = 'none'
+
+
+    const apiKey = '177ea20bfbc344c7bf2130946241605';
+
+    const today = new Date();
+    const targetDate = new Date(dt);
+    const dateDifference = (targetDate - today) / (1000 * 60 * 60 * 24); 
+
+    let url;
+    if (dateDifference <= 14) {
+        url = `https://api.weatherapi.com/v1/forecast.json?key=${apiKey}&q=${q}&dt=${dt}`;
+    } else {
+        url = `https://api.weatherapi.com/v1/future.json?key=${apiKey}&q=${q}&dt=${dt}`;
+    }
+
+    try {
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+            const data = await response.json();
+            const icon = data.forecast.forecastday[0].day.condition.icon;
+            const weather = data.forecast.forecastday[0].day.condition.text;
+
+            document.querySelector('#vivid-weather').textContent = weather;
+            document.querySelector('#vivid-weathericon').src = icon;
+            document.querySelector('#vivid-weathericon').style.display = 'flex'
+
+
+    } catch (error) {
+        console.error('Fetch error:', error);
+    }
+}
+
+
+
+
 activeRequests = [];
 
 async function vividsections() {
@@ -405,6 +449,10 @@ function processPreferredInfo(tickets) {
     document.querySelector('#vivid-max').textContent = `$${highestPrice.toFixed(2)}`;
     document.querySelector('#vivid-median').textContent = `$${medianPrice.toFixed(2)}`;
     document.querySelector('#vivid-avg').textContent = `$${averagePrice.toFixed(2)}`;
+
+    let city = document.querySelector('#vividlocation').textContent.split(',')[0];
+    
+    fetchWeatherData(city, eventdate);
     
 }
 
