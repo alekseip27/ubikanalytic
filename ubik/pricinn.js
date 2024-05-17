@@ -283,6 +283,14 @@ http.send();
 
 }
 
+function findWeatherByTime(hourArray, time) {
+    return hourArray.find(item => {
+
+        let itemTime = item.time.split(' ')[1];
+        return itemTime === time;
+    });
+}
+
 async function fetchWeatherData(q, dt) {
 
     document.querySelector('#vivid-weather').textContent = ''
@@ -313,8 +321,17 @@ async function fetchWeatherData(q, dt) {
             const data = await response.json();
             const icon = data.forecast.forecastday[0].day.condition.icon;
             const weather = data.forecast.forecastday[0].day.condition.text;
+            const hourarray = data.forecast.forecastday[0].day.condition.hour;
+            let time = document.querySelector('#vividtime').textContent
+            
 
-            document.querySelector('#vivid-weather').textContent = weather;
+
+let hresult = findWeatherByTime(hourarray, time);
+
+let temperature = hresult.temp_f
+
+
+            document.querySelector('#vivid-weather').textContent = weather + ' ' + temperature;
             document.querySelector('#vivid-weathericon').src = icon;
             document.querySelector('#vivid-weathericon').style.display = 'flex'
 
