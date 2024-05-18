@@ -282,21 +282,26 @@ http.send();
     });
 
 }
+// Function to find the closest weather data based on the time
+function findClosestWeatherByTime(hourArray, time) {
+    let [hour, minute] = time.split(':').map(Number);
+    if (minute >= 30) {
+        hour += 1; // Round up to the next hour if minutes are 30 or more
+    }
+    let targetTime = hour.toString().padStart(2, '0') + ':00';
 
-function findWeatherByTime(hourArray, time) {
     return hourArray.find(item => {
-
         let itemTime = item.time.split(' ')[1];
-        return itemTime === time;
+        return itemTime === targetTime;
     });
 }
 
+// Function to fetch weather data and update the DOM
 async function fetchWeatherData(q, dt) {
-
-    document.querySelector('#vivid-weather').textContent = ''
-    document.querySelector('#vivid-weathericon').src = ''
-    document.querySelector('#vivid-weathericon').style.display = 'none'
-
+    // Clear previous weather data
+    document.querySelector('#vivid-weather').textContent = '';
+    document.querySelector('#vivid-weathericon').src = '';
+    document.querySelector('#vivid-weathericon').style.display = 'none';
 
     const apiKey = '177ea20bfbc344c7bf2130946241605';
 
@@ -318,28 +323,30 @@ async function fetchWeatherData(q, dt) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
 
-            const data = await response.json();
-            const icon = data.forecast.forecastday[0].day.condition.icon;
-            const weather = data.forecast.forecastday[0].day.condition.text;
-            const hourarray = data.forecast.forecastday[0].day.condition.hour;
-            let time = document.querySelector('#vividtime').textContent
-            
+        const data = await response.json();
+        const icon = data.forecast.forecastday[0].day.condition.icon;
+        const weather = data.forecast.forecastday[0].day.condition.text;
+        const hourarray = data.forecast.forecastday[0].hour; // Corrected to access the hour array
+        let time = document.querySelector('#vividtime').textContent;
 
+        let hresult = findClosestWeatherByTime(hourarray, time);
 
-let hresult = findWeatherByTime(hourarray, time);
+        if (hresult) {
+            let temperature = hresult.temp_f;
 
-let temperature = hresult.temp_f
-
-
-            document.querySelector('#vivid-weather').textContent = weather + ' ' + temperature;
+            // Update the DOM with the fetched weather data
+            document.querySelector('#vivid-weather').textContent = weather + ' ' + temperature + '°F';
             document.querySelector('#vivid-weathericon').src = icon;
-            document.querySelector('#vivid-weathericon').style.display = 'flex'
-
+            document.querySelector('#vivid-weathericon').style.display = 'flex';
+        } else {
+            console.error('Time not found in the data.');
+        }
 
     } catch (error) {
         console.error('Fetch error:', error);
     }
 }
+
 
 
 
