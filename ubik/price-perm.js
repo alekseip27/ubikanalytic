@@ -32,7 +32,7 @@
           auth.signOut();
         };
         signOutButton.addEventListener("click", signout);
-      
+        perms = false
         auth.onAuthStateChanged(async (user) => {
           let currentPath = window.location.pathname;
           if (user) {
