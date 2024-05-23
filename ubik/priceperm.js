@@ -37,6 +37,7 @@
           let currentPath = window.location.pathname;
           if (user) {
             curUser = firebase.auth().currentUser;
+            perms = true
             let myFS = firebase.firestore();
             let docRef = myFS.doc("users/" + curUser.uid);
             docRef.get().then((docSnap) => {
