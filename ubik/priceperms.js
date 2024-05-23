@@ -36,7 +36,7 @@
         auth.onAuthStateChanged(async (user) => {
           let currentPath = window.location.pathname;
           if (user) {
-            let curUser = firebase.auth().currentUser;
+            curUser = firebase.auth().currentUser;
             let myFS = firebase.firestore();
             let docRef = myFS.doc("users/" + curUser.uid);
             docRef.get().then((docSnap) => {
