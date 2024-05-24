@@ -61,12 +61,13 @@ if (keywords5 === 'axs' || keywords5 === 'seetickets' || keywords5 === 'ticketma
   params.push(`scraper_name__icontains=${keywords5}`);
 }
 
-if (keywords5 === 'nontm') {
-  params.push(`event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=livenation`);
+  if (keywords5 === 'nontm') {
+  params.push(`scraper_name__idoesnotcontains=ticketmaster`);
+
 }
  
 if (keywords5 === 'nontmaxs') {
-  params.push(`event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=axs`);
+  params.push(`scraper_name__idoesnotcontains=ticketmaster&scraper_name__idoesnotcontains=axs`);
 }
 
 if (keywords6 === 'recentlyadded') {
