@@ -57,8 +57,12 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     params.push(`category__iexact=${keywords4}`);
 }
 
-if (keywords5 === 'axs' || keywords5 === 'seetickets' || keywords5 === 'ticketmaster') {
-  params.push(`scraper_name__icontains=${keywords5}`);
+if (keywords5 === 'axs' || keywords5 === 'seetickets') {
+  params.push(`event_url__icontains=${keywords5}`);
+}
+
+if (keywords5 === 'ticketmaster') {
+  params.push(`event_url__icontains=ticketmaster&event_url__icontains=livenation`);
 }
 
   if (keywords5 === 'nontm') {
