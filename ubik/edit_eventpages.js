@@ -50,6 +50,12 @@ function checkresults() {
     let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
     let keywords3 = encodeURIComponent(document.getElementById('searchbar3').value)
     let keywords4 = encodeURIComponent(document.getElementById('searchbar4').value)
+    let addedbygoogle = document.getElementById('addedbygoogle').checked
+
+    if (addedbygoogle) {
+    params.push('added_by__icontains=google');
+    }  
+            
     $('.event-box').hide()
     
     let baseUrl = 'https://ubik.wiki/api/primary-events/?';
