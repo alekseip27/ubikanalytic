@@ -51,15 +51,15 @@ function checkresults() {
     let keywords3 = encodeURIComponent(document.getElementById('searchbar3').value)
     let keywords4 = encodeURIComponent(document.getElementById('searchbar4').value)
     let addedbygoogle = document.getElementById('addedbygoogle').checked
-
-    if (addedbygoogle) {
-    params.push('added_by__icontains=google');
-    }  
             
     $('.event-box').hide()
     
     let baseUrl = 'https://ubik.wiki/api/primary-events/?';
     let params = [];
+
+    if (addedbygoogle) {
+    params.push('added_by__icontains=google');
+    }  
     
     if (keywords1.length > 0) {
         params.push('name__icontains=' + keywords1.replaceAll("'", "''"));
