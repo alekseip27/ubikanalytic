@@ -29,7 +29,7 @@ const item = document.getElementById('samplestyle')
     
 thiseventid = eventdata.event_id
 
-    purchaseaccounts = eventdata.purchase_account
+purchaseaccounts = eventdata.purchase_account
 
     
 encodedthiseventid = encodeURIComponent(eventdata.event_id)
@@ -707,7 +707,7 @@ function sortoptions() {
 }
 
 
-function getaccounts(account) {
+function getaccounts(account,category) {
 
   let url = new URL(`https://ubik.wiki/api/buyer-emails/?category__iexact=${category}one1ticket_add__iexact=true&tm_added__iexact=true&one1ticket_verify__iexact=true&second_forward_verify__iexact=true&retired__iexact=false&email_suspended__iexact=false&account__istartswith=' + ${account} + "&limit=1000`);
   let request = new XMLHttpRequest();
@@ -743,7 +743,7 @@ function retryaccounts() {
 const letters = purchaseaccounts.split(',');
   if (token.length === 40 && letters) {
 letters.forEach(letter => {
-    getaccounts(letter.trim())
+    getaccounts(letter.trim(),category)
 });
   clearInterval(intervalIdtwo);
   }}
