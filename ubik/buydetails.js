@@ -421,7 +421,7 @@ intervalIds = setInterval(retryClickingSearchBar, 1000);
 }
 
 function emailpart1() {
-  let emailused = document.getElementById('purchaseemail').value;
+  let emailused = document.getElementById('purchaseaccounts').value;
   const emailurl = 'https://ubik.wiki/api/buyer-emails/?email__iexact=' + emailused;
   let http = new XMLHttpRequest();
 
@@ -571,8 +571,8 @@ function part3(){
     
     let pq = document.querySelector('#purchasequantity').value
     let pmax = document.querySelector('#amountbought2').textContent
-    let pa = document.querySelector("#purchaseemail").value.slice(0,1).toUpperCase();
-    let pm = document.querySelector('#purchaseemail').value
+    let pa = document.querySelector("#purchaseaccounts").value.slice(0,1).toUpperCase();
+    let pm = document.querySelector('#purchaseaccounts').value
     let pc = document.querySelector('#purchaseconfirmation').value
     let purchasedby = document.querySelector('#username').textContent
     
