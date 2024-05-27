@@ -645,7 +645,7 @@ function part3(){
     "purchase_urgency":purchurgency
     }
 
-    const purchaseAccValue = document.getElementById('purchaseacount').value;
+    const purchaseAccValue = document.getElementById('purchaseaccount').value;
     const purchaseAccsValue = document.getElementById('purchaseaccounts').value;
     
     if (purchaseAccValue.trim() !== "") {
