@@ -709,7 +709,17 @@ function sortoptions() {
 
 function getaccounts(account,category) {
 
-  let url = new URL(`https://ubik.wiki/api/buyer-emails/?category__iexact=${category}&one1ticket_add__iexact=true&email_suspended__iexact=false&retired__iexact=false&tm_added__iexact=true&one1ticket_verify__iexact=true&second_forward_verify__iexact=true&retired__iexact=false&email_suspended__iexact=false&account__istartswith=${account}&limit=1000`);
+  let baseUrl = `https://ubik.wiki/api/buyer-emails/?one1ticket_add__iexact=true&email_suspended__iexact=false&retired__iexact=false&tm_added__iexact=true&one1ticket_verify__iexact=true&second_forward_verify__iexact=true&retired__iexact=false&email_suspended__iexact=false&account__istartswith=${account}`
+
+  let params = [];
+  
+  if (category !== '') {
+      params.push(`category__iexact=${category}`)
+  }
+ 
+  params.push('limit=1000'); 
+   
+  let url = baseUrl +  params.join('&')
   let request = new XMLHttpRequest();
   request.open('GET', url, true);
   request.setRequestHeader("Content-type", "application/json; charset=utf-8");
@@ -720,10 +730,8 @@ function getaccounts(account,category) {
     if (request.status >= 200 && request.status < 400) {
       const selectDropdown = document.getElementById("purchaseaccounts");
 
-      // Extract emails and sort them alphabetically
       const emails = data.results.map(event => event.email).sort();
 
-      // Add sorted emails as options to the dropdown
       emails.forEach(email => {
         const option = document.createElement("option");
         option.value = email; 
@@ -733,24 +741,6 @@ function getaccounts(account,category) {
     }
   }; 
   request.send();
-}
-
-
-let intervalIdtwo;
-let intervalthree;
-
-function retryaccounts() {
-const letters = purchaseaccounts.split(',');
- 
-  if (token.length === 40 && letters.length>1) {
-letters.forEach(letter => {
-    getaccounts(letter.trim(),category)
-});
-clearInterval(intervalIdtwo);
-} else if (token.length === 40 && letters.length === 1){
-  getaccounts(letters[0],category)
-  clearInterval(intervalIdtwo);
-}
 }
 
 
