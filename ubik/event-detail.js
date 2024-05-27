@@ -128,6 +128,7 @@ const requestData = {
   event_url: document.getElementById('url').textContent,
   event_time: document.getElementById('time').textContent,
   event_source: document.getElementById('source').textContent,
+  category: document.getElementById('category').value,
 };
 
 const purchaseAccValue = document.getElementById('purchaseacc').value;
