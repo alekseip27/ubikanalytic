@@ -714,10 +714,10 @@ function getaccounts(account,category) {
   let params = [];
   
   if (category !== '') {
-      params.push(`category__iexact=${category}`)
+      params.push(`&category__iexact=${category}`)
   }
  
-  params.push('limit=1000'); 
+  params.push('&limit=1000'); 
    
   let url = baseUrl +  params.join('&')
   let request = new XMLHttpRequest();
