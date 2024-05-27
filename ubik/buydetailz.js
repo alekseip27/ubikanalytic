@@ -741,12 +741,19 @@ let intervalthree;
 
 function retryaccounts() {
 const letters = purchaseaccounts.split(',');
-  if (token.length === 40 && letters) {
+
+  if (token.length === 40 && letters.length>1) {
 letters.forEach(letter => {
     getaccounts(letter.trim(),category)
 });
   clearInterval(intervalIdtwo);
-  }}
+
+} else if (token.length === 40 && letters.length === 1){
+  getaccounts(letter.trim(),category)
+  clearInterval(intervalIdtwo);
+}
+}
+
 
 intervalIdtwo = setInterval(retryaccounts, 1000);
 intervalthree = setInterval(sortoptions, 1000);
