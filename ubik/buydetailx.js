@@ -741,15 +741,14 @@ let intervalthree;
 
 function retryaccounts() {
 const letters = purchaseaccounts.split(',');
-
+ 
   if (token.length === 40 && letters.length>1) {
 letters.forEach(letter => {
     getaccounts(letter.trim(),category)
 });
-  clearInterval(intervalIdtwo);
-
+clearInterval(intervalIdtwo);
 } else if (token.length === 40 && letters.length === 1){
-  getaccounts(letter.trim(),category)
+  getaccounts(letters[0],category)
   clearInterval(intervalIdtwo);
 }
 }
