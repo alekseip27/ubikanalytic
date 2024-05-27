@@ -644,6 +644,16 @@ function part3(){
     "purchase_frequency":purchfreq,
     "purchase_urgency":purchurgency
     }
+
+    const purchaseAccValue = document.getElementById('purchaseacount').value;
+    const purchaseAccsValue = document.getElementById('purchaseaccounts').value;
+    
+    if (purchaseAccValue.trim() !== "") {
+      param.purchase_account = purchaseAccValue;
+    } else if (purchaseAccsValue.trim() !== "") {
+      param.purchase_account = purchaseAccsValue;
+    }
+
     
     fetch(endpointUrl, {
     method: 'POST',
@@ -739,6 +749,7 @@ function getaccounts(account,category) {
         selectDropdown.appendChild(option);
       });
     }
+
   }; 
   request.send();
 }
@@ -765,3 +776,28 @@ function retryaccounts() {
 intervalIdtwo = setInterval(retryaccounts, 1000);
 // intervalthree = setInterval(sortoptions, 1000);
 
+
+
+
+const selectDropdown = document.getElementById("purchaseaccounts");
+const purchaseAcc = document.getElementById("purchaseaccount");
+
+
+const manualOption = document.createElement("option");
+manualOption.value = "manual";
+manualOption.textContent = "Manual";
+selectDropdown.appendChild(manualOption);
+
+// Event listener to handle the "manual" option
+selectDropdown.addEventListener("change", function() {
+  if (this.value === "manual") {
+    purchaseAcc.style.display = "block";
+    selectDropdown.style.display = "none";
+    document.querySelector('.returnbtn').style.display = 'flex'
+  } else {
+    purchaseAcc.style.display = "none";
+    selectDropdown.style.display = "block";
+    document.querySelector('.returnbtn').style.display = 'none'
+      
+  }
+});
