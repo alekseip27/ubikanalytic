@@ -134,6 +134,7 @@ document.querySelector('#purchasefrequency').textContent = eventdata.purchase_fr
 document.querySelector('#purchaseurgency').textContent = eventdata.buying_urgency
 
 document.querySelector('#purchaserequest').textContent = eventdata.added_timestamp
+category = eventdata.category
   
 let pt = document.querySelector('#purchasealltime').textContent
 if(pt.length == 0) {
@@ -707,7 +708,8 @@ function sortoptions() {
 
 
 function getaccounts(account) {
-  let url = new URL('https://ubik.wiki/api/buyer-emails/?one1ticket_add__iexact=true&tm_added__iexact=true&one1ticket_verify__iexact=true&second_forward_verify__iexact=true&retired__iexact=false&email_suspended__iexact=false&account__istartswith=' + account + "&limit=1000");
+
+  let url = new URL(`https://ubik.wiki/api/buyer-emails/?category__iexact=${category}one1ticket_add__iexact=true&tm_added__iexact=true&one1ticket_verify__iexact=true&second_forward_verify__iexact=true&retired__iexact=false&email_suspended__iexact=false&account__istartswith=' + ${account} + "&limit=1000`);
   let request = new XMLHttpRequest();
   request.open('GET', url, true);
   request.setRequestHeader("Content-type", "application/json; charset=utf-8");
