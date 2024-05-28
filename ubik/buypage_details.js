@@ -31,6 +31,16 @@ thiseventid = eventdata.event_id
 
 purchaseaccounts = eventdata.purchase_account
 
+emailsused = eventdata.used_emails
+emailsarray = []
+
+if(emailsused.split(',').length>0){
+emailsused.split(',').forEach(email =>{
+emailsarray.push(email)
+})
+}
+
+
     
 encodedthiseventid = encodeURIComponent(eventdata.event_id)
 
@@ -504,6 +514,7 @@ let bought = Number(document.querySelector('#amountbought1').textContent)
 let cpr = Number(document.querySelector('#purchasequantity').value)
 let combined = bought+cpr
 let limit = Number(document.querySelector('#amountbought2').textContent)
+let purchacc = document.querySelector('#purchaseaccounts').value
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
 var urll = "https://ubik.wiki/api/update/buying-queue/"
@@ -516,6 +527,12 @@ var params = {
 if (combined >= limit) {
     params["completed"] = 'TRUE'; 
 }
+
+if(!emailsarray.includes(purchacc)){
+params["used_emails"] = emailsarray.push(purchacc)
+}
+
+
 
 http.open("PUT", urll, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
@@ -743,11 +760,12 @@ function getaccounts(account,category) {
       const emails = data.results.map(event => event.email).sort();
 
       emails.forEach(email => {
+        if(!emailsarray.includes(email)){
         const option = document.createElement("option");
         option.value = email; 
         option.textContent = email;
         selectDropdown.appendChild(option);
-      });
+      }});
     }
 
   }; 
