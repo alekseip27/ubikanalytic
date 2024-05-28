@@ -34,6 +34,7 @@ purchaseaccounts = eventdata.purchase_account
 emailsused = eventdata.used_emails
 emailsarray = []
 
+
     
 encodedthiseventid = encodeURIComponent(eventdata.event_id)
 
@@ -508,6 +509,7 @@ let cpr = Number(document.querySelector('#purchasequantity').value)
 let combined = bought+cpr
 let limit = Number(document.querySelector('#amountbought2').textContent)
 let purchacc = document.querySelector('#purchaseaccounts').value
+let purchmanual = document.querySelector('#purchaseaccount').value  
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
 var urll = "https://ubik.wiki/api/update/buying-queue/"
@@ -521,13 +523,10 @@ if (combined >= limit) {
     params["completed"] = 'TRUE'; 
 }
 
-if (emailsarray && emailsarray.length > 0) {
-  emailsarray = emailsarray.map(email => email.trim());
-}
-
-if (!emailsarray.includes(purchacc)) {
+if (!emailsarray.find(email => email === purchacc) && purchacc.value !== manual) {
   emailsarray.push(purchacc);
-params["used_emails"] = emailsarray.join(',');
+} else if (!emailsarray.find(email => email === purchmanual) && purchacc.value === manual){
+emailsarray.push(purchmanual);
 }
 
 
@@ -757,7 +756,7 @@ function getaccounts(account,category) {
       const emails = data.results.map(event => event.email).sort();
 
       emails.forEach(email => {
-        if(!emailsarray.includes(email)){
+          if (!emailsarray.find(email => email === email)) {
         const option = document.createElement("option");
         option.value = email; 
         option.textContent = email;
