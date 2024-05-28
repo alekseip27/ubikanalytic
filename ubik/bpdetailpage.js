@@ -427,14 +427,20 @@ intervalIds = setInterval(retryClickingSearchBar, 1000);
 }
 
 function emailpart1() {
-  let emailused = document.getElementById('purchaseaccounts').value;
+
+
+if(purchacc !== 'manual') {
+  emailused = document.getElementById('purchaseaccounts').value;
+} else if(!emails.includes(purchmanual) && purchacc === 'manual') {
+  emailused = document.getElementById('purchaseaccount').value;
+}
+
   const emailurl = 'https://ubik.wiki/api/buyer-emails/?email__iexact=' + emailused;
   let http = new XMLHttpRequest();
 
   http.open("GET", emailurl, true);
   http.setRequestHeader("Content-type", "application/json; charset=utf-8");
   http.setRequestHeader('Authorization', `Bearer ${token}`);
-
   http.onreadystatechange = function() {
     if (http.readyState == 4) {
       if (http.status == 200) {
@@ -442,7 +448,6 @@ function emailpart1() {
         emailid = data.results[0].id;
         openpurchases = data.results[0].open_purchases;
         email1 = true;
-        // Call emailpart2() after emailpart1() has run
         emailpart2();
       }
     }
@@ -454,8 +459,6 @@ function emailpart1() {
 function emailpart2() {
   let bought = Number(document.querySelector('#amountbought1').textContent);
   let cpr = Number(document.querySelector('#purchasequantity').value);
-  let combined = bought + cpr;
-  let limit = Number(document.querySelector('#amountbought2').textContent);
 
     const emailurl2 = 'https://ubik.wiki/api/update/buyer-emails/';
 
@@ -632,7 +635,7 @@ function part3(){
         const randomIndex = Math.floor(Math.random() * characters.length);
         randomId += characters.charAt(randomIndex);
       }
-    
+
     
     var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
     var http = new XMLHttpRequest();
