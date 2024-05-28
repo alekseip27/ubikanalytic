@@ -430,10 +430,10 @@ function emailpart1() {
     
 let purchacc = document.querySelector('#purchaseaccounts').value
 let purchmanual = document.querySelector('#purchaseaccount').value  
-
+let emailused = ''
 if(purchacc !== 'manual') {
   emailused = document.getElementById('purchaseaccounts').value;
-} else if(!emails.includes(purchmanual) && purchacc === 'manual') {
+} else if(purchacc === 'manual') {
   emailused = document.getElementById('purchaseaccount').value;
 }
 
