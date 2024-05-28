@@ -525,10 +525,10 @@ if (combined >= limit) {
 
 if (!emailsarray.find(email => email === purchacc) && purchacc.value !== manual) {
   emailsarray.push(purchacc);
-} else if (!emailsarray.find(email => email === purchmanual) && purchacc.value === manual){
+} else if (!emailsarray.find(email => email === purchmanual) && purchacc.value === 'manual'){
 emailsarray.push(purchmanual);
 }
-
+ 
 
 http.open("PUT", urll, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
