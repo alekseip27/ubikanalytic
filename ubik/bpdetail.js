@@ -31,10 +31,12 @@ thiseventid = eventdata.event_id
 
 purchaseaccounts = eventdata.purchase_account
 
-emailsused = eventdata.used_emails
 emailsarray = []
+emailsused = eventdata.used_emails
 
+emailsarray.push(emailsused.split(','))
 
+emails = emailsarray.join(',')
     
 encodedthiseventid = encodeURIComponent(eventdata.event_id)
 
@@ -524,16 +526,14 @@ if (combined >= limit) {
 }
  
 
-if (!emailsarray.find(email => email === purchacc) && purchacc !== 'manual') {
-    emailsarray.push(purchacc);
-} else if (!emailsarray.find(email => email === purchmanual) && purchacc === 'manual') {
-    emailsarray.push(purchmanual);
+if(!emails.includes(purchacc) && purchacc !== manual) {
+    emails = emails + ',' + purchacc
+    params["used_emails"] = emails
+} else if(!emails.includes(purchmanual) && purchacc === 'manual') {
+    emails = emails + ',' + purchmanual
     params["used_emails"] = purchmanual;
-} else {
-    params["used_emails"] = emailsarray.join(',');
 }
-
-
+ 
 
 http.open("PUT", urll, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
@@ -758,10 +758,10 @@ function getaccounts(account,category) {
     if (request.status >= 200 && request.status < 400) {
       const selectDropdown = document.getElementById("purchaseaccounts");
 
-      const emails = data.results.map(event => event.email).sort();
+      const emailsar = data.results.map(event => event.email).sort();
 
-      emails.forEach(email => {
-          if (!emailsarray.find(email => email === email)) {
+      emailsar.forEach(email => {
+          if (!emails.includes(email)) {
         const option = document.createElement("option");
         option.value = email; 
         option.textContent = email;
