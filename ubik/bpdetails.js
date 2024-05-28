@@ -526,7 +526,7 @@ if (combined >= limit) {
 }
  
 
-if(!emails.includes(purchacc) && purchacc !== manual) {
+if(!emails.includes(purchacc) && purchacc !== 'manual') {
     emails = emails + ',' + purchacc
     params["used_emails"] = emails
 } else if(!emails.includes(purchmanual) && purchacc === 'manual') {
