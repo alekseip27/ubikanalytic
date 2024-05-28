@@ -239,8 +239,8 @@ this.remove()
               } else if (source === 'tm' || source === 'ticketmaster') {
                   let dates = [];
                   var http = new XMLHttpRequest();
-                  var url = "https://shibuy.co:8443/142data?eventid=" + evids;
-                  http.open("GET", url, true);
+                  var urltm = "https://shibuy.co:8443/142data?eventid=" + evids;
+                  http.open("GET", urltm, true);
                   http.setRequestHeader("Content-type", "application/json; charset=utf-8");
                   http.signal = controller.signal; // Attach the signal to the XMLHttpRequest
   
