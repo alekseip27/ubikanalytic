@@ -531,7 +531,7 @@ if(!emails.includes(purchacc) && purchacc !== 'manual') {
     params["used_emails"] = emails
 } else if(!emails.includes(purchmanual) && purchacc === 'manual') {
     emails = emails + ',' + purchmanual
-    params["used_emails"] = purchmanual;
+    params["used_emails"] = emails;
 }
  
 
