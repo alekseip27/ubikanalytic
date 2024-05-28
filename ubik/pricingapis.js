@@ -141,198 +141,152 @@ this.remove()
     const eventcost = card.getElementsByClassName('main-text-cost')[0]
     eventcost.textContent = '$' + events.cost
 
-    async function getchartprimary() {
-      abortControllers = [];
-  
-      const controller = new AbortController();
-      abortControllers.push(controller); // Add controller to the array
-  
-      let vdid = document.querySelector('#selectedevent').getAttribute('vdid');
-      let amountsprimary = [];
-      let datesprimary = [];
-  
-      fetch(`https://ubik.wiki/api/primary-events/?vdid__iexact=${vdid}`, {
-          method: 'GET',
-          headers: {
-              'Authorization': `Bearer ${token}`
-          },
-          signal: controller.signal // Attach the signal to the fetch request
-      })
-      .then(response => {
-          if (!response.ok) {
-              throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-      })
-      .then(data => {
-          const exists = data.count;
-  
-          if (exists.length > 0) {
-              eventdata = data.results[0];
-              counts = eventdata.counts;
-              let source = eventdata.scraper_name.toLowerCase();
-              chartprimary.data.datasets[0].label = source.toUpperCase() + ' Primary';
-              evids = eventdata.site_event_id;
-              
-              if (evids.includes('tm')) {
-                  evids = evids.substring(2);
-              }
-  
-              document.querySelector('#urlmain').setAttribute('url', eventdata.event_url);
-              document.querySelector('#mainurl').value = eventdata.event_url;
-              document.querySelector('#urlmain').style.display = 'flex';
-              document.querySelector('#changedata').style.display = 'flex';
-              document.querySelector('#urlmainmobile').setAttribute('url', eventdata.event_url);
-              document.querySelector('#urlmainmobile').style.display = 'flex';
-  
-              let url = document.querySelector('#urlmain').getAttribute('url');
-              document.querySelector('#urlmain').addEventListener('click', function() {
-                  if (eventdata.event_url !== 'null') {
-                      window.open(url, 'urlmain');
-                      $('#urlmain').css('cursor', 'pointer');
-                  }
-              });
-  
-              document.querySelector('#fwicon6').textContent = '';
-  
-              if (url.includes('ticketmaster') || url.includes('livenation')) {
-                  document.getElementById('142box').style.display = 'flex';
-                  document.getElementById('142boxmobile').style.display = 'flex';
-                  let onefourtwo = 'http://142.93.115.105:8100/event/' + url.split('/event/')[1] + '/details/';
-  
-                  document.getElementById('142box').addEventListener('click', function() {
-                      window.open(onefourtwo, 'onefourtwo');
-                  });
-  
-                  document.getElementById('142boxmobile').addEventListener('click', function() {
-                      window.open(onefourtwo, 'onefourtwomobile');
-                  });
-  
-              } else if (url === 'null') {
-                  $('#urlmain').css('cursor', 'default');
-                  document.getElementById('142box').style.display = 'none';
-                  document.getElementById('142boxmobile').style.display = 'none';
-              }
-  
-              if (counts && counts.length > 0 && !source.includes('tm')) {
-                  for (var i = 0; i < counts.length; i++) {
-                      amountsprimary.push(Math.round(counts[i].primary_amount));
-                      datesprimary.push(counts[i].scrape_date);
-                  }
-  
-                  // Sorting dates and corresponding amounts
-                  const indices = Array.from({ length: datesprimary.length }, (_, i) => i);
-                  indices.sort((a, b) => new Date(datesprimary[a]) - new Date(datesprimary[b]));
-                  amountsprimary = indices.map(i => amountsprimary[i]);
-                  datesprimary = indices.map(i => datesprimary[i]);
-  
-                  // Update chart data
-                  chartprimary.data.datasets[0].data = amountsprimary;
-                  chartprimary.config.data.labels = datesprimary;
-                  chartprimary.update();
-  
-                  // Update display elements
-                  document.querySelector("#chart3").style.display = "flex";
-                  document.querySelector("#chartloading3").style.display = "none";
-                  document.querySelector("#loading3").style.display = "flex";
-                  document.querySelector("#loadingfailed3").style.display = "none";
-  
-              } else if (source === 'tm' || source === 'ticketmaster') {
-                  let dates = [];
-                  var http = new XMLHttpRequest();
-                  var urltm = "https://shibuy.co:8443/142data?eventid=" + evids;
-                  http.open("GET", urltm, true);
-                  http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-                  http.signal = controller.signal; // Attach the signal to the XMLHttpRequest
-  
-                  http.onload = function() {
-                      let data = JSON.parse(this.response);
-  
-                      if (data.length > 0) {
-                          data.forEach(event => {
-                              event.summaries.forEach(summary => {
-                                  const filteredSections = summary.sections.filter(section => section.type !== 'resale');
-                                  const totalAmount = filteredSections.reduce((accumulator, section) => accumulator + section.amount, 0);
-  
-                                  const parts = summary.scrape_date.split(/[-T:Z]/);
-                                  const year = parseInt(parts[0], 10);
-                                  const month = parseInt(parts[1] - 1, 10); // month is 0-indexed in JavaScript Date
-                                  const day = parseInt(parts[2], 10);
-                                  const hours = parseInt(parts[3], 10);
-                                  const minutes = parseInt(parts[4], 10);
-  
-                                  const scrapeDate = new Date(year, month, day, hours, minutes);
-                                  scrapeDate.setHours(scrapeDate.getHours() - 1);
-  
-                                  const formattedDate = scrapeDate.toISOString().slice(0, 16).replace("T", " ");
-  
-                                  dates.push({
-                                      date: scrapeDate.toISOString(),
-                                      formattedDate: formattedDate,
-                                      amount: totalAmount
-                                  });
-                              });
-                          });
-  
-                          dates.sort((a, b) => a.date.localeCompare(b.date));
-                          const sortedDates = dates.map(item => item.formattedDate);
-                          const sortedAmounts = dates.map(item => item.amount);
-  
-                          chartprimary.data.datasets[0].label;
-                          chartprimary.data.datasets[0].data = sortedAmounts;
-                          chartprimary.config.data.labels = sortedDates;
-                          chartprimary.update();
-  
-                          document.querySelector("#chart3").style.display = "flex";
-                          document.querySelector("#chartloading3").style.display = "none";
-                          document.querySelector("#loading3").style.display = "flex";
-                          document.querySelector("#loadingfailed3").style.display = "none";
-  
-                      } else {
-                          document.querySelector("#loading3").style.display = "none";
-                          document.querySelector("#loadingfailed3").style.display = "flex";
-                          document.querySelector("#chart3").style.display = "none";
-                          document.querySelector("#chartloading3").style.display = "flex";
-                      }
-                  };
-  
-                  http.onerror = function() {
-                      console.error('There was an error with the XMLHttpRequest.');
-                      document.querySelector("#loading3").style.display = "none";
-                      document.querySelector("#loadingfailed3").style.display = "flex";
-                      document.querySelector("#chart3").style.display = "none";
-                      document.querySelector("#chartloading3").style.display = "flex";
-                  };
-  
-                  http.send();
-  
-              } else {
-                  document.querySelector("#loading3").style.display = "none";
-                  document.querySelector("#loadingfailed3").style.display = "flex";
-                  document.querySelector("#chart3").style.display = "none";
-                  document.querySelector("#chartloading3").style.display = "flex";
-              }
-          }
-      })
-      .catch(error => {
-          console.error('There was an error fetching the data:', error);
-          document.querySelector("#loading3").style.display = "none";
-          document.querySelector("#loadingfailed3").style.display = "flex";
-          document.querySelector("#chart3").style.display = "none";
-          document.querySelector("#chartloading3").style.display = "flex";
-      });
-  }
-  
-  function abortAllRequests() {
-      abortControllers.forEach(controller => controller.abort());
-      abortControllers = []; // Clear the array after aborting
-  }
-  
- 
+async function getchartprimary(){
+
+
+    let mainurl = document.querySelector('#selectedevent').getAttribute('vdid');
+    let amountsprimary = [];
+    let datesprimary = [];
+
+    fetch(`https://ubik.wiki/api/primary-events/?vdid__iexact=${mainurl}`, {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        let event = data.results[0];
+        let counts = event.counts;
+        let source = event.scraper_name.toLowerCase()
+        chartprimary.data.datasets[0].label = source.toUpperCase() + ' Primary'
+        evids = event.site_event_id
+        if(evids.includes('tm')){
+        evids = evids.substring(2)
+        }
+        if (counts && counts.length > 0 && !source.includes('tm')) {
+
+            for (var i = 0; i < counts.length; i++) {
+                    amountsprimary.push(Math.round(counts[i].primary_amount));
+                    datesprimary.push(counts[i].scrape_date);
+            }
+
+            // Sorting dates and corresponding amounts
+            const indices = Array.from({ length: datesprimary.length }, (_, i) => i);
+            indices.sort((a, b) => new Date(datesprimary[a]) - new Date(datesprimary[b]));
+            amountsprimary = indices.map(i => amountsprimary[i]);
+            datesprimary = indices.map(i => datesprimary[i]);
+
+            // Update chart data
+            chartprimary.data.datasets[0].data = amountsprimary;
+            chartprimary.config.data.labels = datesprimary;
+            chartprimary.update();
+
+            // Update display elements
+            document.querySelector("#chart3").style.display = "flex";
+            document.querySelector("#chartloading3").style.display = "none";
+            document.querySelector("#loading3").style.display = "flex";
+            document.querySelector("#loadingfailed3").style.display = "none";
+
+        } else if(source === 'tm' || source === 'ticketmaster'){
+    let dates = [];
+var http = new XMLHttpRequest();
+var url = "https://shibuy.co:8443/142data?eventid=" + evids
+http.open("GET", url, true);
+http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+
+http.onload = function () {
+
+let data = JSON.parse(this.response);
+
+
+if (data.length > 0) {
+    // Assuming dates is already declared somewhere above this code block
+    data.forEach(event => {
+    event.summaries.forEach(summary => {
+
+        const filteredSections = summary.sections.filter(section => section.type !== 'resale');
+
+
+        const totalAmount = filteredSections.reduce((accumulator, section) => accumulator + section.amount, 0);
+
+
+        const parts = summary.scrape_date.split(/[-T:Z]/);
+        const year = parseInt(parts[0], 10);
+        const month = parseInt(parts[1] - 1, 10); // month is 0-indexed in JavaScript Date
+        const day = parseInt(parts[2], 10);
+        const hours = parseInt(parts[3], 10);
+        const minutes = parseInt(parts[4], 10);
+
+        const scrapeDate = new Date(year, month, day, hours, minutes);
+        scrapeDate.setHours(scrapeDate.getHours() - 1);
+
+        const formattedDate = scrapeDate.toISOString().slice(0, 16).replace("T", " ");
+
+        dates.push({
+        date: scrapeDate.toISOString(),
+        formattedDate: formattedDate,
+        amount: totalAmount
+        });
+    });
+    });
+
+dates.sort((a, b) => a.date.localeCompare(b.date));
+const sortedDates = dates.map(item => item.formattedDate);
+const sortedAmounts = dates.map(item => item.amount);
+    chartprimary.data.datasets[0].label
+    chartprimary.data.datasets[0].data = sortedAmounts;
+    chartprimary.config.data.labels = sortedDates;
+    chartprimary.update();
+
+    document.querySelector("#chart3").style.display = "flex";
+    document.querySelector("#chartloading3").style.display = "none";
+    document.querySelector("#loading3").style.display = "flex";
+    document.querySelector("#loadingfailed3").style.display = "none";
+
+} else {
+
+    document.querySelector("#loading3").style.display = "none";
+    document.querySelector("#loadingfailed3").style.display = "flex";
+    document.querySelector("#chart3").style.display = "none";
+    document.querySelector("#chartloading3").style.display = "flex";
+
+
+}
+
+};
+
+http.send();
+
+
+        } else {
+
+            document.querySelector("#loading3").style.display = "none";
+            document.querySelector("#loadingfailed3").style.display = "flex";
+            document.querySelector("#chart3").style.display = "none";
+            document.querySelector("#chartloading3").style.display = "flex";
+        }
+    })
+    .catch(error => {
+        console.error('There was an error fetching the data:', error);
+
+        document.querySelector("#loading3").style.display = "none";
+        document.querySelector("#loadingfailed3").style.display = "flex";
+        document.querySelector("#chart3").style.display = "none";
+        document.querySelector("#chartloading3").style.display = "flex";
+    });
+
+}
+// Function to find the closest weather data based on the time
 function findClosestWeatherByTime(hourArray, time) {
     let [hour, minute] = time.split(':').map(Number);
     if (minute >= 30) {
-        hour += 1;
+        hour += 1; // Round up to the next hour if minutes are 30 or more
     }
     let targetTime = hour.toString().padStart(2, '0') + ':00';
 
@@ -620,9 +574,81 @@ function getDayOfWeek(dateString) {
 
 
 
+const primaryurl = async function(){
+document.querySelector('#urlmain').setAttribute('url','');
+abortControllers = []; // Array to hold all AbortControllers
+
+    const controller = new AbortController();
+    abortControllers.push(controller); // Add controller to the array
+
+    let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/getevent_primaryurl?search-key='+events.venue.id+events.date.slice(0,10)+'&search-key2='+events.name+'&search-key3='+events.date.slice(0,10);
+    let response = await fetch(getevent, { signal: controller.signal });
+    let commits = await response.json();
+
+    if(commits.length>0) {
+        document.querySelector('#urlmain').setAttribute('url', commits[0].Event_Url);
+        document.querySelector('#mainurl').value = commits[0].Event_Url;
+        document.querySelector('#urlmain').style.display = 'flex';
+        document.querySelector('#changedata').style.display = 'flex';
+        document.querySelector('#urlmainmobile').setAttribute('url', commits[0].Event_Url);
+        document.querySelector('#urlmainmobile').style.display = 'flex';
+
+        let url = document.querySelector('#urlmain').getAttribute('url')
+        document.querySelector('#urlmain').addEventListener('click', function() {
+        if(commits[0].Event_Url !== 'null') {
+        window.open(url, 'urlmain');
+        $('#urlmain').css('cursor', 'pointer');
+        }});
+
+        document.querySelector('#fwicon6').textContent = '';
+
+        if(url.includes('ticketmaster') || url.includes('livenation')) {
+            document.getElementById('142box').style.display = 'flex';
+            document.getElementById('142boxmobile').style.display = 'flex';
+            let onefourtwo = 'http://142.93.115.105:8100/event/' + url.split('/event/')[1] + '/details/';
+
+            const tmcount = async function() {
+                const tmController = new AbortController();
+                abortControllers.push(tmController); // Add controller to the array
+
+                let getevent = 'https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5:v1/tmcount?eventid=' + url.split('/event/')[1];
+                let response = await fetch(getevent, { signal: tmController.signal });
+                let commits = await response.json();
+                if(commits.count) {
+                    document.getElementById('tmcount').textContent = commits.count;
+                }
+            };
+
+            tmcount();
+
+            document.getElementById('142box').addEventListener('click', function() {
+                window.open(onefourtwo, 'onefourtwo');
+            });
+
+            document.getElementById('142boxmobile').addEventListener('click', function() {
+                window.open(onefourtwo, 'onefourtwomobile');
+            });
+
+        } else if(url === 'null') {
+            $('#urlmain').css('cursor', 'default');
+            document.getElementById('142box').style.display = 'none';
+            document.getElementById('142boxmobile').style.display = 'none';
+        }
+    }
+
+getchartprimary()
+};
+
+// Function to cancel all fetch requests
+const cancelFetch = function() {
+    abortControllers.forEach(controller => controller.abort());
+    abortControllers = []; // Clear the array after aborting all requests
+};
+
+
 card.addEventListener('click', function() {
 cancelAllRequests()
-abortAllRequests();
+cancelFetch();
 document.querySelector('#vividclick').style.display = 'none';
 document.querySelector('#mainurl').value = ''
 document.querySelector('#urlmain').style.display = 'none'
@@ -794,7 +820,7 @@ $('#search-button').css({pointerEvents: "none"})
     chartvs.update();
 
 } else {
-getchartprimary()
+primaryurl()
 getchartvs()
 vividsections()
 }
