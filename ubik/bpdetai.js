@@ -522,13 +522,18 @@ var params = {
 if (combined >= limit) {
     params["completed"] = 'TRUE'; 
 }
-
-if (!emailsarray.find(email => email === purchacc) && purchacc.value !== 'manual') {
-  emailsarray.push(purchacc);
-} else if (!emailsarray.find(email => email === purchmanual) && purchacc.value === 'manual'){
-emailsarray.push(purchmanual);
-}
  
+
+if (!emailsarray.find(email => email === purchacc) && purchacc !== 'manual') {
+    emailsarray.push(purchacc);
+} else if (!emailsarray.find(email => email === purchmanual) && purchacc === 'manual') {
+    emailsarray.push(purchmanual);
+    params["used_emails"] = purchmanual;
+} else {
+    params["used_emails"] = emailsarray.join(',');
+}
+
+
 
 http.open("PUT", urll, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
