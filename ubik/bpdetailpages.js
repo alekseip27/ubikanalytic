@@ -427,7 +427,9 @@ intervalIds = setInterval(retryClickingSearchBar, 1000);
 }
 
 function emailpart1() {
-
+    
+let purchacc = document.querySelector('#purchaseaccounts').value
+let purchmanual = document.querySelector('#purchaseaccount').value  
 
 if(purchacc !== 'manual') {
   emailused = document.getElementById('purchaseaccounts').value;
