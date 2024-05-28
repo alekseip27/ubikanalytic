@@ -523,7 +523,7 @@ if (combined >= limit) {
     params["completed"] = 'TRUE'; 
 }
 
-if (!emailsarray.find(email => email === purchacc) && purchacc.value !== manual) {
+if (!emailsarray.find(email => email === purchacc) && purchacc.value !== 'manual') {
   emailsarray.push(purchacc);
 } else if (!emailsarray.find(email => email === purchmanual) && purchacc.value === 'manual'){
 emailsarray.push(purchmanual);
