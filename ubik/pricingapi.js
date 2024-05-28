@@ -168,25 +168,26 @@ this.remove()
           const exists = data.count;
   
           if (exists.length > 0) {
-              event = data.results[0];
-              counts = event.counts;
-              let source = event.scraper_name.toLowerCase();
+              eventdata = data.results[0];
+              counts = eventdata.counts;
+              let source = eventdata.scraper_name.toLowerCase();
               chartprimary.data.datasets[0].label = source.toUpperCase() + ' Primary';
-              evids = event.site_event_id;
+              evids = eventdata.site_event_id;
+              
               if (evids.includes('tm')) {
                   evids = evids.substring(2);
               }
   
-              document.querySelector('#urlmain').setAttribute('url', event.event_url);
-              document.querySelector('#mainurl').value = commits[0].event_url;
+              document.querySelector('#urlmain').setAttribute('url', eventdata.event_url);
+              document.querySelector('#mainurl').value = eventdata.event_url;
               document.querySelector('#urlmain').style.display = 'flex';
               document.querySelector('#changedata').style.display = 'flex';
-              document.querySelector('#urlmainmobile').setAttribute('url', event.event_url);
+              document.querySelector('#urlmainmobile').setAttribute('url', eventdata.event_url);
               document.querySelector('#urlmainmobile').style.display = 'flex';
   
               let url = document.querySelector('#urlmain').getAttribute('url');
               document.querySelector('#urlmain').addEventListener('click', function() {
-                  if (commits[0].Event_Url !== 'null') {
+                  if (eventdata.event_url !== 'null') {
                       window.open(url, 'urlmain');
                       $('#urlmain').css('cursor', 'pointer');
                   }
