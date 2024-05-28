@@ -34,13 +34,6 @@ purchaseaccounts = eventdata.purchase_account
 emailsused = eventdata.used_emails
 emailsarray = []
 
-if(emailsused.split(',').length>0){
-emailsused.split(',').forEach(email =>{
-emailsarray.push(email)
-})
-}
-
-
     
 encodedthiseventid = encodeURIComponent(eventdata.event_id)
 
@@ -528,10 +521,14 @@ if (combined >= limit) {
     params["completed"] = 'TRUE'; 
 }
 
-if(!emailsarray.includes(purchacc)){
-params["used_emails"] = emailsarray.push(purchacc)
+if (emailsarray && emailsarray.length > 0) {
+  emailsarray = emailsarray.map(email => email.trim());
 }
 
+if (!emailsarray.includes(purchacc)) {
+  emailsarray.push(purchacc);
+params["used_emails"] = emailsarray.join(',');
+}
 
 
 http.open("PUT", urll, true);
