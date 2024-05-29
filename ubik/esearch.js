@@ -877,7 +877,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
  
   let primam = parseInt(events.app_142_primary_amount)
   let keyword6 = document.querySelector('#sortby').value
-  let primamount = card.getElementsByClassName('main-text-primary')[0];
+  const primamount = card.getElementsByClassName('main-text-primary')[0];
 
 if(primam){
     primamount.textContent = primam;
