@@ -888,7 +888,7 @@ if(primam){
 if (keyword6 === 'fastmovement') {
     if(Number(primam) === 0) {
         primamount.textContent = '';
-        card.setAttribute('primaryamount', '-1');
+        card.setAttribute('primaryamount', '999999');
 }}
 
   if(events.app_142_difference_per_day){
