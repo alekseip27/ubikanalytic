@@ -865,7 +865,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
   if(events.app_142_scrape_date && events.scraper_name !== 'ticketmaster'){
   let oldDate = events.app_142_scrape_date
-  let estDate = moment().tz('America/New_York').format('YYYY-MM-DD');
+  let estDate = moment().tz('America/New_York').format('YYYY/MM/DD');
               
   let mOldDate = moment(oldDate);
   let mEstDate = moment(estDate);
@@ -874,32 +874,30 @@ document.getElementById('rightarrow').addEventListener('click', function() {
   
   if (differenceInDays >= 14) {
   } else {
-
+ 
   let primam = parseInt(events.app_142_primary_amount)
   let keyword6 = document.querySelector('#sortby').value
+  let primamount = card.getElementsByClassName('main-text-primary')[0];
 
-  if(primam){
-
-  if (keyword6 === 'fastmovement') {
-    if(Number(primam) === 0) {
-        primamount.textContent = '';
-        card.setAttribute('primaryamount', '-1');
-      }} else {
-        primamount.textContent = primam;
-        card.setAttribute('primaryamount', primam);
-      }
+if(primam){
+    primamount.textContent = primam;
+    card.setAttribute('primaryamount', primam);
 }
 
 
+if (keyword6 === 'fastmovement') {
+    if(Number(primam) === 0) {
+        primamount.textContent = '';
+        card.setAttribute('primaryamount', '-1');
+}}
 
   if(events.app_142_difference_per_day){
   const aday = card.getElementsByClassName('main-text-aday')[0]
   aday.textContent = parseInt(events.app_142_difference_per_day)
   card.setAttribute('perday',parseInt(events.app_142_difference_per_day))
   }
- 
-}
-}
+
+}}
               
             if(events.time){
             let eventtime = card.getElementsByClassName('main-text-time')[0]
