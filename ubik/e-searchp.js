@@ -882,6 +882,9 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 if(primam){
     primamount.textContent = primam;
     card.setAttribute('primaryamount', primam);
+} else {
+    primamount.textContent = '';
+    card.setAttribute('primaryamount', '-1');
 }
 
 
@@ -889,7 +892,12 @@ if (keyword6 === 'fastmovement') {
     if(Number(primam) === 0) {
         primamount.textContent = '';
         card.setAttribute('primaryamount', '999999');
-}}
+} else {
+    primamount.textContent = primam;
+    card.setAttribute('primaryamount', primam);
+}
+
+}
 
   if(events.app_142_difference_per_day){
   const aday = card.getElementsByClassName('main-text-aday')[0]
