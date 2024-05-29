@@ -874,7 +874,7 @@ let differenceInDays = mEstDate.diff(mOldDate, 'days');
 if (differenceInDays >= 14) {
 } else {
 
-if(events.app_142_primary_amount){
+if(events.app_142_primary_amount && Number(events.app_142_primary_amount)  !== 0 ){
 const primamount = card.getElementsByClassName('main-text-primary')[0]
 primamount.textContent = parseInt(events.app_142_primary_amount)
 card.setAttribute('primaryamount',parseInt(events.app_142_primary_amount))
