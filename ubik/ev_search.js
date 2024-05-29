@@ -882,13 +882,11 @@ document.getElementById('rightarrow').addEventListener('click', function() {
   const primamount = card.getElementsByClassName('main-text-primary')[0]
   primamount.textContent = parseInt(events.app_142_primary_amount)
   card.setAttribute('primaryamount',parseInt(events.app_142_primary_amount))
-  }
-
-  if(primam && keyword6 === 'fastmovement' && (primam === '0' || primam === '0.00' )){
+  } else if(primam && keyword6 === 'fastmovement' && (Number(primam) === 0 || Number(primam) === 0.00 )){
   primamount.textContent = ''
   card.setAttribute('primaryamount','-1')
   }
-
+ 
   if(events.app_142_difference_per_day){
   const aday = card.getElementsByClassName('main-text-aday')[0]
   aday.textContent = parseInt(events.app_142_difference_per_day)
