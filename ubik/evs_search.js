@@ -878,15 +878,22 @@ document.getElementById('rightarrow').addEventListener('click', function() {
   let primam = events.app_142_primary_amount
   let keyword6 = document.querySelector('#sortby').value
 
-  if(primam){
-  const primamount = card.getElementsByClassName('main-text-primary')[0]
-  primamount.textContent = parseInt(events.app_142_primary_amount)
-  card.setAttribute('primaryamount',parseInt(events.app_142_primary_amount))
-  } else if(primam && keyword6 === 'fastmovement' && (Number(primam) === 0 || Number(primam) === 0.00 )){
-  primamount.textContent = ''
-  card.setAttribute('primaryamount','-1')
+  if (keyword6 === 'fastmovement') {
+    if (parseInt(Number(primam)) === 0) {
+      primamount.textContent = '';
+      card.setAttribute('primaryamount', '-1');
+    } else {
+      primamount.textContent = parseInt(primam);
+      card.setAttribute('primaryamount', parseInt(primam));
+    }
+  } else {
+    if (primam) {
+      primamount.textContent = parseInt(primam);
+      card.setAttribute('primaryamount', parseInt(primam));
+    }
   }
- 
+
+
   if(events.app_142_difference_per_day){
   const aday = card.getElementsByClassName('main-text-aday')[0]
   aday.textContent = parseInt(events.app_142_difference_per_day)
