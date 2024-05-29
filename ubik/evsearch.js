@@ -651,7 +651,6 @@ document.getElementById('rightarrow').addEventListener('click', function() {
                 
             const primrem = card.getElementsByClassName('main-text-primary')[0]
             const dpd = card.getElementsByClassName('main-text-aday')[0]
-            primrem.textContent = ''
           
           const scrapeurl = (eventid) => {
             const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid;
@@ -841,6 +840,8 @@ document.getElementById('rightarrow').addEventListener('click', function() {
                 // Returning the first element of the sorted array
                 return counts[0];
             }
+
+/**
   if (counts && source !== 'tm' && source !== 'ticketmaster') {
       const latestCount = getLatestCount(counts);
       const primamount = card.getElementsByClassName('main-text-primary')[0];
@@ -860,7 +861,8 @@ document.getElementById('rightarrow').addEventListener('click', function() {
           }
       }
   }
-  
+  */
+
   if(events.app_142_scrape_date && events.scraper_name !== 'ticketmaster'){
   let oldDate = events.app_142_scrape_date
   let estDate = moment().tz('America/New_York').format('YYYY-MM-DD');
@@ -878,7 +880,6 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
   if(primam){
   const primamount = card.getElementsByClassName('main-text-primary')[0]
-  
   primamount.textContent = parseInt(events.app_142_primary_amount)
   card.setAttribute('primaryamount',parseInt(events.app_142_primary_amount))
   }
@@ -886,16 +887,16 @@ document.getElementById('rightarrow').addEventListener('click', function() {
   if(primam && keyword6 === 'fastmovement' && (primam === '0' || primam === '0.00' )){
   primamount.textContent = ''
   card.setAttribute('primaryamount','-1')
+  }
 
-}
- 
-  
   if(events.app_142_difference_per_day){
   const aday = card.getElementsByClassName('main-text-aday')[0]
   aday.textContent = parseInt(events.app_142_difference_per_day)
   card.setAttribute('perday',parseInt(events.app_142_difference_per_day))
-  }}
   }
+ 
+}
+}
               
             if(events.time){
             let eventtime = card.getElementsByClassName('main-text-time')[0]
