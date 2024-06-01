@@ -42,6 +42,7 @@
             perms = true
             docRef.get().then((docSnap) => {
               let data = docSnap.data();
+              dataz = docSnap.data();
               let name = data["Name"];
               let email = data["Email"];
               let profileuid = curUser.uid;
