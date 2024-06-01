@@ -146,6 +146,7 @@ function checkresults() {
             document.querySelector('#editvenueid').value = events.site_venue_id
             document.querySelector('#editurl').value = events.event_url
             document.querySelector('#editsource').value = events.scraper_name
+            document.querySelector('#vdid').value = events.vdid
             })
 
             card.style.display = 'flex';
