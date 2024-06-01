@@ -89,7 +89,7 @@ document.querySelector('#search-button').addEventListener("click", () => {
             $('#search-button').css({ pointerEvents: "auto" });
             let data = JSON.parse(this.response);
             if (request.status === 401) {
-                // handle unauthorized
+            document.querySelector('.locked-content').style.display = 'flex';
             } else if (request.status >= 200 && request.status < 400) {
                 const cardContainer = document.getElementById("Cards-Container");
                 let quantityseatdata = 0;
