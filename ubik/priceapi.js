@@ -155,7 +155,10 @@ const url = `${xanoUrl}${eventID}&user=${userEmail}`;
 request.open('GET', url, true);
 request.setRequestHeader("Authorization", apiToken);
 request.onload = function() {
-    if (request.status >= 200 && request.status < 400) {
+if (request.status === 401) {
+document.querySelector('.locked-content').style.display = 'flex';
+} else if (request.status >= 200 && request.status < 400) {
+document.querySelector('.locked-content').style.display = 'none';
         const data = JSON.parse(this.response);
         const cardContainer = document.getElementById("Cards-Container2");
         const sampleStyle = document.getElementById('samplestyle2');
