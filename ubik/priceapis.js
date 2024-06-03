@@ -171,6 +171,19 @@ document.querySelector('.locked-content').style.display = 'none';
             card.setAttribute('id', events.id);
         
             const eventPrice = card.querySelector('.main-field-price');
+            
+            const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
+            let dticket = String((events.cost/events.quantity))
+
+            if(dticket.includes('.')){
+            let pti = dticket.split(".");
+
+            let ptix = pti[0] + '.' + pti[1].slice(0,2)
+            eventpriceticket.textContent = '$' + ptix
+            } else {
+            eventpriceticket.textContent = '$' + dticket
+            }
+
         
             let typingTimer;
             const doneTypingInterval = 1000
