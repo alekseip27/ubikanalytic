@@ -256,6 +256,18 @@ document.querySelector('.locked-content').style.display = 'none';
     $('#samplestyle2').hide();
 };
 request.send();
+
+if (datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com') {
+    document.querySelector('.totalcounts').style.display = 'flex';
+    document.querySelector('#lowerbox').style.display = 'flex';
+    document.querySelector('#searchblock').style.display = 'flex';
+} else {
+    document.querySelector('#lowerbox').style.display = 'none';
+    document.querySelector('#searchblock').style.display = 'none';
+    document.querySelector('.totalcounts').style.display = 'none';
+}
+
+
 }
 
 function updateCardContent(card, events, isAuthorizedUser) {
@@ -442,16 +454,6 @@ http.onload = function() {
                             }
                         }, 500);
                         document.querySelector('#selectedevent').setAttribute('eventid', events.id);
-
-                        if (datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com') {
-                            document.querySelector('.totalcounts').style.display = 'flex';
-                            document.querySelector('#lowerbox').style.display = 'flex';
-                            document.querySelector('#searchblock').style.display = 'flex';
-                        } else {
-                            document.querySelector('#lowerbox').style.display = 'none';
-                            document.querySelector('#searchblock').style.display = 'none';
-                            document.querySelector('.totalcounts').style.display = 'none';
-                        }
 
                         let shubid = events.stubhubEventId;
                         if (shubid !== 0) {
@@ -1082,4 +1084,3 @@ document.querySelector("#pricecancel").addEventListener('click', function() {
         }
     })
 })
-
