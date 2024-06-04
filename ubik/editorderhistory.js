@@ -198,9 +198,6 @@ deletebutton.addEventListener('click', function() {
 
     const pquant = card.getElementsByClassName('main-text-purchquant')[0]
     pquant.textContent = events.purchase_quantity;
- 
-    const source = card.getElementsByClassName('main-text-sources')[0]
-    source.textContent = events.purchase_source;
 
     const requested = card.getElementsByClassName('main-text-requested')[0]
     requested.textContent = events.purchase_requested;
