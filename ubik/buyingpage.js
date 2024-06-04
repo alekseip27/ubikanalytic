@@ -432,9 +432,9 @@ let purchacc = document.querySelector('#purchaseaccounts').value
 let purchmanual = document.querySelector('#purchaseaccount').value  
 let emailused = ''
 if(purchacc !== 'manual') {
-  emailused = document.getElementById('purchaseaccounts').value;
+  emailused = purchacc
 } else if(purchacc === 'manual') {
-  emailused = document.getElementById('purchaseaccount').value;
+  emailused = purchmanual
 }
 
   const emailurl = 'https://ubik.wiki/api/buyer-emails/?email__iexact=' + emailused;
@@ -652,8 +652,6 @@ function part3(){
     "purchase_source":eventsource,
     "purchase_quantity":pq,
     "purchase_quantity_total":pmax,
-    "purchase_account":pa,
-    "purchase_email":pm,
     "confirmation":pc,
     "purchased_by":purchasedby,
     "purchase_requested":purchrequest,
@@ -669,15 +667,16 @@ function part3(){
     "purchase_urgency":purchurgency
     }
 
-    const purchaseAccValue = document.getElementById('purchaseaccount').value;
-    const purchaseAccsValue = document.getElementById('purchaseaccounts').value;
-    
-    if (purchaseAccValue.trim() !== "") {
-      param.purchase_account = purchaseAccValue;
-    } else if (purchaseAccsValue.trim() !== "") {
-      param.purchase_account = purchaseAccsValue;
-    }
+    const email_list = document.getElementById('purchaseaccounts').value;
+    const email_list_manual = document.getElementById('purchaseaccount').value;
 
+    if(email_list !== 'manual') {
+        param.purchase_account = email_list.slice(0,1).toUpperCase();
+        param.purchase_email = email_list
+    } else if(email_list === 'manual') {
+        param.purchase_account = email_list_manual.slice(0,1).toUpperCase();
+        param.purchase_email = email_list_manual
+    }
     
     fetch(endpointUrl, {
     method: 'POST',
