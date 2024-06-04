@@ -1,70 +1,97 @@
-document.addEventListener("DOMContentLoaded", function(){
 
-    function getEvents2() {
-    
-    $('.event-box').hide()
-    document.querySelector('#loading').style.display = "flex";
-    document.querySelector('#flexbox').style.display = "none";
-    
-    let xanoUrl = new URL('https://ubik.wiki/api/order-history/');
-    
-    var searchbar1 = document.getElementById('searchbar1');
-    searchbar1.value = searchbar1.value.trimEnd();
-    
-    var searchbar2 = document.getElementById('searchbar2');
-    searchbar2.value = searchbar2.value.trimEnd();
-    
-    var searchbar3 = document.getElementById('searchbar3');
-    searchbar3.value = searchbar3.value.trimEnd();
-    
-    let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value);
-    let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value);
-    let keywords3 = encodeURIComponent(document.getElementById('searchbar3').value);
-    
-    let keywords4 = encodeURIComponent(document.getElementById('not1ticketcheck').checked);
-    let keywords5 = encodeURIComponent(!document.getElementById('1ticketcheck').checked);
+document.getElementById('rightarrow').addEventListener('click', function() {
+    if(nexturl){
+    constructURL(nexturl)
+    }
+    });
     
     
-    $('.event-box').hide();
-    
-    let params = [];
-    
+    document.getElementById('leftarrow').addEventListener('click', function() {
+    if(prevurl){
+    constructURL(prevurl)
+    }
+    });
+ 
+    function constructURL(next) {
+        document.querySelector('#loading').style.display = "flex";
+        document.querySelector('#flexbox').style.display = "none";
+            
+        let baseUrl = 'https://ubik.wiki/api/order-history/?';
+        params = [];
+      
+        var searchbar1 = document.getElementById('searchbar1');
+        searchbar1.value = searchbar1.value.trimEnd();
+        
+        var searchbar2 = document.getElementById('searchbar2');
+        searchbar2.value = searchbar2.value.trimEnd();
+        
+        var searchbar3 = document.getElementById('searchbar3');
+        searchbar3.value = searchbar3.value.trimEnd();
+        
+        let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value);
+        let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value);
+        let keywords3 = encodeURIComponent(document.getElementById('searchbar3').value);
+        let keywords4 = encodeURIComponent(document.getElementById('not1ticketcheck').checked);
+        let keywords5 = encodeURIComponent(!document.getElementById('1ticketcheck').checked);
+        let keywords6 = encodeURIComponent(document.getElementById('searchbar4').value);
+
+
     if (keywords1.length > 0) {
-    params.push('event_name__icontains=' + keywords1.replaceAll("'", "''"));
-    }
-    
-    if (keywords2.length > 0) {
-    params.push('event_venue__icontains=' + keywords2.replaceAll("'", "''"));
-    }
-    
-    if (keywords3.length > 0) {
-    params.push('confirmation__icontains=' + keywords3.replaceAll("'", "''"));
-    }
-    
-    if (keywords4 === 'true') {
-    params.push("not_one_ticket__iexact="+keywords4)
-    }
-    
-    if (keywords5 === 'false') {
-    params.push("one_ticket__iexact="+keywords5)
-    }
-    
-    params.push('limit=1000');
-    
-    
-    let queryString = params.join('&');
-    if (queryString.length > 0) {
-    queryString = '?' + queryString; // Add the initial question mark
-    }
-    
-    xanoUrl.search = queryString;
-    
-    
+        params.push('event_name__icontains=' + keywords1.replaceAll("'", "''"));
+        }
+        
+        if (keywords2.length > 0) {
+        params.push('event_venue__icontains=' + keywords2.replaceAll("'", "''"));
+        }
+        
+        if (keywords3.length > 0) {
+        params.push('confirmation__icontains=' + keywords3.replaceAll("'", "''"));
+        }
+        
+        if (keywords4 === 'true') {
+        params.push("not_one_ticket__iexact="+keywords4)
+        }
+        
+        if (keywords5 === 'false') {
+        params.push("one_ticket__iexact="+keywords5)
+        }
+
+        if (keywords6.length > 0) {
+        params.push('event_date__icontains=' + keywords6.replaceAll("'", "''"));
+        }
+
+        params.push('limit=100'); 
+
+
+
+        
+    $('.event-box').hide()
+  
+    xanoUrl = ''
+
+    if (next) {
+      const nurl = new URL(next);
+      const param = new URLSearchParams(nurl.search);
+      const offset = param.get('offset');
+      console.log('Offset:', offset);
+      params.push('offset=' + offset);
+      xanoUrl = nurl.origin + nurl.pathname + '?' + params.join('&');
+      } else {
+      xanoUrl = baseUrl + params.join('&');
+      }
+      getEvents(xanoUrl);
+      }
+
+      document.querySelector('#search-button').addEventListener("click", () => {
+      savedevents = []
+      constructURL()
+      })
+  
+    function getEvents(fetchurl) {
+
     let request = new XMLHttpRequest();
-    
-    let url = xanoUrl.toString()
-    
-    request.open('GET', url, true)
+ 
+    request.open('GET', fetchurl, true)
     request.setRequestHeader("Content-type", "application/json; charset=utf-8");
     request.setRequestHeader('Authorization', `Bearer ${token}`);
     request.onload = function() {
@@ -72,9 +99,43 @@ document.addEventListener("DOMContentLoaded", function(){
     let data = JSON.parse(this.response)
     
     if (request.status >= 200 && request.status < 400) {
-    document.querySelector('#loading').style.display = "none";
-    document.querySelector('#flexbox').style.display = "flex";
-    
+
+
+        $('.event-box').hide()
+  
+        nexturl = data.next
+        prevurl = data.previous
+        pcount = parseInt(data.count/100)
+
+        document.getElementById('maxpages').textContent = pcount
+
+
+        if(nexturl){
+          const match = nexturl.match(/offset=(\d+)/);
+          
+          let result;
+          
+          if (match && match[1]) {
+          if (match[1].length >= 4) {
+          result = match[1].slice(0, 2);
+          } else {
+          result = match[1][0];
+          }
+          } else {
+          result = '1'
+          }
+          
+          document.getElementById('curpage').textContent = result
+          } else {
+          document.getElementById('curpage').textContent = '1'
+          document.getElementById('maxpages').textContent = '1'
+          }
+
+
+  
+          document.querySelector('#loading').style.display = "none";
+          document.querySelector('#flexbox').style.display = "flex";
+
     const cardContainer = document.getElementById("Cards-Container")
     
     data.results.forEach(events => {
@@ -247,19 +308,12 @@ document.addEventListener("DOMContentLoaded", function(){
 
 function retryClickingSearchBar() {
     if (token.length === 40) {
-getEvents2()
+        constructURL()
     clearInterval(intervalIds);
     }}
 
   intervalIds = setInterval(retryClickingSearchBar, 1000);
-  
-    checkresults()
     
-    document.querySelector('#search-button').addEventListener("click", () => {
-    getEvents2()
-    })
-    
-    })
     
     
     var input = document.getElementById("searchbar1");
@@ -277,6 +331,13 @@ getEvents2()
     }
     });
     var input = document.getElementById("searchbar3");
+    input.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+    event.preventDefault();
+    document.getElementById("search-button").click();
+    }
+    });
+    var input = document.getElementById("searchbar4");
     input.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
     event.preventDefault();
