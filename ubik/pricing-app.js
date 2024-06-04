@@ -89,9 +89,7 @@ document.querySelector('#search-button').addEventListener("click", () => {
             $('#search-button').css({ pointerEvents: "auto" });
             let data = JSON.parse(this.response);
             if (request.status === 401) {
-            document.querySelector('.locked-content').style.display = 'flex';
             } else if (request.status >= 200 && request.status < 400) {
-            document.querySelector('.locked-content').style.display = 'none';
                 const cardContainer = document.getElementById("Cards-Container");
                 let quantityseatdata = 0;
                 
@@ -228,15 +226,15 @@ document.querySelector('.locked-content').style.display = 'none';
             updateCardContent(card, events, isAuthorizedUser);
             cardContainer.appendChild(card);
 
-
-            lowerableview = document.querySelector('#lowerable').checked
-
-            if(containslowerable === false && lowerableview){
-            card.style.display = 'none'
-            document.querySelector('.event-box.selected').remove()
-            }
         });
-    
+
+
+        lowerableview = document.querySelector('#lowerable').checked
+
+        if(containslowerable === false && lowerableview){
+        console.log('true')
+        }
+
     } else {
         console.error('Failed to load data');
     }
@@ -249,7 +247,6 @@ request.send();
 }
 
 function updateCardContent(card, events, isAuthorizedUser) {
-containslowerable === false
 const lowerableCheck = card.querySelector('.main-checkbox-lowerprice');
 const eventID = document.querySelector('#selectedevent').getAttribute('eventid');
 
