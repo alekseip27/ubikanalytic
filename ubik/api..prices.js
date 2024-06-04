@@ -494,7 +494,6 @@ http.onload = function() {
 
 async function getchartprimary() {
 
-    abortControllers = [];
     const controller = new AbortController();
     abortControllers.push(controller);
 
@@ -672,8 +671,6 @@ function displayLoadingFailed() {
     document.querySelector("#chartloading3").style.display = "flex";
 }
 
-activeRequests = [];
-
 // Function to fetch weather data and update the DOM
 async function fetchWeatherData(q, dt) {
     document.querySelector('#vivid-weather').textContent = '';
@@ -727,6 +724,11 @@ function findClosestWeatherByTime(hourArray, time) {
 
 // Function to get vivid sections data
 async function vividsections() {
+    const controller = new AbortController();
+    abortControllers.push(controller);
+
+
+
     document.querySelector('#seatinghide').style.display = 'none';
     document.querySelector('#vividevent').textContent = '';
     document.querySelector('#vividlocation').textContent = '';
@@ -756,7 +758,7 @@ async function vividsections() {
     try {
         const controller = new AbortController();
         const signal = controller.signal;
-        activeRequests.push(controller);
+        abortControllers.push(controller);
 
         const response = await fetch(csvUrl, { signal });
         if (!response.ok) throw new Error('Network response was not ok');
