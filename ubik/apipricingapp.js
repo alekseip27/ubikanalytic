@@ -265,6 +265,7 @@ if (datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubi
     document.querySelector('#lowerbox').style.display = 'none';
     document.querySelector('#searchblock').style.display = 'none';
     document.querySelector('.totalcounts').style.display = 'none';
+    document.querySelector('#lowerable').checked = true;
 }
 
 
@@ -479,8 +480,13 @@ http.onload = function() {
                         document.querySelector('#fwicon2').textContent = '';
                         document.querySelector('#fwicon3').textContent = '';
                         document.querySelector('#fwicon4').textContent = '';
+
+                        lowerableview = document.querySelector('#lowerable').checked
+                        if(lowerableview === false){
                         getchartprimary();
                         getchartvs();
+                        }
+                        
                         vividsections();
                         retrievetickets()
                     });
@@ -857,11 +863,13 @@ function getDayOfWeek(dateString) {
     return daysOfWeek[dayIndex];
 }
 
-// Function to get vivid chart data
 async function getchartvs() {
     let venuecap = 0;
     let dataEntries = [];
-    let evurl = vividseatsurl
+    let evurl = vividseatsurl;
+
+    const controller = new AbortController();
+    abortControllers.push(controller);
 
     try {
         const response = await fetch(`https://ubik.wiki/api/sbox-data/?limit=1000&vividseats_event_url__icontains=${evurl}`, {
@@ -869,7 +877,8 @@ async function getchartvs() {
             headers: {
                 'Content-type': 'application/json; charset=utf-8',
                 'Authorization': `Bearer ${token}`
-            }
+            },
+            signal: controller.signal
         });
 
         if (!response.ok) throw new Error('HTTP error! status: ' + response.status);
@@ -883,10 +892,15 @@ async function getchartvs() {
             displayChartLoadingFailed();
         }
     } catch (error) {
-        console.error('There was an error fetching the vivid chart data:', error);
-        displayChartLoadingFailed();
+        if (error.name === 'AbortError') {
+            console.log('Fetch aborted');
+        } else {
+            console.error('There was an error fetching the vivid chart data:', error);
+            displayChartLoadingFailed();
+        }
     }
 }
+
 
 // Helper function to process vivid chart data
 function processVividChartData(commits, dataEntries, venuecap) {
