@@ -16,7 +16,6 @@ input.addEventListener("keyup", function(event) {
 document.querySelector('#search-button').addEventListener("click", () => {
     document.getElementById('venuebox').style.display = 'none';
     $('#search-button').css({ pointerEvents: "none" });
-
     let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value);
     document.querySelector('#selectedevent').textContent = '';
     document.querySelector('#eventdate').textContent = '';
