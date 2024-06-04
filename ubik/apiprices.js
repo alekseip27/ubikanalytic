@@ -256,19 +256,6 @@ document.querySelector('.locked-content').style.display = 'none';
 };
 request.send();
 
-if (datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubikanalytic.com') {
-    document.querySelector('.totalcounts').style.display = 'flex';
-    document.querySelector('#lowerbox').style.display = 'flex';
-    document.querySelector('#searchblock').style.display = 'flex';
-    document.querySelector('#lowerable').checked = false
-} else {
-    document.querySelector('#lowerbox').style.display = 'none';
-    document.querySelector('#searchblock').style.display = 'none';
-    document.querySelector('.totalcounts').style.display = 'none';
-    document.querySelector('#lowerable').checked = true;
-}
-
-
 }
 
 function updateCardContent(card, events, isAuthorizedUser) {
