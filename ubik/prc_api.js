@@ -232,7 +232,7 @@ document.querySelector('.locked-content').style.display = 'none';
         
         if(containslowerable === false && lowerableview){
             document.querySelector('.event-box.selected').remove()
-            const pricingBoxes = box.querySelectorAll('.event-box-pricing');
+            const pricingBoxes = document.querySelectorAll('.event-box-pricing');
             pricingBoxes.forEach(pricingBox => {
               if (pricingBox.id !== 'samplestyle2') {
                 pricingBox.remove();
