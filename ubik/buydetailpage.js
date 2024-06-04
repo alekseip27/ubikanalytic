@@ -645,6 +645,7 @@ function part3(){
     
     var param = {
     "event_name":eventname,
+    "event_id":thiseventid,
     "event_date":eventdate,
     "event_venue":eventvenue,
     "event_time":eventtime,
