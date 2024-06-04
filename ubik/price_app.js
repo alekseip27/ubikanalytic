@@ -94,6 +94,7 @@ document.querySelector('#search-button').addEventListener("click", () => {
             document.querySelector('.locked-content').style.display = 'none';
                 const cardContainer = document.getElementById("Cards-Container");
                 let quantityseatdata = 0;
+                
 
                 data.forEach(events => {
                     quantityseatdata += Number(events.quantity);
@@ -165,13 +166,19 @@ document.querySelector('.locked-content').style.display = 'none';
         const isAuthorizedUser = ['aleksei@ubikanalytic.com', 'tim@ubikanalytic.com'].includes(userEmail);
         
         document.querySelector('#lowerabletext').style.display = isAuthorizedUser ? 'flex' : 'none';
-        
+        containslowerable = false;
+
         data.forEach(events => {
             const card = sampleStyle.cloneNode(true);
             card.setAttribute('id', events.id);
         
             const eventPrice = card.querySelector('.main-field-price');
             
+            if (events.tags === 'lowerable') {
+                containslowerable = true;
+            }
+
+
             const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
             let dticket = String((events.cost/events.quantity))
 
@@ -220,8 +227,16 @@ document.querySelector('.locked-content').style.display = 'none';
         
             updateCardContent(card, events, isAuthorizedUser);
             cardContainer.appendChild(card);
+
+
+            lowerableview = document.querySelector('#lowerable').checked
+
+            if(containslowerable === false && lowerableview){
+            card.style.display = 'none'
+            document.querySelector('.event-box.selected').remove()
+            }
         });
-        
+    
     } else {
         console.error('Failed to load data');
     }
@@ -234,6 +249,7 @@ request.send();
 }
 
 function updateCardContent(card, events, isAuthorizedUser) {
+containslowerable === false
 const lowerableCheck = card.querySelector('.main-checkbox-lowerprice');
 const eventID = document.querySelector('#selectedevent').getAttribute('eventid');
 
@@ -247,7 +263,6 @@ card.querySelector('.main-text-qty').textContent = events.quantity;
 card.querySelector('.main-field-price').value = events.listPrice;
 card.querySelector('.main-text-cst').textContent = `$${events.cost}`;
 card.querySelector('.main-text-notes').textContent = events.notes;
-
 
 
 updateLowerableCheck(lowerableCheck, events, eventID);
