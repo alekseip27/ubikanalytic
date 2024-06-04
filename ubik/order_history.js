@@ -152,7 +152,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     card.setAttribute('email', events.purchase_email)
     card.setAttribute('source', events.purchase_Source)
     card.setAttribute('quantity', events.purchase_quantity)
-    card.setAttribute('account', events.purchase_account)
+    card.setAttribute('account', events.purchase_account.slice(0,1))
     card.setAttribute('requested', events.purchase_requested)
     card.setAttribute('bought', events.purchased_by)
     card.setAttribute('confirmation', events.confirmation)
@@ -190,7 +190,9 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     purchasequantitymax.textContent = events.purchase_quantity_total
     
     let purchaseaccount = card.getElementsByClassName('main-text-purchased-account')[0]
-    purchaseaccount.textContent = events.purchase_account
+    purchaseaccount.textContent = events.purchase_account.slice(0,1)
+
+        
     
     let confirmation = card.getElementsByClassName('main-text-confirmation')[0]
     
@@ -344,4 +346,8 @@ function retryClickingSearchBar() {
     document.getElementById("search-button").click();
     }
     });
+
+$('#searchbar4').datepicker({
+  dateFormat: 'yy-mm-dd'
+  });
     
