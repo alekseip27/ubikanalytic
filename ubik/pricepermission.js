@@ -57,8 +57,21 @@
     
       if(email.includes('@ubikanalytic.com')){
         token = data["token"]
+      } else {
+      window.location.replace("https://google.com",);
       }
-    
+
+if (email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com') {
+    document.querySelector('.totalcounts').style.display = 'flex';
+    document.querySelector('#lowerbox').style.display = 'flex';
+    document.querySelector('#searchblock').style.display = 'flex';
+    document.querySelector('#lowerable').checked = false
+} else {
+    document.querySelector('#lowerbox').style.display = 'none';
+    document.querySelector('#searchblock').style.display = 'none';
+    document.querySelector('.totalcounts').style.display = 'none';
+    document.querySelector('#lowerable').checked = true;
+}
 
 
     if(email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com'){
