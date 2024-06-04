@@ -135,7 +135,7 @@ function checkresults() {
     document.querySelector('#editname').value =  events.event_name
     document.querySelector('#editvenue').value = events.event_venue
     document.querySelector('#editconfirmation').value = events.confirmation
-    document.querySelector('#editaccount').value = events.purchase_account
+    document.querySelector('#editaccount').value = events.purchase_account.slice(0,1).toUpperCase()
     document.querySelector('#editemail').value = events.purchase_email
     document.querySelector('#editpquantity').value = events.purchase_quantity
     document.querySelector('#editsource').value = events.purchase_source
@@ -191,7 +191,7 @@ deletebutton.addEventListener('click', function() {
     }
  
     const account = card.getElementsByClassName('main-text-acc')[0]
-    account.textContent = events.purchase_account;
+    account.textContent = events.purchase_account.slice(0,1).toUpperCase()
 
     const emails = card.getElementsByClassName('main-text-emls')[0]
     emails.textContent = events.purchase_email;
