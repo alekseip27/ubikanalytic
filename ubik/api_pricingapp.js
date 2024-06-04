@@ -45,7 +45,6 @@ document.querySelector('#search-button').addEventListener("click", () => {
 
     document.querySelector('#pricingpart1').style.display = 'flex';
     document.querySelector('#pricingpart2').style.display = 'none';
-    document.querySelector('#lowerable').checked = false;
     document.querySelector('#urlmain').style.display = 'none';
     document.querySelector('#changedata').style.display = 'none';
     document.querySelector('#urlmainmobile').style.display = 'none';
@@ -261,6 +260,7 @@ if (datas['Email'] === 'aleksei@ubikanalytic.com' || datas['Email'] === 'tim@ubi
     document.querySelector('.totalcounts').style.display = 'flex';
     document.querySelector('#lowerbox').style.display = 'flex';
     document.querySelector('#searchblock').style.display = 'flex';
+    document.querySelector('#lowerable').checked = false
 } else {
     document.querySelector('#lowerbox').style.display = 'none';
     document.querySelector('#searchblock').style.display = 'none';
@@ -486,7 +486,7 @@ http.onload = function() {
                         getchartprimary();
                         getchartvs();
                         }
-                        
+
                         vividsections();
                         retrievetickets()
                     });
