@@ -322,10 +322,11 @@ eventsAmount++;
 document.querySelector("#eventtext").textContent = eventsAmount === 1 ? "event" : "events";
 document.querySelector("#eventsamount").textContent = eventsAmount;
 
+const activeEvent = document.querySelector('.event-box.selected').id
 const activeTicket = $(savePriceButton).closest(".event-box-pricing").attr('id');
 const price = eventPrice.value;
 const user = datas['Email'];
-const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_add_to_queue?ticket-id=${activeTicket}&price=${price}&user=${user}`;
+const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_add_to_queue?ticket-id=${activeTicket}&price=${price}&user=${user}&eventid=${activeEvent}`;
 const http = new XMLHttpRequest();
 const apiToken = datas['pyeo'];
 
