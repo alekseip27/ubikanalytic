@@ -227,12 +227,23 @@ document.querySelector('.locked-content').style.display = 'none';
             cardContainer.appendChild(card);
 
         });
-
-
+ 
         lowerableview = document.querySelector('#lowerable').checked
-
+        
         if(containslowerable === false && lowerableview){
-        console.log('true')
+            document.querySelector('.event-box.selected').remove()
+            const pricingBoxes = box.querySelectorAll('.event-box-pricing');
+            pricingBoxes.forEach(pricingBox => {
+              if (pricingBox.id !== 'samplestyle2') {
+                pricingBox.remove();
+              }
+            });
+            const ticketID = document.querySelector('.event-box.selected').id
+            const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/remove_pricechanges?ticket_id=${ticketID}`;
+            const http = new XMLHttpRequest();
+            http.open("PUT", url, true);
+            http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+            http.send();
         }
 
     } else {
