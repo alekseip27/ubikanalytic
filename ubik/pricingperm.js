@@ -70,6 +70,7 @@ if (email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com') {
     document.querySelector('#lowerbox').style.display = 'none';
     document.querySelector('#searchblock').style.display = 'none';
     document.querySelector('.totalcounts').style.display = 'none';
+    document.querySelector('.chart-tab').style.display = 'none'
     document.querySelector('#lowerable').checked = true;
 }
 
