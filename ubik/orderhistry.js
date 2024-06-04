@@ -169,7 +169,9 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     if(eventname.textContent.length>10) {
     eventname.textContent = events.event_name.slice(0, 10)+'..'
     }
-    
+
+    eventname.addEventListener('click', function() { copyToClipboard(events.event_name); });
+        
     const eventdate = card.getElementsByClassName('main-text-event-date')[0]
     var tdate = events.event_date
     eventdate.textContent = tdate
@@ -182,6 +184,9 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     if(eventvenue.textContent.length>10) {
     eventvenue.textContent = events.event_venue.slice(0, 10)+'...'
     }
+
+    eventvenue.addEventListener('click', function() { copyToClipboard(events.event_venue); });
+        
     
     let purchasequantity = card.getElementsByClassName('main-text-quantity')[0]
     purchasequantity.textContent = events.purchase_quantity
@@ -218,7 +223,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     purchaseemail.textContent = events.purchase_email.slice(0, 10)+'..'
     }
     
-    
+    purchaseemail.addEventListener('click', function() { copyToClipboard(events.purchase_email); });
     
     let purchasedby = card.getElementsByClassName('main-text-purchased-by')[0]
     purchasedby.textContent = events.purchased_by
