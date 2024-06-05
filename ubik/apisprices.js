@@ -15,6 +15,7 @@ input.addEventListener("keyup", function(event) {
 });
 
 document.querySelector('#search-button').addEventListener("click", () => {
+    checkexp()
     document.getElementById('venuebox').style.display = 'none';
     $('#search-button').css({ pointerEvents: "none" });
     let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value);
@@ -1088,3 +1089,67 @@ document.querySelector("#pricecancel").addEventListener('click', function() {
         }
     })
 })
+
+
+
+function checkexp() {
+  const xanoUrl = new URL(`https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/check_permissions`);
+  const userEmail = dataz['Email'];
+  const apiToken = dataz['pyeo'];
+  const request = new XMLHttpRequest();
+  const url = `${xanoUrl}?user=${userEmail}`;
+
+  request.open('GET', url, true);
+  request.setRequestHeader("Authorization", apiToken);
+
+  request.onload = function() {
+    if (request.status >= 200 && request.status < 400) {
+      const response = JSON.parse(this.response);
+      let queue = response.queue_events;
+      let then = Number(response.expirydate);
+      let now = Date.now();
+
+      if (then < now) {
+        document.querySelector('.locked-content').style.display = 'flex';
+      } else {
+        document.querySelector('.locked-content').style.display = 'none';
+      }
+
+      let count = 0;
+      if (queue.length > 0) {
+        queue.forEach(event => {
+          count++;
+          let card = document.getElementById(event.event_id);
+          function checkCard() {
+            if (card) {
+              card.classList.add("pricechange");
+              card.addEventListener('click', function() {
+                card.classList.remove("pricechange");
+              });
+            } else {
+              setTimeout(checkCard, 1000);
+            }
+          }
+          checkCard();
+        });
+
+        document.querySelector('#confirmprice').style.display = 'flex';
+        document.querySelector('#eventsamount').textContent = count;
+
+        if (count === 1) {
+          document.querySelector('#eventtext').textContent = 'event';
+        } else if (count > 1) {
+          document.querySelector('#eventtext').textContent = 'events';
+        }
+      }
+    } else {
+      console.error('Error fetching data from the server');
+    }
+  };
+
+  request.onerror = function() {
+    console.error('Request failed');
+  };
+
+  request.send();
+}
