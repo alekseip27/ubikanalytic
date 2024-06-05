@@ -374,7 +374,6 @@ http.onload = function() {
         card.querySelector('.main-field-price').readOnly = true;
         card.querySelector('.save-price-button').style.display = 'none';
         card.querySelector('.notbt').style.display = 'flex';
-        document.querySelector(".confirmation-pricing").style.display = 'flex';
     }
 };
 }
