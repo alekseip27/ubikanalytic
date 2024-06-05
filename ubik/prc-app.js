@@ -362,7 +362,8 @@ viewPrice.textContent = predictedPrice;
 }
 
 function checkPricingStatus(card, ticketID) {
-const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_check_item?ticket_id=${ticketID}`;
+const user = datas['Email'];
+const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_check_item?ticket_id=${ticketID}&user=${user}`;
 const http = new XMLHttpRequest();
 const apiToken = datas['pyeo'];
 
