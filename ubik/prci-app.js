@@ -1125,9 +1125,6 @@ function checkexp() {
           function checkCard() {
             if (card) {
               card.classList.add("pricechange");
-              card.addEventListener('click', function() {
-                card.classList.remove("pricechange");
-              });
             } else {
               setTimeout(checkCard, 1000);
             }
