@@ -335,6 +335,7 @@ http.open("PUT", url, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
 http.setRequestHeader("Authorization", apiToken);
 http.send();
+$('.event-box.selected').addClass('pricechange');
 }
 
 function updateLastUpdated(card, events) {
@@ -1021,6 +1022,7 @@ document.querySelector('#search-button').click()
 document.querySelector('#priceconfirm').addEventListener("click", () => {
     $('#priceconfirm').css({pointerEvents: "none"})
     $('.event-box-pricing').css({pointerEvents: "none"})
+    $('.event-box').removeClass('pricechange');
 
     let uszz = datas['Email']
     var http = new XMLHttpRequest();
@@ -1049,7 +1051,7 @@ document.querySelector('#priceconfirm').addEventListener("click", () => {
 document.querySelector("#pricecancel").addEventListener('click', function() {
     $('#pricecancel').css({pointerEvents: "none"})
     $('.event-box-pricing').css({pointerEvents: "none"})
-
+    $('.event-box').removeClass('pricechange');
     let usz = datas['Email']
     var http = new XMLHttpRequest();
     var url = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_remove_queue?user=" + usz
