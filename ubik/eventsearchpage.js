@@ -628,7 +628,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
             document.querySelector('#closecharts').style.display = 'flex'
   
             
-  if (events.scraper_name === 'ticketmaster') {
+  if(events.event_url.includes('ticketmaster') || events.event_url.includes('livenation')) {
   document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + evid.substring(2) + "/details/"
   ticketmasterchart()
   } else {
@@ -772,7 +772,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
             scrapeurl(evid.substring(2))
             })
             
-            if(events.scraper_name === 'ticketmaster'){
+            if(events.event_url.includes('ticketmaster') || events.event_url.includes('livenation')){
             topbox.style.display = 'flex'
             rescrapebutton.style.display = 'flex'
             scrapebutton.style.display = 'flex'
@@ -841,29 +841,8 @@ document.getElementById('rightarrow').addEventListener('click', function() {
                 return counts[0];
             }
 
-/**
-  if (counts && source !== 'tm' && source !== 'ticketmaster') {
-      const latestCount = getLatestCount(counts);
-      const primamount = card.getElementsByClassName('main-text-primary')[0];
-      if (latestCount && latestCount.primary_amount !== undefined) {
-          primamount.textContent = parseInt(latestCount.primary_amount);
-          card.setAttribute('primaryamount', parseInt(latestCount.primary_amount));
-  
-          const aday = card.getElementsByClassName('main-text-aday')[0];
-  
-          if (counts.length > 1) {
-              let twolatest = getTwoLatestCounts(counts);
-              if (twolatest[0] && twolatest[1] && twolatest[0].primary_amount !== undefined && twolatest[1].primary_amount !== undefined) {
-                  let difference = Math.abs(parseInt(twolatest[0].primary_amount) - parseInt(twolatest[1].primary_amount));
-                  aday.textContent = difference;
-                  card.setAttribute('perday', parseInt(difference));
-              }
-          }
-      }
-  }
-  */
 
-  if(events.app_142_scrape_date && events.scraper_name !== 'ticketmaster'){
+  if(events.app_142_scrape_date && !events.event_url.includes('ticketmaster') && !events.event_url.includes('livenation')){
   let oldDate = events.app_142_scrape_date
   let estDate = moment().tz('America/New_York').format('YYYY/MM/DD');
               
@@ -888,7 +867,7 @@ if(primam){
 }
 
 
-if (keyword6 === 'fastmovement') {
+if (keyword6 === 'fastmovement' && events.event_url.includes('seetickets')) {
     if(Number(primam) === 0) {
         primamount.textContent = '';
         card.setAttribute('primaryamount', '999999');
