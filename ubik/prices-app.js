@@ -729,8 +729,6 @@ async function vividsections() {
     const controller = new AbortController();
     abortControllers.push(controller);
 
-
-
     document.querySelector('#seatinghide').style.display = 'none';
     document.querySelector('#vividevent').textContent = '';
     document.querySelector('#vividlocation').textContent = '';
@@ -757,15 +755,22 @@ async function vividsections() {
     let vivid_id = document.querySelector('#vseats').getAttribute('url').split('productionId=')[1];
     const csvUrl = `https://ubikdata.wiki:3000/listing/${vivid_id}`;
 
+    const fetchData = async (url, options, retries) => {
+        for (let i = 0; i < retries; i++) {
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) throw new Error('Network response was not ok');
+                return await response.text();
+            } catch (error) {
+                if (i === retries - 1) throw error;
+                console.error(`Retrying... (${i + 1})`);
+            }
+        }
+    };
+
     try {
-        const controller = new AbortController();
         const signal = controller.signal;
-        abortControllers.push(controller);
-
-        const response = await fetch(csvUrl, { signal });
-        if (!response.ok) throw new Error('Network response was not ok');
-
-        const data = await response.text();
+        const data = await fetchData(csvUrl, { signal }, 5);
         const evd = JSON.parse(data);
         const eventDetails = evd[0];
         const globalDetails = eventDetails.global[0];
@@ -790,6 +795,8 @@ async function vividsections() {
         console.error("Error fetching data: ", error);
     }
 }
+
+
 
 // Function to process preferred info
 function processPreferredInfo(tickets, vdcapacity, seatchart) {
