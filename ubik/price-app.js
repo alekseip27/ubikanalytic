@@ -529,12 +529,12 @@ async function getchartprimary() {
             document.querySelector('#urlmainmobile').setAttribute('url', event.event_url);
             document.querySelector('#urlmainmobile').style.display = 'flex';
 
-            let url = document.querySelector('#urlmain').getAttribute('url');
             document.querySelector('#urlmain').addEventListener('click', function() {
-                if (event.event_url !== 'null') window.open(url, 'urlmain');
-                $('#urlmain').css('cursor', 'pointer');
-            });
+              let url = document.querySelector('#urlmain').getAttribute('url');
+              if (url.length>10) window.open(url, 'urlmain');
+              });
 
+              
             document.querySelector('#fwicon6').textContent = '';
 
             if (url.includes('ticketmaster') || url.includes('livenation')) {
@@ -547,6 +547,10 @@ async function getchartprimary() {
             }
         } else {
             displayLoadingFailed();
+            document.querySelector('#urlmain').addEventListener('click', function() {
+              let url = document.querySelector('#urlmain').getAttribute('url');
+              if (url.length>10) window.open(url, 'urlmain');
+              });
         }
     } catch (error) {
         console.error('There was an error fetching the data:', error);
