@@ -336,7 +336,7 @@ source = 'zouk'
 }
 
 else {
-prefix = ''
+prefix = 'other'
 venueprefix = ''
 source = 'other'
 }
@@ -565,7 +565,7 @@ source = 'other'
 
 
    else {
-      result = "other";
+      result = "";
       result2 = "other";
    }
 
