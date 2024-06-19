@@ -336,8 +336,8 @@ source = 'zouk'
 }
 
 else {
-prefix = 'other'
-venueprefix = 'other'
+prefix = ''
+venueprefix = ''
 source = 'other'
 }
 
