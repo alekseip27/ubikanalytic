@@ -528,6 +528,8 @@ async function getchartprimary() {
             document.querySelector('#changedata').style.display = 'flex';
             document.querySelector('#urlmainmobile').setAttribute('url', event.event_url);
             document.querySelector('#urlmainmobile').style.display = 'flex';
+            
+            let url = document.querySelector('#urlmain').getAttribute('url');
 
             document.querySelector('#urlmain').addEventListener('click', function() {
               let url = document.querySelector('#urlmain').getAttribute('url');
