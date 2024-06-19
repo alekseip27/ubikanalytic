@@ -546,6 +546,9 @@ async function getchartprimary() {
                 displayLoadingFailed();
             }
         } else {
+          document.querySelector('#urlmainmobile').style.display = 'none';
+          document.querySelector('#urlmain').style.display = 'none';
+
             displayLoadingFailed();
             document.querySelector('#urlmain').addEventListener('click', function() {
               let url = document.querySelector('#urlmain').getAttribute('url');
