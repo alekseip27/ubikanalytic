@@ -60,6 +60,7 @@
       } else {
       window.location.replace("https://google.com",);
       }
+                
 
 if (email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com') {
     document.querySelector('.totalcounts').style.display = 'flex';
@@ -228,7 +229,20 @@ if (email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com') {
               
               let firstletter = name.substring(0, 1);
               $(".firstletter").html(firstletter);
-              
+
+
+if (email === 'ken@ubikanalytic.com' || email === 'jm@ubikanalytic.com') {
+
+document.querySelector('#scrapeurls').style.display = 'flex'
+document.querySelector('#edithistory').style.display = 'none'
+document.querySelector('#editvenues').style.display = 'none'
+document.querySelector('#editevents').style.display = 'flex'
+document.getElementById('142scraping').style.display = 'none'
+document.querySelector('#datalabeling').style.display = 'none'
+document.querySelector('#datacleaning').style.display = 'none'
+document.querySelector('#dropchecking').style.display = 'none'
+
+}
       
             });
           } else {
