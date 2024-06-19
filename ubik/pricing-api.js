@@ -15,6 +15,7 @@ input.addEventListener("keyup", function(event) {
 });
 
 document.querySelector('#search-button').addEventListener("click", () => {
+  document.querySelector('#searchbar1').disabled = 'true'
     document.getElementById('venuebox').style.display = 'none';
     $('#search-button').css({ pointerEvents: "none" });
     let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value);
@@ -480,13 +481,14 @@ http.onload = function() {
                         vividsections();
                         retrievetickets()
                     });
-
+                document.querySelector('#searchbar1').disabled = 'false'
                     cardContainer.appendChild(card);
                 });
                 checkexp()
                 $('#mainpricing').css("display", "block");
                 $('#loadingpricing').css("display", "none");
                 $('#samplestyle2').hide();
+                document.querySelector('#searchbar1').disabled = 'false'
             }
         };
 
