@@ -938,6 +938,10 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
   if(events.app_142_scrape_date && !events.event_url.includes('ticketmaster') && !events.event_url.includes('livenation')){
   let oldDate = events.app_142_scrape_date
+      
+  const scrapedate = card.getElementsByClassName('main-text-scrapedate')[0];
+  scrapedate.textContent = events.app_142_scrape_date
+
   let estDate = moment().tz('America/New_York').format('YYYY/MM/DD');
 
   let mOldDate = moment(oldDate);
