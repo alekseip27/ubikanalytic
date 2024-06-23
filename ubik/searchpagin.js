@@ -1,4 +1,4 @@
-
+ 
 document.getElementById('rightarrow').addEventListener('click', function() {
     if(nexturl){
     constructURL(nexturl)
@@ -941,11 +941,10 @@ document.getElementById('rightarrow').addEventListener('click', function() {
       
   const scrapedate = card.getElementsByClassName('main-text-scrapedate')[0];
   scrapedate.textContent = events.app_142_scrape_date
-  scrapedate.setAttribute('scrapedate',events.app_142_scrape_date')
+  scrapedate.setAttribute('scrapedate',events.app_142_scrape_date)
 
   if(events.app_142_scrape_date.length<10){
   card.setAttribute('scrapedate','1998-09-09')
-      
   }
 
   let estDate = moment().tz('America/New_York').format('YYYY/MM/DD');
