@@ -507,6 +507,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
                 evids = event.site_event_id.substring(2)
                 if (counts && counts.length > 0 && !source.includes('tm')) {
                 document.querySelector('#tmurl').style.display = 'none'
+                document.querySelector('#eventicon').style.display = 'block'
                 for (var i = 0; i < counts.length; i++) {
                 amountsprimary.push(Math.round(counts[i].primary_amount));
                 datesprimary.push(counts[i].scrape_date);
@@ -654,6 +655,8 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
 
   if(events.event_url.includes('ticketmaster') || events.event_url.includes('livenation')) {
+  document.querySelector('#eventicon').style.display = 'none'
+  document.querySelector('#tmurl').style.display = 'block'
   document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + evid.substring(2) + "/details/"
   ticketmasterchart()
   } else {
