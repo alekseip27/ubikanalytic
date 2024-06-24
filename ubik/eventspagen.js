@@ -615,6 +615,27 @@ document.getElementById('rightarrow').addEventListener('click', function() {
   }
 
         charticon.addEventListener('click', function () {
+                    
+                    document.querySelector('#chart-date').textContent = ''
+                    document.querySelector('#chart-event').textContent = ''
+                    document.querySelector('#chart-venue').textContent = ''
+                    document.querySelector('#chart-location').textContent = ''
+                    document.querySelector('#chart-time').textContent = ''
+
+                    const eventBoxParent = charticon.closest('.event-box')
+                    const daten = eventBoxParent.getAttribute('date')
+                    const eventn = eventBoxParent.getAttribute('name')
+                    const venuen = eventBoxParent.getAttribute('venue')
+                    const cityn = eventBoxParent.getAttribute('location')
+                    const timen = eventBoxParent.getAttribute('time')
+
+                    document.querySelector('#chart-date').textContent = daten
+                    document.querySelector('#chart-event').textContent = eventn
+                    document.querySelector('#chart-venue').textContent = venuen
+                    document.querySelector('#chart-location').textContent = cityn
+                    document.querySelector('#chart-time').textContent = timen
+
+
                     chart.data.datasets[0].label = ''
                     chart.data.datasets[0].data = []
                     chart.config.data.labels = []
