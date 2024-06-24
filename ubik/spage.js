@@ -183,7 +183,10 @@ document.getElementById('rightarrow').addEventListener('click', function() {
             card.setAttribute('name', events.event_name);
             card.setAttribute('url',events.event_url);
             card.setAttribute('country', events.country);
+            card.setAttribute('city', events.city);
+            card.setAttribute('state', events.state);
 
+             
            if(events.date){
             card.setAttribute('date', events.date.slice(0, 10).replaceAll("-","/"));
             card.setAttribute('vivid_ed', events.date.slice(0,10));
@@ -626,13 +629,14 @@ document.getElementById('rightarrow').addEventListener('click', function() {
                     const daten = eventBoxParent.getAttribute('date')
                     const eventn = eventBoxParent.getAttribute('name')
                     const venuen = eventBoxParent.getAttribute('venue')
-                    const cityn = eventBoxParent.getAttribute('location')
+                    const cityn = eventBoxParent.getAttribute('city')
+                    const staten = eventBoxParent.getAttribute('state')
                     const timen = eventBoxParent.getAttribute('time')
 
                     document.querySelector('#chart-date').textContent = daten
                     document.querySelector('#chart-event').textContent = eventn
                     document.querySelector('#chart-venue').textContent = venuen
-                    document.querySelector('#chart-location').textContent = cityn
+                    document.querySelector('#chart-location').textContent = cityn + ',' + staten
                     document.querySelector('#chart-time').textContent = timen
 
 
