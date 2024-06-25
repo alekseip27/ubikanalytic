@@ -797,6 +797,9 @@ async function vividsections() {
             });
         });
 
+        tickets.sort((a, b) => a.price - b.price);
+
+        
         processPreferredInfo(tickets, vdcapacity, seatchart);
         document.querySelector('#sampleitem').style.display = 'none';
         document.querySelector('#vividclick').style.display = 'flex';
