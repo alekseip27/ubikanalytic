@@ -58,7 +58,7 @@ function checkresults() {
     let params = [];
 
     if (addedbygoogle) {
-    params.push('added_by__icontains=google');
+    params.push('added_by__icontains=google&site_venue_id__isblank=true');
     }  
     
     if (keywords1.length > 0) {
