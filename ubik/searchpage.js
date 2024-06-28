@@ -73,6 +73,10 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     params.push(`event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=axs`);
   }
 
+  if (keywords5 === 'nonseeticketstmaxs') {
+    params.push(`event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=axs&event_url__idoesnotcontains=seetickets`);
+  }
+
   if (keywords6 === 'recentlyadded') {
     params.push(`date_created__sort=-1`);
   }
