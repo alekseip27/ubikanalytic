@@ -32,6 +32,30 @@ function checkresults() {
         document.getElementById("search-button").click();
         }
         });
+
+   var input = document.getElementById("searchbar2");
+        input.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("search-button").click();
+        }
+        });
+
+   var input = document.getElementById("searchbar3");
+        input.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("search-button").click();
+        }
+        });
+
+   var input = document.getElementById("searchbar4");
+        input.addEventListener("keyup", function(event) {
+        if (event.keyCode === 13) {
+        event.preventDefault();
+        document.getElementById("search-button").click();
+        }
+        });
         
         document.querySelector('#search-button').addEventListener("click", () => {
         document.querySelector('#loading').style.display = "flex";
