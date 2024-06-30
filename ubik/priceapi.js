@@ -154,7 +154,6 @@ request.open('GET', url, true);
 request.setRequestHeader("Authorization", apiToken);
 request.onload = function() {
 if (request.status === 401) {
-document.querySelector('.locked-content').style.display = 'flex';
 } else if (request.status >= 200 && request.status < 400) {
 document.querySelector('.locked-content').style.display = 'none';
         const data = JSON.parse(this.response);
