@@ -1160,7 +1160,8 @@ function checkexp() {
         }
       }
     } else {
-      console.error('Error fetching data from the server');
+        document.querySelector('.locked-content').style.display = 'flex';
+    
     }
   };
 
@@ -1170,3 +1171,4 @@ function checkexp() {
 
   request.send();
 }
+
