@@ -780,7 +780,7 @@ async function vividsections() {
         const signal = controller.signal;
         const data = await fetchData(csvUrl, { signal }, 5);
         const evd = JSON.parse(data);
-        const eventDetails = evd[0];
+        const eventDetails = evd;
         const globalDetails = eventDetails.global[0];
         const ticketsDetails = eventDetails.tickets;
 
