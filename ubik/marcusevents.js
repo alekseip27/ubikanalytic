@@ -91,7 +91,7 @@ function checkresults() {
             data.results.forEach(events => {
             const style = document.getElementById('samplestyle')
             const card = style.cloneNode(true)
-            evid = events.site_event_id
+            let evid = events.site_event_id
 
             if(evid.startsWith('tm')){
             evid = encodeURIComponent(events.site_event_id).substring(2)
