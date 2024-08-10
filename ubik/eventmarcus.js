@@ -92,6 +92,11 @@ function checkresults() {
             const style = document.getElementById('samplestyle')
             const card = style.cloneNode(true)
             const evid = events.site_event_id
+
+            if(evid.startsWith('tm')){
+            evid = encodeURIComponent(events.site_event_id).substring(2)
+            }
+                
             const eventdate = card.getElementsByClassName('main-text-date')[0]
             
             card.setAttribute('id', '');
@@ -367,9 +372,11 @@ function checkresults() {
             dpd.textContent = ''
             scrapeurl(evid)
             })
-            
+
+                
             
             if(events.scraper_name == 'TM' && !evid.startsWith('Z') && evid.length == 16) {
+
             primrem.textContent = '0'
             dpd.textContent = '0'
             fetchEventData(events.site_event_id)
