@@ -57,6 +57,11 @@ const firebaseConfig = {
     token = data["token"]
   }
 
+            
+
+  if(email.includes('@ubikanalytic.com')){
+    token = data["token"]
+  }
   
   if(marcus === true){
   document.querySelector('#eventsdropdown').style.display = 'flex'
