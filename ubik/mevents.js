@@ -51,6 +51,7 @@ function checkresults() {
       var searchbar2 = document.getElementById('searchbar2');
       searchbar2.value = searchbar2.value.trimEnd();
 
+
     let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
     let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
     $('.event-box').hide()
@@ -97,6 +98,12 @@ function checkresults() {
             evid = encodeURIComponent(events.site_event_id).substring(2)
             }
 
+            const charticon = card.getElementsByClassName('main-text-chart')[0];
+
+            charticon.style.display = 'none'
+
+
+
             const eventdate = card.getElementsByClassName('main-text-date')[0]
 
             card.setAttribute('id', '');
@@ -127,6 +134,10 @@ function checkresults() {
 
 
         function vschartdata(VDID) {
+
+            if(VDID.length<5){
+                return;
+            }
 
         const url = `https://ubik.wiki/api/vividseats/${VDID}/?format=json`;  // Fixed the stray "
 
@@ -216,88 +227,6 @@ function checkresults() {
         }
 
 
-        const charticon = card.getElementsByClassName('main-text-chart')[0];
-
-
-        charticon.addEventListener('click', function () {
-            vschartdata(events.vdid)
-            document.querySelector('#graph-overlay').style.display = 'flex';
-            if (events.scraper_name === 'TM') {
-            document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + evid + "/details/"
-
-            let dates = [];
-            let amounts = [];
-            var http = new XMLHttpRequest();
-            var url = "https://shibuy.co:8443/142data?eventid=" + evid
-            http.open("GET", url, true);
-            http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-
-            // Set a timeout for the request (5 seconds)
-            const requestTimeout = 5000; // 5 seconds
-
-            // Create a timer to log an error if the request takes too long
-            const timeoutTimer = setTimeout(() => {
-              document.querySelector('#tmloader').style.display = 'none';
-              document.querySelector('#tmerror').style.display = 'flex';
-              document.querySelector('#tmchart').style.display = 'none';
-              http.abort(); // Abort the request
-            }, requestTimeout);
-
-            http.onload = function () {
-              // Clear the timeout timer since the request has completed
-              clearTimeout(timeoutTimer);
-
-              let data = JSON.parse(this.response);
-
-              data.forEach(event => {
-                event.summaries.forEach(summary => {
-                  // Assuming there is an array called sections, and you want to sum the amount from all sections
-                  const totalAmount = summary.sections.reduce((accumulator, section) => accumulator + section.amount, 0);
-
-                  // Parse the date string into components
-                  const parts = summary.scrape_date.split(/[-T:Z]/);
-                  const year = parseInt(parts[0], 10);
-                  const month = parseInt(parts[1] - 1, 10);
-                  const day = parseInt(parts[2], 10);
-                  const hours = parseInt(parts[3], 10);
-                  const minutes = parseInt(parts[4], 10);
-
-                  // Create a Date object with the components and subtract 4 hours
-                  const scrapeDate = new Date(year, month, day, hours, minutes);
-                  scrapeDate.setHours(scrapeDate.getHours() - 1);
-
-                  // Format the date as a string
-                  const formattedDate = scrapeDate.toISOString().slice(0, 16).replace("T", " ");
-
-                  dates.push({ date: scrapeDate.toISOString(), formattedDate: formattedDate, amount: totalAmount });
-                });
-              });
-
-              // Sort the dates array by ISO date string (oldest to newest)
-              dates.sort((a, b) => a.date.localeCompare(b.date));
-
-              // Extract formatted dates and amounts after sorting
-              const sortedDates = dates.map(item => item.formattedDate);
-              const sortedAmounts = dates.map(item => item.amount);
-              console.log(sortedAmounts);
-
-              chart.data.datasets[0].data = sortedAmounts;
-              chart.config.data.labels = sortedDates;
-              chart.update();
-              document.querySelector('#tmloader').style.display = 'none';
-              document.querySelector('#tmchart').style.display = 'flex';
-              document.querySelector('#tmerror').style.display = 'none';
-            };
-
-            http.send();
-
-
-        }
-        });
-
-              if (events.scraper_name !== 'TM' || events.vdid.length === 0 ) {
-        charticon.style.display = 'none'
-              }
 
             const primrem = card.getElementsByClassName('main-text-primary')[0]
             const dpd = card.getElementsByClassName('main-text-aday')[0]
@@ -375,14 +304,64 @@ function checkresults() {
 
 
 
-            if(events.scraper_name == 'TM' && !evid.startsWith('Z') && evid.length == 16) {
+if (
+    (events.event_url.includes('ticketmaster') || events.event_url.includes('livenation'))
+    && !evid.startsWith('Z')
+    && evid.length == 16
+) {
+    primrem.textContent = '0';
+    dpd.textContent = '0';
+    rescrapebutton.style.display = 'flex';
+    scrapebutton.style.display = 'flex';
+}
 
-            primrem.textContent = '0'
-            dpd.textContent = '0'
-            fetchEventData(events.site_event_id)
-            rescrapebutton.style.display = 'flex'
-            scrapebutton.style.display = 'flex'
+if (
+    !events.event_url.includes('ticketmaster')
+    && !events.event_url.includes('livenation')
+) {
+    rescrapebutton.style.display = 'none';
+    scrapebutton.style.display = 'none';
+}
+
+
+            function getLatestCount(counts) {
+                if(counts && counts.length>0){
+
+                counts.sort((a, b) => {
+                const dateA = new Date(a.scrape_date);
+                const dateB = new Date(b.scrape_date);
+                return dateB - dateA;
+                });
+
+                return counts[0].primary_amount;
+                } else {
+                return 0;
+                }
             }
+
+            if(events.app_142_scrape_date && !events.event_url.includes('ticketmaster') && !events.event_url.includes('livenation')){
+            const primamount = card.getElementsByClassName('main-text-primary')[0];
+            countsarray = events.counts
+            let primam = parseInt(events.app_142_primary_amount)
+
+            if(Number(getLatestCount(countsarray))){
+                primamount.textContent = getLatestCount(countsarray);
+                card.setAttribute('primaryamount', primam);
+            } else {
+                primamount.textContent = '';
+                card.setAttribute('primaryamount', '-1');
+            }
+
+
+            if(events.app_142_difference_per_day){
+                const aday = card.getElementsByClassName('main-text-aday')[0]
+                aday.textContent = parseInt(events.app_142_difference_per_day)
+                card.setAttribute('perday',parseInt(events.app_142_difference_per_day))
+                }
+
+        }
+
+
 
 
             card.style.display = 'flex';
@@ -455,7 +434,7 @@ function checkresults() {
 
             request.send();
 
-            }
+}
 
             (function() {
             getEvents();
