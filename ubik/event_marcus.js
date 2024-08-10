@@ -94,7 +94,7 @@ function checkresults() {
             const evid = events.site_event_id
 
             if(evid.startsWith('tm')){
-            evid = encodeURIComponent(events.site_event_id).substring(2)
+            const evid = encodeURIComponent(events.site_event_id).substring(2)
             }
                 
             const eventdate = card.getElementsByClassName('main-text-date')[0]
