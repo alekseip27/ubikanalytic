@@ -141,6 +141,10 @@ function checkresults() {
     document.querySelector('#editvenueidsh').value = events.stubhub_venue_id
          
     document.querySelector('#editwarning').value = events.warning
+        
+    document.querySelector('#editpref1').value = events.pref_section1
+    document.querySelector('#editpref2').value = events.pref_section2
+    document.querySelector('#editpref3').value = events.pref_section3
     
     document.querySelector('#editurl').value = events.venue_url
     document.querySelector('#editurlsh').value = events.stubhub_url
