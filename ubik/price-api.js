@@ -836,6 +836,7 @@ function processPreferredInfo(tickets, vdcapacity, seatchart) {
         let clone = document.querySelector('.top-part-section').cloneNode(true);
         clone.id = '';
         clone.setAttribute('section', section);
+        clone.setAttribute('quantity', quantity);
         clone.querySelector('.main-text-vivid-section').textContent = section;
         clone.querySelector('.main-text-vivid-quantity').textContent = quantity.toString();
         clone.querySelector('.main-text-vivid-price').textContent = '$' + price.toFixed(2);
