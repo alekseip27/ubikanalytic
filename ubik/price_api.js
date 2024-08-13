@@ -840,6 +840,25 @@ function processPreferredInfo(tickets, vdcapacity, seatchart) {
         clone.querySelector('.main-text-vivid-section').textContent = section;
         clone.querySelector('.main-text-vivid-quantity').textContent = quantity.toString();
         clone.querySelector('.main-text-vivid-price').textContent = '$' + price.toFixed(2);
+
+
+        clone.querySelector('.main-checkbox-vs').addEventListener('click', function () {
+        if (this.checked) {
+        var ticketRow = this.closest('.top-part-section');
+        var section = ticketRow.getAttribute('section');
+        var quantity = ticketRow.getAttribute('quantity');
+            
+        var rows = document.querySelectorAll('.top-part-section');
+        rows.forEach(function(row) {
+            if (row.getAttribute('section') === section && row.getAttribute('quantity') === quantity) {
+                row.remove();
+            }
+        });
+    }
+});
+
+
+        
         container.appendChild(clone);
     });
 
@@ -855,6 +874,8 @@ function processPreferredInfo(tickets, vdcapacity, seatchart) {
     document.querySelector('#vivid-median').textContent = `$${medianPrice.toFixed(2)}`;
     document.querySelector('#vivid-avg').textContent = `$${averagePrice.toFixed(2)}`;
 
+
+    
     let city = document.querySelector('#vividlocation').textContent.split(',')[0];
     fetchWeatherData(city, eventdate);
 }
