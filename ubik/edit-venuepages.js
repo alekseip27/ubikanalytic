@@ -77,15 +77,15 @@ function checkresults() {
     let params = [];
     
     if (keywords1.length > 0) {
-    params.push('name__icontains=' + keywords1.replaceAll("'", "''"));
+    params.push('name__icontains=' + keywords1)
     }
     
     if (keywords2.length > 0) {
-    params.push('site_venue_id__icontains=' + keywords2.replaceAll("'", "''"));
+    params.push('site_venue_id__icontains=' + keywords2)
     }
     
     if (keywords3.length > 0) {
-    params.push('source_site__icontains=' + keywords3.replaceAll("'", "''"));
+    params.push('source_site__icontains=' + keywords3)
     }
     
     
