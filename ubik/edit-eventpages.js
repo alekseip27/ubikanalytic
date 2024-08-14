@@ -86,18 +86,18 @@ function checkresults() {
     }  
     
     if (keywords1.length > 0) {
-        params.push('name__icontains=' + keywords1
+        params.push('name__icontains=' + keywords1)
     }
 
     if (keywords2.length > 0) {
-        params.push('site_event_id__icontains=' + keywords2
+        params.push('site_event_id__icontains=' + keywords2)
     }
 
     if (keywords3.length > 0) {
-        params.push('venue__icontains=' + keywords3
+        params.push('venue__icontains=' + keywords3)
     }
     if (keywords4.length > 0) {
-        params.push('site_venue_id__icontains=' + keywords4
+        params.push('site_venue_id__icontains=' + keywords4)
     }
 
 
