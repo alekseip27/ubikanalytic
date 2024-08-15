@@ -828,6 +828,7 @@ function processPreferredInfo(tickets, vdcapacity, seatchart) {
     tickets.forEach(ticket => {
         let quantity = parseInt(ticket.quantity, 10);
         let section = ticket.section;
+        let row = ticket.row;
         let price = parseFloat(ticket.price);
 
         totalQuantity += quantity;
@@ -836,8 +837,10 @@ function processPreferredInfo(tickets, vdcapacity, seatchart) {
         let clone = document.querySelector('.top-part-section').cloneNode(true);
         clone.id = '';
         clone.setAttribute('section', section);
+        clone.setAttribute('row', row);
         clone.setAttribute('quantity', quantity);
         clone.querySelector('.main-text-vivid-section').textContent = section;
+        clone.querySelector('.main-text-vivid-row').textContent = row;
         clone.querySelector('.main-text-vivid-quantity').textContent = quantity.toString();
         clone.querySelector('.main-text-vivid-price').textContent = '$' + price.toFixed(2);
 
