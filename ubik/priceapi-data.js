@@ -791,6 +791,7 @@ async function vividsections() {
         ticketsDetails.forEach(ticket => {
             tickets.push({
                 "section": ticket.s,
+                "row": ticket.r,
                 "price": ticket.p,
                 "quantity": ticket.q
             });
