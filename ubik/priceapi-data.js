@@ -91,7 +91,7 @@ document.querySelector('#search-button').addEventListener("click", () => {
             } else if (request.status >= 200 && request.status < 400) {
                 const cardContainer = document.getElementById("Cards-Container");
                 let quantityseatdata = 0;
-                
+
 
                 data.forEach(events => {
                     quantityseatdata += Number(events.quantity);
@@ -142,7 +142,7 @@ document.querySelector('#search-button').addEventListener("click", () => {
 
 //
 
-function retrievetickets(){  
+function retrievetickets(){
 const eventID = document.querySelector('#selectedevent').getAttribute('eventid');
 const xanoUrl = new URL('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_inventory?searchkey=');
 const userEmail = datas['Email'];
@@ -160,16 +160,16 @@ document.querySelector('.locked-content').style.display = 'none';
         const cardContainer = document.getElementById("Cards-Container2");
         const sampleStyle = document.getElementById('samplestyle2');
         const isAuthorizedUser = ['aleksei@ubikanalytic.com', 'tim@ubikanalytic.com'].includes(userEmail);
-        
+
         document.querySelector('#lowerabletext').style.display = isAuthorizedUser ? 'flex' : 'none';
         containslowerable = false;
 
         data.forEach(events => {
             const card = sampleStyle.cloneNode(true);
             card.setAttribute('id', events.id);
-        
+
             const eventPrice = card.querySelector('.main-field-price');
-            
+
             if (events.tags === 'lowerable') {
                 containslowerable = true;
             }
@@ -187,32 +187,32 @@ document.querySelector('.locked-content').style.display = 'none';
             eventpriceticket.textContent = '$' + dticket
             }
 
-        
+
             let typingTimer;
             const doneTypingInterval = 1000
-        
+
             eventPrice.addEventListener('keyup', () => {
                 clearTimeout(typingTimer);
                 if (eventPrice.value && document.querySelector('#vspricing').checked) {
                     typingTimer = setTimeout(() => {
                         var X_given = Number(eventPrice.value);
-        
+
                         if (isNaN(X_given)) {
                             console.error('X_given is not a number');
                             return;
                         }
-        
+
                         let Y_predicted = (
                             -0.56 +
                             1.20 * X_given
                         );
-        
+
                         let Y_predicted_rounded = Y_predicted.toFixed(2);
                         eventPrice.value = Y_predicted_rounded;
                     }, doneTypingInterval);
                 }
             });
-        
+
             eventPrice.addEventListener("keypress", (event) => {
                 if ((event.keyCode === 13) && (!eventPrice.readOnly)) {
                     card.querySelector('.save-price-button').click();
@@ -220,14 +220,14 @@ document.querySelector('.locked-content').style.display = 'none';
                     setTimeout(() => document.querySelector('#isfocus').textContent = '0', 5000);
                 }
             });
-        
+
             updateCardContent(card, events, isAuthorizedUser);
             cardContainer.appendChild(card);
 
         });
- 
+
         lowerableview = document.querySelector('#lowerable').checked
-        
+
         if(containslowerable === false && lowerableview){
 
             const ticketID = document.querySelector('.event-box.selected').id
@@ -236,7 +236,7 @@ document.querySelector('.locked-content').style.display = 'none';
             http.open("PUT", url, true);
             http.setRequestHeader("Content-type", "application/json; charset=utf-8");
             http.send();
-            
+
             document.querySelector('.event-box.selected').remove()
             const pricingBoxes = document.querySelectorAll('.event-box-pricing');
             pricingBoxes.forEach(pricingBox => {
@@ -294,7 +294,7 @@ lowerableCheck.addEventListener('change', function () {
     const ticketID = lowerableCheck.closest('.event-box-pricing').id;
     const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/${lowerableCheck.checked ? 'allow' : 'remove'}_pricechanges?ticket_id=${ticketID}&event_id=${eventID}`;
     const http = new XMLHttpRequest();
-    
+
     http.open("PUT", url, true);
     http.setRequestHeader("Content-type", "application/json; charset=utf-8");
     http.send();
@@ -516,7 +516,7 @@ async function getchartprimary() {
             const event = data.results[0];
             const counts = event.counts;
             let source = event.scraper_name.toLowerCase();
-
+            let venueid = event.site_venue_id
             chartprimary.data.datasets[0].label = `${source.toUpperCase()} Primary`;
             let evids = event.site_event_id;
             if (evids.includes('tm')) evids = evids.substring(2);
@@ -527,7 +527,7 @@ async function getchartprimary() {
             document.querySelector('#changedata').style.display = 'flex';
             document.querySelector('#urlmainmobile').setAttribute('url', event.event_url);
             document.querySelector('#urlmainmobile').style.display = 'flex';
-            
+
             let url = document.querySelector('#urlmain').getAttribute('url');
 
             document.querySelector('#urlmain').addEventListener('click', function() {
@@ -535,14 +535,14 @@ async function getchartprimary() {
               if (url.length>10) window.open(url, 'urlmain');
               });
 
-              
+
             document.querySelector('#fwicon6').textContent = '';
 
             if (url.includes('ticketmaster') || url.includes('livenation')) {
                 handleTicketmasterUrl(url);
                 fetchTicketmasterData(evids);
             } else if (counts && counts.length > 0 && !source.includes('tm')) {
-                updatePrimaryChart(counts);
+                updatePrimaryChart(counts,venueid);
             }  else {
                 displayLoadingFailed();
             }
@@ -577,11 +577,14 @@ function handleTicketmasterUrl(url) {
     });
 }
 
-// Helper function to update primary chart
-function updatePrimaryChart(counts) {
+
+function updatePrimaryChart(counts, venueid) {
     let amountsprimary = [];
     let datesprimary = [];
+    let preferredAmounts = [];
+    let preferredDates = [];
 
+    // Populate primary amounts and dates
     for (let i = 0; i < counts.length; i++) {
         amountsprimary.push(Math.round(counts[i].primary_amount));
         datesprimary.push(counts[i].scrape_date);
@@ -593,19 +596,94 @@ function updatePrimaryChart(counts) {
     amountsprimary = indices.map(i => amountsprimary[i]);
     datesprimary = indices.map(i => datesprimary[i]);
 
-    chartprimary.data.datasets[0].data = amountsprimary;
-    chartprimary.config.data.labels = datesprimary;
-    chartprimary.update();
+    // Fetch preferred sections and update chart with both datasets
+    const controller = new AbortController();
+    abortControllers.push(controller);
 
-    document.querySelector("#chart3").style.display = "flex";
-    document.querySelector("#chartloading3").style.display = "none";
-    document.querySelector("#loading3").style.display = "flex";
-    document.querySelector("#loadingfailed3").style.display = "none";
+    var http = new XMLHttpRequest();
+    var url = `https://ubik.wiki/api/venues/${venueid}/`;
+    http.open("GET", url, true);
+    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    http.setRequestHeader('Authorization', `Bearer ${token}`);
+    http.signal = controller.signal;
+
+    http.onload = function() {
+        let dataResponse = JSON.parse(this.response);
+        let prefSections = {
+            pref1: dataResponse.pref_section1,
+            pref2: dataResponse.pref_section2,
+            pref3: dataResponse.pref_section3
+        };
+
+        // Process counts data to filter preferred sections
+        counts.forEach(count => {
+            const sections = count.sections || []; // Assuming sections are part of count
+            const preferredFilteredSections = sections.filter(section =>
+                section.name === prefSections.pref1 ||
+                section.name === prefSections.pref2 ||
+                section.name === prefSections.pref3
+            );
+            const preferredTotalAmount = preferredFilteredSections.reduce((accumulator, section) => accumulator + section.amount, 0);
+
+            if (preferredTotalAmount > 0) {
+                preferredAmounts.push(Math.round(preferredTotalAmount));
+                preferredDates.push(count.scrape_date);
+            }
+        });
+
+        // Sort preferred data based on dates
+        const preferredIndices = Array.from({ length: preferredDates.length }, (_, i) => i);
+        preferredIndices.sort((a, b) => new Date(preferredDates[a]) - new Date(preferredDates[b]));
+
+        preferredAmounts = preferredIndices.map(i => preferredAmounts[i]);
+        preferredDates = preferredIndices.map(i => preferredDates[i]);
+
+        // Update chart with primary data
+        chartprimary.data.datasets[0].data = amountsprimary;
+        chartprimary.config.data.labels = datesprimary;
+
+        if (preferredAmounts.length > 0) {
+            // Update chart with preferred sections data if available
+            chartprimary.data.datasets[1] = {
+                data: preferredAmounts,
+                label: 'Preferred Sections',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            };
+
+            // Sync labels if necessary
+            chartprimary.config.data.labels = preferredDates;
+        } else {
+            // Remove the preferred dataset if it doesn't exist
+            chartprimary.data.datasets[1] = {
+                data: [],
+                label: 'Preferred Sections (Unavailable)',
+                backgroundColor: 'rgba(192, 75, 75, 0.2)',
+                borderColor: 'rgba(192, 75, 75, 1)',
+                borderWidth: 1
+            };
+        }
+
+        chartprimary.update();
+        console.log(prefSections);
+
+        document.querySelector("#chart3").style.display = "flex";
+        document.querySelector("#chartloading3").style.display = "none";
+        document.querySelector("#loading3").style.display = "flex";
+        document.querySelector("#loadingfailed3").style.display = "none";
+    };
+
+    http.onerror = function() {
+        console.error('There was an error with the XMLHttpRequest.');
+        displayLoadingFailed();
+    };
+
+    http.send();
 }
 
 // Helper function to fetch ticketmaster data
 function fetchTicketmasterData(evids) {
-    let dates = [];
     const controller = new AbortController();
     abortControllers.push(controller);
 
@@ -618,7 +696,11 @@ function fetchTicketmasterData(evids) {
     http.onload = function() {
         let data = JSON.parse(this.response);
         if (data.length > 0) {
-            processTicketmasterData(data, dates);
+    let venueid = 'tm'+data[0].venue.ticketmaster_id
+    console.log(venueid)
+
+
+            processTicketmasterData(data,venueid);
         } else {
             displayLoadingFailed();
         }
@@ -632,46 +714,130 @@ function fetchTicketmasterData(evids) {
     http.send();
 }
 
-// Helper function to process ticketmaster data
-function processTicketmasterData(data, dates) {
-    data.forEach(event => {
-        event.summaries.forEach(summary => {
-            const filteredSections = summary.sections.filter(section => section.type !== 'resale');
-            const totalAmount = filteredSections.reduce((accumulator, section) => accumulator + section.amount, 0);
+function processTicketmasterData(data, venueid) {
+    let preferredDates = [];
+    let preferredAmounts = [];
+    let dates = [];
+    let amounts = [];
+    let venue_id = venueid;
 
-            const parts = summary.scrape_date.split(/[-T:Z]/);
-            const year = parseInt(parts[0], 10);
-            const month = parseInt(parts[1] - 1, 10);
-            const day = parseInt(parts[2], 10);
-            const hours = parseInt(parts[3], 10);
-            const minutes = parseInt(parts[4], 10);
+    // Fetch preferred sections and process data
+    const controller = new AbortController();
+    abortControllers.push(controller);
 
-            const scrapeDate = new Date(year, month, day, hours, minutes);
-            scrapeDate.setHours(scrapeDate.getHours() - 1);
+    var http = new XMLHttpRequest();
+    var url = `https://ubik.wiki/api/venues/${venue_id}/`;
+    http.open("GET", url, true);
+    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    http.setRequestHeader('Authorization', `Bearer ${token}`);
+    http.signal = controller.signal;
 
-            const formattedDate = scrapeDate.toISOString().slice(0, 16).replace("T", " ");
+    http.onload = function () {
+        let dataResponse = JSON.parse(this.response);
+        let prefSections = {
+            pref1: dataResponse.pref_section1,
+            pref2: dataResponse.pref_section2,
+            pref3: dataResponse.pref_section3
+        };
 
-            dates.push({
-                date: scrapeDate.toISOString(),
-                formattedDate: formattedDate,
-                amount: totalAmount
+        console.log("Preferred Sections:", prefSections);
+
+        // Process the Ticketmaster data with the preferred sections
+        data.forEach(event => {
+            event.summaries.forEach(summary => {
+                if (!summary.sections || summary.sections.length === 0) {
+                    console.log("No sections available for this summary:", summary.scrape_date);
+                    return;
+                }
+
+                const filteredSections = summary.sections.filter(section => section.type !== 'resale');
+                const totalAmount = filteredSections.reduce((accumulator, section) => accumulator + section.amount, 0);
+
+                if (totalAmount > 0) {
+                    const parts = summary.scrape_date.split(/[-T:Z]/);
+                    const year = parseInt(parts[0], 10);
+                    const month = parseInt(parts[1], 10) - 1;
+                    const day = parseInt(parts[2], 10);
+                    const hours = parseInt(parts[3], 10);
+                    const minutes = parseInt(parts[4], 10);
+
+                    const scrapeDate = new Date(year, month, day, hours, minutes);
+                    scrapeDate.setHours(scrapeDate.getHours() - 1);
+
+                    const formattedDate = scrapeDate.toISOString().slice(0, 16).replace("T", " ");
+
+                    dates.push(formattedDate);
+                    amounts.push(totalAmount);
+
+                    const preferredFilteredSections = filteredSections.filter(section =>
+                        (section.section === prefSections.pref1 && prefSections.pref1 !== "") ||
+                        (section.section === prefSections.pref2 && prefSections.pref2 !== "") ||
+                        (section.section === prefSections.pref3 && prefSections.pref3 !== "")
+                    );
+                    const preferredTotalAmount = preferredFilteredSections.reduce((accumulator, section) => accumulator + section.amount, 0);
+
+                    if (preferredTotalAmount > 0) {
+                        preferredDates.push(formattedDate);
+                        preferredAmounts.push(preferredTotalAmount);
+                    }
+                }
             });
         });
-    });
 
-    dates.sort((a, b) => a.date.localeCompare(b.date));
-    const sortedDates = dates.map(item => item.formattedDate);
-    const sortedAmounts = dates.map(item => item.amount);
+        // Sort both datasets
+        const sortedIndices = dates.map((date, index) => ({ date, index }))
+            .sort((a, b) => new Date(a.date) - new Date(b.date))
+            .map(({ index }) => index);
 
-    chartprimary.data.datasets[0].data = sortedAmounts;
-    chartprimary.config.data.labels = sortedDates;
-    chartprimary.update();
+        const sortedDates = sortedIndices.map(i => dates[i]);
+        const sortedAmounts = sortedIndices.map(i => amounts[i]);
 
-    document.querySelector("#chart3").style.display = "flex";
-    document.querySelector("#chartloading3").style.display = "none";
-    document.querySelector("#loading3").style.display = "flex";
-    document.querySelector("#loadingfailed3").style.display = "none";
+        const sortedPreferredAmounts = sortedIndices.map(i => preferredAmounts[i] || null);
+
+        console.log("Sorted dates:", sortedDates);
+        console.log("Sorted amounts:", sortedAmounts);
+        console.log("Sorted preferred amounts:", sortedPreferredAmounts);
+
+        // Populate the first dataset
+        chartprimary.data.datasets[0].data = sortedAmounts;
+        chartprimary.config.data.labels = sortedDates;
+
+        if (preferredAmounts.length > 0) {
+            // Populate the second dataset with preferred sections data, aligned with sortedDates
+            chartprimary.data.datasets[1] = {
+                data: sortedPreferredAmounts,
+                label: 'Preferred Sections',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            };
+        } else {
+            // Indicate that preferred data is unavailable
+            chartprimary.data.datasets[1] = {
+                data: [],
+                label: 'Preferred Sections (Unavailable)',
+                backgroundColor: 'rgba(192, 75, 75, 0.2)',
+                borderColor: 'rgba(192, 75, 75, 1)',
+                borderWidth: 1
+            };
+        }
+
+        chartprimary.update();
+
+        document.querySelector("#chart3").style.display = "flex";
+        document.querySelector("#chartloading3").style.display = "none";
+        document.querySelector("#loading3").style.display = "flex";
+        document.querySelector("#loadingfailed3").style.display = "none";
+    };
+
+    http.onerror = function () {
+        console.error('There was an error with the XMLHttpRequest.');
+        displayLoadingFailed();
+    };
+
+    http.send();
 }
+
 
 // Helper function to display loading failed
 function displayLoadingFailed() {
@@ -799,7 +965,7 @@ async function vividsections() {
 
         tickets.sort((a, b) => a.price - b.price);
 
-        
+
         processPreferredInfo(tickets, vdcapacity, seatchart);
         document.querySelector('#sampleitem').style.display = 'none';
         document.querySelector('#vividclick').style.display = 'flex';
@@ -846,7 +1012,7 @@ function processPreferredInfo(tickets, vdcapacity, seatchart) {
         clone.querySelector('.main-text-vivid-price').textContent = '$' + price.toFixed(2);
 
 
-        
+
         container.appendChild(clone);
     });
 
@@ -863,7 +1029,7 @@ function processPreferredInfo(tickets, vdcapacity, seatchart) {
     document.querySelector('#vivid-avg').textContent = `$${averagePrice.toFixed(2)}`;
 
 
-    
+
     let city = document.querySelector('#vividlocation').textContent.split(',')[0];
     fetchWeatherData(city, eventdate);
 }
@@ -1171,7 +1337,7 @@ function checkexp() {
       }
     } else {
         document.querySelector('.locked-content').style.display = 'flex';
-    
+
     }
   };
 
@@ -1181,4 +1347,3 @@ function checkexp() {
 
   request.send();
 }
-
