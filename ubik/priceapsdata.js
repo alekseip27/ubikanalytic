@@ -412,6 +412,8 @@ http.onload = function() {
                         chartprimary.data.datasets[0].data = '';
                         chartprimary.config.data.labels = '';
                         chartprimary.data.datasets[0].label = '';
+                        chartprimary.data.datasets.splice(1,3)
+
                         chartprimary.update();
 
                         $('#mainpricing').hide();
