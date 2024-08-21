@@ -493,6 +493,7 @@ http.onload = function() {
     });
 });
 
+
 async function getchartprimary() {
 
     const controller = new AbortController();
@@ -577,7 +578,6 @@ function handleTicketmasterUrl(url) {
     });
 }
 
-
 function updatePrimaryChart(counts, venueid) {
     let amountsprimary = [];
     let datesprimary = [];
@@ -642,24 +642,11 @@ function updatePrimaryChart(counts, venueid) {
         chartprimary.data.datasets[0].data = amountsprimary;
         chartprimary.config.data.labels = datesprimary;
 
-        if (preferredAmounts.length > 0) {
-            // Update chart with preferred sections data if available
-            chartprimary.data.datasets[1] = {
-                data: preferredAmounts,
-                label: 'Preferred Sections',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
-            };
-
-            // Sync labels if necessary
-            chartprimary.config.data.labels = preferredDates;
-        } else {
-            // Remove the preferred dataset if it doesn't exist
+        if (!preferredAmounts.length > 0) {
             chartprimary.data.datasets[1] = {
                 data: [],
                 label: 'Preferred Sections (Unavailable)',
-                backgroundColor: 'rgba(192, 75, 75, 0.2)',
+                backgroundColor: 'rgba(192, 75, 75, 1)',
                 borderColor: 'rgba(192, 75, 75, 1)',
                 borderWidth: 1
             };
@@ -713,12 +700,19 @@ function fetchTicketmasterData(evids) {
 
     http.send();
 }
-
 function processTicketmasterData(data, venueid) {
-    let preferredDates = [];
-    let preferredAmounts = [];
     let dates = [];
     let amounts = [];
+
+    let preferredDates1 = [];
+    let preferredAmounts1 = [];
+
+    let preferredDates2 = [];
+    let preferredAmounts2 = [];
+
+    let preferredDates3 = [];
+    let preferredAmounts3 = [];
+
     let venue_id = venueid;
 
     // Fetch preferred sections and process data
@@ -769,59 +763,101 @@ function processTicketmasterData(data, venueid) {
                     dates.push(formattedDate);
                     amounts.push(totalAmount);
 
-                    const preferredFilteredSections = filteredSections.filter(section =>
-                        (section.section === prefSections.pref1 && prefSections.pref1 !== "") ||
-                        (section.section === prefSections.pref2 && prefSections.pref2 !== "") ||
-                        (section.section === prefSections.pref3 && prefSections.pref3 !== "")
-                    );
-                    const preferredTotalAmount = preferredFilteredSections.reduce((accumulator, section) => accumulator + section.amount, 0);
+                    // Process for preferred section 1 (contains check), if pref1 is valid
+                    if (prefSections.pref1 && prefSections.pref1 !== "null") {
+                        const section1 = filteredSections.find(section => section.section.includes(prefSections.pref1));
+                        if (section1) {
+                            preferredDates1.push(formattedDate);
+                            preferredAmounts1.push(section1.amount);
+                        }
+                    }
 
-                    if (preferredTotalAmount > 0) {
-                        preferredDates.push(formattedDate);
-                        preferredAmounts.push(preferredTotalAmount);
+                    // Process for preferred section 2 (contains check), if pref2 is valid
+                    if (prefSections.pref2 && prefSections.pref2 !== "null") {
+                        const section2 = filteredSections.find(section => section.section.includes(prefSections.pref2));
+                        if (section2) {
+                            preferredDates2.push(formattedDate);
+                            preferredAmounts2.push(section2.amount);
+                        }
+                    }
+
+                    // Process for preferred section 3 (contains check), if pref3 is valid
+                    if (prefSections.pref3 && prefSections.pref3 !== "null") {
+                        const section3 = filteredSections.find(section => section.section.includes(prefSections.pref3));
+                        if (section3) {
+                            preferredDates3.push(formattedDate);
+                            preferredAmounts3.push(section3.amount);
+                        }
                     }
                 }
             });
         });
 
-        // Sort both datasets
-        const sortedIndices = dates.map((date, index) => ({ date, index }))
-            .sort((a, b) => new Date(a.date) - new Date(b.date))
-            .map(({ index }) => index);
-
-        const sortedDates = sortedIndices.map(i => dates[i]);
-        const sortedAmounts = sortedIndices.map(i => amounts[i]);
-
-        const sortedPreferredAmounts = sortedIndices.map(i => preferredAmounts[i] || null);
-
-        console.log("Sorted dates:", sortedDates);
-        console.log("Sorted amounts:", sortedAmounts);
-        console.log("Sorted preferred amounts:", sortedPreferredAmounts);
-
-        // Populate the first dataset
-        chartprimary.data.datasets[0].data = sortedAmounts;
-        chartprimary.config.data.labels = sortedDates;
-
-        if (preferredAmounts.length > 0) {
-            // Populate the second dataset with preferred sections data, aligned with sortedDates
-            chartprimary.data.datasets[1] = {
-                data: sortedPreferredAmounts,
-                label: 'Preferred Sections',
-                backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 1
+        // Sort the collected data
+        const sortData = (amounts, dates) => {
+            const indices = Array.from({ length: dates.length }, (_, i) => i);
+            indices.sort((a, b) => new Date(dates[a]) - new Date(dates[b]));
+            return {
+                sortedAmounts: indices.map(i => amounts[i]),
+                sortedDates: indices.map(i => dates[i])
             };
-        } else {
-            // Indicate that preferred data is unavailable
-            chartprimary.data.datasets[1] = {
-                data: [],
-                label: 'Preferred Sections (Unavailable)',
-                backgroundColor: 'rgba(192, 75, 75, 0.2)',
-                borderColor: 'rgba(192, 75, 75, 1)',
+        };
+
+        const sortedPrimaryData = sortData(amounts, dates);
+        const sortedData1 = sortData(preferredAmounts1, preferredDates1);
+        const sortedData2 = sortData(preferredAmounts2, preferredDates2);
+        const sortedData3 = sortData(preferredAmounts3, preferredDates3);
+
+        console.log("Sorted dates:", sortedPrimaryData.sortedDates);
+        console.log("Sorted amounts:", sortedPrimaryData.sortedAmounts);
+
+        // Update chart with primary data
+        chartprimary.data.datasets[0].data = sortedPrimaryData.sortedAmounts;
+        chartprimary.config.data.labels = sortedPrimaryData.sortedDates;
+
+        // Ensure primary dataset is always present
+        chartprimary.data.datasets = [{
+            data: sortedPrimaryData.sortedAmounts,
+            label: "TICKETMASTER Primary",
+            backgroundColor: 'rgba(0, 102, 51, 1)',
+            borderColor: 'rgba(0, 102, 51, 1)',
+            borderWidth: 1
+        }];
+
+        // Add other datasets conditionally, only if prefSections are not empty or "null"
+        if (prefSections.pref1 && prefSections.pref1 !== "null" && sortedData1.sortedAmounts.length > 0) {
+            chartprimary.data.datasets.push({
+                data: sortedData1.sortedAmounts,
+                label: `${prefSections.pref1}`,
+                backgroundColor: 'rgba(33, 104, 105, 1)',
+                borderColor: 'rgba(33, 104, 105, 1)',
                 borderWidth: 1
-            };
+            });
         }
 
+        if (prefSections.pref2 && prefSections.pref2 !== "null" && sortedData2.sortedAmounts.length > 0) {
+            chartprimary.data.datasets.push({
+                data: sortedData2.sortedAmounts,
+                label: `${prefSections.pref2}`,
+                backgroundColor: 'rgba(0, 51, 102, 1)',
+                borderColor: 'rgba(0, 51, 102, 1)',
+                borderWidth: 1
+            });
+        }
+
+        if (prefSections.pref3 && prefSections.pref3 !== "null" && sortedData3.sortedAmounts.length > 0) {
+            chartprimary.data.datasets.push({
+                data: sortedData3.sortedAmounts,
+                label: `${prefSections.pref3}`,
+                backgroundColor: 'rgba(173, 217, 244, 1)',
+                borderColor: 'rgba(173, 217, 244, 1)',
+                borderWidth: 1
+            });
+        }
+
+        console.log("Final datasets for the chart:", chartprimary.data.datasets);
+
+        // Update the chart
         chartprimary.update();
 
         document.querySelector("#chart3").style.display = "flex";
@@ -837,6 +873,7 @@ function processTicketmasterData(data, venueid) {
 
     http.send();
 }
+
 
 
 // Helper function to display loading failed
