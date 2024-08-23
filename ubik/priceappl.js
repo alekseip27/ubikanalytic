@@ -638,11 +638,11 @@ function updateChartWithPrimaryAndPreferred(counts, venueid, evids) {
                     let formattedDate = `${scrapeDate.getMonth() + 1}/${scrapeDate.getDate()}/${scrapeDate.getFullYear()}, ${hours}:${("0" + scrapeDate.getMinutes()).slice(-2)}:${("0" + scrapeDate.getSeconds()).slice(-2)} ${scrapeDate.getHours() >= 12 ? 'PM' : 'AM'}`;
 
                     result.tickets_by_sections.forEach(section => {
-                        if (section.n.toLowerCase().includes(pref.toLowerCase())) {
-                            prefAmounts.push(Math.round(section.q));
+                        if (section.section.toLowerCase().includes(pref.toLowerCase())) {
+                            prefAmounts.push(Math.round(section.amount));
                             prefDates.push(formattedDate);
                             combinedDates.add(formattedDate);
-                            console.log(`Inserting value ${section.q} for ${section.n} on ${formattedDate}`);
+                            console.log(`Inserting value ${section.amount} for ${section.section} on ${formattedDate}`);
                         }
                     });
                 });
