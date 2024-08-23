@@ -495,9 +495,22 @@ http.onload = function() {
     });
 });
 
+// Helper function to handle ticketmaster URL
+function handleTicketmasterUrl(url) {
+    document.getElementById('142box').style.display = 'flex';
+    document.getElementById('142boxmobile').style.display = 'flex';
+    let onefourtwo = `http://142.93.115.105:8100/event/${url.split('/event/')[1]}/details/`;
+
+    document.getElementById('142box').addEventListener('click', function() {
+        window.open(onefourtwo, 'onefourtwo');
+    });
+
+    document.getElementById('142boxmobile').addEventListener('click', function() {
+        window.open(onefourtwo, 'onefourtwomobile');
+    });
+}
 
 async function getchartprimary() {
-
     const controller = new AbortController();
     abortControllers.push(controller);
 
@@ -519,9 +532,10 @@ async function getchartprimary() {
             const event = data.results[0];
             const counts = event.counts;
             let source = event.scraper_name.toLowerCase();
-            let venueid = event.site_venue_id
+            let venueid = event.site_venue_id;
             chartprimary.data.datasets[0].label = `${source.toUpperCase()} Primary`;
             let evids = event.site_event_id;
+            let url = event.event_url
             if (evids.includes('tm')) evids = evids.substring(2);
 
             document.querySelector('#urlmain').setAttribute('url', event.event_url);
@@ -531,13 +545,10 @@ async function getchartprimary() {
             document.querySelector('#urlmainmobile').setAttribute('url', event.event_url);
             document.querySelector('#urlmainmobile').style.display = 'flex';
 
-            let url = document.querySelector('#urlmain').getAttribute('url');
-
             document.querySelector('#urlmain').addEventListener('click', function() {
               let url = document.querySelector('#urlmain').getAttribute('url');
-              if (url.length>10) window.open(url, 'urlmain');
-              });
-
+              if (url.length > 10) window.open(url, 'urlmain');
+            });
 
             document.querySelector('#fwicon6').textContent = '';
 
@@ -545,19 +556,14 @@ async function getchartprimary() {
                 handleTicketmasterUrl(url);
                 fetchTicketmasterData(evids);
             } else if (counts && counts.length > 0 && !source.includes('tm')) {
-                updatePrimaryChart(counts,venueid);
-            }  else {
+                updateChartWithPrimaryAndPreferred(counts, venueid, evids);
+            } else {
                 displayLoadingFailed();
             }
         } else {
-          document.querySelector('#urlmainmobile').style.display = 'none';
-          document.querySelector('#urlmain').style.display = 'none';
-
+            document.querySelector('#urlmainmobile').style.display = 'none';
+            document.querySelector('#urlmain').style.display = 'none';
             displayLoadingFailed();
-            document.querySelector('#urlmain').addEventListener('click', function() {
-              let url = document.querySelector('#urlmain').getAttribute('url');
-              if (url.length>10) window.open(url, 'urlmain');
-              });
         }
     } catch (error) {
         console.error('There was an error fetching the data:', error);
@@ -565,43 +571,30 @@ async function getchartprimary() {
     }
 }
 
-// Helper function to handle ticketmaster URL
-function handleTicketmasterUrl(url) {
-    document.getElementById('142box').style.display = 'flex';
-    document.getElementById('142boxmobile').style.display = 'flex';
-    let onefourtwo = `http://142.93.115.105:8100/event/${url.split('/event/')[1]}/details/`;
+function updateChartWithPrimaryAndPreferred(counts, venueid, evids) {
+    let amountsPrimary = [];
+    let datesPrimary = [];
+    let combinedDates = new Set();
+    let preferredData = [];
 
-    document.getElementById('142box').addEventListener('click', function() {
-        window.open(onefourtwo, 'onefourtwo');
-    });
-
-    document.getElementById('142boxmobile').addEventListener('click', function() {
-        window.open(onefourtwo, 'onefourtwomobile');
-    });
-}
-
-function updatePrimaryChart(counts, venueid) {
-    let amountsprimary = [];
-    let datesprimary = [];
-    let preferredAmounts = [];
-    let preferredDates = [];
+    chartprimary.data.datasets.splice(1,3)
+    chartprimary.update();
 
     // Populate primary amounts and dates
-    for (let i = 0; i < counts.length; i++) {
-        amountsprimary.push(Math.round(counts[i].primary_amount));
-        datesprimary.push(counts[i].scrape_date);
-    }
+    counts.forEach(count => {
+        amountsPrimary.push(Math.round(count.primary_amount));
+        datesPrimary.push(count.scrape_date);
+        combinedDates.add(count.scrape_date);
+    });
 
-    const indices = Array.from({ length: datesprimary.length }, (_, i) => i);
-    indices.sort((a, b) => new Date(datesprimary[a]) - new Date(datesprimary[b]));
+    console.log("Primary data amounts:", amountsPrimary);
+    console.log("Primary data dates:", datesPrimary);
 
-    amountsprimary = indices.map(i => amountsprimary[i]);
-    datesprimary = indices.map(i => datesprimary[i]);
-
-    // Fetch preferred sections and update chart with both datasets
+    // Fetch preferred sections and preferred counts
     const controller = new AbortController();
     abortControllers.push(controller);
 
+    // Step 1: Fetch preferred sections
     var http = new XMLHttpRequest();
     var url = `https://ubik.wiki/api/venues/${venueid}/`;
     http.open("GET", url, true);
@@ -617,59 +610,105 @@ function updatePrimaryChart(counts, venueid) {
             pref3: dataResponse.pref_section3
         };
 
-        // Process counts data to filter preferred sections
-        counts.forEach(count => {
-            const sections = count.sections || []; // Assuming sections are part of count
-            const preferredFilteredSections = sections.filter(section =>
-                section.name === prefSections.pref1 ||
-                section.name === prefSections.pref2 ||
-                section.name === prefSections.pref3
-            );
-            const preferredTotalAmount = preferredFilteredSections.reduce((accumulator, section) => accumulator + section.amount, 0);
+        console.log("Preferred sections:", prefSections);
 
-            if (preferredTotalAmount > 0) {
-                preferredAmounts.push(Math.round(preferredTotalAmount));
-                preferredDates.push(count.scrape_date);
-            }
+        // Step 2: Fetch counts for preferred sections from another API
+        fetch(`https://ubik.wiki/api/primary-counts/?tickets_by_sections__icontains={&event_id__icontains=${evids}&format=json`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            },
+            signal: controller.signal
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log("Preferred counts data response:", data);
+
+            // Process datasets for each preferred section
+            const validPrefs = [prefSections.pref1, prefSections.pref2, prefSections.pref3].filter(pref => pref && pref !== 'null' && pref !== null);
+
+            validPrefs.forEach((pref, index) => {
+                let prefAmounts = [];
+                let prefDates = [];
+
+                data.results.forEach(result => {
+                    let scrapeDate = new Date(result.event.scrape_date);
+                    let hours = scrapeDate.getHours() % 12 || 12;  // Convert 0 (midnight) or 12 (noon) to 12
+                    let formattedDate = `${scrapeDate.getMonth() + 1}/${scrapeDate.getDate()}/${scrapeDate.getFullYear()}, ${hours}:${("0" + scrapeDate.getMinutes()).slice(-2)}:${("0" + scrapeDate.getSeconds()).slice(-2)} ${scrapeDate.getHours() >= 12 ? 'PM' : 'AM'}`;
+
+                    result.tickets_by_sections.forEach(section => {
+                        if (section.n.toLowerCase().includes(pref.toLowerCase())) {
+                            prefAmounts.push(Math.round(section.q));
+                            prefDates.push(formattedDate);
+                            combinedDates.add(formattedDate);
+                            console.log(`Inserting value ${section.q} for ${section.n} on ${formattedDate}`);
+                        }
+                    });
+                });
+
+                preferredData.push({
+                    label: pref,
+                    amounts: prefAmounts,
+                    dates: prefDates,
+                    backgroundColor: `rgba(${75 + index * 40}, 179, 113, 1)`,
+                    borderColor: `rgba(${75 + index * 40}, 170, 113, 1)`,
+                });
+            });
+
+            // Step 3: Combine and sort all dates
+            combinedDates = Array.from(combinedDates).sort((a, b) => new Date(a) - new Date(b));
+
+            // Step 4: Align primary data with combined dates
+            let alignedPrimaryData = combinedDates.map(date => {
+                let index = datesPrimary.indexOf(date);
+                return index !== -1 ? amountsPrimary[index] : null;
+            });
+
+            // Step 5: Align preferred data with combined dates
+            preferredData.forEach(prefDataset => {
+                let alignedAmounts = combinedDates.map(date => {
+                    let index = prefDataset.dates.indexOf(date);
+                    return index !== -1 ? prefDataset.amounts[index] : null;
+                });
+
+                chartprimary.data.datasets.push({
+                    data: alignedAmounts,
+                    label: prefDataset.label,
+                    backgroundColor: prefDataset.backgroundColor,
+                    borderColor: prefDataset.borderColor,
+                    borderWidth: 1
+                });
+            });
+
+            // Step 6: Update the chart with combined data
+            chartprimary.config.data.labels = combinedDates;
+            chartprimary.data.datasets[0].data = alignedPrimaryData;
+            chartprimary.update();
+            console.log("Chart updated with primary and preferred data");
+
+            document.querySelector("#chart3").style.display = "flex";
+            document.querySelector("#chartloading3").style.display = "none";
+            document.querySelector("#loading3").style.display = "flex";
+            document.querySelector("#loadingfailed3").style.display = "none";
+        })
+        .catch(error => {
+            console.error('There was an error with the fetch request for preferred counts.', error);
+            displayLoadingFailed();
         });
-
-        // Sort preferred data based on dates
-        const preferredIndices = Array.from({ length: preferredDates.length }, (_, i) => i);
-        preferredIndices.sort((a, b) => new Date(preferredDates[a]) - new Date(preferredDates[b]));
-
-        preferredAmounts = preferredIndices.map(i => preferredAmounts[i]);
-        preferredDates = preferredIndices.map(i => preferredDates[i]);
-
-        // Update chart with primary data
-        chartprimary.data.datasets[0].data = amountsprimary;
-        chartprimary.config.data.labels = datesprimary;
-
-        if (!preferredAmounts.length > 0) {
-            chartprimary.data.datasets[1] = {
-                data: [],
-                label: 'Preferred Sections (Unavailable)',
-                backgroundColor: 'rgba(192, 75, 75, 1)',
-                borderColor: 'rgba(192, 75, 75, 1)',
-                borderWidth: 1
-            };
-        }
-
-        chartprimary.update();
-        console.log(prefSections);
-
-        document.querySelector("#chart3").style.display = "flex";
-        document.querySelector("#chartloading3").style.display = "none";
-        document.querySelector("#loading3").style.display = "flex";
-        document.querySelector("#loadingfailed3").style.display = "none";
     };
 
     http.onerror = function() {
-        console.error('There was an error with the XMLHttpRequest.');
+        console.error('There was an error with the XMLHttpRequest for preferred sections.');
         displayLoadingFailed();
     };
 
     http.send();
 }
+
+
+
+
 
 // Helper function to fetch ticketmaster data
 function fetchTicketmasterData(evids) {
@@ -716,6 +755,9 @@ function processTicketmasterData(data, venueid) {
     let preferredAmounts3 = [];
 
     let venue_id = venueid;
+
+chartprimary.data.datasets.splice(1,3)
+chartprimary.update();
 
     // Fetch preferred sections and process data
     const controller = new AbortController();
@@ -831,8 +873,8 @@ function processTicketmasterData(data, venueid) {
             chartprimary.data.datasets.push({
                 data: sortedData1.sortedAmounts,
                 label: `${prefSections.pref1}`,
-                backgroundColor: 'rgba(33, 104, 105, 1)',
-                borderColor: 'rgba(33, 104, 105, 1)',
+                backgroundColor: 'rgba(52, 152, 219, 1)',
+                borderColor: 'rgba(52, 152, 219, 1)',
                 borderWidth: 1
             });
         }
@@ -841,8 +883,8 @@ function processTicketmasterData(data, venueid) {
             chartprimary.data.datasets.push({
                 data: sortedData2.sortedAmounts,
                 label: `${prefSections.pref2}`,
-                backgroundColor: 'rgba(0, 51, 102, 1)',
-                borderColor: 'rgba(0, 51, 102, 1)',
+                backgroundColor: 'rgba(46, 204, 113, 1)',
+                borderColor: 'rgba(46, 204, 113, 1)',
                 borderWidth: 1
             });
         }
@@ -851,11 +893,12 @@ function processTicketmasterData(data, venueid) {
             chartprimary.data.datasets.push({
                 data: sortedData3.sortedAmounts,
                 label: `${prefSections.pref3}`,
-                backgroundColor: 'rgba(173, 217, 244, 1)',
-                borderColor: 'rgba(173, 217, 244, 1)',
+                backgroundColor: 'rgba(241, 196, 15, 1)',
+                borderColor: 'rgba(241, 196, 15, 1)',
                 borderWidth: 1
             });
         }
+
 
         console.log("Final datasets for the chart:", chartprimary.data.datasets);
 
