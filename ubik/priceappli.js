@@ -981,10 +981,12 @@ function findClosestWeatherByTime(hourArray, time) {
 }
 
 // Function to get vivid sections data
+
 async function vividsections() {
     const controller = new AbortController();
     abortControllers.push(controller);
 
+    // Reset UI elements
     document.querySelector('#seatinghide').style.display = 'none';
     document.querySelector('#vividevent').textContent = '';
     document.querySelector('#vividlocation').textContent = '';
@@ -1008,9 +1010,11 @@ async function vividsections() {
         }
     });
 
+    // Get the vivid_id from the attribute
     let vivid_id = document.querySelector('#vseats').getAttribute('url').split('productionId=')[1];
-    const csvUrl = `https://ubikdata.wiki:3000/listing/${vivid_id}`;
+    const csvUrl = `https://www.vividseats.com/hermes/api/v1/listings?productionId=${vivid_id}`;
 
+    // Function to fetch data with retries
     const fetchData = async (url, options, retries) => {
         for (let i = 0; i < retries; i++) {
             try {
@@ -1026,7 +1030,7 @@ async function vividsections() {
 
     try {
         const signal = controller.signal;
-        const data = await fetchData(csvUrl, { signal }, 5);
+        const data = await fetchData(csvUrl, { signal }, 5); // Fetch data using the updated URL
         const evd = JSON.parse(data);
         const eventDetails = evd;
         const globalDetails = eventDetails.global[0];
@@ -1047,7 +1051,6 @@ async function vividsections() {
 
         tickets.sort((a, b) => a.price - b.price);
 
-
         processPreferredInfo(tickets, vdcapacity, seatchart);
         document.querySelector('#sampleitem').style.display = 'none';
         document.querySelector('#vividclick').style.display = 'flex';
@@ -1055,6 +1058,7 @@ async function vividsections() {
         console.error("Error fetching data: ", error);
     }
 }
+
 
 
 
