@@ -1012,7 +1012,7 @@ async function vividsections() {
 
     // Get the vivid_id from the attribute
     let vivid_id = document.querySelector('#vseats').getAttribute('url').split('productionId=')[1];
-    const csvUrl = `https://www.vividseats.com/hermes/api/v1/listings?productionId=${vivid_id}`;
+    const csvUrl = `https://ubikdata.wiki:3000/listing/${vivid_id}`;
 
     // Function to fetch data with retries
     const fetchData = async (url, options, retries) => {
