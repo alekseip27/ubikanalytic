@@ -95,7 +95,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
   }
 
   if (preonsales) {
-    params.push('&is_preonsale=true');
+    params.push('&is_preonsale__iexact=true');
   }
 
     params.push('limit=100');
