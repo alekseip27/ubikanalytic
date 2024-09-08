@@ -57,7 +57,26 @@ const firebaseConfig = {
     token = data["token"]
   }
 
-  
+let presalelate = document.querySelector('#presale-late')
+let presaleearly = document.querySelector('#presale-early')
+            
+let favoritescheck = document.querySelector('#favourites')
+let regularcheck = document.querySelector('#regular')
+let checks = document.querySelector('#checks')
+
+if(!!admin || email.includes('daryl@ubikanalytic.com')){
+    checks.style.display = 'flex'
+    favoritescheck.style.display = 'flex'
+    presalelate.style.display = 'flex'
+  }
+
+  if(!!admin || email.includes('emily@ubikanalytic.com')  || email.includes('mark@ubikanalytic.com')) {
+    checks.style.display = 'flex'
+    presaleearly.style.display = 'flex'
+    regularcheck.style.display = 'flex'
+}
+   
+            
   if(marcus === true){
   document.querySelector('#eventsdropdown').style.display = 'flex'
   document.querySelector('#eventsm').style.display = 'flex'
