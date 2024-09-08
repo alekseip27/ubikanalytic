@@ -31,7 +31,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     let keywords6 = document.querySelector('#sortby').value
 
     let favoritecbox = document.getElementById('favorite').checked
-
+    let preonsales = document.getElementById('preonsales').checked
     $('.event-box').hide()
 
     let baseUrl = 'https://ubik.wiki/api/event-venue/?';
@@ -88,10 +88,16 @@ document.getElementById('rightarrow').addEventListener('click', function() {
   if (keywords6 === 'fastmovement') {
     params.push(`app_142_difference_per_day__sort=-1`);
   }
+    
 
   if (favoritecbox) {
     params.push('&favorites__iexact=true');
   }
+
+  if (preonsales) {
+    params.push('&is_preonsale=true');
+  }
+
     params.push('limit=100');
 
     xanoUrl = ''
