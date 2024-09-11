@@ -996,7 +996,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
   const primamount = card.getElementsByClassName('main-text-primary')[0];
 
   if (keyword6 === 'fastmovement' && events.event_url.includes('seetickets')) {
-    if(Number(getLatestCount(countsarray)) === 0) {
+    if(events.app_142_primary_amount === 0) {
         card.style.display = "none";
 }}
 
