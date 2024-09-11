@@ -173,9 +173,9 @@ function emailpart1() {
             let eventdate = document.querySelector('#date').textContent
             let eventvenue = document.querySelector('#venue').textContent
             let eventsource = document.querySelector('#purchasesource').textContent
-     
             let pq = document.querySelector('#purchasequantity').value
             let pm = document.querySelector('#purchaseemail').value
+            let purchaseaccount = pm.slice(0,1).toUpperCase()
             let pc = document.querySelector('#purchaseconfirmation').value
             let purchasedby = document.querySelector('#username').textContent
             
@@ -215,8 +215,8 @@ function emailpart1() {
             "purchase_email":pm,
             "confirmation":pc,
             "purchased_by":purchasedby,
+            "purchase_account":purchaseaccount,
             "purchase_requested":"manual",
-            "purchase_account":"manual",
             "purchase_urgency":"manual",
             "purchase_difference":"manual",
             "p_requested":"manual",
