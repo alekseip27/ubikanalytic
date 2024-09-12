@@ -88,7 +88,10 @@ document.getElementById('rightarrow').addEventListener('click', function() {
   if (keywords6 === 'fastmovement') {
     params.push(`app_142_difference_per_day__sort=-1`);
   }
-    
+  if (keyword6 === 'fastmovement' && keywords5 === 'seetickets')) {
+    params.push(`app_142_primary_amount__gt=0`);
+  }
+
 
   if (favoritecbox) {
     params.push('&favorites__iexact=true');
@@ -994,11 +997,6 @@ document.getElementById('rightarrow').addEventListener('click', function() {
   let primam = parseInt(events.app_142_primary_amount)
   keyword6 = document.querySelector('#sortby').value
   const primamount = card.getElementsByClassName('main-text-primary')[0];
-
-  if (keyword6 === 'fastmovement' && events.event_url.includes('seetickets')) {
-    if(events.app_142_primary_amount === 0) {
-        card.style.display = "none";
-}}
 
 
 if(Number(getLatestCount(countsarray))){
