@@ -982,11 +982,15 @@ function findClosestWeatherByTime(hourArray, time) {
 
 // Function to get vivid sections data
 
+
 async function vividsections() {
     const controller = new AbortController();
     abortControllers.push(controller);
 
     // Reset UI elements
+    document.getElementById('event-clickable').href = ''
+    document.getElementById('pricewithfeestrue').style.display = 'none'
+    document.getElementById('pricewithfeesfalse').style.display = 'none'
     document.querySelector('#seatinghide').style.display = 'none';
     document.querySelector('#vividevent').textContent = '';
     document.querySelector('#vividlocation').textContent = '';
@@ -1039,12 +1043,26 @@ async function vividsections() {
         let tickets = [];
         const vdcapacity = globalDetails.venueCapacity;
         const seatchart = globalDetails.staticMapUrl;
+        const pricewithfees = globalDetails.showAip
+
+        document.getElementById('event-clickable').addEventListener('click', function() {
+            let url = document.querySelector('#vseats').getAttribute('url')
+            if (url.length > 10) window.open(url, 'vividmain');
+          });
+
+        if(pricewithfees === 'true'){
+        document.getElementById('pricewithfeestrue').style.display = 'flex'
+        document.getElementById('pricewithfeesfalse').style.display = 'none'
+        } else if(pricewithfees === 'false') {
+        document.getElementById('pricewithfeestrue').style.display = 'none'
+        document.getElementById('pricewithfeesfalse').style.display = 'flex'
+        }
 
         ticketsDetails.forEach(ticket => {
             tickets.push({
                 "section": ticket.s,
                 "row": ticket.r,
-                "price": ticket.p,
+                "price": ticket.aip ? ticket.aip : ticket.p,
                 "quantity": ticket.q
             });
         });
