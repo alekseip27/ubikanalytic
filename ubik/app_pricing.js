@@ -191,27 +191,24 @@ document.querySelector('.locked-content').style.display = 'none';
             let typingTimer;
             const doneTypingInterval = 1000
 
-            eventPrice.addEventListener('keyup', () => {
-                clearTimeout(typingTimer);
-                if (eventPrice.value && document.querySelector('#vspricing').checked) {
-                    typingTimer = setTimeout(() => {
-                        var X_given = Number(eventPrice.value);
+eventPrice.addEventListener('keyup', () => {
+    clearTimeout(typingTimer);
+    if (eventPrice.value && document.querySelector('#vspricing').checked) {
+        typingTimer = setTimeout(() => {
+            var Y_given = Number(eventPrice.value);
+            if (isNaN(Y_given)) {
+                console.error('Y_given is not a number');
+                return;
+            }
 
-                        if (isNaN(X_given)) {
-                            console.error('X_given is not a number');
-                            return;
-                        }
+            let X_predicted = (1.16 * Y_given) - 3.29;
 
-                        let Y_predicted = (
-                            -0.56 +
-                            1.20 * X_given
-                        );
+            let X_predicted_rounded = X_predicted.toFixed(2);
+            eventPrice.value = X_predicted_rounded;
+        }, doneTypingInterval);
+    }
+});
 
-                        let Y_predicted_rounded = Y_predicted.toFixed(2);
-                        eventPrice.value = Y_predicted_rounded;
-                    }, doneTypingInterval);
-                }
-            });
 
             eventPrice.addEventListener("keypress", (event) => {
                 if ((event.keyCode === 13) && (!eventPrice.readOnly)) {
