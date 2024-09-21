@@ -71,6 +71,7 @@ if(email.includes('daryl@ubikanalytic.com')){
   }
 
   if(email.includes('emily@ubikanalytic.com') || email.includes('mark@ubikanalytic.com')) {
+    $('#checkslogo').show()
     checks.style.display = 'flex'
     presaleearly.style.display = 'flex'
     regularcheck.style.display = 'flex'
@@ -188,6 +189,7 @@ if(email.includes('daryl@ubikanalytic.com')){
   $('#buying').css('display','flex');
   $('#history').css('display','flex');
   }
+      
           
   if(!!entry && (window.location.href.includes('/events') || window.location.href.includes('/buy-queue'))) {
   location.href = '/order-history'
