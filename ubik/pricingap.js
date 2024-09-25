@@ -98,8 +98,12 @@ document.querySelector('#search-button').addEventListener("click", () => {
                     const style = document.getElementById('samplestyle');
                     const card = style.cloneNode(true);
 
-                    if (events.tags === 'lowerable') {
+                    if (events.tags.includes('lowerable')) {
                         card.setAttribute('tags', events.tags);
+                    }
+
+                    if (events.tags.includes('includesfees')) {
+                        card.style.backgroundColor = 'rgba(48,245,39, 0.2)';
                     }
 
                     if (events[0] === 'unlisted') {
@@ -170,7 +174,7 @@ document.querySelector('.locked-content').style.display = 'none';
 
             const eventPrice = card.querySelector('.main-field-price');
 
-            if (events.tags === 'lowerable') {
+if (events.tags && events.tags.includes('lowerable')) {
                 containslowerable = true;
             }
 
