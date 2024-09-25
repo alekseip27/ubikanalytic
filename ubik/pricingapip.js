@@ -292,22 +292,36 @@ savePriceButton.addEventListener('click', function() {
 function updateLowerableCheck(lowerableCheck, events, eventID) {
     let tags = [];
 
+    // Check if 'events.tags' exists and includes 'lowerable'
     if (events.tags && events.tags.includes('lowerable')) {
         lowerableCheck.checked = true;
         tags.push('lowerable');
+        console.log('Tag "lowerable" added:', tags); // Debug: Check tags array after addition
     }
 
+    // Check if 'events.tags' exists and includes 'includesfees'
     if (events.tags && events.tags.includes('includesfees')) {
         tags.push('includesfees');
+        console.log('Tag "includesfees" added:', tags); // Debug: Check tags array after addition
     }
 
-    const tagsString = tags.join(',');
+    // Convert tags array to a comma-separated string
+    let tagsString = tags.join(',');
+    console.log('Initial tagsString:', tagsString); // Debug: Output initial tags string
 
+    // Add event listener to the checkbox
     lowerableCheck.addEventListener('change', function () {
         const ticketID = lowerableCheck.closest('.event-box-pricing').id;
 
-        const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/${lowerableCheck.checked ? 'allow' : 'remove'}_pricechanges?ticket_id=${ticketID}&event_id=${eventID}&tags=${tagsString}`;
+        // Update tagsString based on the latest checkbox state
+        tagsString = lowerableCheck.checked ? 'lowerable' : tagsString.replace('lowerable', '').replace(/^,|,$/g, '');
+        console.log('Updated tagsString after change:', tagsString); // Debug: Output updated tags string
 
+        // Construct URL for the PUT request
+        const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/${lowerableCheck.checked ? 'allow' : 'remove'}_pricechanges?ticket_id=${ticketID}&event_id=${eventID}&tags=${tagsString}`;
+        console.log('Request URL:', url); // Debug: Output the constructed URL
+
+        // Send the PUT request
         const http = new XMLHttpRequest();
         http.open("PUT", url, true);
         http.setRequestHeader("Content-type", "application/json; charset=utf-8");
