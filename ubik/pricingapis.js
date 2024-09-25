@@ -290,20 +290,31 @@ savePriceButton.addEventListener('click', function() {
 }
 
 function updateLowerableCheck(lowerableCheck, events, eventID) {
-if (events.tags && events.tags.includes('lowerable')) {
-    lowerableCheck.checked = true;
+    let tags = [];
+
+    if (events.tags && events.tags.includes('lowerable')) {
+        lowerableCheck.checked = true;
+        tags.push('lowerable');
+    }
+
+    if (events.tags && events.tags.includes('includesfees')) {
+        tags.push('includesfees');
+    }
+
+    const tagsString = tags.join(',');
+
+    lowerableCheck.addEventListener('change', function () {
+        const ticketID = lowerableCheck.closest('.event-box-pricing').id;
+
+        const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/${lowerableCheck.checked ? 'allow' : 'remove'}_pricechanges?ticket_id=${ticketID}&event_id=${eventID}&tags=${tagsString}`;
+
+        const http = new XMLHttpRequest();
+        http.open("PUT", url, true);
+        http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+        http.send();
+    });
 }
 
-lowerableCheck.addEventListener('change', function () {
-    const ticketID = lowerableCheck.closest('.event-box-pricing').id;
-    const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/${lowerableCheck.checked ? 'allow' : 'remove'}_pricechanges?ticket_id=${ticketID}&event_id=${eventID}`;
-    const http = new XMLHttpRequest();
-
-    http.open("PUT", url, true);
-    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-    http.send();
-});
-}
 
 function handleSavePriceButtonClick(card) {
 const savePriceButton = card.querySelector('.save-price-button');
