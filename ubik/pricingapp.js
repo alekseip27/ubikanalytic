@@ -98,6 +98,8 @@ document.querySelector('#search-button').addEventListener("click", () => {
                     const style = document.getElementById('samplestyle');
                     const card = style.cloneNode(true);
 
+if(events.tags){
+                    
                     if (events.tags.includes('lowerable')) {
                         card.setAttribute('tags', events.tags);
                     }
@@ -105,6 +107,7 @@ document.querySelector('#search-button').addEventListener("click", () => {
                     if (events.tags.includes('includesfees')) {
                         card.style.backgroundColor = 'rgba(48,245,39, 0.2)';
                     }
+}
 
                     if (events[0] === 'unlisted') {
                         card.classList.add('unlisted');
