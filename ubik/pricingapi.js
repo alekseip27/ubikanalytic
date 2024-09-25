@@ -105,8 +105,8 @@ if(events.tags){
                     }
 
                     if (events.tags.includes('includesfees')) {
-                        card.style.backgroundColor = 'rgba(48,245,39, 0.2)';
-                    }
+                        card.classList.add('includesfees');
+                    } 
 }
 
                     if (events[0] === 'unlisted') {
