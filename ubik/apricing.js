@@ -90,24 +90,25 @@
                 if (request.status === 401) {
                 } else if (request.status >= 200 && request.status < 400) {
                     const cardContainer = document.getElementById("Cards-Container");
-                    let quantityseatdata = 0;
-
 
                     data.forEach(events => {
-                        quantityseatdata += Number(events.quantity);
                         const style = document.getElementById('samplestyle');
                         const card = style.cloneNode(true);
 
-    if(events.tags){
 
-                        if (events.tags.includes('lowerable')) {
+
+                        if (events.tags) {
                             card.setAttribute('tags', events.tags);
+
+                        if(events.tags.includes('includesfees')){
+                        card.classList.add('includesfees');
                         }
 
-                        if (events.tags.includes('includesfees')) {
-                            card.classList.add('includesfees','true');
                         }
-    }
+
+
+
+
 
                         if (events[0] === 'unlisted') {
                             card.classList.add('unlisted');
@@ -233,8 +234,16 @@
 
             if(containslowerable === false && lowerableview){
 
+                let ftags = ''
+                const tag = document.querySelector('.event-box.selected').getAttribute('tags')
+
+                if(tag.includes('includesfees')){
+                    ftags = 'includesfees'
+                }
+
+
                 const ticketID = document.querySelector('.event-box.selected').id
-                const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/remove_pricechanges?ticket_id=${ticketID}`;
+                const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/remove_pricechanges?ticket_id=${ticketID}&tags=${ftags}`;
                 const http = new XMLHttpRequest();
                 http.open("PUT", url, true);
                 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
@@ -291,7 +300,6 @@
 
     async function updateLowerableCheck(lowerableCheck, events, eventID) {
         let tags = [];
-        console.log('eventId');
         lowerableCheck.disabled = true
         if (events.tags && events.tags.includes('lowerable')) {
             lowerableCheck.checked = true;
@@ -314,7 +322,6 @@
 
         // Convert tags array to a comma-separated string
         let tagsString = tags.join(',');
-        console.log('Initial tagsString:', tagsString); // Debug: Output initial tags string
 
         // Add event listener to the checkbox
         lowerableCheck.addEventListener('change', function () {
@@ -431,7 +438,6 @@
                             document.querySelector('#urlmain').setAttribute('url', '');
                             document.querySelector('#selectedevent').setAttribute('VDID', '');
                             document.querySelector('#urlmainmobile').setAttribute('url', '');
-                            document.querySelector('#sdatacount').textContent = '0';
                             document.querySelector('#shubcross').style.display = 'none';
 
                             document.querySelector('#chart2').style.display = 'none';
@@ -487,15 +493,6 @@
                             }, 500);
                             document.querySelector('#selectedevent').setAttribute('eventid', events.id);
 
-                            let shubid = events.stubhubEventId;
-                            if (shubid !== 0) {
-                                const urlon = `https://x828-xess-evjx.n7.xano.io/api:Bwn2D4w5/seatdata_data?eventid=${shubid}`;
-                                fetch(urlon).then(response => response.text()).then(data => {
-                                    if (!data.includes('message')) {
-                                        document.querySelector('#sdatacount').textContent = data;
-                                    }
-                                });
-                            }
                             document.querySelector('#selectedevent').textContent = events.name.slice(0, 15);
                             document.querySelector('#selectedevent').setAttribute('VDID', events.venue.id + events.date.slice(0, 10));
                             document.querySelector('#eventdate').textContent = events.date.slice(0, 10);
@@ -764,11 +761,7 @@
         http.onload = function() {
             let data = JSON.parse(this.response);
             if (data.length > 0) {
-        let venueid = 'tm'+data[0].venue.ticketmaster_id
-        console.log(venueid)
-
-
-                processTicketmasterData(data,venueid);
+                processTicketmasterData(data);
             } else {
                 displayLoadingFailed();
             }
@@ -781,7 +774,8 @@
 
         http.send();
     }
-    function processTicketmasterData(data, venueid) {
+
+    function processTicketmasterData(data) {
         let dates = [];
         let amounts = [];
 
@@ -794,170 +788,147 @@
         let preferredDates3 = [];
         let preferredAmounts3 = [];
 
-        let venue_id = venueid;
+        let prefSections = {};
 
-    chartprimary.data.datasets.splice(1,3)
-    chartprimary.update();
+        if (data[0].venue && Array.isArray(data[0].venue.preferred_sections)) {
+            for (let i = 0; i < data[0].venue.preferred_sections.length; i++) {
+                if (data[0].venue.preferred_sections[i] && data[0].venue.preferred_sections[i].name) {
+                    prefSections[`pref${i + 1}`] = data[0].venue.preferred_sections[i].name;
+                }
+            }
+        }
 
-        // Fetch preferred sections and process data
-        const controller = new AbortController();
-        abortControllers.push(controller);
+        console.log(prefSections);
 
-        var http = new XMLHttpRequest();
-        var url = `https://ubik.wiki/api/venues/${venue_id}/`;
-        http.open("GET", url, true);
-        http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-        http.setRequestHeader('Authorization', `Bearer ${token}`);
-        http.signal = controller.signal;
+        chartprimary.data.datasets.splice(1, 3);
+        chartprimary.update();
 
-        http.onload = function () {
-            let dataResponse = JSON.parse(this.response);
-            let prefSections = {
-                pref1: dataResponse.pref_section1,
-                pref2: dataResponse.pref_section2,
-                pref3: dataResponse.pref_section3
-            };
+        data.forEach(event => {
+            event.summaries.forEach((summary, index) => {
 
-            console.log("Preferred Sections:", prefSections);
+                if (!summary.sections || summary.sections.length === 0) {
+                    console.log("No sections available for this summary:", summary.scrape_date);
+                    return;
+                }
 
-            // Process the Ticketmaster data with the preferred sections
-            data.forEach(event => {
-                event.summaries.forEach(summary => {
-                    if (!summary.sections || summary.sections.length === 0) {
-                        console.log("No sections available for this summary:", summary.scrape_date);
-                        return;
-                    }
+                // Filter out resale sections
+                const filteredSections = summary.sections.filter(section => section.type !== 'resale');
+                const totalAmount = filteredSections.reduce((accumulator, section) => accumulator + section.amount, 0);
 
-                    const filteredSections = summary.sections.filter(section => section.type !== 'resale');
-                    const totalAmount = filteredSections.reduce((accumulator, section) => accumulator + section.amount, 0);
+                if (totalAmount > 0) {
+                    // Format the scrape_date string to "YYYY-MM-DD HH:MM"
+                    const scrapeDateStr = summary.scrape_date;
+                    const formattedDate = scrapeDateStr.slice(0, 16).replace("T", " ");
+                    console.log("Formatted Date:", formattedDate);
 
-                    if (totalAmount > 0) {
-                        const parts = summary.scrape_date.split(/[-T:Z]/);
-                        const year = parseInt(parts[0], 10);
-                        const month = parseInt(parts[1], 10) - 1;
-                        const day = parseInt(parts[2], 10);
-                        const hours = parseInt(parts[3], 10);
-                        const minutes = parseInt(parts[4], 10);
+                    dates.push(formattedDate);
+                    amounts.push(totalAmount);
 
-                        const scrapeDate = new Date(year, month, day, hours, minutes);
-                        scrapeDate.setHours(scrapeDate.getHours() - 1);
-
-                        const formattedDate = scrapeDate.toISOString().slice(0, 16).replace("T", " ");
-
-                        dates.push(formattedDate);
-                        amounts.push(totalAmount);
-
-                        // Process for preferred section 1 (contains check), if pref1 is valid
-                        if (prefSections.pref1 && prefSections.pref1 !== "null") {
-                            const section1 = filteredSections.find(section => section.section.includes(prefSections.pref1));
-                            if (section1) {
-                                preferredDates1.push(formattedDate);
-                                preferredAmounts1.push(section1.amount);
-                            }
-                        }
-
-                        // Process for preferred section 2 (contains check), if pref2 is valid
-                        if (prefSections.pref2 && prefSections.pref2 !== "null") {
-                            const section2 = filteredSections.find(section => section.section.includes(prefSections.pref2));
-                            if (section2) {
-                                preferredDates2.push(formattedDate);
-                                preferredAmounts2.push(section2.amount);
-                            }
-                        }
-
-                        // Process for preferred section 3 (contains check), if pref3 is valid
-                        if (prefSections.pref3 && prefSections.pref3 !== "null") {
-                            const section3 = filteredSections.find(section => section.section.includes(prefSections.pref3));
-                            if (section3) {
-                                preferredDates3.push(formattedDate);
-                                preferredAmounts3.push(section3.amount);
-                            }
+                    // Process for preferred section 1 (matching all "GA" sections)
+                    if (prefSections.pref1 && prefSections.pref1 !== "null") {
+                        const matchingSections1 = filteredSections.filter(section => section.section.includes(prefSections.pref1));
+                        if (matchingSections1.length > 0) {
+                            const prefAmount1 = matchingSections1.reduce((acc, sec) => acc + sec.amount, 0);
+                            preferredDates1.push(formattedDate);
+                            preferredAmounts1.push(prefAmount1);
                         }
                     }
-                });
+
+                    // Process for preferred section 2
+                    if (prefSections.pref2 && prefSections.pref2 !== "null") {
+                        const matchingSections2 = filteredSections.filter(section => section.section.includes(prefSections.pref2));
+                        if (matchingSections2.length > 0) {
+                            const prefAmount2 = matchingSections2.reduce((acc, sec) => acc + sec.amount, 0);
+                            preferredDates2.push(formattedDate);
+                            preferredAmounts2.push(prefAmount2);
+                        }
+                    }
+
+                    // Process for preferred section 3
+                    if (prefSections.pref3 && prefSections.pref3 !== "null") {
+                        const matchingSections3 = filteredSections.filter(section => section.section.includes(prefSections.pref3));
+                        if (matchingSections3.length > 0) {
+                            const prefAmount3 = matchingSections3.reduce((acc, sec) => acc + sec.amount, 0);
+                            preferredDates3.push(formattedDate);
+                            preferredAmounts3.push(prefAmount3);
+                        }
+                    }
+                } else {
+                    console.log("No valid sections found for this summary.");
+                }
             });
+        });
 
-            // Sort the collected data
-            const sortData = (amounts, dates) => {
-                const indices = Array.from({ length: dates.length }, (_, i) => i);
-                indices.sort((a, b) => new Date(dates[a]) - new Date(dates[b]));
-                return {
-                    sortedAmounts: indices.map(i => amounts[i]),
-                    sortedDates: indices.map(i => dates[i])
-                };
+        // Sort the collected data
+        const sortData = (amounts, dates) => {
+            const indices = Array.from({ length: dates.length }, (_, i) => i);
+            indices.sort((a, b) => new Date(dates[a]) - new Date(dates[b]));
+            return {
+                sortedAmounts: indices.map(i => amounts[i]),
+                sortedDates: indices.map(i => dates[i])
             };
+        };
 
-            const sortedPrimaryData = sortData(amounts, dates);
-            const sortedData1 = sortData(preferredAmounts1, preferredDates1);
-            const sortedData2 = sortData(preferredAmounts2, preferredDates2);
-            const sortedData3 = sortData(preferredAmounts3, preferredDates3);
+        const sortedPrimaryData = sortData(amounts, dates);
+        const sortedData1 = sortData(preferredAmounts1, preferredDates1);
+        const sortedData2 = sortData(preferredAmounts2, preferredDates2);
+        const sortedData3 = sortData(preferredAmounts3, preferredDates3);
 
-            console.log("Sorted dates:", sortedPrimaryData.sortedDates);
-            console.log("Sorted amounts:", sortedPrimaryData.sortedAmounts);
+        // Update chart with primary data
+        chartprimary.data.datasets[0].data = sortedPrimaryData.sortedAmounts;
+        chartprimary.config.data.labels = sortedPrimaryData.sortedDates;
 
-            // Update chart with primary data
-            chartprimary.data.datasets[0].data = sortedPrimaryData.sortedAmounts;
-            chartprimary.config.data.labels = sortedPrimaryData.sortedDates;
+        // Ensure primary dataset is always present
+        chartprimary.data.datasets = [{
+            data: sortedPrimaryData.sortedAmounts,
+            label: "TICKETMASTER Primary",
+            backgroundColor: 'rgba(0, 102, 51, 1)',
+            borderColor: 'rgba(0, 102, 51, 1)',
+            borderWidth: 1
+        }];
 
-            // Ensure primary dataset is always present
-            chartprimary.data.datasets = [{
-                data: sortedPrimaryData.sortedAmounts,
-                label: "TICKETMASTER Primary",
-                backgroundColor: 'rgba(0, 102, 51, 1)',
-                borderColor: 'rgba(0, 102, 51, 1)',
+        // Add other datasets conditionally, only if prefSections are not empty or "null"
+        if (prefSections.pref1 && prefSections.pref1 !== "null" && sortedData1.sortedAmounts.length > 0) {
+            chartprimary.data.datasets.push({
+                data: sortedData1.sortedAmounts,
+                label: `${prefSections.pref1}`,
+                backgroundColor: 'rgba(52, 152, 219, 1)',
+                borderColor: 'rgba(52, 152, 219, 1)',
                 borderWidth: 1
-            }];
+            });
+        }
 
-            // Add other datasets conditionally, only if prefSections are not empty or "null"
-            if (prefSections.pref1 && prefSections.pref1 !== "null" && sortedData1.sortedAmounts.length > 0) {
-                chartprimary.data.datasets.push({
-                    data: sortedData1.sortedAmounts,
-                    label: `${prefSections.pref1}`,
-                    backgroundColor: 'rgba(52, 152, 219, 1)',
-                    borderColor: 'rgba(52, 152, 219, 1)',
-                    borderWidth: 1
-                });
-            }
+        if (prefSections.pref2 && prefSections.pref2 !== "null" && sortedData2.sortedAmounts.length > 0) {
+            chartprimary.data.datasets.push({
+                data: sortedData2.sortedAmounts,
+                label: `${prefSections.pref2}`,
+                backgroundColor: 'rgba(46, 204, 113, 1)',
+                borderColor: 'rgba(46, 204, 113, 1)',
+                borderWidth: 1
+            });
+        }
 
-            if (prefSections.pref2 && prefSections.pref2 !== "null" && sortedData2.sortedAmounts.length > 0) {
-                chartprimary.data.datasets.push({
-                    data: sortedData2.sortedAmounts,
-                    label: `${prefSections.pref2}`,
-                    backgroundColor: 'rgba(46, 204, 113, 1)',
-                    borderColor: 'rgba(46, 204, 113, 1)',
-                    borderWidth: 1
-                });
-            }
+        if (prefSections.pref3 && prefSections.pref3 !== "null" && sortedData3.sortedAmounts.length > 0) {
+            chartprimary.data.datasets.push({
+                data: sortedData3.sortedAmounts,
+                label: `${prefSections.pref3}`,
+                backgroundColor: 'rgba(241, 196, 15, 1)',
+                borderColor: 'rgba(241, 196, 15, 1)',
+                borderWidth: 1
+            });
+        }
 
-            if (prefSections.pref3 && prefSections.pref3 !== "null" && sortedData3.sortedAmounts.length > 0) {
-                chartprimary.data.datasets.push({
-                    data: sortedData3.sortedAmounts,
-                    label: `${prefSections.pref3}`,
-                    backgroundColor: 'rgba(241, 196, 15, 1)',
-                    borderColor: 'rgba(241, 196, 15, 1)',
-                    borderWidth: 1
-                });
-            }
+        console.log("Final datasets for the chart:", chartprimary.data.datasets);
 
+        // Update the chart
+        chartprimary.update();
 
-            console.log("Final datasets for the chart:", chartprimary.data.datasets);
-
-            // Update the chart
-            chartprimary.update();
-
-            document.querySelector("#chart3").style.display = "flex";
-            document.querySelector("#chartloading3").style.display = "none";
-            document.querySelector("#loading3").style.display = "flex";
-            document.querySelector("#loadingfailed3").style.display = "none";
-        };
-
-        http.onerror = function () {
-            console.error('There was an error with the XMLHttpRequest.');
-            displayLoadingFailed();
-        };
-
-        http.send();
+        document.querySelector("#chart3").style.display = "flex";
+        document.querySelector("#chartloading3").style.display = "none";
+        document.querySelector("#loading3").style.display = "flex";
+        document.querySelector("#loadingfailed3").style.display = "none";
     }
+
 
 
 
@@ -1027,7 +998,6 @@
         const controller = new AbortController();
         abortControllers.push(controller);
 
-        // Reset UI elements
         document.getElementById('event-clickable').href = ''
         document.getElementById('pricewithfeestrue').style.display = 'none'
         document.getElementById('pricewithfeesfalse').style.display = 'none'
@@ -1090,13 +1060,34 @@
                 if (url.length > 10) window.open(url, 'vividmain');
             });
 
-            if(pricewithfees === 'true'){
-            document.getElementById('pricewithfeestrue').style.display = 'flex'
-            document.getElementById('pricewithfeesfalse').style.display = 'none'
-            } else if(pricewithfees === 'false') {
-            document.getElementById('pricewithfeestrue').style.display = 'none'
-            document.getElementById('pricewithfeesfalse').style.display = 'flex'
+            if (pricewithfees === 'true') {
+                document.getElementById('pricewithfeestrue').style.display = 'flex';
+                document.getElementById('pricewithfeesfalse').style.display = 'none';
+                document.getElementById(`${vivid_id}`).classList.add('includesfees');
+                let evcardtags = document.getElementById(`${vivid_id}`).getAttribute('tags');
+
+                if (evcardtags) {
+
+                    if (!evcardtags.includes('includesfees')) {
+                        if (evcardtags.includes('lowerable')) {
+                            evcardtags += ',includesfees';
+                        } else {
+                            evcardtags = evcardtags ? evcardtags + ',includesfees' : 'includesfees';
+                        }
+
+                        inclfees(vivid_id, evcardtags);
+                    }
+                } else {
+                    inclfees(vivid_id, 'includesfees');
+                    document.getElementById(`${vivid_id}`).classList.add('includesfees');
+                    document.getElementById(`${vivid_id}`).setAttribute('tags','includesfees');
+                }
+
+            } else if (pricewithfees === 'false') {
+                document.getElementById('pricewithfeestrue').style.display = 'none';
+                document.getElementById('pricewithfeesfalse').style.display = 'flex';
             }
+
 
             ticketsDetails.forEach(ticket => {
                 tickets.push({
@@ -1540,3 +1531,28 @@
 
     request.send();
     }
+
+
+
+function inclfees(eventId, tags) {
+
+    const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/updatewithfees?event_id=${eventId}&tags=${(tags)}`;
+
+    const http = new XMLHttpRequest();
+    http.open('PUT', url, true);
+    http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+
+    http.onload = function() {
+        if (http.status >= 200 && http.status < 300) {
+            console.log('Request successful:', http.responseText);
+        } else {
+            console.error('Request failed:', http.status, http.statusText);
+        }
+    };
+
+    http.onerror = function() {
+        console.error('Request error:', http.status, http.statusText);
+    };
+
+    http.send();
+}
