@@ -74,7 +74,10 @@ switch(true) {
   break;
   case eventUrl.includes('TM'):
     txtsource.textContent = 'TM';
-    break;
+  break;
+  case eventUrl.includes('ticketmaster.ca'):
+    txtsource.textContent = 'TM';
+  break;
   case eventUrl.includes('ticketmaster'):
     txtsource.textContent = 'TM';
     break;
