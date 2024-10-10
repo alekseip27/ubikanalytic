@@ -960,6 +960,9 @@ const scrapetm = (eventid) => {
                     case eventUrl.includes('ticketmaster.co.uk'):
                     txtsource.textContent = 'TM-UK';
                     break;
+                    case eventUrl.includes('ticketmaster.ca'):
+                    txtsource.textContent = 'TM';
+                    break;
                     case eventUrl.includes('ticketmaster.de'):
                     txtsource.textContent = 'TM-DE';
                     break;
