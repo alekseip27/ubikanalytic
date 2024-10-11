@@ -237,7 +237,7 @@
                 let ftags = ''
                 const tag = document.querySelector('.event-box.selected').getAttribute('tags')
 
-                if(tag.includes('includesfees')){
+                if(!!tag && tag.includes('includesfees')){
                     ftags = 'includesfees'
                 }
 
