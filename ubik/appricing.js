@@ -242,8 +242,9 @@
                 }
 
 
-                const ticketID = document.querySelector('.event-box.selected').id
-                const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/remove_pricechanges?ticket_id=${ticketID}&tags=${ftags}`;
+                const eventID = document.querySelector('.event-box.selected').id
+
+                const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/remove_pricechanges?event_id=${eventID}&tags=${ftags}`;
                 const http = new XMLHttpRequest();
                 http.open("PUT", url, true);
                 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
@@ -325,6 +326,7 @@
 
         // Add event listener to the checkbox
         lowerableCheck.addEventListener('change', function () {
+            const eventID = lowerableCheck.closest('.event-box-pricing').id;
             const ticketID = lowerableCheck.closest('.event-box-pricing').id;
 
             if (lowerableCheck.checked) {
