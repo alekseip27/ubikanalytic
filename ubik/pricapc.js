@@ -234,17 +234,9 @@ eventPrice.addEventListener('keyup', () => {
 
         if(containslowerable === false && lowerableview){
 
-            let ftags = ''
-            const tag = document.querySelector('.event-box.selected').getAttribute('tags')
-
-            if(!!tag && tag.includes('includesfees')){
-                ftags = 'includesfees'
-            }
-
-
             const eventID = document.querySelector('.event-box.selected').id
 
-            const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/remove_pricechanges_?event_id=${eventID}&tags=${ftags}`;
+            const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/remove_pricechanges_?event_id=${eventID}`;
             const http = new XMLHttpRequest();
             http.open("PUT", url, true);
             http.setRequestHeader("Content-type", "application/json; charset=utf-8");
