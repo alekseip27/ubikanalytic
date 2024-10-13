@@ -236,7 +236,7 @@ eventPrice.addEventListener('keyup', () => {
 
             const eventID = document.querySelector('.event-box.selected').id
 
-            const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/remove_pricechanges_?event_id=${eventID}`;
+            const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/remove_pricechanges?event_id=${eventID}`;
             const http = new XMLHttpRequest();
             http.open("PUT", url, true);
             http.setRequestHeader("Content-type", "application/json; charset=utf-8");
@@ -293,42 +293,18 @@ savePriceButton.addEventListener('click', function() {
 
 async function updateLowerableCheck(lowerableCheck, events, eventID) {
     let tags = [];
-    lowerableCheck.disabled = true
+
     if (events.tags && events.tags.includes('lowerable')) {
-        lowerableCheck.checked = true;
-        tags.push('lowerable');
-        console.log('Tag "lowerable" added:', tags); // Debug: Check tags array after addition
+        lowerableCheck.checked = true
     }
 
-    // Asynchronously check if the event ID includes fees and update tags accordingly
-    try {
-        const result = await checkAip(events.eventId);
-        if (result === true) {
-            tags.push('includesfees');
-        }
-        lowerableCheck.disabled = false
-
-    } catch (error) {
-        console.error('Error checking API:', error); // Handle any potential errors from checkAip
-    }
-
-
-    // Convert tags array to a comma-separated string
-    let tagsString = tags.join(',');
 
     // Add event listener to the checkbox
     lowerableCheck.addEventListener('change', function () {
         const eventID = document.querySelector('.event-box.selected').id
         const ticketID = lowerableCheck.closest('.event-box-pricing').id;
-        if (lowerableCheck.checked) {
-            if (!tagsString.includes('lowerable')) {
-                tagsString = tagsString ? `${tagsString},lowerable` : 'lowerable';
-            }
-        } else {
-            tagsString = tagsString.replace(/\b(lowerable),?\b/, '').replace(/^,|,$/g, '');
-        }
         // Construct URL for the PUT request
-        const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/${lowerableCheck.checked ? 'allow' : 'remove'}_pricechanges?ticket_id=${ticketID}&event_id=${eventID}&tags=${tagsString}`;
+        const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/${lowerableCheck.checked ? 'allow' : 'remove'}_pricechanges?ticket_id=${ticketID}&event_id=${eventID}`;
 
         console.log('Request URL:', url); // Debug: Output the constructed URL
 
@@ -1068,12 +1044,11 @@ async function vividsections() {
                         evcardtags = evcardtags ? evcardtags + ',includesfees' : 'includesfees';
                     }
 
-                    inclfees(vivid_id, evcardtags);
+                //    inclfees(vivid_id);
                 }
             } else {
-                inclfees(vivid_id, 'includesfees');
+               // inclfees(vivid_id);
                 document.getElementById(`${vivid_id}`).classList.add('includesfees');
-                document.getElementById(`${vivid_id}`).setAttribute('tags','includesfees');
             }
 
         } else if (pricewithfees === 'false') {
@@ -1527,9 +1502,9 @@ request.send();
 
 
 
-function inclfees(eventId, tags) {
+function inclfees(eventId) {
 
-const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/updatewithfees?event_id=${eventId}&tags=${(tags)}`;
+const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/remove_pricechanges?event_id=${eventId}`;
 
 const http = new XMLHttpRequest();
 http.open('PUT', url, true);
