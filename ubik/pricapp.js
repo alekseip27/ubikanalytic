@@ -1048,27 +1048,9 @@ async function vividsections() {
         });
 
         if (pricewithfees === 'true') {
+            addfees(vivid_id)
             document.getElementById('pricewithfeestrue').style.display = 'flex';
             document.getElementById('pricewithfeesfalse').style.display = 'none';
-            document.getElementById(`${vivid_id}`).classList.add('includesfees');
-            let evcardtags = document.getElementById(`${vivid_id}`).getAttribute('tags');
-            addfees(vivid_id)
-            
-            if (evcardtags) {
-
-                if (!evcardtags.includes('includesfees')) {
-                    if (evcardtags.includes('lowerable')) {
-                        evcardtags += ',includesfees';
-                    } else {
-                        evcardtags = evcardtags ? evcardtags + ',includesfees' : 'includesfees';
-                    }
-
-                //    inclfees(vivid_id);
-                }
-            } else {
-               // inclfees(vivid_id);
-                document.getElementById(`${vivid_id}`).classList.add('includesfees');
-            }
 
         } else if (pricewithfees === 'false') {
             document.getElementById('pricewithfeestrue').style.display = 'none';
