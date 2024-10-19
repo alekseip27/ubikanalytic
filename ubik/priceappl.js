@@ -898,7 +898,24 @@ function processTicketmasterData(data) {
     document.querySelector("#loadingfailed3").style.display = "none";
 }
 
-
+function addfees(eventid){
+fetch('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/add_to_includesfees', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+        eventid: eventid
+    })
+})
+.then(response => response.json())
+.then(data => {
+    console.log('Success:', data);
+})
+.catch((error) => {
+    console.error('Error:', error);
+});
+}
 
 
 // Helper function to display loading failed
@@ -1034,7 +1051,8 @@ async function vividsections() {
             document.getElementById('pricewithfeesfalse').style.display = 'none';
             document.getElementById(`${vivid_id}`).classList.add('includesfees');
             let evcardtags = document.getElementById(`${vivid_id}`).getAttribute('tags');
-
+            addfees(vivid_id)
+            
             if (evcardtags) {
 
                 if (!evcardtags.includes('includesfees')) {
