@@ -913,13 +913,20 @@ fetch('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/add_to_includesfees', {
 })
 .then(response => response.json())
 .then(data => {
-    console.log('Success:', data);
+console.log('Success:', data);
+
+if(data.eventid.length>5){
+const element = document.getElementById(String(data.eventid));
+if (element) {
+element.classList.add('includesfees');
+}
+}
+
 })
 .catch((error) => {
     console.error('Error:', error);
 });
 }
-
 
 // Helper function to display loading failed
 function displayLoadingFailed() {
