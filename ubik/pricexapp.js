@@ -101,8 +101,8 @@ document.querySelector('#search-button').addEventListener("click", () => {
                     if (events.tags) {
                         card.setAttribute('tags', events.tags);
 
-                    if(events.tags.includes('includesfees')){
-                    card.classList.add('includesfees');
+                    if(events.tags.includes('lowerable')){
+                    card.classList.add('lowerable');
                     }
 
                     }
@@ -480,6 +480,7 @@ http.onload = function() {
                         document.querySelector('#fwicon4').textContent = '';
 
                         lowerableview = document.querySelector('#lowerable').checked
+                        
                         if(lowerableview === false){
                         getchartprimary();
                         getchartvs();
