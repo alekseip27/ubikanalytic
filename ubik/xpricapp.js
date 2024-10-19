@@ -492,6 +492,7 @@ http.onload = function() {
                     cardContainer.appendChild(card);
                 });
                 checkexp()
+                checkfeeitems()
                 $('#mainpricing').css("display", "block");
                 $('#loadingpricing').css("display", "none");
                 $('#samplestyle2').hide();
@@ -1502,6 +1503,21 @@ request.onerror = function() {
 request.send();
 }
 
+function checkfeeitems(){
+    fetch('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_events_w_fees')
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(item => {
+                const element = document.getElementById(String(item.eventid));
+                if (element) {
+                    element.classList.add('includesfees');
+                }
+            });
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}
 
 
 function inclfees(eventId) {
