@@ -14,6 +14,7 @@ input.addEventListener("keyup", function(event) {
     }
 });
 
+
 document.querySelector('#search-button').addEventListener("click", () => {
     document.getElementById('venuebox').style.display = 'none';
     $('#search-button').css({ pointerEvents: "none" });
