@@ -149,6 +149,11 @@ if(email.includes('daryl@ubikanalytic.com')){
   $('#editevents').css('display','flex');
   $('#editvenues').css('display','flex');
   $('#edithistory').css('display','flex');
+
+  $('#142scraping').css('display','none');
+  $('#datalabeling').css('display','none');
+  $('#datacleaning').css('display','none');
+  $('#ptool').css('display','none');
   }
   
           
