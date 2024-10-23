@@ -145,6 +145,10 @@ if(email.includes('daryl@ubikanalytic.com')){
   $('#create-emails').css('display','flex');
   $('#history').css('display','flex');
   $('#errorlog').css('display','flex');
+  $('#scrapeurls').css('display','flex');
+  $('#editevents').css('display','flex');
+  $('#editvenues').css('display','flex');
+  $('#edithistory').css('display','flex');
   }
   
           
