@@ -99,10 +99,33 @@ document.querySelector('#search-button').addEventListener("click", () => {
                         });
                     }
                     
-                    // Confirm button click handler
-                    confirmbutton.addEventListener('click', function(event) {
-                        event.stopImmediatePropagation();
+                    // Main card click handler for opening the edit dialog
+                    card.addEventListener('click', function(event) {
+                        // Prevent click if the click originated from the delete or confirm button
+                        if (event.target.closest('.main-edit-button') || event.target.closest('.main-edit-button-confirm')) {
+                            return;
+                        }
                     
+                        document.querySelector('#errortext').textContent = '';
+                        document.querySelector(".edit-wrapper").style.display = 'flex';
+                    
+                        document.querySelector('#editid').value = events.id;
+                        document.querySelector('#edit-email').value = events.email;
+                        document.querySelector('#edit-fname').value = events.first_name;
+                        document.querySelector('#edit-lname').value = events.last_name;
+                        document.querySelector('#edit-gender').value = events.gender;
+                        document.querySelector('#edit-bday').value = events.birthdate;
+                        document.querySelector('#edit-pnumber').value = events.phone_number;
+                        document.querySelector('#edit-plocation').value = events.phone_location;
+                        document.querySelector('#edit-country').value = events.country;
+                        document.querySelector('#edit-address').value = events.address;
+                        document.querySelector('#edit-city').value = events.city;
+                        document.querySelector('#edit-state').value = events.state;
+                        document.querySelector('#edit-zip').value = events.zip;
+                    });
+                    
+                    // Confirm button click handler
+                    confirmbutton.addEventListener('click', function() {
                         deletebutton.style.display = 'flex';
                         confirmbutton.style.display = 'none';
                     
@@ -112,6 +135,7 @@ document.querySelector('#search-button').addEventListener("click", () => {
                         // Attach the handleDelete function to deletebutton
                         deletebutton.addEventListener('click', handleDelete);
                     });
+                    
                     
                     // Fill card content
                     card.querySelector('.main-text-acc').textContent = events.email;
