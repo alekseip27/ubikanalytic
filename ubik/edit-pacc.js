@@ -146,17 +146,33 @@ function checkresults() {
             const emailcard = card.getElementsByClassName('main-text-acc')[0]
             emailcard.textContent = events.email;
 
-            const namecard = card.getElementsByClassName('main-text-name')[0]
-            namecard.textContent = events.first_name + ' ' + events.last_name;
+            const numbercard = card.getElementsByClassName('main-text-numbers')[0]
+            numbercard.textContent = events.phone_number;
+
+            const fname = card.getElementsByClassName('main-text-fname')[0]
+            fname.textContent = events.first_name
+
+            const lname = card.getElementsByClassName('main-text-lname')[0]
+            lname.textContent = events.last_name;
+
+            const addresscard = card.getElementsByClassName('main-text-address')[0]
+            addresscard.textContent = events.address;
+
+            if(addresscard.textContent.length>10) {
+            addresscard.textContent = events.address.slice(0, 10)+'...'
+            }
 
             const statecard = card.getElementsByClassName('main-text-states')[0]
             statecard.textContent = events.state;
 
-            const pnumbercard = card.getElementsByClassName('main-text-pnumber')[0]
-            pnumbercard.textContent = events.gender;
+            const zipcard = card.getElementsByClassName('main-text-zip')[0]
+            zipcard.textContent = events.zip;
 
-            const bdaycard = card.getElementsByClassName('main-text-birthdate')[0]
-            bdaycard.textContent = events.birthdate;
+            const countrycard = card.getElementsByClassName('main-text-countrys')[0]
+            countrycard.textContent = events.country;
+
+            const gendercard = card.getElementsByClassName('main-text-genders')[0]
+            gendercard.textContent = events.gender;
 
 
 const deletebutton = card.getElementsByClassName('main-edit-button')[0];
