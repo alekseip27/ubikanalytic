@@ -55,6 +55,10 @@ document.querySelector('#search-button').addEventListener("click", () => {
     let xanoUrl = `https://ubik.wiki/api/purchasing-accounts/?${keywords}`;
 
     function getEvents() {
+        // Clear old event boxes
+        const cardContainer = document.getElementById("Cards-Container");
+        cardContainer.innerHTML = ''; // This line removes old events
+
         let request = new XMLHttpRequest();
         request.open('GET', xanoUrl, true);
         request.setRequestHeader('Authorization', `Bearer ${token}`);
@@ -65,7 +69,6 @@ document.querySelector('#search-button').addEventListener("click", () => {
             if (request.status >= 200 && request.status < 400) {
                 document.querySelector('#loading').style.display = "none";
                 document.querySelector('#flexbox').style.display = "flex";
-                const cardContainer = document.getElementById("Cards-Container");
 
                 data.results.forEach(events => {
                     const style = document.getElementById('samplestyle');
@@ -77,9 +80,8 @@ document.querySelector('#search-button').addEventListener("click", () => {
                     card.style.display = 'flex';
 
                     const deletebutton = card.getElementsByClassName('main-edit-button')[0];
-                    const confirmbutton = card.getElementsByClassName('main-edit-button-confirm')[0]
+                    const confirmbutton = card.getElementsByClassName('main-edit-button-confirm')[0];
 
-                
                     function handleDelete() {
                         document.querySelector('.edit-wrapper').style.display = 'none';
                         const url = `https://ubik.wiki/api/delete/purchasing-accounts/`;
@@ -135,7 +137,6 @@ document.querySelector('#search-button').addEventListener("click", () => {
                         // Attach the handleDelete function to deletebutton
                         deletebutton.addEventListener('click', handleDelete);
                     });
-                    
                     
                     // Fill card content
                     card.querySelector('.main-text-acc').textContent = events.email;
