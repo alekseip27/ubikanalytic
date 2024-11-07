@@ -137,6 +137,16 @@ const tokenCheckInterval = setInterval(() => {
     }
 
     // Remaining event listeners, data fetching functions, and helper functions...
+    document.getElementById('buyer_email').addEventListener('change', function() {
+        erasedata()
+        const buyerEmail = this.value;
+        if (buyerEmail) {
+            document.querySelector('#purchaseaccounts').value = '';
+            retrievedatato(buyerEmail);
+            displayBuyerData(buyerEmail);
+            setvalue(buyerEmail);
+        }
+    });
 
 // Initialize the states and email dropdowns on load
 
