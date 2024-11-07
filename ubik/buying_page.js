@@ -1,137 +1,142 @@
-let states = ''
 const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/';
-const headers = {
-    'Authorization': `Bearer ${token}`,
-    'Content-type': 'application/json; charset=utf-8'
-};
+let headers;
 
-// Fetch data from the API
-async function fetchData(url) {
-    const response = await fetch(url.toString(), { method: 'GET', headers });
-    if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-    return response.json();
+// Function to initialize headers and proceed with code
+function initialize() {
+    headers = {
+        'Authorization': `Bearer ${token}`,
+        'Content-type': 'application/json; charset=utf-8'
+    };
+
+    // Your main code that requires headers goes here
+    initializeStates(); // Example function call
 }
-// Populate state dropdown and handle state selection
-// Populate state dropdown and handle state selection
-async function initializeStates(states, emailsused = '') {
-    try {
-        const url = new URL(`${apiUrl}?limit=1000`);
-        const data = await fetchData(url);
-        const items = Array.isArray(data) ? data : data.results;
 
-        if (!Array.isArray(items)) throw new Error("Expected an array in 'data' or 'data.results'.");
+// Set interval to check for token length
+const tokenCheckInterval = setInterval(() => {
+    if (token && token.length === 40) {
+        clearInterval(tokenCheckInterval); // Clear interval once token is valid
+        initialize(); // Call function to initialize headers and proceed
+    }
+}, 1000); // Check every 1 second
 
-        const stateCounts = items.reduce((counts, item) => {
-            counts[item.state] = (counts[item.state] || 0) + 1;
-            return counts;
-        }, {});
 
-        const buyerStateSelect = document.getElementById('buyer_state');
-        buyerStateSelect.innerHTML = '';
+    // Fetch data from the API
+    async function fetchData(url) {
+        const response = await fetch(url.toString(), { method: 'GET', headers });
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+        return response.json();
+    }
 
-        // Add "Select one..." as the first option
-        const defaultOption = document.createElement('option');
-        defaultOption.value = '';
-        defaultOption.textContent = 'Select one...';
-        buyerStateSelect.appendChild(defaultOption);
+    // Populate state dropdown and handle state selection
+    async function initializeStates(states, emailsused = '') {
+        try {
+            const url = new URL(`${apiUrl}?limit=1000`);
+            const data = await fetchData(url);
+            const items = Array.isArray(data) ? data : data.results;
 
-        // If specified `states` is in the list, add it as the first selectable option
-        if (states && stateCounts[states]) {
-            const specifiedStateOption = document.createElement('option');
-            specifiedStateOption.value = states;
-            specifiedStateOption.textContent = `${states} (${stateCounts[states]})`;
-            buyerStateSelect.appendChild(specifiedStateOption);
-            delete stateCounts[states]; // Remove from the list to avoid duplication
+            if (!Array.isArray(items)) throw new Error("Expected an array in 'data' or 'data.results'.");
+
+            const stateCounts = items.reduce((counts, item) => {
+                counts[item.state] = (counts[item.state] || 0) + 1;
+                return counts;
+            }, {});
+
+            const buyerStateSelect = document.getElementById('buyer_state');
+            buyerStateSelect.innerHTML = '';
+
+            // Add "Select one..." as the first option
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = 'Select one...';
+            buyerStateSelect.appendChild(defaultOption);
+
+            // If specified `states` is in the list, add it as the first selectable option
+            if (states && stateCounts[states]) {
+                const specifiedStateOption = document.createElement('option');
+                specifiedStateOption.value = states;
+                specifiedStateOption.textContent = `${states} (${stateCounts[states]})`;
+                buyerStateSelect.appendChild(specifiedStateOption);
+                delete stateCounts[states]; // Remove from the list to avoid duplication
+            }
+
+            // Populate other states in alphabetical order
+            Object.keys(stateCounts).sort().forEach(state => {
+                const option = document.createElement('option');
+                option.value = state;
+                option.textContent = `${state} (${stateCounts[state]})`;
+                buyerStateSelect.appendChild(option);
+            });
+
+            // Convert emailsused string to an array for easy filtering
+            const usedEmails = emailsused.split(',').map(email => email.trim());
+
+            // Add change event listener to filter out used emails
+            buyerStateSelect.addEventListener('change', () => {
+                erasedata();
+                const selectedState = buyerStateSelect.value.split(" (")[0];
+                if (selectedState) populateEmails(items, selectedState, usedEmails);
+            });
+
+            // If `states` is specified, set it as the selected option and trigger the event
+            if (states) {
+                buyerStateSelect.value = states;
+            } else {
+                buyerStateSelect.value = ''; // Default to "Select one..."
+            }
+
+            // Trigger change event to populate based on initial selection
+            const event = new Event("change");
+            buyerStateSelect.dispatchEvent(event);
+
+        } catch (error) {
+            console.error('Error initializing states:', error);
         }
+    }
 
-        // Populate other states in alphabetical order
-        Object.keys(stateCounts).sort().forEach(state => {
-            const option = document.createElement('option');
-            option.value = state;
-            option.textContent = `${state} (${stateCounts[state]})`;
-            buyerStateSelect.appendChild(option);
-        });
+    function addDefaultOption(selectElement, text) {
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = text;
+        selectElement.appendChild(option);
+    }
 
-        // Convert emailsused string to an array for easy filtering
-        const usedEmails = emailsused.split(',').map(email => email.trim());
+    function populateEmails(items, selectedState) {
+        const buyerEmailSelect = document.getElementById('buyer_email');
+        buyerEmailSelect.innerHTML = '';
+        addDefaultOption(buyerEmailSelect, 'Select one...');
 
-        // Add change event listener to filter out used emails
-        buyerStateSelect.addEventListener('change', () => {
-            erasedata();
-            const selectedState = buyerStateSelect.value.split(" (")[0];
-            if (selectedState) populateEmails(items, selectedState, usedEmails);
-        });
+        items.filter(item => item.state === selectedState && !emailsused.includes(item.email))
+            .forEach(item => {
+                const option = document.createElement('option');
+                option.value = item.email;
+                option.textContent = item.email;
+                buyerEmailSelect.appendChild(option);
+            });
+    }
 
-        // If `states` is specified, set it as the selected option and trigger the event
-        if (states) {
-            buyerStateSelect.value = states;
-        } else {
-            buyerStateSelect.value = ''; // Default to "Select one..."
+    async function displayBuyerData(buyerEmail) {
+        try {
+            const url = new URL(`${apiUrl}?email__iexact=${buyerEmail}`);
+            const data = await fetchData(url);
+
+            const accountInfo = data.results[0];
+            if (!accountInfo) throw new Error("No account information found.");
+
+            document.querySelector('#firstname').textContent = accountInfo.first_name;
+            document.querySelector('#lastname').textContent = accountInfo.last_name;
+            document.querySelector('#phonenumber').textContent = accountInfo.phone_number;
+            document.querySelector('#birthdate').textContent = accountInfo.birthdate;
+            document.querySelector('#gender').textContent = accountInfo.gender;
+            document.querySelector('#street').textContent = accountInfo.address;
+            document.querySelector('#city').textContent = accountInfo.city;
+            document.querySelector('#zip').textContent = accountInfo.zip;
+        } catch (error) {
+            console.error('Error displaying buyer data:', error);
         }
-
-        // Trigger change event to populate based on initial selection
-        const event = new Event("change");
-        buyerStateSelect.dispatchEvent(event);
-
-    } catch (error) {
-        console.error('Error initializing states:', error);
     }
-}
 
-function addDefaultOption(selectElement, text) {
-    const option = document.createElement('option');
-    option.value = '';
-    option.textContent = text;
-    selectElement.appendChild(option);
-}
-
-function populateEmails(items, selectedState) {
-    const buyerEmailSelect = document.getElementById('buyer_email');
-    buyerEmailSelect.innerHTML = '';
-    addDefaultOption(buyerEmailSelect, 'Select one...');
-
-    items.filter(item => item.state === selectedState && !emailsused.includes(item.email))
-        .forEach(item => {
-            const option = document.createElement('option');
-            option.value = item.email;
-            option.textContent = item.email;
-            buyerEmailSelect.appendChild(option);
-        });
-}
-
-
-async function displayBuyerData(buyerEmail) {
-    try {
-        const url = new URL(`${apiUrl}?email__iexact=${buyerEmail}`);
-        const data = await fetchData(url);
-
-        const accountInfo = data.results[0];
-        if (!accountInfo) throw new Error("No account information found.");
-
-        document.querySelector('#firstname').textContent = accountInfo.first_name;
-        document.querySelector('#lastname').textContent = accountInfo.last_name;
-        document.querySelector('#phonenumber').textContent = accountInfo.phone_number;
-        document.querySelector('#birthdate').textContent = accountInfo.birthdate;
-        document.querySelector('#gender').textContent = accountInfo.gender;
-        document.querySelector('#street').textContent = accountInfo.address;
-        document.querySelector('#city').textContent = accountInfo.city;
-        document.querySelector('#zip').textContent = accountInfo.zip;
-    } catch (error) {
-        console.error('Error displaying buyer data:', error);
-    }
-}
-
-// Event listener for email selection
-document.getElementById('buyer_email').addEventListener('change', function() {
-    erasedata()
-    const buyerEmail = this.value;
-    if (buyerEmail){
-        document.querySelector('#purchaseaccounts').value = ''
-        retrievedatato(buyerEmail)
-        displayBuyerData(buyerEmail);
-        setvalue(buyerEmail)
-    }
-});
+    // Remaining event listeners, data fetching functions, and helper functions...
 
 // Initialize the states and email dropdowns on load
 
