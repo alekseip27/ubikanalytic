@@ -139,10 +139,12 @@ function checkresults() {
             document.querySelector('#edit-city').value = events.city
             document.querySelector('#edit-state').value = events.state
             document.querySelector('#edit-zip').value = events.zip
+            document.querySelector('#edit-openpurchases').value = events.open_purchases
+            document.querySelector('#edit-created').value = events.created_date
             })
 
             card.style.display = 'flex';
-
+                
             const emailcard = card.getElementsByClassName('main-text-acc')[0]
             emailcard.textContent = events.email;
 
