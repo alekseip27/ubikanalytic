@@ -34,6 +34,12 @@ buybutton.addEventListener('click', function() {
 window.location.assign("https://www.ubikanalytic.com/buy-event?id=" + events.id)
 });
 
+const buybutton2 = card.getElementsByClassName('main-buy-button2')[0]
+buybutton2.addEventListener('click', function() {
+window.location.assign("https://www.ubikanalytic.com/buy-event-copy?id=" + events.id)
+});
+
+    
 const editbutton = card.getElementsByClassName('main-edit-button')[0]
 editbutton.style.display = 'none'
 editbutton.addEventListener('click', function() {
