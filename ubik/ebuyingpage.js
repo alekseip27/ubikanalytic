@@ -165,7 +165,7 @@ return response.json();
   let cd = data.data
   document.querySelector('#dnum1').textContent = cd.n1
   document.querySelector('#dnum2').textContent = cd.n3
-  document.querySelector('#dnum3').textContent = '10/28'
+  document.querySelector('#dnum3').textContent = cd.n6
   document.querySelector('#dnum4').textContent = cd.n4
   document.querySelector('#dnum5').textContent = cd.n5
 
