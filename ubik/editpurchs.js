@@ -114,8 +114,8 @@ function checkresults() {
             card.setAttribute('id', '');
             card.setAttribute('cardid', idcard);
 
-            card.setAttribute('source', events.scraper_name);
-            card.setAttribute('vivid_id', events.vdid);
+            card.setAttribute('email', events.email);
+            card.setAttribute('id', events.id);
 
             card.addEventListener('click', function(){
 
