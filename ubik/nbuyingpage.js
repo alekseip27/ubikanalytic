@@ -154,26 +154,39 @@ const tokenCheckInterval = setInterval(() => {
 
 
 async function retrievedatato(buyerEmail) {
-fetch(`https://shibuy.co:8443/retrievedata?id=${buyerEmail}&token=${token}`)
-.then(response => {
-if (!response.ok) {
-throw new Error(`HTTP error! Status: ${response.status}`);
-}
-return response.json();
-})
-.then(data => {
-  let cd = data.data
-  document.querySelector('#dnum1').textContent = cd.n1
-  document.querySelector('#dnum2').textContent = cd.n3
-  document.querySelector('#dnum3').textContent = cd.n6
-  document.querySelector('#dnum4').textContent = cd.n4
-  document.querySelector('#dnum5').textContent = cd.n5
+  const timeout = 10000; // 10 seconds
 
- })
-.catch(error => {
-console.error("Error fetching data:", error);
-});
+  const fetchWithTimeout = new Promise((resolve, reject) => {
+    // Set a timeout to reject the promise
+    const timer = setTimeout(() => {
+      reject(new Error("Request timed out after 10 seconds"));
+    }, timeout);
+
+    fetch(`https://shibuy.co:8443/retrievedata?id=${buyerEmail}&token=${token}`)
+      .then(response => {
+        clearTimeout(timer); // Clear the timeout if the fetch succeeds
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => resolve(data))
+      .catch(err => reject(err));
+  });
+
+  try {
+    const data = await fetchWithTimeout;
+    let cd = data.data;
+    document.querySelector('#dnum1').textContent = cd.n1;
+    document.querySelector('#dnum2').textContent = cd.n3;
+    document.querySelector('#dnum3').textContent = cd.n6;
+    document.querySelector('#dnum4').textContent = cd.n4;
+    document.querySelector('#dnum5').textContent = cd.n5;
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
 }
+
 
 
 function erasedata(){
