@@ -31,11 +31,6 @@ card.style.display = 'flex';
 
 const buybutton = card.getElementsByClassName('main-buy-button')[0]
 buybutton.addEventListener('click', function() {
-window.location.assign("https://www.ubikanalytic.com/buy-event?id=" + events.id)
-});
-
-const buybutton2 = card.getElementsByClassName('main-buy-button2')[0]
-buybutton2.addEventListener('click', function() {
 window.location.assign("https://www.ubikanalytic.com/buy-event-copy?id=" + events.id)
 });
 
