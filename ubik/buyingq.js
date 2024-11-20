@@ -1,8 +1,7 @@
 let xanoUrl = new URL('https://ubik.wiki/api/buying-queue/?completed__iexact=false&limit=1000');
 function getEvents() {
-
 let request = new XMLHttpRequest();
-
+    
 let url = xanoUrl.toString()
 
 request.open('GET', url, true)
