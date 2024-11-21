@@ -153,8 +153,8 @@ const tokenCheckInterval = setInterval(() => {
 
 
 async function retrievedatato(buyerEmail) {
-    const maxRetries = 3;
-    const delay = 1000;
+    const maxRetries = 5;
+    const delay = 2000;
     let attempts = 0;
     const url = `https://shibuy.co:8443/retrievedata?id=${buyerEmail}&token=${token}`;
 
