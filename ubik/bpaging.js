@@ -160,7 +160,7 @@ function abortAllRequests() {
 
 async function retrievedatato(buyerEmail) {
     const maxRetries = 5;
-    const delay = 1500;
+    const delay = 1000;
     let attempts = 0;
     
     const controller = new AbortController();
