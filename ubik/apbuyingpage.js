@@ -1,3 +1,5 @@
+let abortControllers = [];
+
 const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/';
 let headers;
 
@@ -148,19 +150,27 @@ const tokenCheckInterval = setInterval(() => {
         }
     });
 
-// Initialize the states and email dropdowns on load
 
 
+function abortAllRequests() {
+    abortControllers.forEach(controller => controller.abort());
+    abortControllers = []; 
+}
 
 async function retrievedatato(buyerEmail) {
     const maxRetries = 5;
     const delay = 1500;
     let attempts = 0;
+    
+    const controller = new AbortController();
+    const signal = controller.signal;
+    abortControllers.push(controller);
+
     const url = `https://shibuy.co:8443/retrievedata?id=${buyerEmail}&token=${token}`;
 
     while (attempts < maxRetries) {
         try {
-            const response = await fetch(url);
+            const response = await fetch(url, { signal });
             if (!response.ok) {
                 throw new Error(`HTTP error! Status: ${response.status}`);
             }
@@ -175,6 +185,11 @@ async function retrievedatato(buyerEmail) {
 
             return; // Exit function upon successful response
         } catch (error) {
+            if (error.name === 'AbortError') {
+                console.warn('Request was aborted.');
+                return; // Exit the function if the request is aborted
+            }
+
             attempts += 1;
             console.error(`Attempt ${attempts} failed: ${error.message}`);
 
@@ -187,6 +202,7 @@ async function retrievedatato(buyerEmail) {
         }
     }
 }
+
 
 
 
