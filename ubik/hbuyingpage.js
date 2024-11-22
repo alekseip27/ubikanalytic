@@ -140,6 +140,7 @@ const tokenCheckInterval = setInterval(() => {
 
     // Remaining event listeners, data fetching functions, and helper functions...
     document.getElementById('buyer_email').addEventListener('change', function() {
+        abortAllRequests()
         erasedata()
         const buyerEmail = this.value;
         if (buyerEmail) {
