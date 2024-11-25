@@ -51,7 +51,6 @@ const firebaseConfig = {
           let orderh = data["orderhistory"]
           let marcus = data['marcus']
           let pricing = data['pricing']
-          let pricing = data['pricing']
           let emailsacc = data['emailsaccess']
 
 
