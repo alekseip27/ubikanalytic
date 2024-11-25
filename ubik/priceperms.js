@@ -53,7 +53,12 @@
               let orderh = data["orderhistory"]
               let marcus = data['marcus']
               let pricing = data['pricing']
-      
+              let emailsacc = data['emailsaccess']
+
+if(emailsacc){
+  $('#emaildropdown').css('display','flex');
+  $('#manage-emails').css('display','flex');  
+}
     
       if(email.includes('@ubikanalytic.com')){
         token = data["token"]
@@ -125,9 +130,7 @@ if (email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com') {
       $('#dropchecking').css('display','flex');
           
       $('#emaildropdown').css('display','flex');
-      $('#create-emails').css('display','flex');
       $('#manage-emails').css('display','flex');
-      $('#email-types').css('display','flex');
           
       
       
@@ -144,7 +147,6 @@ if (email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com') {
       $('#buying').css('display','flex');
       $('#emaildropdown').css('display','flex');
       $('#queue').css('display','flex');
-      $('#create-emails').css('display','flex');
       $('#history').css('display','flex');
       $('#errorlog').css('display','flex');
       }
