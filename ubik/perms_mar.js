@@ -51,7 +51,8 @@ const firebaseConfig = {
           let orderh = data["orderhistory"]
           let marcus = data['marcus']
           let pricing = data['pricing']
-  
+          let emailsacc = data['emailsaccess']
+
 
   if(email.includes('mmyerstix')){
     token = data["token"]
