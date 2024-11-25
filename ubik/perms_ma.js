@@ -57,7 +57,11 @@ const firebaseConfig = {
     token = data["token"]
   }
 
-            
+if(emailsacc){
+  $('#emaildropdown').css('display','flex');
+  $('#manage-emails').css('display','flex');  
+}
+
 
   if(email.includes('@ubikanalytic.com')){
     token = data["token"]
@@ -102,9 +106,7 @@ const firebaseConfig = {
   $('#dropchecking').css('display','flex');
       
   $('#emaildropdown').css('display','flex');
-  $('#create-emails').css('display','flex');
   $('#manage-emails').css('display','flex');
-  $('#email-types').css('display','flex');
       
   
   
@@ -121,7 +123,6 @@ const firebaseConfig = {
   $('#buying').css('display','flex');
   $('#emaildropdown').css('display','flex');
   $('#queue').css('display','flex');
-  $('#create-emails').css('display','flex');
   $('#history').css('display','flex');
   $('#errorlog').css('display','flex');
   }
