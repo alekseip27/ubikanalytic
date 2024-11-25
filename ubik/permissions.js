@@ -77,6 +77,11 @@ if(email.includes('daryl@ubikanalytic.com')){
     regularcheck.style.display = 'flex'
 }
             
+if(emailsacc){
+  $('#emaildropdown').css('display','flex');
+  $('#manage-emails').css('display','flex');  
+}
+
             
   if(marcus === true){
   document.querySelector('#eventsdropdown').style.display = 'flex'
@@ -123,11 +128,8 @@ if(email.includes('daryl@ubikanalytic.com')){
   $('#dropchecking').css('display','flex');
       
   $('#emaildropdown').css('display','flex');
-  $('#create-emails').css('display','flex');
   $('#manage-emails').css('display','flex');
-  $('#email-types').css('display','flex');
-      
-  
+    
   
   }
   
@@ -142,7 +144,6 @@ if(email.includes('daryl@ubikanalytic.com')){
   $('#buying').css('display','flex');
   $('#emaildropdown').css('display','flex');
   $('#queue').css('display','flex');
-  $('#create-emails').css('display','flex');
   $('#history').css('display','flex');
   $('#errorlog').css('display','flex');
   $('#scrapeurls').css('display','flex');
