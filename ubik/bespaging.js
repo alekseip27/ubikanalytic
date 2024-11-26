@@ -276,6 +276,8 @@ function erasedata(){
     document.querySelector('#dnum4').textContent = ''
     document.querySelector('#dnum5').textContent = ''
     document.querySelector('#unlock').setAttribute('retrieve','')
+    document.getElementById('unlock').style.pointerEvents = "none";
+    document.getElementById('unlock').classList.add('none')
     document.querySelector('#purchaseaccounts').value = ''
     document.querySelector('#failedemail').value = ''
 
