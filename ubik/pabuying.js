@@ -177,6 +177,7 @@ async function retrievedatato(buyerEmail) {
             const data = await response.json();
             const cd = data.data;
 
+            document.querySelector('#dnum1').textContent = cd.n1;
             document.querySelector('#dnum3').textContent = cd.n2;
             document.querySelector('#dnum4').textContent = 'Ramp'
             document.querySelector('#dnum5').textContent = 'Visa'
@@ -185,12 +186,6 @@ async function retrievedatato(buyerEmail) {
             document.getElementById('unlock').style.pointerEvents = "auto";
             document.getElementById('unlock').classList.remove('none')
             document.getElementById('unlock').style.display = 'flex'
-
-            document.getElementById('unlock2').setAttribute('retrieve',cd.n1)
-            document.getElementById('unlock2').style.pointerEvents = "auto";
-            document.getElementById('unlock2').classList.remove('none')
-            document.getElementById('unlock2').style.display = 'flex'
-
 
 
 
@@ -215,49 +210,47 @@ async function retrievedatato(buyerEmail) {
     }
 }
 
-
-function copyToClipboard(text) {
-    const tempInput = document.createElement('input');
-    document.body.appendChild(tempInput);
-    tempInput.value = text;
-    tempInput.select();
+function copyToClipboard1(text) {
+    const tempInput1 = document.createElement('input');
+    document.body.appendChild(tempInput1);
+    tempInput1.value = text;
+    tempInput1.select();
     document.execCommand('copy');
-    document.body.removeChild(tempInput);
+    document.body.removeChild(tempInput1);
 }
 
 
 document.querySelector('#unlock').addEventListener("click", () => {
-    let id = document.querySelector('#unlock').getAttribute('retrieve')
-    retrievezip(id)
-})
-
-document.querySelector('#unlock2').addEventListener("click", () => {
-let id = document.querySelector('#unlock2').getAttribute('retrieve')
-copyToClipboard(id)
+let id = document.querySelector('#unlock').getAttribute('retrieve')
+retrievezip(id)
 })
 
 
-    async function retrievezip(id) {
-        const maxRetries = 5;
-        const delay = 1000;
-        let attempts = 0;
-        let buyerEmail = id
-        const controller = new AbortController();
-        const signal = controller.signal;
-        abortControllers.push(controller);
+function retrievezip(id) {
+    const maxRetries = 5;
+    const delay = 1000;
+    let attempts = 0;
+    let buyerEmail = id;
 
-        const url = `https://shibuy.co:8443/retrievezip?id=${buyerEmail}&token=${token}`;
+    const controller = new AbortController();
+    const signal = controller.signal;
+    abortControllers.push(controller);
 
-        while (attempts < maxRetries) {
-            try {
-                const response = await fetch(url, { signal });
+    const url = `https://shibuy.co:8443/retrievezip?id=${buyerEmail}&token=${token}`;
+
+    function fetchWithRetry() {
+        return fetch(url, { signal })
+            .then(response => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-                const data = await response.json();
-                copyToClipboard(data)
-                return; // Exit function upon successful response
-            } catch (error) {
+                return response.json();
+            })
+            .then(data => {
+                copyToClipboard1(data)
+                document.querySelector('.hdnclick').click()
+            })
+            .catch(error => {
                 if (error.name === 'AbortError') {
                     console.warn('Request was aborted.');
                     return; // Exit the function if the request is aborted
@@ -266,15 +259,18 @@ copyToClipboard(id)
                 attempts += 1;
                 console.error(`Attempt ${attempts} failed: ${error.message}`);
 
-                if (attempts >= maxRetries) {
+                if (attempts < maxRetries) {
+                    return new Promise(resolve => setTimeout(resolve, delay)).then(fetchWithRetry);
+                } else {
                     console.error("Max retries reached. Error fetching data:", error);
-                    return;
                 }
-
-                await new Promise(resolve => setTimeout(resolve, delay)); // Wait before retrying
-            }
-        }
+            });
     }
+
+    fetchWithRetry();
+}
+
+
 
 
 
@@ -288,6 +284,7 @@ function erasedata(){
     document.querySelector('#street').textContent = ''
     document.querySelector('#city').textContent = ''
     document.querySelector('#zip').textContent = ''
+    document.querySelector('#dnum1').textContent = ''
     document.querySelector('#dnum3').textContent = ''
     document.querySelector('#dnum4').textContent = ''
     document.querySelector('#dnum5').textContent = ''
@@ -295,11 +292,6 @@ function erasedata(){
     document.getElementById('unlock').style.pointerEvents = "none";
     document.getElementById('unlock').setAttribute('retrieve','')
     document.getElementById('unlock').style.display = 'none'
-
-    document.getElementById('unlock2').style.pointerEvents = "auto";
-    document.getElementById('unlock2').setAttribute('retrieve','')
-    document.getElementById('unlock2').style.display = 'none'
-
 
     document.querySelector('#purchaseaccounts').value = ''
     document.querySelector('#failedemail').value = ''
