@@ -176,14 +176,25 @@ async function retrievedatato(buyerEmail) {
             }
             const data = await response.json();
             const cd = data.data;
-            document.querySelector('#dnum1').textContent = cd.n1;
+
             document.querySelector('#dnum3').textContent = cd.n2;
             document.querySelector('#dnum4').textContent = 'Ramp'
             document.querySelector('#dnum5').textContent = 'Visa'
-            document.querySelector('#unlock').setAttribute('retrieve',buyerEmail)
+
+            document.getElementById('unlock').setAttribute('retrieve',buyerEmail)
             document.getElementById('unlock').style.pointerEvents = "auto";
             document.getElementById('unlock').classList.remove('none')
-            document.querySelector('#unlock').style.display = 'flex'
+            document.getElementById('unlock').style.display = 'flex'
+
+            document.getElementById('unlock2').setAttribute('retrieve',cd.n1)
+            document.getElementById('unlock2').style.pointerEvents = "auto";
+            document.getElementById('unlock2').classList.remove('none')
+            document.getElementById('unlock2').style.display = 'flex'
+
+
+
+
+
             return; // Exit function upon successful response
         } catch (error) {
             if (error.name === 'AbortError') {
@@ -218,8 +229,14 @@ function copyToClipboard(text) {
 document.querySelector('#unlock').addEventListener("click", () => {
     let id = document.querySelector('#unlock').getAttribute('retrieve')
     retrievezip(id)
+})
 
-    })
+document.querySelector('#unlock2').addEventListener("click", () => {
+let id = document.querySelector('#unlock2').getAttribute('retrieve')
+copyToClipboard(id)
+})
+
+
     async function retrievezip(id) {
         const maxRetries = 5;
         const delay = 1000;
@@ -271,12 +288,19 @@ function erasedata(){
     document.querySelector('#street').textContent = ''
     document.querySelector('#city').textContent = ''
     document.querySelector('#zip').textContent = ''
-    document.querySelector('#dnum1').textContent = ''
     document.querySelector('#dnum3').textContent = ''
     document.querySelector('#dnum4').textContent = ''
     document.querySelector('#dnum5').textContent = ''
-    document.querySelector('#unlock').setAttribute('retrieve','')
-    document.querySelector('#unlock').style.display = 'none'
+
+    document.getElementById('unlock').style.pointerEvents = "none";
+    document.getElementById('unlock').setAttribute('retrieve','')
+    document.getElementById('unlock').style.display = 'none'
+
+    document.getElementById('unlock2').style.pointerEvents = "auto";
+    document.getElementById('unlock2').setAttribute('retrieve','')
+    document.getElementById('unlock2').style.display = 'none'
+
+
     document.querySelector('#purchaseaccounts').value = ''
     document.querySelector('#failedemail').value = ''
 
