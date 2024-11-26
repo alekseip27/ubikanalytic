@@ -144,10 +144,6 @@ const tokenCheckInterval = setInterval(() => {
         erasedata()
         const buyerEmail = this.value;
         if (buyerEmail) {
-            document.querySelector('#purchaseaccounts').value = '';
-            document.querySelector('#unlock').setAttribute('retrieve','')
-            document.getElementById('unlock').style.pointerEvents = "none";
-            document.getElementById('unlock').classList.add('none')
             retrievedatato(buyerEmail);
             displayBuyerData(buyerEmail);
             setvalue(buyerEmail);
@@ -187,6 +183,7 @@ async function retrievedatato(buyerEmail) {
             document.querySelector('#unlock').setAttribute('retrieve',buyerEmail)
             document.getElementById('unlock').style.pointerEvents = "auto";
             document.getElementById('unlock').classList.remove('none')
+            document.querySelector('#unlock').style.display = 'flex'
             return; // Exit function upon successful response
         } catch (error) {
             if (error.name === 'AbortError') {
@@ -205,6 +202,16 @@ async function retrievedatato(buyerEmail) {
             await new Promise(resolve => setTimeout(resolve, delay)); // Wait before retrying
         }
     }
+}
+
+
+function copyToClipboard(text) {
+    const tempInput = document.createElement('input');
+    document.body.appendChild(tempInput);
+    tempInput.value = text;
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
 }
 
 
@@ -231,14 +238,7 @@ document.querySelector('#unlock').addEventListener("click", () => {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
                 const data = await response.json();
-                const cd = data
-
-                // Copy cd to clipboard
-                try {
-                    await navigator.clipboard.writeText(cd);
-                } catch (clipboardError) {
-                }
-
+                copyToClipboard(data)
                 return; // Exit function upon successful response
             } catch (error) {
                 if (error.name === 'AbortError') {
@@ -276,8 +276,7 @@ function erasedata(){
     document.querySelector('#dnum4').textContent = ''
     document.querySelector('#dnum5').textContent = ''
     document.querySelector('#unlock').setAttribute('retrieve','')
-    document.getElementById('unlock').style.pointerEvents = "none";
-    document.getElementById('unlock').classList.add('none')
+    document.querySelector('#unlock').style.display = 'none'
     document.querySelector('#purchaseaccounts').value = ''
     document.querySelector('#failedemail').value = ''
 
