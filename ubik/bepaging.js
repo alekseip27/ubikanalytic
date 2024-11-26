@@ -145,6 +145,9 @@ const tokenCheckInterval = setInterval(() => {
         const buyerEmail = this.value;
         if (buyerEmail) {
             document.querySelector('#purchaseaccounts').value = '';
+            document.querySelector('#unlock').setAttribute('retrieve','')
+            document.getElementById('unlock').style.pointerEvents = "none";
+            document.getElementById('unlock').classList.add('none')
             retrievedatato(buyerEmail);
             displayBuyerData(buyerEmail);
             setvalue(buyerEmail);
@@ -155,14 +158,14 @@ const tokenCheckInterval = setInterval(() => {
 
 function abortAllRequests() {
     abortControllers.forEach(controller => controller.abort());
-    abortControllers = []; 
+    abortControllers = [];
 }
 
 async function retrievedatato(buyerEmail) {
     const maxRetries = 5;
     const delay = 1000;
     let attempts = 0;
-    
+
     const controller = new AbortController();
     const signal = controller.signal;
     abortControllers.push(controller);
@@ -177,13 +180,13 @@ async function retrievedatato(buyerEmail) {
             }
             const data = await response.json();
             const cd = data.data;
-
             document.querySelector('#dnum1').textContent = cd.n1;
-            document.querySelector('#dnum2').textContent = cd.n3;
-            document.querySelector('#dnum3').textContent = cd.n6;
-            document.querySelector('#dnum4').textContent = cd.n4;
-            document.querySelector('#dnum5').textContent = cd.n5;
-
+            document.querySelector('#dnum3').textContent = cd.n2;
+            document.querySelector('#dnum4').textContent = 'Ramp'
+            document.querySelector('#dnum5').textContent = 'Visa'
+            document.querySelector('#unlock').setAttribute('retrieve',buyerEmail)
+            document.getElementById('unlock').style.pointerEvents = "auto";
+            document.getElementById('unlock').classList.remove('none')
             return; // Exit function upon successful response
         } catch (error) {
             if (error.name === 'AbortError') {
@@ -205,6 +208,58 @@ async function retrievedatato(buyerEmail) {
 }
 
 
+document.querySelector('#unlock').addEventListener("click", () => {
+    let id = document.querySelector('#unlock').getAttribute('retrieve')
+    retrievezip(id)
+
+    })
+    async function retrievezip(id) {
+        const maxRetries = 5;
+        const delay = 1000;
+        let attempts = 0;
+        let buyerEmail = id
+        const controller = new AbortController();
+        const signal = controller.signal;
+        abortControllers.push(controller);
+
+        const url = `https://shibuy.co:8443/retrievezip?id=${buyerEmail}&token=${token}`;
+
+        while (attempts < maxRetries) {
+            try {
+                const response = await fetch(url, { signal });
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                const data = await response.json();
+                const cd = data
+
+                // Copy cd to clipboard
+                try {
+                    await navigator.clipboard.writeText(cd);
+                } catch (clipboardError) {
+                }
+
+                return; // Exit function upon successful response
+            } catch (error) {
+                if (error.name === 'AbortError') {
+                    console.warn('Request was aborted.');
+                    return; // Exit the function if the request is aborted
+                }
+
+                attempts += 1;
+                console.error(`Attempt ${attempts} failed: ${error.message}`);
+
+                if (attempts >= maxRetries) {
+                    console.error("Max retries reached. Error fetching data:", error);
+                    return;
+                }
+
+                await new Promise(resolve => setTimeout(resolve, delay)); // Wait before retrying
+            }
+        }
+    }
+
+
 
 
 function erasedata(){
@@ -217,10 +272,10 @@ function erasedata(){
     document.querySelector('#city').textContent = ''
     document.querySelector('#zip').textContent = ''
     document.querySelector('#dnum1').textContent = ''
-    document.querySelector('#dnum2').textContent = ''
     document.querySelector('#dnum3').textContent = ''
     document.querySelector('#dnum4').textContent = ''
     document.querySelector('#dnum5').textContent = ''
+    document.querySelector('#unlock').setAttribute('retrieve','')
     document.querySelector('#purchaseaccounts').value = ''
     document.querySelector('#failedemail').value = ''
 
@@ -1000,4 +1055,3 @@ function getStateName(input) {
 
     return "State not found";
 }
-
