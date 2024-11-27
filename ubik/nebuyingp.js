@@ -1,3 +1,4 @@
+let purcharray = []
 let abortControllers = [];
 
 const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/';
@@ -30,8 +31,10 @@ const tokenCheckInterval = setInterval(() => {
         return response.json();
     }
 
-    // Populate state dropdown and handle state selection
-    async function initializeStates(states, emailsused = '') {
+
+
+
+    async function initializeStates(states) {
         try {
             const url = new URL(`${apiUrl}?limit=1000`);
             const data = await fetchData(url);
@@ -72,7 +75,6 @@ const tokenCheckInterval = setInterval(() => {
 
             // Convert emailsused string to an array for easy filtering
             const usedEmails = emailsused.split(',').map(email => email.trim());
-
             // Add change event listener to filter out used emails
             buyerStateSelect.addEventListener('change', () => {
                 erasedata();
@@ -103,19 +105,57 @@ const tokenCheckInterval = setInterval(() => {
         selectElement.appendChild(option);
     }
 
-    function populateEmails(items, selectedState) {
+
+    function populateEmails(items, selectedState, emailsused) {
         const buyerEmailSelect = document.getElementById('buyer_email');
         buyerEmailSelect.innerHTML = '';
         addDefaultOption(buyerEmailSelect, 'Select one...');
 
-        items.filter(item => item.state === selectedState && !emailsused.includes(item.email))
-            .forEach(item => {
-                const option = document.createElement('option');
-                option.value = item.email;
-                option.textContent = item.email;
-                buyerEmailSelect.appendChild(option);
-            });
+        const today = new Date().toLocaleDateString('en-CA', {
+            timeZone: 'America/New_York',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        }); // Get today's date in EST (YYYY-MM-DD)
+
+        const source = getsource(document.querySelector('#url').textContent); // Get the source
+        // Collect emails and their counts
+        const emailOptions = items.filter(item => item.state === selectedState).map(item => {
+            let count = 0;
+
+            // Check if purchases_tracking exists and process it
+            if (item.purchases_tracking && Array.isArray(item.purchases_tracking)) {
+                item.purchases_tracking.forEach(purchase => {
+                    if (purchase[source]) {
+                        Object.values(purchase[source]).forEach(date => {
+                            if (date >= today) {
+                                count++;
+                            }
+                        });
+                    }
+                });
+            }
+
+            // Return the email and its count (default 0 if no purchases_tracking)
+            return { email: item.email.trim(), count };
+        });
+
+        // Exclude emails already used
+        const filteredEmailOptions = emailOptions.filter(option => !emailsused.map(email => email.trim()).includes(option.email));
+        // Sort by count (ascending)
+        filteredEmailOptions.sort((a, b) => a.count - b.count);
+
+        // Populate dropdown
+        filteredEmailOptions.forEach(option => {
+            const emailOption = document.createElement('option');
+            emailOption.value = option.email; // Set plain email as value
+            emailOption.textContent = option.count > 0 ? `${option.email} (${option.count})` : option.email; // Add count if > 0
+            buyerEmailSelect.appendChild(emailOption);
+        });
     }
+
+
+
 
     async function displayBuyerData(buyerEmail) {
         try {
@@ -138,11 +178,11 @@ const tokenCheckInterval = setInterval(() => {
         }
     }
 
-    // Remaining event listeners, data fetching functions, and helper functions...
     document.getElementById('buyer_email').addEventListener('change', function() {
-        abortAllRequests()
-        erasedata()
-        const buyerEmail = this.value;
+        abortAllRequests();
+        erasedata();
+        const buyerEmail = this.value; // Get the plain email as the value
+
         if (buyerEmail) {
             retrievedatato(buyerEmail);
             displayBuyerData(buyerEmail);
@@ -763,71 +803,76 @@ intervalIds = setInterval(retryClickingSearchBar, 1000);
 }
 
 function emailpart1() {
-
 let purchacc = document.querySelector('#purchaseaccounts').value
+const emailurl = 'https://ubik.wiki/api/purchasing-accounts/?email__iexact=' + purchacc;
+let http = new XMLHttpRequest();
 
-  const emailurl = 'https://ubik.wiki/api/purchasing-accounts/?email__iexact=' + purchacc;
-  let http = new XMLHttpRequest();
+http.open("GET", emailurl, true);
+http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+http.setRequestHeader('Authorization', `Bearer ${token}`);
 
-  http.open("GET", emailurl, true);
-  http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-  http.setRequestHeader('Authorization', `Bearer ${token}`);
-  http.onreadystatechange = function() {
-    if (http.readyState == 4) {
-      if (http.status == 200) {
-        let data = JSON.parse(http.responseText);
-        emailid = data.results[0].id;
-        openpurchases = data.results[0].open_purchases;
-        email1 = true;
-        emailpart2();
-      }
-    }
-  };
+http.onreadystatechange = function() {
+if (http.readyState == 4) {
+if (http.status == 200) {
+let data = JSON.parse(http.responseText);
+emailid = data.results[0].id;
+purcharray = data.results[0].purchases_tracking
+if(purcharray === null){
+purcharray = []
+}
+email1 = true;
+emailpart2();
+}
+}
+};
 
   http.send();
 }
 
+
+
+
 function emailpart2() {
-  let bought = Number(document.querySelector('#amountbought1').textContent);
-  let cpr = Number(document.querySelector('#purchasequantity').value);
+    let keyToCheck = getsource(document.querySelector('#url').textContent);
+    let date = document.getElementById('date').textContent.trim();
+    let found = false;
+
+    // Check if the source already exists in purcharray
+    for (let item of purcharray) {
+        if (item[keyToCheck] !== undefined) {
+            // Add new event with eventid as the key
+            item[keyToCheck][encodedthiseventid] = date;
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        purcharray.push({
+            [keyToCheck]: { [encodedthiseventid]: date }
+        });
+    }
 
     const emailurl2 = 'https://ubik.wiki/api/update/purchasing-accounts/';
-
-    if (openpurchases>0) {
-      openpurchases++;
-
-      var params = {
-        "id": emailid,
-        "open_purchases": openpurchases
-      };
+        params = {
+            "id": emailid,
+            "purchases_tracking": purcharray
+        };
 
 
-    } else {
+    let http = new XMLHttpRequest();
+    http.open("PUT", emailurl2, true);
+    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    http.setRequestHeader('Authorization', `Bearer ${token}`);
 
-      var params = {
-        "id": emailid,
-        "open_purchases": 1
-      };
-
-
-    }
-      let http = new XMLHttpRequest();
-
-      http.open("PUT", emailurl2, true);
-      http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-      http.setRequestHeader('Authorization', `Bearer ${token}`);
-
-      http.onreadystatechange = function() {
+    http.onreadystatechange = function () {
         if (http.readyState == 4) {
-          if (http.status == 200) {
-            emailchecked = true;
-          }
+            if (http.status == 200) {
+                emailchecked = true;
+            }
         }
-      };
-
-      http.send(JSON.stringify(params));
-
-
+    };
+    http.send(JSON.stringify(params));
 }
 
 
@@ -1097,5 +1142,101 @@ function getStateName(input) {
         return reverseStateMap[input];
     }
 
-    return "State not found";
+    return "";
 }
+
+
+
+function getsource(eventUrl) {
+    switch(true) {
+        case eventUrl.includes('showclix'):
+        return('SHOW');
+        break;
+        case eventUrl.includes('thecomplexslc'):
+        return('SHOW');
+        break;
+        case eventUrl.includes('ticketmaster.co.uk'):
+        return('TM-UK');
+        break;
+        case eventUrl.includes('ticketmaster.ca'):
+        return('TM');
+        break;
+        case eventUrl.includes('ticketmaster.de'):
+        return('TM-DE');
+        break;
+        case eventUrl.includes('ticketmaster.com.mx'):
+        return('TM-MX');
+        break;
+        case eventUrl.includes('ticketmaster.com'):
+        return('TM');
+        break;
+        case eventUrl.includes('livenation'):
+        return('TM');
+        break;
+        case eventUrl.includes('24tix'):
+        return('24TIX');
+        break;
+        case eventUrl.includes('admitone'):
+        return('ADMIT1');
+        break;
+        case eventUrl.includes('axs'):
+        return('AXS');
+        break;
+        case eventUrl.includes('dice'):
+        return('DICE');
+        break;
+        case eventUrl.includes('etix'):
+        return('ETIX');
+        break;
+        case eventUrl.includes('eventbrite'):
+        return('EBRITE');
+        break;
+        case eventUrl.includes('freshtix'):
+        return('FRESH');
+        break;
+        case eventUrl.includes('frontgate'):
+        return('FGATE');
+        break;
+        case eventUrl.includes('holdmyticket'):
+        return('HOLDMT');
+        break;
+        case eventUrl.includes('prekindle'):
+        return('PRE');
+        break;
+        case eventUrl.includes('seetickets'):
+        return('SEETIX');
+        break;
+        case eventUrl.includes('showclix'):
+        return('SHOW');
+        break;
+        case eventUrl.includes('ticketweb'):
+        return('TWEB');
+        break;
+        case eventUrl.includes('ticketswest'):
+        return('TWEST');
+        break;
+        case eventUrl.includes('tixr'):
+        return('TIXR');
+        break;
+        case eventUrl.includes('stubwire'):
+        return('STUBW');
+        break;
+        case eventUrl.includes('fgtix'):
+        return('FGATE');
+        break;
+        case eventUrl.includes('evenue'):
+        return('EVENUE');
+        break;
+        case eventUrl.includes('gruenehall'):
+        return('gruenehall');
+        break;
+        case eventUrl.includes('meowwolf'):
+        return('MEOW');
+        break;
+        case eventUrl.includes('thevogue.com'):
+        return('thevogue');
+        break;
+    default:
+        return('OTHER');
+        break;
+    }}
