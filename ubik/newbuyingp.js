@@ -105,54 +105,55 @@ const tokenCheckInterval = setInterval(() => {
         selectElement.appendChild(option);
     }
 
+function populateEmails(items, selectedState, emailsused) {
+    const buyerEmailSelect = document.getElementById('buyer_email');
+    buyerEmailSelect.innerHTML = '';
+    addDefaultOption(buyerEmailSelect, 'Select one...');
 
-    function populateEmails(items, selectedState, emailsused) {
-        const buyerEmailSelect = document.getElementById('buyer_email');
-        buyerEmailSelect.innerHTML = '';
-        addDefaultOption(buyerEmailSelect, 'Select one...');
+    const today = new Date().toLocaleDateString('en-CA', {
+        timeZone: 'America/New_York',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+    }); // Get today's date in EST (YYYY-MM-DD)
 
-        const today = new Date().toLocaleDateString('en-CA', {
-            timeZone: 'America/New_York',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-        }); // Get today's date in EST (YYYY-MM-DD)
+    const source = getsource(document.querySelector('#url').textContent); // Get the source
+    const encodedThisEventID = encodeURIComponent(eventdata.event_id); // Encode the event ID
 
-        const source = getsource(document.querySelector('#url').textContent); // Get the source
-        // Collect emails and their counts
-        const emailOptions = items.filter(item => item.state === selectedState).map(item => {
-            let count = 0;
+    // Collect emails and their counts
+    const emailOptions = items.filter(item => item.state === selectedState).map(item => {
+        let count = 0;
 
-            // Check if purchases_tracking exists and process it
-            if (item.purchases_tracking && Array.isArray(item.purchases_tracking)) {
-                item.purchases_tracking.forEach(purchase => {
-                    if (purchase[source]) {
-                        Object.values(purchase[source]).forEach(date => {
-                            if (date >= today) {
-                                count++;
-                            }
-                        });
-                    }
-                });
-            }
+        // Check if purchases_tracking exists and process it
+        if (item.purchases_tracking && Array.isArray(item.purchases_tracking)) {
+            item.purchases_tracking.forEach(purchase => {
+                if (purchase[source]) {
+                    Object.entries(purchase[source]).forEach(([eventID, date]) => {
+                        if (date >= today && eventID !== encodedThisEventID) {
+                            count++;
+                        }
+                    });
+                }
+            });
+        }
 
-            // Return the email and its count (default 0 if no purchases_tracking)
-            return { email: item.email.trim(), count };
-        });
+        // Return the email and its count (default 0 if no purchases_tracking)
+        return { email: item.email.trim(), count };
+    });
 
-        // Exclude emails already used
-        const filteredEmailOptions = emailOptions.filter(option => !emailsused.map(email => email.trim()).includes(option.email));
-        // Sort by count (ascending)
-        filteredEmailOptions.sort((a, b) => a.count - b.count);
+    // Exclude emails already used
+    const filteredEmailOptions = emailOptions.filter(option => !emailsused.map(email => email.trim()).includes(option.email));
+    // Sort by count (ascending)
+    filteredEmailOptions.sort((a, b) => a.count - b.count);
 
-        // Populate dropdown
-        filteredEmailOptions.forEach(option => {
-            const emailOption = document.createElement('option');
-            emailOption.value = option.email; // Set plain email as value
-            emailOption.textContent = option.count > 0 ? `${option.email} (${option.count})` : option.email; // Add count if > 0
-            buyerEmailSelect.appendChild(emailOption);
-        });
-    }
+    // Populate dropdown
+    filteredEmailOptions.forEach(option => {
+        const emailOption = document.createElement('option');
+        emailOption.value = option.email; // Set plain email as value
+        emailOption.textContent = option.count > 0 ? `${option.email} (${option.count})` : option.email; // Add count if > 0
+        buyerEmailSelect.appendChild(emailOption);
+    });
+}
 
 
 
