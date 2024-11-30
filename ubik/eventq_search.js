@@ -375,146 +375,165 @@ document.querySelector('#vserror').style.display = 'flex';
 
 
         const charticon = card.getElementsByClassName('main-text-chart')[0];
-
-function updateChartWithPrimaryAndPreferred() {
-    let amountsPrimary = [];
-    let datesPrimary = [];
-    let combinedDates = new Set();
-    let preferredData = [];
-    let counts = events.counts;
-    let source = events.scraper_name.toLowerCase();
-    let venueid = events.site_venue_id
-    chart.data.datasets[0].label = `${source.toUpperCase()} Primary`;
-
-    chart.data.datasets.splice(1,3)
-        // Ensure primary dataset is always present
-    chart.update();
-
-    // Populate primary amounts and dates
-    counts.forEach(count => {
-        amountsPrimary.push(Math.round(count.primary_amount));
-        datesPrimary.push(count.scrape_date);
-        combinedDates.add(count.scrape_date);
-    });
-
-    console.log("Primary data amounts:", amountsPrimary);
-    console.log("Primary data dates:", datesPrimary);
-
-    // Fetch preferred sections and preferred counts
-    const controller = new AbortController();
-    abortControllers.push(controller);
-
-    // Step 1: Fetch preferred sections
-    var http = new XMLHttpRequest();
-    var url = `https://ubik.wiki/api/venues/${venueid}/`;
-    http.open("GET", url, true);
-    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-    http.setRequestHeader('Authorization', `Bearer ${token}`);
-    http.signal = controller.signal;
-
-    http.onload = function() {
-        let dataResponse = JSON.parse(this.response);
-        let prefSections = {
-            pref1: dataResponse.pref_section1,
-            pref2: dataResponse.pref_section2,
-            pref3: dataResponse.pref_section3
-        };
-
-        console.log("Preferred sections:", prefSections);
-
-        // Step 2: Fetch counts for preferred sections from another API
-        fetch(`https://ubik.wiki/api/primary-counts/?tickets_by_sections__icontains={&event_id__icontains=${events.site_event_id}&format=json`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
-            },
-            signal: controller.signal
-        })
-        .then(response => response.json())
-        .then(data => {
-            console.log("Preferred counts data response:", data);
-
-            // Process datasets for each preferred section
-            const validPrefs = [prefSections.pref1, prefSections.pref2, prefSections.pref3].filter(pref => pref && pref !== 'null' && pref !== null);
-validPrefs.forEach((pref, index) => {
-    let prefAmounts = [];
-    let prefDates = [];
-
-    data.results.forEach(result => {
-        let scrapeDate = new Date(result.event.scrape_date);
-        let hours = scrapeDate.getHours() % 12 || 12;  // Convert 0 (midnight) or 12 (noon) to 12
-        let formattedDate = `${scrapeDate.getMonth() + 1}/${scrapeDate.getDate()}/${scrapeDate.getFullYear()}, ${hours}:${("0" + scrapeDate.getMinutes()).slice(-2)}:${("0" + scrapeDate.getSeconds()).slice(-2)} ${scrapeDate.getHours() >= 12 ? 'PM' : 'AM'}`;
-
-        result.tickets_by_sections.forEach(section => {
-            // Use startsWith instead of includes for broader matching
-            if (section.section.toLowerCase().startsWith(pref.toLowerCase())) {
-                prefAmounts.push(Math.round(section.amount));
-                prefDates.push(formattedDate);
-                combinedDates.add(formattedDate);
-                console.log(`Inserting value ${section.amount} for ${section.section} on ${formattedDate}`);
-            }
-        });
-    });
-
-    preferredData.push({
-        label: pref,
-        amounts: prefAmounts,
-        dates: prefDates,
-        backgroundColor: `rgba(${75 + index * 40}, 179, 113, 1)`,
-        borderColor: `rgba(${75 + index * 40}, 170, 113, 1)`,
-    });
-});
-
-
-            // Step 3: Combine and sort all dates
-            combinedDates = Array.from(combinedDates).sort((a, b) => new Date(a) - new Date(b));
-
-            // Step 4: Align primary data with combined dates
-            let alignedPrimaryData = combinedDates.map(date => {
-                let index = datesPrimary.indexOf(date);
-                return index !== -1 ? amountsPrimary[index] : null;
-            });
-
-            // Step 5: Align preferred data with combined dates
-            preferredData.forEach(prefDataset => {
-                let alignedAmounts = combinedDates.map(date => {
-                    let index = prefDataset.dates.indexOf(date);
-                    return index !== -1 ? prefDataset.amounts[index] : null;
-                });
-
-                chart.data.datasets.push({
-                    data: alignedAmounts,
-                    label: prefDataset.label,
-                    backgroundColor: prefDataset.backgroundColor,
-                    borderColor: prefDataset.borderColor,
-                    borderWidth: 1
-                });
-            });
-
-            // Step 6: Update the chart with combined data
-            chart.config.data.labels = combinedDates;
-            chart.data.datasets[0].data = alignedPrimaryData;
-            chart.update();
-            console.log("Chart updated with primary and preferred data");
-
-            document.querySelector('#tmloader').style.display = 'none';
-            document.querySelector('#tmerror').style.display = 'none';
-            document.querySelector('#tmchart').style.display = 'flex';
-        })
-        .catch(error => {
-            console.error('There was an error with the fetch request for preferred counts.', error);
-            displayLoadingFailed();
-        });
-    };
-
-    http.onerror = function() {
-        console.error('There was an error with the XMLHttpRequest for preferred sections.');
-        displayLoadingFailed();
-    };
-
-    http.send();
+function normalizeDate(date) {
+    const normalizedDate = new Date(date).toISOString();
+    return normalizedDate.slice(0, 16).replace("T", " ");
 }
+
+      function updateChartWithPrimaryAndPreferred() {
+          let amountsPrimary = [];
+          let datesPrimary = [];
+          let combinedDates = new Set();
+          let preferredData = [];
+          let counts = events.counts;
+          let source = events.scraper_name.toLowerCase();
+          let venueid = events.site_venue_id;
+
+          // Reset the chart for primary and preferred datasets
+          chart.data.datasets[0].label = `${source.toUpperCase()} Primary`;
+          chart.data.datasets.splice(1, 3); // Remove old preferred datasets
+          chart.update();
+
+          // Populate primary amounts and dates
+          counts.forEach(count => {
+              amountsPrimary.push(Math.round(count.primary_amount));
+              datesPrimary.push(normalizeDate(count.scrape_date)); // Normalize dates
+              combinedDates.add(normalizeDate(count.scrape_date));
+          });
+
+          console.log("Primary data amounts:", amountsPrimary);
+          console.log("Primary data dates:", datesPrimary);
+
+          // Fetch preferred sections and counts
+          const controller = new AbortController();
+          abortControllers.push(controller);
+
+          // Step 1: Fetch preferred sections
+          var http = new XMLHttpRequest();
+          var url = `https://ubik.wiki/api/venues/${venueid}/`;
+          http.open("GET", url, true);
+          http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+          http.setRequestHeader('Authorization', `Bearer ${token}`);
+          http.signal = controller.signal;
+
+          http.onload = function() {
+              let dataResponse = JSON.parse(this.response);
+              let prefSections = {
+                  pref1: dataResponse.pref_section1,
+                  pref2: dataResponse.pref_section2,
+                  pref3: dataResponse.pref_section3
+              };
+
+              console.log("Preferred sections:", prefSections);
+
+              // Step 2: Fetch counts for preferred sections
+              fetch(`https://ubik.wiki/api/primary-counts/?tickets_by_sections__icontains={&event_id__icontains=${events.site_event_id}&format=json`, {
+                  method: 'GET',
+                  headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
+                  },
+                  signal: controller.signal
+              })
+              .then(response => response.json())
+              .then(data => {
+                  console.log("Preferred counts data response:", data);
+
+                  // Process datasets for each preferred section
+                  const validPrefs = [prefSections.pref1, prefSections.pref2, prefSections.pref3].filter(pref => pref && pref !== 'null' && pref !== null);
+                  validPrefs.forEach((pref, index) => {
+                    let datewiseAggregation = {};
+
+                    data.results.forEach(result => {
+                        let scrapeDate = normalizeDate(result.event.scrape_date);
+
+                        if (!datewiseAggregation[scrapeDate]) {
+                            datewiseAggregation[scrapeDate] = 0; // Initialize aggregation for this date
+                        }
+
+                        result.tickets_by_sections.forEach(section => {
+                            // Use includes for flexible matching
+                            if (section.section && section.section.toLowerCase().includes(pref.toLowerCase())) {
+                                datewiseAggregation[scrapeDate] += Math.round(section.amount);
+                                combinedDates.add(scrapeDate);
+                                console.log(`Adding ${section.amount} from ${section.section} to ${scrapeDate} for preferred section "${pref}"`);
+                            }
+                        });
+                    });
+
+                    let prefAmounts = [];
+                    let prefDates = [];
+                    Object.keys(datewiseAggregation).forEach(date => {
+                        prefDates.push(date);
+                        prefAmounts.push(datewiseAggregation[date]);
+                    });
+
+                    preferredData.push({
+                        label: pref,
+                        amounts: prefAmounts,
+                        dates: prefDates,
+                        backgroundColor: `rgba(${75 + index * 40}, 179, 113, 1)`,
+                        borderColor: `rgba(${75 + index * 40}, 170, 113, 1)`
+                    });
+                });
+
+                  // Step 3: Combine and sort all dates
+                  combinedDates = Array.from(combinedDates).sort((a, b) => new Date(a) - new Date(b));
+
+                  // Step 4: Align primary data with combined dates
+                  let alignedPrimaryData = combinedDates.map(date => {
+                      let index = datesPrimary.indexOf(date);
+                      return index !== -1 ? amountsPrimary[index] : 0; // Use 0 if no match
+                  });
+
+                  // Step 5: Align preferred data with combined dates
+                  preferredData.forEach(prefDataset => {
+                      prefDataset.alignedAmounts = combinedDates.map(date => {
+                          let index = prefDataset.dates.indexOf(date);
+                          return index !== -1 ? prefDataset.amounts[index] : 0; // Use 0 if no match
+                      });
+                  });
+
+                  // Step 6: Update the chart with combined data
+                  chart.config.data.labels = combinedDates;
+                  chart.data.datasets[0].data = alignedPrimaryData;
+
+                  preferredData.forEach(prefDataset => {
+                      chart.data.datasets.push({
+                          data: prefDataset.alignedAmounts,
+                          label: prefDataset.label,
+                          backgroundColor: prefDataset.backgroundColor,
+                          borderColor: prefDataset.borderColor,
+                          borderWidth: 1
+                      });
+                  });
+
+                  chart.update();
+                  console.log("Chart updated with primary and preferred data");
+
+                  document.querySelector('#tmloader').style.display = 'none';
+                  document.querySelector('#tmerror').style.display = 'none';
+                  document.querySelector('#tmchart').style.display = 'flex';
+              })
+              .catch(error => {
+                  console.error('There was an error with the fetch request for preferred counts.', error);
+                  displayLoadingFailed();
+              });
+          };
+
+          http.onerror = function() {
+              console.error('There was an error with the XMLHttpRequest for preferred sections.');
+              displayLoadingFailed();
+          };
+
+          http.send();
+      }
+
+      function displayLoadingFailed() {
+          document.querySelector('#tmloader').style.display = 'none';
+          document.querySelector('#tmerror').style.display = 'flex';
+          document.querySelector('#tmchart').style.display = 'none';
+      }
 
         function displayLoadingFailed() {
             document.querySelector('#tmloader').style.display = 'none';
@@ -710,8 +729,6 @@ function processTicketmasterData(data) {
 }
 
 
-
-//
         charticon.addEventListener('click', function () {
 
                     document.querySelector('#chart-date').textContent = ''
@@ -729,7 +746,7 @@ function processTicketmasterData(data) {
                     const cityn = eventBoxParent.getAttribute('city')
                     const staten = eventBoxParent.getAttribute('state')
                     const timen = eventBoxParent.getAttribute('time')
-
+                    const eventurl = eventBoxParent.getAttribute('url')
                     document.querySelector('#chart-date').textContent = daten
                     document.querySelector('#chart-event').textContent = eventn
                     document.querySelector('#chart-venue').textContent = venuen
@@ -757,6 +774,9 @@ document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + ev
 fetchTicketmasterData()
 } else {
 updateChartWithPrimaryAndPreferred()
+document.querySelector('#eventicon').style.display = 'none'
+document.querySelector('#tmurl').style.display = 'block'
+document.querySelector('#tmurl').href = eventurl
 }
 });
 
