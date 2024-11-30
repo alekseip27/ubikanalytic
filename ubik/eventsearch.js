@@ -437,34 +437,35 @@ function updateChartWithPrimaryAndPreferred() {
 
             // Process datasets for each preferred section
             const validPrefs = [prefSections.pref1, prefSections.pref2, prefSections.pref3].filter(pref => pref && pref !== 'null' && pref !== null);
+validPrefs.forEach((pref, index) => {
+    let prefAmounts = [];
+    let prefDates = [];
 
-            validPrefs.forEach((pref, index) => {
-                let prefAmounts = [];
-                let prefDates = [];
+    data.results.forEach(result => {
+        let scrapeDate = new Date(result.event.scrape_date);
+        let hours = scrapeDate.getHours() % 12 || 12;  // Convert 0 (midnight) or 12 (noon) to 12
+        let formattedDate = `${scrapeDate.getMonth() + 1}/${scrapeDate.getDate()}/${scrapeDate.getFullYear()}, ${hours}:${("0" + scrapeDate.getMinutes()).slice(-2)}:${("0" + scrapeDate.getSeconds()).slice(-2)} ${scrapeDate.getHours() >= 12 ? 'PM' : 'AM'}`;
 
-                data.results.forEach(result => {
-                    let scrapeDate = new Date(result.event.scrape_date);
-                    let hours = scrapeDate.getHours() % 12 || 12;  // Convert 0 (midnight) or 12 (noon) to 12
-                    let formattedDate = `${scrapeDate.getMonth() + 1}/${scrapeDate.getDate()}/${scrapeDate.getFullYear()}, ${hours}:${("0" + scrapeDate.getMinutes()).slice(-2)}:${("0" + scrapeDate.getSeconds()).slice(-2)} ${scrapeDate.getHours() >= 12 ? 'PM' : 'AM'}`;
+        result.tickets_by_sections.forEach(section => {
+            // Use startsWith instead of includes for broader matching
+            if (section.section.toLowerCase().startsWith(pref.toLowerCase())) {
+                prefAmounts.push(Math.round(section.amount));
+                prefDates.push(formattedDate);
+                combinedDates.add(formattedDate);
+                console.log(`Inserting value ${section.amount} for ${section.section} on ${formattedDate}`);
+            }
+        });
+    });
 
-                    result.tickets_by_sections.forEach(section => {
-                        if (section.section.toLowerCase().includes(pref.toLowerCase())) {
-                            prefAmounts.push(Math.round(section.amount));
-                            prefDates.push(formattedDate);
-                            combinedDates.add(formattedDate);
-                            console.log(`Inserting value ${section.amount} for ${section.section} on ${formattedDate}`);
-                        }
-                    });
-                });
+    preferredData.push({
+        label: pref,
+        amounts: prefAmounts,
+        dates: prefDates,
+        backgroundColor: `rgba(${75 + index * 40}, 179, 113, 1)`,
+        borderColor: `rgba(${75 + index * 40}, 170, 113, 1)`,
+    });
+});
 
-                preferredData.push({
-                    label: pref,
-                    amounts: prefAmounts,
-                    dates: prefDates,
-                    backgroundColor: `rgba(${75 + index * 40}, 179, 113, 1)`,
-                    borderColor: `rgba(${75 + index * 40}, 170, 113, 1)`,
-                });
-            });
 
             // Step 3: Combine and sort all dates
             combinedDates = Array.from(combinedDates).sort((a, b) => new Date(a) - new Date(b));
