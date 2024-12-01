@@ -361,7 +361,6 @@ function retryClickingSearchBar() {
     document.getElementById("search-button").click();
     }
     });
-    });
     var input = document.getElementById("searchbar5");
     input.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
