@@ -1097,7 +1097,7 @@ const checkStepsInterval = setInterval(() => {
   if (step1 && step2 && step3 && emailchecked) {
     clearInterval(checkStepsInterval);
     setTimeout(() => {
-//      window.location.href = "/buy-queue";
+      window.location.href = "/buy-queue";
     }, 2000);
   }
 }, 1000);
