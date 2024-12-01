@@ -367,7 +367,7 @@ async function retrievezip(id) {
 
 
 function erasedata(){
-    document.querySelector('#fullname').textContent
+    document.querySelector('#fullname').textContent = ''
     document.querySelector('#firstname').textContent = ''
     document.querySelector('#lastname').textContent = ''
     document.querySelector('#phonenumber').textContent = ''
