@@ -102,7 +102,7 @@ function checkresults() {
     
     
     if (keywords4.length > 0) {
-    params.push('purchase_email__icontains=' + keywords3)
+    params.push('purchase_email__icontains=' + keywords4)
     }
     
     
