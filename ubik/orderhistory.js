@@ -27,6 +27,12 @@ document.getElementById('rightarrow').addEventListener('click', function() {
         
         var searchbar3 = document.getElementById('searchbar3');
         searchbar3.value = searchbar3.value.trimEnd();
+
+        var searchbar4 = document.getElementById('searchbar4');
+        searchbar4.value = searchbar4.value.trimEnd();
+        
+        var searchbar5 = document.getElementById('searchbar5');
+        searchbar5.value = searchbar5.value.trimEnd();
         
         let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value);
         let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value);
@@ -34,7 +40,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
         let keywords4 = encodeURIComponent(document.getElementById('not1ticketcheck').checked);
         let keywords5 = encodeURIComponent(!document.getElementById('1ticketcheck').checked);
         let keywords6 = encodeURIComponent(document.getElementById('searchbar4').value);
-
+        let keywords7 = encodeURIComponent(document.getElementById('searchbar5').value);
 
     if (keywords1.length > 0) {
         params.push('event_name__icontains=' + keywords1.replaceAll("'", "''"));
@@ -59,7 +65,11 @@ document.getElementById('rightarrow').addEventListener('click', function() {
         if (keywords6.length > 0) {
         params.push('event_date__icontains=' + keywords6.replaceAll("'", "''"));
         }
-
+        
+        if (keywords7.length > 0) {
+        params.push("purchase_email__icontains="+keywords7)
+        }
+            
         params.push('limit=100'); 
 
 
