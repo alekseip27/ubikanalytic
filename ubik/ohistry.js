@@ -361,6 +361,14 @@ function retryClickingSearchBar() {
     document.getElementById("search-button").click();
     }
     });
+    });
+    var input = document.getElementById("searchbar5");
+    input.addEventListener("keyup", function(event) {
+    if (event.keyCode === 13) {
+    event.preventDefault();
+    document.getElementById("search-button").click();
+    }
+    });
 
 $('#searchbar4').datepicker({
   dateFormat: 'yy-mm-dd'
