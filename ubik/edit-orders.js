@@ -67,10 +67,13 @@ function checkresults() {
     searchbar2.value = searchbar2.value.trimEnd();
     var searchbar3 = document.getElementById('searchbar3');
     searchbar3.value = searchbar3.value.trimEnd();
+    var searchbar4 = document.getElementById('searchbar4');
+    searchbar4.value = searchbar4.value.trimEnd();
     
     let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
     let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
     let keywords3 = encodeURIComponent(document.getElementById('searchbar3').value)
+    let keywords4 = encodeURIComponent(document.getElementById('searchbar4').value)
     $('.event-box').hide()
     
     let baseUrl = 'https://ubik.wiki/api/order-history/?';
@@ -88,6 +91,10 @@ function checkresults() {
     params.push('purchased_by__icontains=' + keywords3)
     }
     
+    
+    if (keywords4.length > 0) {
+    params.push('purchase_email__icontains=' + keywords3)
+    }
     
     
     params.push('limit=100');
