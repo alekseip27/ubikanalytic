@@ -34,7 +34,7 @@ const tokenCheckInterval = setInterval(() => {
 
 
 
-    async function initializeStates(states) {
+    async function initializeStates(states,emails) {
         try {
             const url = new URL(`${apiUrl}?limit=1000`);
             const data = await fetchData(url);
@@ -74,7 +74,7 @@ const tokenCheckInterval = setInterval(() => {
             });
 
             // Convert emailsused string to an array for easy filtering
-            const usedEmails = emailsused.split(',').map(email => email.trim());
+            const usedEmails = emails.split(',').map(email => email.trim());
             // Add change event listener to filter out used emails
             buyerStateSelect.addEventListener('change', () => {
                 erasedata();
@@ -198,61 +198,77 @@ function abortAllRequests() {
 }
 
 async function retrievedatato(buyerEmail) {
-    const maxRetries = 5;
-    const delay = 1000;
-    let attempts = 0;
+  const maxRetries = 5;
+  const delay = 1000;
+  let attempts = 0;
 
-    const controller = new AbortController();
-    const signal = controller.signal;
-    abortControllers.push(controller);
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buyerEmail)) {
+      console.error("Invalid email format.");
+      return;
+  }
 
-    const url = `https://shibuy.co:8443/retrievedata?id=${buyerEmail}&token=${token}`;
+  const controller = new AbortController();
+  const signal = controller.signal;
+  const abortTimeout = setTimeout(() => controller.abort(), 10000); // Timeout after 10 seconds
 
-    while (attempts < maxRetries) {
-        try {
-            const response = await fetch(url, { signal });
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
-            const data = await response.json();
-            const cd = data.data;
+  const url = `https://shibuy.co:8443/retrievedata`;
+  const requestOptions = {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify({ id: buyerEmail }),
+      signal,
+  };
 
-            document.querySelector('#dnum3').textContent = cd.n2;
-            document.querySelector('#dnum4').textContent = 'Ramp'
-            document.querySelector('#dnum5').textContent = 'Visa'
+  while (attempts < maxRetries) {
+      try {
+        const response = await fetch(url, requestOptions);
+        clearTimeout(abortTimeout);
+          if (!response.ok) {
+              throw new Error(`HTTP error! Status: ${response.status}`);
+          }
+          const data = await response.json();
+          const cd = data.data;
 
-            document.getElementById('unlock').setAttribute('retrieve',buyerEmail)
-            document.getElementById('unlock').style.pointerEvents = "auto";
-            document.getElementById('unlock').classList.remove('none')
-            document.getElementById('unlock').style.display = 'flex'
+          // Update DOM securely
+          document.querySelector('#dnum3').textContent = cd.n2 || "N/A";
+          document.querySelector('#dnum4').textContent = 'Ramp';
+          document.querySelector('#dnum5').textContent = 'Visa';
 
-            document.getElementById('unlock2').setAttribute('retrieve',cd.n1)
-            document.getElementById('unlock2').style.pointerEvents = "auto";
-            document.getElementById('unlock2').classList.remove('none')
-            document.getElementById('unlock2').style.display = 'flex'
+          const unlockElement = document.getElementById('unlock');
+          unlockElement.setAttribute('retrieve', buyerEmail);
+          unlockElement.style.pointerEvents = "auto";
+          unlockElement.classList.remove('none');
+          unlockElement.style.display = 'flex';
 
+          const unlockElement2 = document.getElementById('unlock2');
+          unlockElement2.setAttribute('retrieve', cd.n1 || "N/A");
+          unlockElement2.style.pointerEvents = "auto";
+          unlockElement2.classList.remove('none');
+          unlockElement2.style.display = 'flex';
 
+          return; // Exit function upon successful response
+      } catch (error) {
+          if (error.name === 'AbortError') {
+              console.warn('Request was aborted due to timeout.');
+              return; // Exit function on timeout
+          }
 
+          attempts += 1;
+          console.error(`Attempt ${attempts} failed: ${error.message}`);
 
+          if (attempts >= maxRetries) {
+              console.error("Max retries reached. Error fetching data:", error);
+              return;
+          }
 
-            return; // Exit function upon successful response
-        } catch (error) {
-            if (error.name === 'AbortError') {
-                console.warn('Request was aborted.');
-                return; // Exit the function if the request is aborted
-            }
+          await new Promise(resolve => setTimeout(resolve, delay)); 
+      }
+  }
 
-            attempts += 1;
-            console.error(`Attempt ${attempts} failed: ${error.message}`);
-
-            if (attempts >= maxRetries) {
-                console.error("Max retries reached. Error fetching data:", error);
-                return;
-            }
-
-            await new Promise(resolve => setTimeout(resolve, delay)); // Wait before retrying
-        }
-    }
+  clearTimeout(abortTimeout);
 }
 
 function copyToClipboard1(text) {
@@ -284,55 +300,66 @@ let id = document.querySelector('#unlock2').getAttribute('retrieve')
 copyToClipboard2(id)
 })
 
+
 async function retrievezip(id) {
-    const maxRetries = 5;
-    const delay = 1000;
-    let attempts = 0;
-    let buyerEmail = id;
-    const controller = new AbortController();
-    const signal = controller.signal;
-    abortControllers.push(controller);
+  const maxRetries = 5;
+  const delay = 2000;
+  let attempts = 0;
 
-    const url = `https://shibuy.co:8443/retrievezip?id=${buyerEmail}&token=${token}`;
+  const controller = new AbortController();
+  const signal = controller.signal;
+  abortControllers.push(controller);
 
-    while (attempts < maxRetries) {
-        try {
-            const response = await fetch(url, { signal });
-            const text = await response.text(); // Get raw response body
+  const url = `https://shibuy.co:8443/retrievezip`;
 
-            if (!response.ok) {
-                throw new Error(`HTTP error! Status: ${response.status}`);
-            }
+  while (attempts < maxRetries) {
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, 
+        },
+        body: JSON.stringify({ id }), 
+        signal,
+      });
 
-            // Check if the response is JSON
-            let data;
-            try {
-                data = JSON.parse(text); // Try parsing as JSON
-            } catch (parseError) {
-                data = text; // Fallback to raw text if parsing fails
-            }
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
 
-            copyToClipboard1(data); // Use the response (JSON or plain text)
-            document.querySelector('.hdnclick').click()
-            return; // Exit function upon successful response
-        } catch (error) {
-            if (error.name === 'AbortError') {
-                console.warn('Request was aborted.');
-                return; // Exit the function if the request is aborted
-            }
+      const text = await response.text();
 
-            attempts += 1;
-            console.error(`Attempt ${attempts} failed: ${error.message}`);
+      // Check if the response is JSON
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = text;
+      }
 
-            if (attempts >= maxRetries) {
-                console.error("Max retries reached. Error fetching data:", error);
-                return;
-            }
+      copyToClipboard1(data);
+      document.querySelector('.hdnclick').click();
+      return;
+    } catch (error) {
+      if (error.name === 'AbortError') {
+        console.warn("Request was aborted.");
+        return;
+      }
 
-            await new Promise(resolve => setTimeout(resolve, delay)); // Wait before retrying
-        }
+      attempts += 1;
+      console.error(`Attempt ${attempts} failed: ${error.message}`);
+
+      if (attempts >= maxRetries) {
+        console.error("Max retries reached. Error fetching data:", error);
+        return;
+      }
+
+      await new Promise(resolve => setTimeout(resolve, delay));
     }
+  }
 }
+
 
 
 
@@ -405,12 +432,6 @@ const item = document.getElementById('samplestyle')
 
 thiseventid = eventdata.event_id
 
-emailsarray = []
-emailsused = eventdata.used_emails
-
-emailsarray.push(emailsused.split(','))
-
-emails = emailsarray.join(',')
 
 encodedthiseventid = encodeURIComponent(eventdata.event_id)
 
@@ -470,7 +491,16 @@ makeRequest(
       let evurl = data.results[0].event_url
       states = data.results[0].state
       state = getStateName(states)
-      initializeStates(state);
+
+
+      emailsarray = []
+      emailsused = data.results[0].used_emails
+
+      emailsarray.push(emailsused.split(','))
+
+      emails = emailsarray.join(',')
+
+      initializeStates(state,emails);
 
     document.querySelector('#purchasetotal').textContent = parseInt(pam || '0', 10);
 
@@ -883,7 +913,6 @@ let bought = Number(document.querySelector('#amountbought1').textContent)
 let cpr = Number(document.querySelector('#purchasequantity').value)
 let combined = bought+cpr
 let limit = Number(document.querySelector('#amountbought2').textContent)
-let purchacc = document.querySelector('#purchaseaccounts').value
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event-copy?id=')[1]
 var http = new XMLHttpRequest();
 var urll = "https://ubik.wiki/api/update/buying-queue/"
@@ -896,13 +925,6 @@ var params = {
 if (combined >= limit) {
     params["completed"] = 'TRUE';
 }
-
-
-if(!emails.includes(purchacc)) {
-    emails = emails + ',' + purchacc
-    params["used_emails"] = emails
-}
-
 
 http.open("PUT", urll, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
@@ -920,6 +942,7 @@ http.send(JSON.stringify(params));
 function part2(){
   let palltime = Number(document.querySelector('#purchasetotal').textContent)
   let pthistime = Number(document.querySelector('#purchasequantity').value)
+  let purchacc = document.querySelector('#purchaseaccounts').value
   let pcombined = palltime + pthistime
   var http = new XMLHttpRequest();
   var urll = "https://ubik.wiki/api/update/primary-events/"
@@ -928,6 +951,13 @@ function part2(){
   "site_event_id": thiseventid,
   "purchased_amount": pcombined
   }
+
+  if(!emails.includes(purchacc)) {
+    emails = emails + ',' + purchacc
+    params["used_emails"] = emails
+}
+
+
   http.open("PUT", urll, true);
   http.setRequestHeader("Content-type", "application/json; charset=utf-8");
   http.setRequestHeader('Authorization', `Bearer ${token}`);
@@ -999,8 +1029,7 @@ function part3(){
       }
 
 
-    var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event-copy?id=')[1]
-    var http = new XMLHttpRequest();
+
     var endpointUrl = "https://ubik.wiki/api/create/order-history/"
 
     var param = {
@@ -1056,10 +1085,11 @@ function part3(){
 
 document.querySelector('#buybtn').addEventListener("click", () => {
 $('#buybtn').css({pointerEvents: "none"})
+emailpart1()
 part1()
 part2()
 part3()
-emailpart1()
+
 
 })
 
@@ -1067,7 +1097,7 @@ const checkStepsInterval = setInterval(() => {
   if (step1 && step2 && step3 && emailchecked) {
     clearInterval(checkStepsInterval);
     setTimeout(() => {
-      window.location.href = "/buy-queue";
+//      window.location.href = "/buy-queue";
     }, 2000);
   }
 }, 1000);
