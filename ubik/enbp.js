@@ -118,7 +118,6 @@ function populateEmails(items, selectedState, emailsused) {
     }); // Get today's date in EST (YYYY-MM-DD)
 
     const source = getsource(document.querySelector('#url').textContent); // Get the source
-    const encodedThisEventID = encodeURIComponent(eventdata.event_id); // Encode the event ID
 
     // Collect emails and their counts
     const emailOptions = items.filter(item => item.state === selectedState).map(item => {
@@ -129,7 +128,7 @@ function populateEmails(items, selectedState, emailsused) {
             item.purchases_tracking.forEach(purchase => {
                 if (purchase[source]) {
                     Object.entries(purchase[source]).forEach(([eventID, date]) => {
-                        if (date >= today && eventID !== encodedThisEventID) {
+                        if (date >= today) {
                             count++;
                         }
                     });
