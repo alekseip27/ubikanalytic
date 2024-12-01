@@ -165,6 +165,7 @@ function populateEmails(items, selectedState, emailsused) {
             const accountInfo = data.results[0];
             if (!accountInfo) throw new Error("No account information found.");
 
+            document.querySelector('#fullname').textContent = accountInfo.first_name + ' ' + accountInfo.last_name;
             document.querySelector('#firstname').textContent = accountInfo.first_name;
             document.querySelector('#lastname').textContent = accountInfo.last_name;
             document.querySelector('#phonenumber').textContent = accountInfo.phone_number;
@@ -366,6 +367,7 @@ async function retrievezip(id) {
 
 
 function erasedata(){
+    document.querySelector('#fullname').textContent
     document.querySelector('#firstname').textContent = ''
     document.querySelector('#lastname').textContent = ''
     document.querySelector('#phonenumber').textContent = ''
