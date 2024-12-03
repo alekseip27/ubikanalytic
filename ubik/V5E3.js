@@ -17,12 +17,7 @@ let day = estDate.getDate().toString().padStart(2, '0');
 $('#event_date').datepicker({
   dateFormat: 'yy-mm-dd'
   });
-  
-  Webflow.push(function() {
-  $('form').submit(function() {
-  return false;
-  })
-  })
+
   
    
   document.querySelector('#search-buttoneventid').addEventListener("click", () => {
