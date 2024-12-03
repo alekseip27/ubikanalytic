@@ -1,12 +1,5 @@
 let abortControllers = [];
 
-
-Webflow.push(function() {
-    $('form').submit(function() {
-        return false;
-    });
-});
-
 var input = document.getElementById("searchbar1");
 input.addEventListener("keyup", function(event) {
     if (event.keyCode === 13) {
