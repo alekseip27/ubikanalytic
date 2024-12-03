@@ -74,7 +74,7 @@ document.querySelector('#search-button').addEventListener("click", () => {
         let stimestamp2 = moment(dt).format('YYYY-MM-DD');
         let xanoUrl = new URL('https://shibuy.co:8443/sboxinventory?searchkey=');
         let request = new XMLHttpRequest();
-        let url = xanoUrl.toString() + keywords1.replaceAll("'", "''") + '&curdate=' + stimestamp2 + '&user=' + usr;
+        let url = xanoUrl.toString() + keywords1.replaceAll("'", "''") + '&user=' + usr;
         let pa = datas['pyeo'];
         request.open('GET', url, true);
         request.setRequestHeader("Authorization", pa);
