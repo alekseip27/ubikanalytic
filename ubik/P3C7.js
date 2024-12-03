@@ -7,11 +7,6 @@ input.addEventListener("keyup", function(event) {
     }
 });
 
-Webflow.push(function() {
-    $('form').submit(function() {
-        return false;
-    });
-});
 
 document.querySelector('#search-button').addEventListener("click", () => {
     document.getElementById('venuebox').style.display = 'none';
