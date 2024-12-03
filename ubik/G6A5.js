@@ -1156,7 +1156,9 @@ const stateMap = {
     "WA": "Washington",
     "WV": "West Virginia",
     "WI": "Wisconsin",
-    "WY": "Wyoming"
+    "WY": "Wyoming",
+    "QC": "Quebec",
+    "ON": "Ontario"
 };
 
 const reverseStateMap = Object.fromEntries(
