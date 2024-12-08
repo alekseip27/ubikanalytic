@@ -65,13 +65,26 @@ if(emailsacc){
       } else {
       window.location.replace("https://google.com",);
       }
-                
+
+let presalelate = document.querySelector('#presale-late')
+let presaleearly = document.querySelector('#presale-early')
+            
+let favoritescheck = document.querySelector('#favourites')
+let regularcheck = document.querySelector('#regular')
+let checks = document.querySelector('#checks')
+
+            
 
 if (email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com') {
     document.querySelector('.totalcounts').style.display = 'flex';
     document.querySelector('#lowerbox').style.display = 'flex';
     document.querySelector('#searchblock').style.display = 'flex';
     document.querySelector('#lowerable').checked = false
+    checks.style.display = 'flex'
+    presalelate.style.display = 'flex'
+    presaleearly.style.display = 'flex'
+    regularcheck.style.display = 'flex'
+    favoritescheck.style.display = 'flex'
 } else {
     document.querySelector('#lowerbox').style.display = 'none';
     document.querySelector('#searchblock').style.display = 'none';
