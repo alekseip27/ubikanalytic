@@ -106,7 +106,6 @@ if(emailsacc){
     presaleearly.style.display = 'flex'
     regularcheck.style.display = 'flex'
     favoritescheck.style.display = 'flex'
-
   $('#adminlogo').show()
   $('#eventsdropdown').css('display','flex');
   $('#events').css('display','flex');
@@ -123,15 +122,13 @@ if(emailsacc){
   $('#adminplaceholder').css('display','block');
   
   document.querySelector('#scrapeurls').style.display = 'flex'
-  
+  document.querySelector('#src-instructions').style.display = 'flex'
   $('#stats').css('display','flex');
   
   $('#dropchecking').css('display','flex');
       
   $('#emaildropdown').css('display','flex');
   $('#manage-emails').css('display','flex');
-    
-  
   }
   
           
