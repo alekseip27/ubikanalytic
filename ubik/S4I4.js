@@ -40,7 +40,8 @@
     const browser = events.browser;
     const source = events.source;
     const id = events.id;
-    const prefix = events.prefix;
+    const eventprefix = events.event_prefix;
+    const venueprefix = events.venue_prefix;
 
     const sourcecard = card.getElementsByClassName('main-text-sourcei')[0]
     sourcecard.textContent = source
@@ -51,9 +52,12 @@
     const instructionscard = card.getElementsByClassName('main-text-instruction')[0]
     instructionscard.textContent = instructions
 
-    const prefixcard = card.getElementsByClassName('main-text-prefix')[0]
-    prefixcard.textContent = prefix
+    const eventprefixcard = card.getElementsByClassName('main-text-eprefix')[0]
+    eventprefixcard.textContent = eventprefix
 
+    const venueprefixcard = card.getElementsByClassName('main-text-vprefix')[0]
+    venueprefixcard.textContent = venueprefix
+        
     if(instructions.length > 33) {
     instructionscard.textContent = instructions.slice(0, 30) + '...'
     } else {
@@ -64,7 +68,8 @@
         document.querySelector('#edit-id').value = ''
         document.querySelector('#edit-source').value = ''
         document.querySelector('#edit-browser').value = ''
-        document.querySelector('#edit-prefix').value = ''
+        document.querySelector('#edit-event-prefix').value = ''
+        document.querySelector('#edit-venue-prefix').value = ''
         document.querySelector('#edit-instructions').value = ''
 
         if (event.target.closest('.main-text-delete')) {
@@ -78,7 +83,8 @@
         document.querySelector('#edit-source').value = source
         document.querySelector('#edit-browser').value = browser
         document.querySelector('#edit-instructions').value = instructions
-        document.querySelector('#edit-prefix').value = prefix
+        document.querySelector('#edit-event-prefix').value = eventprefix
+        document.querySelector('#edit-venue-prefix').value = venueprefix
         })
 
 
@@ -176,7 +182,8 @@ let itemid = document.querySelector('#edit-id').value
 let source = document.querySelector('#edit-source').value
 let browser = document.querySelector('#edit-browser').value
 let instructions = document.querySelector('#edit-instructions').value
-let prefix = document.querySelector('#edit-prefix').value
+let eventprefix = document.querySelector('#edit-event-prefix').value
+let venueprefix = document.querySelector('#edit-venue-prefix').value
 const endpointUrl = 'https://ubik.wiki/api/update/source-instructions/'
 
 const newRowData = {
@@ -184,7 +191,8 @@ id: itemid,
 source: source,
 browser: browser,
 instructions: instructions,
-prefix: prefix
+event_prefix: eventprefix,
+venue_prefix: venueprefix
 };
 
 
