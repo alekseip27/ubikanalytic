@@ -101,7 +101,7 @@ if(emailsacc){
   $('#adminplaceholder').css('display','block');
   
   document.querySelector('#scrapeurls').style.display = 'flex'
-  
+  document.querySelector('#src-instructions').style.display = 'flex'
   $('#stats').css('display','flex');
   
   $('#dropchecking').css('display','flex');
