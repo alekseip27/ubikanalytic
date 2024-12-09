@@ -528,7 +528,7 @@ document.querySelector('#venue').textContent =  eventdata.event_venue
 document.querySelector('#time').textContent =  eventdata.event_time
 document.querySelector('#url').textContent =  eventdata.event_url
 document.querySelector('#quantityper').textContent =  eventdata.quantity_per
-part4(eventdata.event_url)
+part4(document.querySelector('#url').textContent)
 purchasequantity = eventdata.purchased_amount
 
 if(purchasequantity>0) {
