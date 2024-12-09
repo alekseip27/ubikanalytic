@@ -427,7 +427,7 @@ function normalizeDate(date) {
               console.log("Preferred sections:", prefSections);
 
               // Step 2: Fetch counts for preferred sections
-              fetch(`https://ubik.wiki/api/primary-counts/?tickets_by_sections__icontains={&event_id__icontains=${events.site_event_id}&format=json`, {
+              fetch(`https://ubik.wiki/api/primary-counts/?tickets_by_sections__icontains={&event_id__icontains=${events.site_event_id}&limit=1000&format=json`, {
                   method: 'GET',
                   headers: {
                       'Content-Type': 'application/json',
