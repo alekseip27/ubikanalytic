@@ -265,7 +265,7 @@ async function retrievedatato(buyerEmail) {
               return;
           }
 
-          await new Promise(resolve => setTimeout(resolve, delay)); 
+          await new Promise(resolve => setTimeout(resolve, delay));
       }
   }
 
@@ -319,9 +319,9 @@ async function retrievezip(id) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`, 
+          'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ id }), 
+        body: JSON.stringify({ id }),
         signal,
       });
 
@@ -528,7 +528,7 @@ document.querySelector('#venue').textContent =  eventdata.event_venue
 document.querySelector('#time').textContent =  eventdata.event_time
 document.querySelector('#url').textContent =  eventdata.event_url
 document.querySelector('#quantityper').textContent =  eventdata.quantity_per
-
+part4(eventdata.event_url)
 purchasequantity = eventdata.purchased_amount
 
 if(purchasequantity>0) {
@@ -1091,8 +1091,6 @@ emailpart1()
 part1()
 part2()
 part3()
-
-
 })
 
 const checkStepsInterval = setInterval(() => {
@@ -1274,3 +1272,125 @@ function getsource(eventUrl) {
         return('OTHER');
         break;
     }}
+
+
+
+function part4(url) {
+    let keyToCheck = getsourceid(url);
+    console.log(keyToCheck)
+        const sourceurl = 'https://ubik.wiki/api/source-instructions/?id__iexact=' + keyToCheck;
+
+        let http = new XMLHttpRequest();
+        http.open("GET", sourceurl, true);
+        http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+        http.setRequestHeader('Authorization', `Bearer ${token}`);
+
+        http.onreadystatechange = function () {
+            if (http.readyState == 4) {
+                if (http.status == 200) {
+    let response = JSON.parse(http.response)
+    let results = response.results[0]
+    let browser = results.browser
+    let instructions = results.instructions
+    document.querySelector('#browser').textContent = browser
+    document.querySelector('#instructions').textContent = instructions
+
+                }
+            }
+        };
+        http.send();
+}
+
+
+
+function getsourceid(eventUrl) {
+    switch(true) {
+        case eventUrl.includes('showclix'):
+        return('45');
+        break;
+        case eventUrl.includes('thecomplexslc'):
+        return('45');
+        break;
+        case eventUrl.includes('ticketmaster.co.uk'):
+        return('9');
+        break;
+        case eventUrl.includes('ticketmaster.ca'):
+        return('9');
+        break;
+        case eventUrl.includes('ticketmaster.de'):
+        return('9');
+        break;
+        case eventUrl.includes('ticketmaster.com.mx'):
+        return('9');
+        break;
+        case eventUrl.includes('ticketmaster.com'):
+        return('9');
+        break;
+        case eventUrl.includes('livenation'):
+        return('9');
+        break;
+        case eventUrl.includes('24tix'):
+        return('47');
+        break;
+        case eventUrl.includes('admitone'):
+        return('48');
+        break;
+        case eventUrl.includes('axs'):
+        return('2');
+        break;
+        case eventUrl.includes('dice'):
+        return('8');
+        break;
+        case eventUrl.includes('etix'):
+        return('16');
+        break;
+        case eventUrl.includes('eventbrite'):
+        return('11');
+        break;
+        case eventUrl.includes('freshtix'):
+        return('10');
+        break;
+        case eventUrl.includes('frontgate'):
+        return('49');
+        break;
+        case eventUrl.includes('holdmyticket'):
+        return('5');
+        break;
+        case eventUrl.includes('prekindle'):
+        return('19');
+        break;
+        case eventUrl.includes('seetickets'):
+        return('18');
+        break;
+        case eventUrl.includes('ticketweb'):
+        return('14');
+        break;
+        case eventUrl.includes('ticketswest'):
+        return('13');
+        break;
+        case eventUrl.includes('tixr'):
+        return('23');
+        break;
+        case eventUrl.includes('stubwire'):
+        return('15');
+        break;
+        case eventUrl.includes('fgtix'):
+        return('49');
+        break;
+        case eventUrl.includes('evenue'):
+        return('6');
+        break;
+        case eventUrl.includes('gruenehall'):
+        return('7');
+        break;
+        case eventUrl.includes('meowwolf'):
+        return('21');
+        break;
+        case eventUrl.includes('thevogue.com'):
+        return('25');
+        break;
+    default:
+        return('30');
+        break;
+    }}
+
