@@ -414,7 +414,7 @@ $("#purchasequantity").attr({"min" : 0});
     function retryClickingSearchBar() {
         if (token.length === 40) {
         clearInterval(intervalIds);
-var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event-copy?id=')[1];
+var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1];
 document.querySelector('#evids').value = eventid;
 document.querySelector('#queueid').value = eventid;
 var request = new XMLHttpRequest()
@@ -915,7 +915,7 @@ let bought = Number(document.querySelector('#amountbought1').textContent)
 let cpr = Number(document.querySelector('#purchasequantity').value)
 let combined = bought+cpr
 let limit = Number(document.querySelector('#amountbought2').textContent)
-var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event-copy?id=')[1]
+var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
 var urll = "https://ubik.wiki/api/update/buying-queue/"
 
