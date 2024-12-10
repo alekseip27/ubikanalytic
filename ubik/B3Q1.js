@@ -30,7 +30,7 @@ card.style.display = 'flex';
 
 const buybutton = card.getElementsByClassName('main-buy-button')[0]
 buybutton.addEventListener('click', function() {
-window.location.assign("https://www.ubikanalytic.com/buy-event-copy?id=" + events.id)
+window.location.assign("https://www.ubikanalytic.com/buy-event?id=" + events.id)
 });
 
     
