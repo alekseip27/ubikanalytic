@@ -276,9 +276,7 @@ function createInstruction() {
 
 document.getElementById('editbtn2').addEventListener('click', function() {
     const fld1 = !!document.querySelector("#add-source").value;
-    const fld2 = !!document.querySelector("#add-browser").value;
-    const fld3 = !!document.querySelector("#add-instructions").value;
-    if (!fld1 || !fld2 || !fld3) {
+    if (!fld1) {
         document.querySelector('#errortext2').textContent = "All required fields must be filled.";
         return;
     } else {
@@ -302,10 +300,7 @@ document.querySelector('#add-event-prefix').value = ''
 
 document.addEventListener("input", () => {
     const fld1 = !!document.querySelector("#add-source").value;
-    const fld2 = !!document.querySelector("#add-browser").value;
-    const fld3 = !!document.querySelector("#add-instructions").value;
-
-    if (!!fld1 && !!fld2 && !!fld3) {
+    if (!!fld1) {
         document.querySelector('#editbtn2').style.pointerEvents = "auto";
     } else {
         document.querySelector('#editbtn2').style.pointerEvents = "none";
