@@ -1311,23 +1311,20 @@ function getsourceid(eventUrl) {
         case eventUrl.includes('thecomplexslc'):
         return('45');
         break;
-        case eventUrl.includes('ticketmaster.co.uk'):
-        return('9');
-        break;
         case eventUrl.includes('ticketmaster.ca'):
-        return('9');
-        break;
-        case eventUrl.includes('ticketmaster.de'):
-        return('9');
+        return('51');
         break;
         case eventUrl.includes('ticketmaster.com.mx'):
-        return('9');
+        return('50');
         break;
         case eventUrl.includes('ticketmaster.com'):
         return('9');
         break;
-        case eventUrl.includes('livenation'):
+        case eventUrl.includes('livenation.com'):
         return('9');
+        break;
+        case eventUrl.includes('livenation.ca'):
+        return('51');
         break;
         case eventUrl.includes('24tix'):
         return('47');
