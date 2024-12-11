@@ -1116,8 +1116,8 @@ if(Number(getLatestCount(countsarray))){
 
 if(events.app_142_difference_per_day){
 const aday = card.getElementsByClassName('main-text-aday')[0]
-aday.textContent = parseInt(events.app_142_difference_per_day)
-card.setAttribute('perday',parseInt(events.app_142_difference_per_day))
+aday.textContent = events.app_142_difference_per_day
+card.setAttribute('perday',events.app_142_difference_per_day)
 }
 
 } if(events.event_url.includes('ticketmaster') || events.event_url.includes('livenation')) {
