@@ -36,7 +36,7 @@ const tokenCheckInterval = setInterval(() => {
 
     async function initializeStates(states,emails) {
         try {
-            const url = new URL(`${apiUrl}?limit=1000`);
+            const url = new URL(`${apiUrl}&limit=1000`);
             const data = await fetchData(url);
             const items = Array.isArray(data) ? data : data.results;
 
