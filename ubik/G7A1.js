@@ -1,7 +1,7 @@
 let purcharray = []
 let abortControllers = [];
 
-const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/';
+const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?email__idoesnotcontains=closed';
 let headers;
 
 // Function to initialize headers and proceed with code
@@ -836,7 +836,7 @@ intervalIds = setInterval(retryClickingSearchBar, 1000);
 
 function emailpart1() {
 let purchacc = document.querySelector('#purchaseaccounts').value
-const emailurl = 'https://ubik.wiki/api/purchasing-accounts/?email__iexact=' + purchacc;
+const emailurl = 'https://ubik.wiki/api/purchasing-accounts/?email__idoesnotcontains=closed&email__iexact=' + purchacc;
 let http = new XMLHttpRequest();
 
 http.open("GET", emailurl, true);
