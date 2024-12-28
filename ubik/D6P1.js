@@ -127,7 +127,8 @@ event_date: document.getElementById('date').textContent,
 event_url: document.getElementById('url').textContent,
 event_time: document.getElementById('time').textContent,
 event_source: document.getElementById('source').textContent,
-purchase_account: document.getElementById('purchaseaccs').value
+purchase_account: document.getElementById('purchaseaccs').value,
+credit_account: document.getElementById('purchaseaccs').value
 };
 
     fetch(url, {
