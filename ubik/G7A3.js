@@ -159,7 +159,7 @@ function populateEmails(items, selectedState, emailsused) {
 
     async function displayBuyerData(buyerEmail) {
         try {
-            const url = new URL(`${apiUrl}?email__iexact=${buyerEmail}`);
+            const url = new URL(`${apiUrl}&email__iexact=${buyerEmail}`);
             const data = await fetchData(url);
 
             const accountInfo = data.results[0];
