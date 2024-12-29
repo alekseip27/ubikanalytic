@@ -161,8 +161,6 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     card.setAttribute('time', events.event_time)
     card.setAttribute('email', events.purchase_email)
     card.setAttribute('source', events.purchase_Source)
-    card.setAttribute('quantity', events.purchase_quantity)
-    card.setAttribute('account', events.purchase_account.slice(0,1).toUpperCase())
     card.setAttribute('requested', events.purchase_requested)
     card.setAttribute('bought', events.purchased_by)
     card.setAttribute('confirmation', events.confirmation)
@@ -196,17 +194,6 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     }
 
     eventvenue.addEventListener('click', function() { copyToClipboard(events.event_venue); });
-        
-    
-    let purchasequantity = card.getElementsByClassName('main-text-quantity')[0]
-    purchasequantity.textContent = events.purchase_quantity
-    
-    let purchasequantitymax = card.getElementsByClassName('main-text-quantity-max')[0]
-    purchasequantitymax.textContent = events.purchase_quantity_total
-    
-    let purchaseaccount = card.getElementsByClassName('main-text-purchased-account')[0]
-    purchaseaccount.textContent = events.purchase_account.slice(0,1).toUpperCase()
-
         
     
     let confirmation = card.getElementsByClassName('main-text-confirmation')[0]
