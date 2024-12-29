@@ -206,9 +206,6 @@ deletebutton.addEventListener('click', function() {
     confirmation.textContent = events.confirmation.slice(0, 15)+'..'
     }
  
-    const account = card.getElementsByClassName('main-text-acc')[0]
-    account.textContent = events.purchase_account.slice(0,1).toUpperCase()
-
     const emails = card.getElementsByClassName('main-text-emls')[0]
     emails.textContent = events.purchase_email;
 
