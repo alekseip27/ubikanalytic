@@ -137,6 +137,9 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     document.querySelector('#errortext').textContent = ''
     document.querySelector(".edit-wrapper").style.display = 'flex'
 
+        
+ 		document.querySelector('#closed').checked = events.closed
+    document.querySelector('#paused').checked = events.paused
     document.querySelector('#editid').value = events.id
     document.querySelector('#edit-email').value = events.email
     document.querySelector('#edit-fname').value = events.first_name
