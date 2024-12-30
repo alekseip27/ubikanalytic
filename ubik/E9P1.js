@@ -29,6 +29,9 @@ document.getElementById('rightarrow').addEventListener('click', function() {
       let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value);
       let keywords3 = encodeURIComponent(document.getElementById('searchbar3').value);
 
+    let cb1 = document.getElementById('closed-check').checked
+    let cb2 = document.getElementById('paused-check').checked
+
       let baseUrl = 'https://ubik.wiki/api/purchasing-accounts/?';
 
       let params = [];
@@ -43,6 +46,14 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
     if (keywords3.length > 0) {
         params.push('phone_number__icontains=' + keywords3)
+    }
+
+    if (cb1) {
+    params.push('&closed__iexact=true');
+    }
+
+    if (cb2) {
+    params.push('&paused__iexact=true');
     }
 
       params.push('limit=100');
