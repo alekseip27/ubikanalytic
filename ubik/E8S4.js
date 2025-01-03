@@ -1002,7 +1002,7 @@ const scrapetm = (eventid) => {
                     case eventUrl.includes('admitone'):
                     txtsource.textContent = 'ADMIT1';
                     break;
-                    case eventUrl.includes('axs'):
+                    case eventUrl.includes('axs.'):
                     txtsource.textContent = 'AXS';
                     break;
                     case eventUrl.includes('dice'):
