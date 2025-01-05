@@ -262,7 +262,7 @@
             if (provider === "slash") {
             document.querySelector('#dnum3').textContent = cd.s2 || "N/A";
             document.querySelector('#dnum4').textContent = 'Slash';
-            document.querySelector('#dnum5').textContent = 'Mastercard';
+            document.querySelector('#dnum5').textContent = 'Visa';
 
 
             const unlockElement = document.getElementById('unlock');
