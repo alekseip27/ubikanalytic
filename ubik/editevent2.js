@@ -94,7 +94,6 @@ const formattedHours = nowInEastern.format('hh');
     let quantityper = document.querySelector('#quantityper').value;
     let section = document.querySelector('#section').value;
     let buyingurgency = document.querySelector('#buyingurgency').value;
-    let purchasefreq = document.querySelector('#purchasefreq').value;
     let creditacc = document.querySelector('#creditaccount').value;
     let presale = document.querySelector('#presalecode').value;
     let note = document.querySelector('#notes').value;
