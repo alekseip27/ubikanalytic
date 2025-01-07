@@ -41,9 +41,7 @@ request.onload = function() {
 
         document.querySelector('#buyingurgency').value =  events.buying_urgency;
 
-        document.querySelector('#purchasefreq').value =  events.purchase_frequency;
-
-        document.querySelector('#purchaseacc').value =  events.purchase_account;
+        document.querySelector('#creditaccount').value =  events.credit_account;
 
         document.querySelector('#presalecode').value =  events.presale_code;
 
@@ -97,7 +95,7 @@ const formattedHours = nowInEastern.format('hh');
     let section = document.querySelector('#section').value;
     let buyingurgency = document.querySelector('#buyingurgency').value;
     let purchasefreq = document.querySelector('#purchasefreq').value;
-    let purchaseacc = document.querySelector('#purchaseacc').value;
+    let creditacc = document.querySelector('#creditaccount').value;
     let presale = document.querySelector('#presalecode').value;
     let note = document.querySelector('#notes').value;
     let queueid = location.href.split('id=')[1]
@@ -108,8 +106,7 @@ const formattedHours = nowInEastern.format('hh');
         "quantity_per": quantityper,
         "section": section,
         "buying_urgency": buyingurgency,
-        "purchase_frequency": purchasefreq,
-        "purchase_account": purchaseacc,
+        "credit_account": creditacc,
         "presale_code": presale,
         "purchase_notes": note,
         "added_timestamp": dategoal
