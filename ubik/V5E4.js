@@ -189,6 +189,13 @@ venueprefix = ''
 source = 'dice'
 }
 
+else if(eventurl.includes('bigtickets.com')){
+prefix = 'big-'
+venueprefix = 'big-'
+source = 'big'
+}
+
+
 else if(eventurl.includes('etix.com')){
 prefix = 'etix'
 venueprefix = 'etix'
@@ -511,6 +518,11 @@ source = 'other'
     result2 = "gruenehall"
    }
 
+   else if (venueUrl.includes("bigtickets.com")) {
+    result = "big-";
+    result2 = "big"
+   }
+    
 
    else if (venueUrl.includes("meowwolf")) {
     result = "";
