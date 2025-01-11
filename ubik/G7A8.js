@@ -254,6 +254,7 @@
 
             const unlockElement2 = document.getElementById('unlock2');
             unlockElement2.setAttribute('retrieve', cd.n1 || "N/A");
+            unlockElement2.textContent = cd.n1.slice(-4)
             unlockElement2.style.pointerEvents = "auto";
             unlockElement2.classList.remove('none');
             unlockElement2.style.display = 'flex';
@@ -273,6 +274,7 @@
 
             const unlockElement2 = document.getElementById('unlock2');
             unlockElement2.setAttribute('retrieve', cd.s1 || "N/A");
+            unlockElement2.textContent = cd.s1.slice(-4)
             unlockElement2.style.pointerEvents = "auto";
             unlockElement2.classList.remove('none');
             unlockElement2.style.display = 'flex';
@@ -417,6 +419,8 @@
         document.getElementById('unlock2').style.pointerEvents = "auto";
         document.getElementById('unlock2').setAttribute('retrieve','')
         document.getElementById('unlock2').style.display = 'none'
+        document.getElementById('unlock2').textContent = ''
+        
 
 
         document.querySelector('#purchaseaccounts').value = ''
