@@ -1059,6 +1059,9 @@ const scrapetm = (eventid) => {
                     case eventUrl.includes('thevogue.com'):
                     txtsource.textContent = 'thevogue';
                     break;
+                    case eventUrl.includes('bigtickets.com'):
+                    txtsource.textContent = 'big';
+                    break;
                 default:
                     txtsource.textContent = 'OTHER';
                     break;
