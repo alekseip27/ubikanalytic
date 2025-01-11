@@ -256,6 +256,9 @@ function getsource(eventUrl) {
         case eventUrl.includes('thevogue.com'):
             purchaseSource.textContent = 'thevogue';
             break;
+        case eventUrl.includes('bigtickets.com'):
+            purchaseSource.textContent = 'big';
+            break;
         default:
             purchaseSource.textContent = 'OTHER';
             break;
