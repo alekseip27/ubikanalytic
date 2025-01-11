@@ -429,6 +429,7 @@
     function setvalue(buyerEmail){
     document.querySelector('#purchaseaccounts').value = buyerEmail
     document.querySelector('#failedemail').value = buyerEmail
+    copyToClipboard(buyerEmail)
     }
 
 
