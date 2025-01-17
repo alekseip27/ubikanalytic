@@ -40,20 +40,31 @@ const tokenCheckInterval = setInterval(() => {
 
             if (account === 'slash') {
                 url.searchParams.append('cards__icontains', 'slash');
-                fetch('https://shibuy.co:8443/sba')
-                .then(res => res.json())
-                .then(response => {
-                  document.querySelector('#dnum6').textContent = '$'+response;
-                })
-                .catch(console.error);
+fetch('https://shibuy.co:8443/sba', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+  .then(res => res.json())
+  .then(response => {
+    document.querySelector('#dnum6').textContent = '$' + response;
+  })
+  .catch(console.error);
 
             } else {
-                fetch('https://shibuy.co:8443/rba')
-                .then(res => res.json())
-                .then(response => {
-                  document.querySelector('#dnum6').textContent = '$'+response;
-                })
-                .catch(console.error);
+fetch('https://shibuy.co:8443/rba', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+})
+  .then(res => res.json())
+  .then(response => {
+    document.querySelector('#dnum6').textContent = '$' + response;
+  })
+  .catch(console.error);
+
             }
 
 
