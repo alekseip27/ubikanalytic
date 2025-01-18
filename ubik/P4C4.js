@@ -192,6 +192,9 @@ document.querySelector('.locked-content').style.display = 'none';
             
             if(events.shownQuantity !== null){
             shownquant.textContent = events.shownQuantity
+            } else {
+            shownquant.textContent = events.quantity
+            
             }
 
             
