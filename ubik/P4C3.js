@@ -187,7 +187,14 @@ document.querySelector('.locked-content').style.display = 'none';
             const card = sampleStyle.cloneNode(true);
             card.setAttribute('id', events.id);
             const eventPrice = card.querySelector('.main-field-price');
-main-text-shownquantity
+
+            const shownquant = card.querySelector('.main-text-shownquantity');
+            
+            if(events.shownQuantity !== null){
+            shownquant.textContent = events.shownQuantity
+            }
+
+            
 if (events.tags && events.tags.includes('lowerable')) {
                 containslowerable = true;
             }
