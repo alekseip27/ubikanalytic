@@ -121,6 +121,9 @@ document.querySelector('#search-button').addEventListener("click", () => {
                     const eventdate = card.getElementsByClassName('main-text-date')[0];
                     eventdate.textContent = events.date.slice(0, 10);
 
+                    const weekday = card.getElementsByClassName('main-text-day')[0];
+                    weekday.textContent = getDayOfWeek(events.date.slice(0, 10));
+                    
                     const eventtime = card.getElementsByClassName('main-text-time')[0];
                     eventtime.textContent = events.date.slice(11, 16);
                     const eventvenue = card.getElementsByClassName('main-text-venue')[0];
@@ -143,6 +146,20 @@ document.querySelector('#search-button').addEventListener("click", () => {
 
 
 //
+function getDayOfWeek(dateString) {
+    // Parse the date string into a Date object
+    const [year, month, day] = dateString.split('-').map(Number);
+    const date = new Date(year, month - 1, day);
+
+    // Array of days of the week
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    // Get the day of the week as a number (0 for Sunday, 1 for Monday, etc.)
+    const dayOfWeek = date.getDay();
+
+    // Return the name of the day
+    return daysOfWeek[dayOfWeek];
+}
 
 function retrievetickets(){
 const eventID = document.querySelector('#selectedevent').getAttribute('eventid');
