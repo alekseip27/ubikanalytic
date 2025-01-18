@@ -208,7 +208,9 @@ if (preonsales) {
             var tdate = events.date.slice(0, 10).replaceAll("-","/")
             tdate = [tdate.slice(5), tdate.slice(0,4)].join('/');
             eventdate.textContent = tdate
-
+            
+            const weekday = card.getElementsByClassName('main-text-weekday')[0]
+            weekday.textContent = getDayOfWeek(tdate)
         }
 
             card.setAttribute('eventid', evid);
