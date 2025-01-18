@@ -239,6 +239,21 @@ if (preonsales) {
     status.textContent = events.status
     }
 
+function getDayOfWeek(dateString) {
+    // Parse the date string into a Date object
+    const [month, day, year] = dateString.split('/').map(Number);
+    const date = new Date(year, month - 1, day);
+
+    // Array of days of the week
+    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    // Get the day of the week as a number (0 for Sunday, 1 for Monday, etc.)
+    const dayOfWeek = date.getDay();
+
+    // Return the name of the day
+    return daysOfWeek[dayOfWeek];
+}
+                
 function vschartdata(VDID) {
 
     chartvs.data.datasets[0].data = []
