@@ -247,7 +247,7 @@ function getDayOfWeek(dateString) {
     const date = new Date(year, month - 1, day);
 
     // Array of days of the week
-    const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    const daysOfWeek = ['Sun', 'Mon', 'Tues', 'Wed', 'Thurs', 'Fri', 'Sat'];
 
     // Get the day of the week as a number (0 for Sunday, 1 for Monday, etc.)
     const dayOfWeek = date.getDay();
