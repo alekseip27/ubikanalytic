@@ -392,9 +392,15 @@ document.querySelector('#vserror').style.display = 'flex';
 
 
         const charticon = card.getElementsByClassName('main-text-chart')[0];
+                
 function normalizeDate(date) {
-    const normalizedDate = new Date(date).toISOString();
-    return normalizedDate.slice(0, 16).replace("T", " ");
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
 
       function updateChartWithPrimaryAndPreferred() {
