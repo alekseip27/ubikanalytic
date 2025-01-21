@@ -123,7 +123,7 @@ document.querySelector('#search-button').addEventListener("click", () => {
 
                     const weekday = card.getElementsByClassName('main-text-day')[0];
                     weekday.textContent = getDayOfWeek(events.date.slice(0, 10));
-                    
+
                     const eventtime = card.getElementsByClassName('main-text-time')[0];
                     eventtime.textContent = events.date.slice(11, 16);
                     const eventvenue = card.getElementsByClassName('main-text-venue')[0];
@@ -189,15 +189,15 @@ document.querySelector('.locked-content').style.display = 'none';
             const eventPrice = card.querySelector('.main-field-price');
 
             const shownquant = card.querySelector('.main-text-shownquantity');
-            
+
             if(events.shownQuantity !== null){
             shownquant.textContent = events.shownQuantity
             } else {
             shownquant.textContent = events.quantity
-            
+
             }
 
-            
+
 if (events.tags && events.tags.includes('lowerable')) {
                 containslowerable = true;
             }
@@ -500,7 +500,7 @@ http.onload = function() {
                         document.querySelector('#fwicon4').textContent = '';
 
                         lowerableview = document.querySelector('#lowerable').checked
-                        
+
                         if(lowerableview === false){
                         getchartprimary();
                         getchartvs();
@@ -608,6 +608,7 @@ function normalizeDate(date) {
     const minutes = String(d.getMinutes()).padStart(2, '0');
     return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
+
 function updateChartWithPrimaryAndPreferred(counts, venueid, evids) {
     let amountsPrimary = [];
     let datesPrimary = [];
@@ -620,8 +621,8 @@ function updateChartWithPrimaryAndPreferred(counts, venueid, evids) {
     // Populate primary amounts and dates
     counts.forEach(count => {
         amountsPrimary.push(Math.round(count.primary_amount));
-        datesPrimary.push(count.scrape_date);
-        combinedDates.add(count.scrape_date);
+        datesPrimary.push(normalizeDate(count.scrape_date));
+        combinedDates.add(normalizeDate(count.scrape_date));
     });
 
     console.log("Primary data amounts:", amountsPrimary);
@@ -661,35 +662,45 @@ function updateChartWithPrimaryAndPreferred(counts, venueid, evids) {
         .then(response => response.json())
         .then(data => {
             console.log("Preferred counts data response:", data);
+            console.log("Preferred counts data response:", data);
 
             // Process datasets for each preferred section
             const validPrefs = [prefSections.pref1, prefSections.pref2, prefSections.pref3].filter(pref => pref && pref !== 'null' && pref !== null);
-
             validPrefs.forEach((pref, index) => {
-                let prefAmounts = [];
-                let prefDates = [];
+              let datewiseAggregation = {};
 
-                data.results.forEach(result => {
-                    let scrapeDate = normalizeDate(result.event.scrape_date);
+              data.results.forEach(result => {
+                  let scrapeDate = normalizeDate(result.event.scrape_date);
 
-                    result.tickets_by_sections.forEach(section => {
-                        if (section.section.toLowerCase().includes(pref.toLowerCase())) {
-                            prefAmounts.push(Math.round(section.amount));
-                            prefDates.push(scrapeDate);
-                            combinedDates.add(scrapeDate);
-                            console.log(`Inserting value ${section.amount} for ${section.section} on ${scrapeDate}`);
-                        }
-                    });
-                });
+                  if (!datewiseAggregation[scrapeDate]) {
+                      datewiseAggregation[scrapeDate] = 0; // Initialize aggregation for this date
+                  }
 
-                preferredData.push({
-                    label: pref,
-                    amounts: prefAmounts,
-                    dates: prefDates,
-                    backgroundColor: `rgba(${75 + index * 40}, 179, 113, 1)`,
-                    borderColor: `rgba(${75 + index * 40}, 170, 113, 1)`,
-                });
-            });
+                  result.tickets_by_sections.forEach(section => {
+                      // Use includes for flexible matching
+                      if (section.section && section.section.toLowerCase().includes(pref.toLowerCase())) {
+                          datewiseAggregation[scrapeDate] += Math.round(section.amount);
+                          combinedDates.add(scrapeDate);
+                          console.log(`Adding ${section.amount} from ${section.section} to ${scrapeDate} for preferred section "${pref}"`);
+                      }
+                  });
+              });
+
+              let prefAmounts = [];
+              let prefDates = [];
+              Object.keys(datewiseAggregation).forEach(date => {
+                  prefDates.push(date);
+                  prefAmounts.push(datewiseAggregation[date]);
+              });
+
+              preferredData.push({
+                  label: pref,
+                  amounts: prefAmounts,
+                  dates: prefDates,
+                  backgroundColor: `rgba(${75 + index * 40}, 179, 113, 1)`,
+                  borderColor: `rgba(${75 + index * 40}, 170, 113, 1)`
+              });
+          });
 
             // Step 3: Combine and sort all dates
             combinedDates = Array.from(combinedDates).sort((a, b) => new Date(a) - new Date(b));
@@ -697,29 +708,33 @@ function updateChartWithPrimaryAndPreferred(counts, venueid, evids) {
             // Step 4: Align primary data with combined dates
             let alignedPrimaryData = combinedDates.map(date => {
                 let index = datesPrimary.indexOf(date);
-                return index !== -1 ? amountsPrimary[index] : null;
+                return index !== -1 ? amountsPrimary[index] : 0; // Use 0 if no match
             });
 
             // Step 5: Align preferred data with combined dates
             preferredData.forEach(prefDataset => {
-                let alignedAmounts = combinedDates.map(date => {
+                prefDataset.alignedAmounts = combinedDates.map(date => {
                     let index = prefDataset.dates.indexOf(date);
-                    return index !== -1 ? prefDataset.amounts[index] : null;
-                });
-
-                chartprimary.data.datasets.push({
-                    data: alignedAmounts,
-                    label: prefDataset.label,
-                    backgroundColor: prefDataset.backgroundColor,
-                    borderColor: prefDataset.borderColor,
-                    borderWidth: 1
+                    return index !== -1 ? prefDataset.amounts[index] : 0; // Use 0 if no match
                 });
             });
 
             // Step 6: Update the chart with combined data
             chartprimary.config.data.labels = combinedDates;
             chartprimary.data.datasets[0].data = alignedPrimaryData;
-            chartprimary.update();
+
+                  preferredData.forEach(prefDataset => {
+                    chartprimary.data.datasets.push({
+                          data: prefDataset.alignedAmounts,
+                          label: prefDataset.label,
+                          backgroundColor: prefDataset.backgroundColor,
+                          borderColor: prefDataset.borderColor,
+                          borderWidth: 1
+                      });
+                  });
+
+                  chartprimary.update();
+
             console.log("Chart updated with primary and preferred data");
 
             document.querySelector("#chart3").style.display = "flex";
