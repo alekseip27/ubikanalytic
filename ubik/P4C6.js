@@ -599,7 +599,15 @@ async function getchartprimary() {
         displayLoadingFailed();
     }
 }
-
+function normalizeDate(date) {
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(d.getDate()).padStart(2, '0');
+    const hours = String(d.getHours()).padStart(2, '0');
+    const minutes = String(d.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+}
 function updateChartWithPrimaryAndPreferred(counts, venueid, evids) {
     let amountsPrimary = [];
     let datesPrimary = [];
@@ -662,16 +670,14 @@ function updateChartWithPrimaryAndPreferred(counts, venueid, evids) {
                 let prefDates = [];
 
                 data.results.forEach(result => {
-                    let scrapeDate = new Date(result.event.scrape_date);
-                    let hours = scrapeDate.getHours() % 12 || 12;  // Convert 0 (midnight) or 12 (noon) to 12
-                    let formattedDate = `${scrapeDate.getMonth() + 1}/${scrapeDate.getDate()}/${scrapeDate.getFullYear()}, ${hours}:${("0" + scrapeDate.getMinutes()).slice(-2)}:${("0" + scrapeDate.getSeconds()).slice(-2)} ${scrapeDate.getHours() >= 12 ? 'PM' : 'AM'}`;
+                    let scrapeDate = normalizeDate(result.event.scrape_date);
 
                     result.tickets_by_sections.forEach(section => {
                         if (section.section.toLowerCase().includes(pref.toLowerCase())) {
                             prefAmounts.push(Math.round(section.amount));
-                            prefDates.push(formattedDate);
-                            combinedDates.add(formattedDate);
-                            console.log(`Inserting value ${section.amount} for ${section.section} on ${formattedDate}`);
+                            prefDates.push(scrapeDate);
+                            combinedDates.add(scrapeDate);
+                            console.log(`Inserting value ${section.amount} for ${section.section} on ${scrapeDate}`);
                         }
                     });
                 });
