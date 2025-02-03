@@ -186,6 +186,10 @@ function getEvents(fetchurl) {
                 const eventname = card.getElementsByClassName('main-text-event-name')[0];
                 eventname.textContent = eventData.event_name + ' - ';
 
+
+                const eventvenue = card.getElementsByClassName('chart-venuename')[0];
+                eventvenue.textContent = '- ' + eventData.venue_name
+
                 const locationcard = card.getElementsByClassName('chartloc')[0];
                 locationcard.textContent = eventData.city + ', ' + eventData.state + ', ' + eventData.country;
 
@@ -270,6 +274,15 @@ function getEvents(fetchurl) {
 
                 const latestcount = getLatestCount2(eventData.counts);
                 const primaryam = card.getElementsByClassName('chartprim')[0];
+                card.getElementsByClassName('chartprim')[0].id = 'prim'+eventData.site_event_id;
+
+
+                const chartperday = card.getElementsByClassName('chartperday')[0];
+                chartperday.textContent = eventData.app_142_difference_per_day;
+                card.getElementsByClassName('chartperday')[0].id = 'diff'+eventData.site_event_id;
+
+
+
 
                 if (primaryam !== 0) {
                     primaryam.textContent = latestcount;
@@ -422,14 +435,16 @@ function getEvents(fetchurl) {
 
                 if (eventData.event_url.includes('ticketmaster') || eventData.event_url.includes('livenation')) {
                     eventname.addEventListener('click', function () {
-                        window.open('http://142.93.115.105:8100/event/' + evid + '/details/', "primary");
+                        copyToClipboard('http://142.93.115.105:8100/event/' + evid + '/details/');
                     });
+
+                    chartperday.textContent = eventData.app_142_difference_per_day;
+
                 } else {
                     eventname.addEventListener('click', function () {
-                        window.open(eventData.event_url, "primary");
+                        copyToClipboard(eventData.event_url);
                     });
                 }
-
                 if (eventData.hidden === 'true') {
                     card.style.display = "none";
                 } else {
@@ -724,7 +739,9 @@ function fetchTicketmasterData(eventData, chart) {
             processTicketmasterData(eventData, chart, data);
         } else {
             console.log("No data received from Ticketmaster.");
-            // Hide the chart if no Ticketmaster data is available:
+            let eventid = eventData.site_event_id
+            document.querySelector(`#diff${eventid}`).parentElement.style.display = 'none'
+            document.querySelector(`#prim${eventid}`).parentElement.style.display = 'none'
             chart.canvas.style.display = 'none';
         }
     };
@@ -738,6 +755,7 @@ function fetchTicketmasterData(eventData, chart) {
 }
 
 function processTicketmasterData(eventData, chart, data) {
+    const eventid = eventData.site_event_id
     let dates = [];
     let amounts = [];
 
@@ -758,6 +776,13 @@ function processTicketmasterData(eventData, chart, data) {
                 prefSections[`pref${i + 1}`] = data[0].venue.preferred_sections[i].name;
             }
         }
+    }
+
+    if(data[0].summaries[0].total_difference_per_day){
+    document.querySelector(`#diff${eventid}`).textContent = data[0].summaries[0].total_difference_per_day
+    document.querySelector(`#diff${eventid}`).parentElement.style.display = 'flex'
+    } else {
+    document.querySelector(`#diff${eventid}`).parentElement.style.display = 'none'
     }
 
     console.log(prefSections);
@@ -873,6 +898,16 @@ function processTicketmasterData(eventData, chart, data) {
     console.log("Final datasets for the chart:", chart.data.datasets);
 
     chart.update();
+
+    let latestcount = sortedPrimaryData.sortedAmounts[sortedPrimaryData.sortedAmounts.length - 1];
+
+    if(latestcount && latestcount !== 0) {
+    document.querySelector(`#prim${eventid}`).textContent = sortedPrimaryData.sortedAmounts[sortedPrimaryData.sortedAmounts.length - 1];
+    document.querySelector(`#prim${eventid}`).parentElement.style.display = 'flex'
+    } else {
+    document.querySelector(`#prim${eventid}`).parentElement.style.display = 'none'
+    }
+
 
 }
 
