@@ -172,6 +172,7 @@ function getEvents(fetchurl) {
                 const style = document.getElementById('samplestyle');
                 const card = style.cloneNode(true);
                 let evid = encodeURIComponent(events.site_event_id);
+                // Remove the 'tm' prefix only if present
                 if(evid.startsWith('tm')){
                     evid = encodeURIComponent(events.site_event_id).substring(2);
                 }
@@ -198,11 +199,8 @@ function getEvents(fetchurl) {
                     weekday.textContent = getDayOfWeek(tdate);
                 }
 
-                card.setAttribute('eventid', evid);
+                card.setAttribute('eventid', events.site_event_id);
 
-                if (evid.startsWith("tm")) {
-                    card.setAttribute('eventid', evid.substring(2));
-                }
                 if(events.time){
                     card.setAttribute('time', events.time.slice(0, 8));
                 }
@@ -240,6 +238,7 @@ function getEvents(fetchurl) {
                 }
 
                 function vschartdata(VDID) {
+                    // Clear the Vividseats chart data
                     chartvs.data.datasets[0].data = [];
                     chartvs.data.datasets[1].data = [];
                     chartvs.data.datasets[2].data = [];
@@ -353,8 +352,6 @@ function getEvents(fetchurl) {
                         document.querySelector('#vserror').style.display = 'flex';
                     });
                 }
-
-                const charticon = card.getElementsByClassName('main-text-chart')[0];
 
                 function normalizeDate(date) {
                     const d = new Date(date);
@@ -519,7 +516,11 @@ function getEvents(fetchurl) {
                 // NEW helper function to fetch Ticketmaster data using updated event info
                 function fetchTicketmasterDataForEvent(eventData) {
                     chart.update();
-                    let evidp = eventData.site_event_id.substring(2);
+                    // Remove the 'tm' prefix only if the event_id starts with it
+                    let evidp = eventData.site_event_id;
+                    if(evidp.startsWith('tm')){
+                        evidp = evidp.substring(2);
+                    }
                     const controller = new AbortController();
                     abortControllers.push(controller);
 
@@ -547,102 +548,108 @@ function getEvents(fetchurl) {
                     http.send();
                 }
 
-                // Modified chart icon click event: when the main-text-chart element is clicked,
-                // first abort any ongoing requests, then re-fetch the latest event data using the event ID,
-                // and finally update the charts using the fresh data.
-                charticon.addEventListener('click', function () {
-                    // Clear chart info fields
-                    document.querySelector('#chart-date').textContent = '';
-                    document.querySelector('#chart-event').textContent = '';
-                    document.querySelector('#chart-venue').textContent = '';
-                    document.querySelector('#chart-location').textContent = '';
-                    document.querySelector('#chart-time').textContent = '';
+                // Locate the chart icon element inside the cloned card
+                const charticon = card.getElementsByClassName('main-text-chart')[0];
+                if(charticon){
+                    // Add a debugging log when the chart icon is clicked
+                    charticon.addEventListener('click', function () {
 
-                    // Clear chart datasets and labels
-                    chart.data.datasets.splice(1,3);
-                    chart.data.labels.splice(0,100);
-                    chart.data.datasets[0].label = '';
-                    chart.data.datasets[0].data = [];
-                    chart.config.data.labels = [];
-                    chart.update();
+                        console.log("Chart icon clicked");
+                        // Clear chart info fields
+                        document.querySelector('#chart-date').textContent = '';
+                        document.querySelector('#chart-event').textContent = '';
+                        document.querySelector('#chart-venue').textContent = '';
+                        document.querySelector('#chart-location').textContent = '';
+                        document.querySelector('#chart-time').textContent = '';
 
-                    // Get event details from the parent event box
-                    const eventBoxParent = charticon.closest('.event-box');
-                    const daten = eventBoxParent.getAttribute('date');
-                    const eventn = eventBoxParent.getAttribute('name');
-                    const venuen = eventBoxParent.getAttribute('venue');
-                    const cityn = eventBoxParent.getAttribute('city');
-                    const staten = eventBoxParent.getAttribute('state');
-                    const timen = eventBoxParent.getAttribute('time');
-                    const eventurl = eventBoxParent.getAttribute('url');
-                    const eventid = eventBoxParent.getAttribute('eventid'); // new event id
+                        // Clear chart datasets and labels
+                        chart.data.datasets.splice(1,3);
+                        chart.data.labels.splice(0,100);
+                        chart.data.datasets[0].label = '';
+                        chart.data.datasets[0].data = [];
+                        chart.config.data.labels = [];
+                        chart.update();
 
-                    document.querySelector('#chart-date').textContent = daten;
-                    document.querySelector('#chart-event').textContent = eventn;
-                    document.querySelector('#chart-venue').textContent = venuen;
-                    document.querySelector('#chart-location').textContent = cityn + ',' + staten;
-                    document.querySelector('#chart-time').textContent = timen;
+                        // Get event details from the parent event box
+                        const eventBoxParent = charticon.closest('.event-box');
+                        const daten = eventBoxParent.getAttribute('date');
+                        const eventn = eventBoxParent.getAttribute('name');
+                        const venuen = eventBoxParent.getAttribute('venue');
+                        const cityn = eventBoxParent.getAttribute('city');
+                        const staten = eventBoxParent.getAttribute('state');
+                        const timen = eventBoxParent.getAttribute('time');
+                        const eventurl = eventBoxParent.getAttribute('url');
+                        const eventid = eventBoxParent.getAttribute('eventid');
 
-                    // Show loader for chart data
-                    document.querySelector('#tmloader').style.display = 'flex';
-                    document.querySelector('#tmerror').style.display = 'none';
-                    document.querySelector('#tmchart').style.display = 'none';
+                        document.querySelector('#chart-date').textContent = daten;
+                        document.querySelector('#chart-event').textContent = eventn;
+                        document.querySelector('#chart-venue').textContent = venuen;
+                        document.querySelector('#chart-location').textContent = cityn + ',' + staten;
+                        document.querySelector('#chart-time').textContent = timen;
 
-                    // Abort any ongoing fetches to ensure fresh data
-                    abortControllers.forEach(controller => controller.abort());
-                    abortControllers = [];
-
-                    // Refresh event data (using eventid) to get updated counts
-                    const refreshUrl = `https://ubik.wiki/api/event-venue/?site_event_id=${eventid}`;
-                    fetch(refreshUrl, {
-                        headers: {
-                            'Authorization': `Bearer ${token}`
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if(data.results && data.results.length > 0) {
-                            const updatedEvent = data.results[0];
-
-                            // Optionally update chart header with updated info
-                            document.querySelector('#chart-date').textContent = updatedEvent.date ? updatedEvent.date.slice(0,10).replaceAll("-","/") : daten;
-                            document.querySelector('#chart-event').textContent = updatedEvent.event_name || eventn;
-                            document.querySelector('#chart-venue').textContent = updatedEvent.venue_name || venuen;
-                            document.querySelector('#chart-location').textContent = updatedEvent.city + ',' + updatedEvent.state;
-                            document.querySelector('#chart-time').textContent = updatedEvent.time ? updatedEvent.time.slice(0,8) : timen;
-
-                            // Retrieve new Vividseats chart data
-                            vschartdata(updatedEvent.vdid);
-
-                            // Depending on the event URL source, update counts using the fresh data
-                            if(updatedEvent.event_url.includes('ticketmaster') || updatedEvent.event_url.includes('livenation')) {
-                                document.querySelector('#eventicon').style.display = 'none';
-                                document.querySelector('#tmurl').style.display = 'block';
-                                document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + eventid + "/details/";
-                                fetchTicketmasterDataForEvent(updatedEvent);
-                            } else {
-                                updateChartWithPrimaryAndPreferredForEvent(updatedEvent);
-                                document.querySelector('#eventicon').style.display = 'none';
-                                document.querySelector('#tmurl').style.display = 'block';
-                                document.querySelector('#tmurl').href = eventurl;
-                            }
-
-                            // Display the chart overlay
-                            document.querySelector('#graph-overlay').style.display = 'flex';
-                            document.querySelector('#closecharts').style.display = 'flex';
-                        }
-                    })
-                    .catch(error => {
-                        console.error("Error refreshing event data:", error);
-                        document.querySelector('#tmloader').style.display = 'none';
+                        // Show loader for chart data
+                        document.querySelector('#tmloader').style.display = 'flex';
+                        document.querySelector('#tmerror').style.display = 'none';
                         document.querySelector('#tmchart').style.display = 'none';
-                        document.querySelector('#tmerror').style.display = 'flex';
-                    });
-                });
 
-                let count = events.counts;
-                let src = events.event_url;
-                if (count && count.length > 0 || (src.includes('ticketmaster') || src.includes('livenation')) && !src.includes('ticketmaster.com.mx') && !src.includes('ticketmaster.co.uk') && !src.includes('ticketmaster.de')) {
+                        // Abort any ongoing fetches to ensure fresh data
+                        abortControllers.forEach(controller => controller.abort());
+                        abortControllers = [];
+
+                        // Refresh event data (using eventid) to get updated counts
+                        const refreshUrl = `https://ubik.wiki/api/event-venue/?site_event_id=${eventid}`;
+                        fetch(refreshUrl, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if(data.results && data.results.length > 0) {
+                                const updatedEvent = data.results[0];
+
+                                // Optionally update chart header with updated info
+                                document.querySelector('#chart-date').textContent = updatedEvent.date ? updatedEvent.date.slice(0,10).replaceAll("-","/") : daten;
+                                document.querySelector('#chart-event').textContent = updatedEvent.event_name || eventn;
+                                document.querySelector('#chart-venue').textContent = updatedEvent.venue_name || venuen;
+                                document.querySelector('#chart-location').textContent = updatedEvent.city + ',' + updatedEvent.state;
+                                document.querySelector('#chart-time').textContent = updatedEvent.time ? updatedEvent.time.slice(0,8) : timen;
+
+                                // Retrieve new Vividseats chart data
+                                vschartdata(updatedEvent.vdid);
+
+                                // Depending on the event URL source, update counts using the fresh data
+                                if(updatedEvent.event_url.includes('ticketmaster') || updatedEvent.event_url.includes('livenation')) {
+                                    document.querySelector('#eventicon').style.display = 'none';
+                                    document.querySelector('#tmurl').style.display = 'block';
+                                    document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + eventid + "/details/";
+                                    fetchTicketmasterDataForEvent(updatedEvent);
+                                } else {
+                                    updateChartWithPrimaryAndPreferredForEvent(updatedEvent);
+                                    document.querySelector('#eventicon').style.display = 'none';
+                                    document.querySelector('#tmurl').style.display = 'block';
+                                    document.querySelector('#tmurl').href = eventurl;
+                                }
+
+                                // Display the chart overlay
+                                document.querySelector('#graph-overlay').style.display = 'flex';
+                                document.querySelector('#closecharts').style.display = 'flex';
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error refreshing event data:", error);
+                            document.querySelector('#tmloader').style.display = 'none';
+                            document.querySelector('#tmchart').style.display = 'none';
+                            document.querySelector('#tmerror').style.display = 'flex';
+                        });
+                    });
+                } else {
+                    console.error("Chart icon element not found in card", card);
+                }
+
+                // Instead of the previous condition (which hid the chart icon when counts were missing), we now show it
+                // as long as a valid vivid_id exists.
+                if(events.vdid) {
                     charticon.style.display = 'flex';
                 } else {
                     charticon.style.display = 'none';
@@ -825,9 +832,9 @@ function getEvents(fetchurl) {
 
                 let eventUrl = events.event_url;
 
-                    eventname.addEventListener('click', function () {
-                        copyToClipboard(eventUrl);
-                    });
+                eventname.addEventListener('click', function () {
+                    copyToClipboard(eventUrl);
+                });
 
                 switch(true) {
                     case eventUrl.includes('showclix'):
@@ -1072,3 +1079,160 @@ input.addEventListener("keyup", function(event) {
         document.getElementById("search-button").click();
     }
 });
+
+
+
+
+
+function processTicketmasterData(data) {
+    let dates = [];
+    let amounts = [];
+
+    let preferredDates1 = [];
+    let preferredAmounts1 = [];
+
+    let preferredDates2 = [];
+    let preferredAmounts2 = [];
+
+    let preferredDates3 = [];
+    let preferredAmounts3 = [];
+
+    let prefSections = {};
+
+    if (data[0].venue && Array.isArray(data[0].venue.preferred_sections)) {
+        for (let i = 0; i < data[0].venue.preferred_sections.length; i++) {
+            if (data[0].venue.preferred_sections[i] && data[0].venue.preferred_sections[i].name) {
+                prefSections[`pref${i + 1}`] = data[0].venue.preferred_sections[i].name;
+            }
+        }
+    }
+
+    console.log(prefSections);
+
+    chart.data.datasets.splice(1, 3);
+    chart.update();
+
+    data.forEach(event => {
+        event.summaries.forEach((summary, index) => {
+
+            if (!summary.sections || summary.sections.length === 0) {
+                console.log("No sections available for this summary:", summary.scrape_date);
+                return;
+            }
+
+            // Filter out resale sections
+            const filteredSections = summary.sections.filter(section => section.type !== 'resale');
+            const totalAmount = filteredSections.reduce((accumulator, section) => accumulator + section.amount, 0);
+
+            if (totalAmount > 0) {
+                // Format the scrape_date string to "YYYY-MM-DD HH:MM"
+                const scrapeDateStr = summary.scrape_date;
+                const formattedDate = scrapeDateStr.slice(0, 16).replace("T", " ");
+                console.log("Formatted Date:", formattedDate);
+
+                dates.push(formattedDate);
+                amounts.push(totalAmount);
+
+                // Process for preferred section 1 (matching all "GA" sections)
+                if (prefSections.pref1 && prefSections.pref1 !== "null") {
+                    const matchingSections1 = filteredSections.filter(section => section.section.includes(prefSections.pref1));
+                    if (matchingSections1.length > 0) {
+                        const prefAmount1 = matchingSections1.reduce((acc, sec) => acc + sec.amount, 0);
+                        preferredDates1.push(formattedDate);
+                        preferredAmounts1.push(prefAmount1);
+                    }
+                }
+
+                // Process for preferred section 2
+                if (prefSections.pref2 && prefSections.pref2 !== "null") {
+                    const matchingSections2 = filteredSections.filter(section => section.section.includes(prefSections.pref2));
+                    if (matchingSections2.length > 0) {
+                        const prefAmount2 = matchingSections2.reduce((acc, sec) => acc + sec.amount, 0);
+                        preferredDates2.push(formattedDate);
+                        preferredAmounts2.push(prefAmount2);
+                    }
+                }
+
+                // Process for preferred section 3
+                if (prefSections.pref3 && prefSections.pref3 !== "null") {
+                    const matchingSections3 = filteredSections.filter(section => section.section.includes(prefSections.pref3));
+                    if (matchingSections3.length > 0) {
+                        const prefAmount3 = matchingSections3.reduce((acc, sec) => acc + sec.amount, 0);
+                        preferredDates3.push(formattedDate);
+                        preferredAmounts3.push(prefAmount3);
+                    }
+                }
+            } else {
+                console.log("No valid sections found for this summary.");
+            }
+        });
+    });
+
+    // Sort the collected data
+    const sortData = (amounts, dates) => {
+        const indices = Array.from({ length: dates.length }, (_, i) => i);
+        indices.sort((a, b) => new Date(dates[a]) - new Date(dates[b]));
+        return {
+            sortedAmounts: indices.map(i => amounts[i]),
+            sortedDates: indices.map(i => dates[i])
+        };
+    };
+
+    const sortedPrimaryData = sortData(amounts, dates);
+    const sortedData1 = sortData(preferredAmounts1, preferredDates1);
+    const sortedData2 = sortData(preferredAmounts2, preferredDates2);
+    const sortedData3 = sortData(preferredAmounts3, preferredDates3);
+
+    // Update chart with primary data
+    chart.data.datasets[0].data = sortedPrimaryData.sortedAmounts;
+    chart.config.data.labels = sortedPrimaryData.sortedDates;
+
+    // Ensure primary dataset is always present
+    chart.data.datasets = [{
+        data: sortedPrimaryData.sortedAmounts,
+        label: "TICKETMASTER Primary",
+        backgroundColor: 'rgba(0, 102, 51, 1)',
+        borderColor: 'rgba(0, 102, 51, 1)',
+        borderWidth: 1
+    }];
+
+    // Add other datasets conditionally, only if prefSections are not empty or "null"
+    if (prefSections.pref1 && prefSections.pref1 !== "null" && sortedData1.sortedAmounts.length > 0) {
+        chart.data.datasets.push({
+            data: sortedData1.sortedAmounts,
+            label: `${prefSections.pref1}`,
+            backgroundColor: 'rgba(52, 152, 219, 1)',
+            borderColor: 'rgba(52, 152, 219, 1)',
+            borderWidth: 1
+        });
+    }
+
+    if (prefSections.pref2 && prefSections.pref2 !== "null" && sortedData2.sortedAmounts.length > 0) {
+        chart.data.datasets.push({
+            data: sortedData2.sortedAmounts,
+            label: `${prefSections.pref2}`,
+            backgroundColor: 'rgba(46, 204, 113, 1)',
+            borderColor: 'rgba(46, 204, 113, 1)',
+            borderWidth: 1
+        });
+    }
+
+    if (prefSections.pref3 && prefSections.pref3 !== "null" && sortedData3.sortedAmounts.length > 0) {
+        chart.data.datasets.push({
+            data: sortedData3.sortedAmounts,
+            label: `${prefSections.pref3}`,
+            backgroundColor: 'rgba(241, 196, 15, 1)',
+            borderColor: 'rgba(241, 196, 15, 1)',
+            borderWidth: 1
+        });
+    }
+
+    console.log("Final datasets for the chart:", chart.data.datasets);
+
+    // Update the chart
+    chart.update();
+
+    document.querySelector("#tmchart").style.display = "flex";
+    document.querySelector("#tmloader").style.display = "none";
+    document.querySelector("#tmerror").style.display = "none";
+}
