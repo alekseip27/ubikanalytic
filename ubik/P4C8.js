@@ -217,6 +217,7 @@ if (events.tags && events.tags.includes('lowerable')) {
 
 
             let typingTimer;
+            let typingTimer2;
             const doneTypingInterval = 1000
 
 eventPrice.addEventListener('keyup', () => {
@@ -236,6 +237,28 @@ eventPrice.addEventListener('keyup', () => {
         }, doneTypingInterval);
     }
 });
+
+
+eventPrice.addEventListener('keyup', () => {
+    let crds = document.querySelectorAll('.event-box.selected.includesfees').length
+
+    clearTimeout(typingTimer2);
+    if (eventPrice.value && !document.querySelector('#vspricing').checked && crds>0) {
+        typingTimer = setTimeout(() => {
+            var Y_given = Number(eventPrice.value);
+            if (isNaN(Y_given)) {
+                console.error('Y_given is not a number');
+                return;
+            }
+
+            let X_predicted = (0.87 * Y_given);
+
+            let X_predicted_rounded = X_predicted.toFixed();
+            eventPrice.value = X_predicted_rounded;
+        }, doneTypingInterval);
+    }
+});
+
 
 
             eventPrice.addEventListener("keypress", (event) => {
