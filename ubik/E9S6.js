@@ -824,17 +824,10 @@ function getEvents(fetchurl) {
                 txtsource.textContent = events.scraper_name;
 
                 let eventUrl = events.event_url;
-
-                    if (eventUrl.includes('ticketmaster') || eventUrl.includes('livenation')) {
-                    eventname.addEventListener('click', function () {
-                        copyToClipboard('http://142.93.115.105:8100/event/' + evid + '/details/');
-                    });
-                        
-                } else {
+                
                     eventname.addEventListener('click', function () {
                         copyToClipboard(eventUrl);
                     });
-                }
 
                 switch(true) {
                     case eventUrl.includes('showclix'):
