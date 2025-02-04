@@ -829,6 +829,7 @@ function getEvents(fetchurl) {
                     eventname.addEventListener('click', function () {
                         copyToClipboard('http://142.93.115.105:8100/event/' + evid.slice(2) + '/details/');
                     });
+                        
                 } else {
                     eventname.addEventListener('click', function () {
                         copyToClipboard(eventUrl);
@@ -1010,10 +1011,6 @@ function getEvents(fetchurl) {
                     document.execCommand("copy");
                     $temp.remove();
                 }
-
-                eventname.addEventListener('click', function() { 
-                    copyToClipboard(eventurl); 
-                });
 
                 cardContainer.appendChild(card);
             });
