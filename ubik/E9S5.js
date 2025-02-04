@@ -827,7 +827,7 @@ function getEvents(fetchurl) {
 
                     if (eventUrl.includes('ticketmaster') || eventUrl.includes('livenation')) {
                     eventname.addEventListener('click', function () {
-                        copyToClipboard('http://142.93.115.105:8100/event/' + evid.slice(2) + '/details/');
+                        copyToClipboard('http://142.93.115.105:8100/event/' + evid + '/details/');
                     });
                         
                 } else {
