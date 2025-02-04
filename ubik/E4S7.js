@@ -798,12 +798,12 @@ function getEvents(fetchurl) {
 
                 const buybutton = card.getElementsByClassName('main-buy-button')[0];
                 buybutton.addEventListener('click', function() {
-                    window.location.assign('https://www.ubikanalytic.com/event?id=' + evid);
+                    window.location.assign('https://www.ubikanalytic.com/event?id=' + encodeURIComponent(events.site_event_id));
                 });
 
                 const mbutton = card.getElementsByClassName('manualbutton')[0];
                 mbutton.addEventListener('click', function() {
-                    window.location.assign('https://www.ubikanalytic.com/buy-manual?id=' + evid);
+                    window.location.assign('https://www.ubikanalytic.com/buy-manual?id=' + encodeURIComponent(events.site_event_id));
                 });
 
                 const eventname = card.getElementsByClassName('main-text-event')[0];
