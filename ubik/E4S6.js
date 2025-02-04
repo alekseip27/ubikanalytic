@@ -668,7 +668,7 @@ function getEvents(fetchurl) {
                 const dpd = card.getElementsByClassName('main-text-aday')[0];
 
                 const scrapeurl = (eventid) => {
-                    const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid.split(2);
+                    const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid
 
                     const request = fetch(url)
                         .then(response => response.json())
