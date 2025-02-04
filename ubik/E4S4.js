@@ -773,7 +773,7 @@ function getEvents(fetchurl) {
                 let scrapebutton = card.getElementsByClassName('scrape-div-fresh')[0];
 
                 scrapebutton.addEventListener('click',function(){
-                    scrapetm(evid.substring(2));
+                    scrapetm(evid.split(2));
                     primrem.textContent = '';
                     dpd.textContent = '';
                 });
@@ -781,7 +781,7 @@ function getEvents(fetchurl) {
                 rescrapebutton.addEventListener('click',function(){
                     primrem.textContent = '';
                     dpd.textContent = '';
-                    scrapeurl(evid.substring(2))
+                    scrapeurl(evid.split(2))
                 });
 
                 if(!events.event_url.includes('ticketmaster.com.mx') && (events.event_url.includes('ticketmaster.com') || events.event_url.includes('livenation'))) {
