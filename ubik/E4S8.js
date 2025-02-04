@@ -999,7 +999,7 @@ function getEvents(fetchurl) {
                     var http = new XMLHttpRequest();
                     var url = "https://ubik.wiki/api/update/primary-events/";
                     var params = JSON.stringify({
-                        "site_event_id": eventid,
+                        "site_event_id": encodeURIComponent(events.site_event_id),
                         "hidden": "true"
                     });
                     http.open("PUT", url, true);
