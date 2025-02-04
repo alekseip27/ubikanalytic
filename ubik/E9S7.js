@@ -238,7 +238,7 @@ function getEvents(fetchurl) {
                     // Return the name of the day
                     return daysOfWeek[dayOfWeek];
                 }
-                
+
                 function vschartdata(VDID) {
                     chartvs.data.datasets[0].data = [];
                     chartvs.data.datasets[1].data = [];
@@ -355,7 +355,7 @@ function getEvents(fetchurl) {
                 }
 
                 const charticon = card.getElementsByClassName('main-text-chart')[0];
-                
+
                 function normalizeDate(date) {
                     const d = new Date(date);
                     const year = d.getFullYear();
@@ -761,7 +761,7 @@ function getEvents(fetchurl) {
                 let scrapebutton = card.getElementsByClassName('scrape-div-fresh')[0];
 
                 scrapebutton.addEventListener('click',function(){
-                    scrapetm(evid.substring(2));
+                    scrapetm(evid);
                     primrem.textContent = '';
                     dpd.textContent = '';
                 });
@@ -769,7 +769,7 @@ function getEvents(fetchurl) {
                 rescrapebutton.addEventListener('click',function(){
                     primrem.textContent = '';
                     dpd.textContent = '';
-                    scrapeurl(evid.substring(2));
+                    scrapeurl(evid)
                 });
 
                 if(!events.event_url.includes('ticketmaster.com.mx') && (events.event_url.includes('ticketmaster.com') || events.event_url.includes('livenation'))) {
@@ -824,7 +824,7 @@ function getEvents(fetchurl) {
                 txtsource.textContent = events.scraper_name;
 
                 let eventUrl = events.event_url;
-                
+
                     eventname.addEventListener('click', function () {
                         copyToClipboard(eventUrl);
                     });
@@ -969,10 +969,10 @@ function getEvents(fetchurl) {
                         aday.textContent = events.app_142_difference_per_day;
                         card.setAttribute('perday', events.app_142_difference_per_day);
                     }
-                } 
+                }
                 if(events.event_url.includes('ticketmaster') || events.event_url.includes('livenation')){
                     txtsource.addEventListener('click', function(){
-                        window.open('http://142.93.115.105:8100/event/' + evid.substring(2) + '/details/', "142");
+                        window.open('http://142.93.115.105:8100/event/' + evid + '/details/', "142");
                     });
                     txtsource.classList.add("clickable");
                 }
