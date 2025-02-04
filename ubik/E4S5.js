@@ -668,7 +668,7 @@ function getEvents(fetchurl) {
                 const dpd = card.getElementsByClassName('main-text-aday')[0];
 
                 const scrapeurl = (eventid) => {
-                    const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid;
+                    const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid.split(2);
 
                     const request = fetch(url)
                         .then(response => response.json())
@@ -733,7 +733,7 @@ function getEvents(fetchurl) {
                     const url = 'https://shibuy.co:8443/scrapeurl';
                     let eventidscrape = eventid;
                     if(eventidscrape.startsWith('tm')){
-                        eventidscrape = eventid.substring(2);
+                        eventidscrape = eventid.split(2);
                     }
                     const data = {
                         eventid: eventidscrape
@@ -773,7 +773,7 @@ function getEvents(fetchurl) {
                 let scrapebutton = card.getElementsByClassName('scrape-div-fresh')[0];
 
                 scrapebutton.addEventListener('click',function(){
-                    scrapetm(evid.split(2));
+                    scrapetm(evid);
                     primrem.textContent = '';
                     dpd.textContent = '';
                 });
@@ -781,7 +781,7 @@ function getEvents(fetchurl) {
                 rescrapebutton.addEventListener('click',function(){
                     primrem.textContent = '';
                     dpd.textContent = '';
-                    scrapeurl(evid.split(2))
+                    scrapeurl(evid)
                 });
 
                 if(!events.event_url.includes('ticketmaster.com.mx') && (events.event_url.includes('ticketmaster.com') || events.event_url.includes('livenation'))) {
