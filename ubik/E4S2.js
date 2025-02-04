@@ -201,6 +201,11 @@ function getEvents(fetchurl) {
 
                 card.setAttribute('eventid', events.site_event_id);
 
+                if (evid.startsWith("tm")) {
+                card.setAttribute('eventids', evidp);
+                }
+
+                
                 if(events.time){
                     card.setAttribute('time', events.time.slice(0, 8));
                 }
