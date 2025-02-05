@@ -200,7 +200,7 @@ document.querySelector('.locked-content').style.display = 'none';
 
 if (events.tags && events.tags.includes('lowerable')) {
                 containslowerable = true;
-            }
+}
 
 
             const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
@@ -243,7 +243,7 @@ eventPrice.addEventListener('keyup', () => {
     let crds = document.querySelectorAll('.event-box.selected.includesfees').length
 
     clearTimeout(typingTimer2);
-    if (eventPrice.value && !document.querySelector('#vspricing').checked && crds>0) {
+    if (eventPrice.value && !document.querySelector('#vspricing').checked && document.querySelector('#vspricing').checked && crds>0) {
         typingTimer = setTimeout(() => {
             var Y_given = Number(eventPrice.value);
             if (isNaN(Y_given)) {
@@ -252,7 +252,6 @@ eventPrice.addEventListener('keyup', () => {
             }
 
             let X_predicted = (0.87 * Y_given);
-
             let X_predicted_rounded = X_predicted.toFixed();
             eventPrice.value = X_predicted_rounded;
         }, doneTypingInterval);
