@@ -806,6 +806,33 @@ function getEvents(fetchurl) {
                     window.location.assign('https://www.ubikanalytic.com/buy-manual?id=' + encodeURIComponent(events.site_event_id));
                 });
 
+                
+//
+
+const checkbox = card.getElementsByClassName('main-checkbox-favorite')[0]
+
+checkbox.checked = events.favorites
+let eventidc = events.site_event_id
+
+
+checkbox.addEventListener('click', function() {
+
+
+var http = new XMLHttpRequest();
+var url = "https://ubik.wiki/api/update/primary-events/"
+var params = JSON.stringify({
+"site_event_id": eventidc,
+"favorites": checkbox.checked
+})
+http.open("PUT", url, true);
+http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+http.setRequestHeader('Authorization', `Bearer ${token}`);
+http.send(params);
+});
+
+//
+
+
                 const eventname = card.getElementsByClassName('main-text-event')[0];
                 eventname.textContent = events.event_name;
                 if(eventname.textContent.length > 10) {
