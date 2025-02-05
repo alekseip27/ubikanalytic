@@ -221,8 +221,10 @@ if (events.tags && events.tags.includes('lowerable')) {
             const doneTypingInterval = 1000
 
 eventPrice.addEventListener('keyup', () => {
+    let crds = document.querySelectorAll('.event-box.selected.includesfees').length
+    
     clearTimeout(typingTimer);
-    if (eventPrice.value && document.querySelector('#vspricing').checked) {
+    if (eventPrice.value && document.querySelector('#vspricing').checked && crds<=0) {
         typingTimer = setTimeout(() => {
             var Y_given = Number(eventPrice.value);
             if (isNaN(Y_given)) {
@@ -243,7 +245,7 @@ eventPrice.addEventListener('keyup', () => {
     let crds = document.querySelectorAll('.event-box.selected.includesfees').length
 
     clearTimeout(typingTimer2);
-    if (eventPrice.value && !document.querySelector('#vspricing').checked && document.querySelector('#vspricing').checked && crds>0) {
+    if (eventPrice.value && document.querySelector('#vspricing').checked && crds>0) {
         typingTimer = setTimeout(() => {
             var Y_given = Number(eventPrice.value);
             if (isNaN(Y_given)) {
