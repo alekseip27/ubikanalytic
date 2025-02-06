@@ -537,6 +537,8 @@ http.onload = function() {
                 });
                 checkexp()
                 checkfeeitems()
+                checkpurchdates()
+                checkdates()
                 $('#mainpricing').css("display", "block");
                 $('#loadingpricing').css("display", "none");
                 $('#samplestyle2').hide();
@@ -1589,6 +1591,108 @@ function checkfeeitems(){
         .catch((error) => {
             console.error('Error:', error);
         });
+}
+
+async function checkdates() {
+    const curUser = firebase.auth().currentUser;
+    const myFS = firebase.firestore();
+    const docRef = myFS.doc("users/" + curUser.uid);
+
+    try {
+        const docSnap = await docRef.get();
+        const data = docSnap.data();
+        const pauth = data['pyeo'];
+        const emails = data['Email'];
+        const eventBoxes = document.querySelectorAll('.event-box');
+        const maxConcurrentRequests = 50;
+        let concurrentRequestCount = 0;
+
+        for (let i = 0; i < eventBoxes.length; i++) {
+            const eventBox = eventBoxes[i];
+            const pdateElement = eventBox.querySelector('.main-text-pdate');
+
+            if (pdateElement.textContent || eventBox.id === 'samplestyle') {
+                continue;
+            }
+
+            const eventId = eventBox.id;
+            const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_inventory_purchdate?searchkey=${eventId}&user=${emails}`;
+
+            if (concurrentRequestCount >= maxConcurrentRequests) {
+                await sleep(1000);
+            }
+
+            try {
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': pauth
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error('Response not OK');
+                }
+
+                // Handle the response as needed
+                // const data = await response.json();
+                // processData(data);
+
+            } catch (error) {
+                console.error('Error:', error);
+            } finally {
+                concurrentRequestCount--;
+            }
+
+            concurrentRequestCount++;
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+function checkpurchdates(){
+
+fetch('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_events_purchdate')
+  .then(response => response.json())
+  .then(data => {
+    data.forEach(item => {
+      // Get the element by its eventid
+      const element = document.getElementById(String(item.eventid));
+      if (element) {
+        // Calculate days difference and set as an attribute
+        let curdate = item.days_purch;
+        const daysDiff = getDaysDifference(curdate);
+        element.setAttribute('createddate', daysDiff);
+
+        // Now, select the element with class 'main-text-pdate' inside the current element.
+        const mainTextPdateElement = element.querySelector('.main-text-pdate');
+        if (mainTextPdateElement) {
+        mainTextPdateElement.textContent = daysDiff + ' Days'
+        }
+      }
+    });
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+
+function getDaysDifference(timestamp) {
+  // Ensure the timestamp is a number
+  const ts = Number(timestamp);
+  if (isNaN(ts)) {
+    throw new Error('Invalid timestamp provided');
+  }
+
+  const dateFromTimestamp = moment.tz(ts, "America/New_York");
+
+  // Get the current date/time in the America/New_York timezone
+  const currentDate = moment.tz("America/New_York");
+
+  // Calculate the difference in days and use Math.abs to ensure it's non-negative
+  const daysDifference = Math.abs(dateFromTimestamp.diff(currentDate, 'days'));
+
+  return daysDifference;
 }
 
 
