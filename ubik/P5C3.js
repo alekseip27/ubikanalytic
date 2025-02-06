@@ -1668,6 +1668,7 @@ fetch('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_events_purchdate')
         const mainTextPdateElement = element.querySelector('.main-text-pdate');
         if (mainTextPdateElement) {
         mainTextPdateElement.textContent = daysDiff + ' Days'
+        element.setAttribute('purchdate',daysDiff)
         }
       }
     });
