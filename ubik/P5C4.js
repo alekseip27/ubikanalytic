@@ -400,7 +400,7 @@ $('.event-box.selected').addClass('pricechange');
 
 function updateLastUpdated(card, events) {
 const lastUpdated = card.querySelector('.main-text-updated');
-const updatedTime = moment.utc(events.lastPriceUpdate).subtract(4, 'hours').format('MM-DD HH:mm');
+const updatedTime = moment.utc(events.lastPriceUpdate).subtract(5, 'hours').format('MM-DD HH:mm');
 
 lastUpdated.textContent = updatedTime;
 }
