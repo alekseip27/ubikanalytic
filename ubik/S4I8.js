@@ -47,6 +47,9 @@ const venueprefix = events.venue_prefix;
 const sourcecard = card.getElementsByClassName('main-text-sourcei')[0]
 sourcecard.textContent = source
 
+const sourcecard = card.getElementsByClassName('main-text-contains')[0]
+sourcecard.textContent = contains
+
 const browsercard = card.getElementsByClassName('main-text-browser')[0]
 browsercard.textContent = browser
 
