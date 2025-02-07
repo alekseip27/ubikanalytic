@@ -37,6 +37,7 @@ card.setAttribute('id', events.id);
 card.setAttribute('checked','false')
 
 const instructions = events.instructions;
+const contains = events.contains;
 const browser = events.browser;
 const source = events.source;
 const id = events.id;
@@ -71,6 +72,7 @@ card.addEventListener('click', function(){
     document.querySelector('#edit-event-prefix').value = ''
     document.querySelector('#edit-venue-prefix').value = ''
     document.querySelector('#edit-instructions').value = ''
+    document.querySelector('#edit-contains').value = ''
 
     if (event.target.closest('.main-text-delete')) {
     return;
@@ -83,6 +85,7 @@ card.addEventListener('click', function(){
     document.querySelector('#edit-source').value = source
     document.querySelector('#edit-browser').value = browser
     document.querySelector('#edit-instructions').value = instructions
+    document.querySelector('#edit-contains').value = contains
     document.querySelector('#edit-event-prefix').value = eventprefix
     document.querySelector('#edit-venue-prefix').value = venueprefix
     })
@@ -183,6 +186,7 @@ let itemid = document.querySelector('#edit-id').value
 let source = document.querySelector('#edit-source').value
 let browser = document.querySelector('#edit-browser').value
 let instructions = document.querySelector('#edit-instructions').value
+let contains = document.querySelector('#edit-contains').value
 let eventprefix = document.querySelector('#edit-event-prefix').value
 let venueprefix = document.querySelector('#edit-venue-prefix').value
 const endpointUrl = 'https://ubik.wiki/api/update/source-instructions/'
@@ -192,6 +196,7 @@ id: itemid,
 source: source,
 browser: browser,
 instructions: instructions,
+contains: contains,
 event_prefix: eventprefix,
 venue_prefix: venueprefix
 };
