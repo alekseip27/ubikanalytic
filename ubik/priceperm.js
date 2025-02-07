@@ -130,7 +130,8 @@ if (email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com') {
       $('#queue').css('display','flex');
       $('#history').css('display','flex');
       $('#errorlog').css('display','flex');
-       
+      $('#eventslistchart').css('display','flex');
+
       $('.main-confirm-button').css('display','flex');
        
       $('#normalplaceholder').css('display','none');
