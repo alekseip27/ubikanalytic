@@ -601,7 +601,6 @@ document.querySelector('#purchasesource').textContent = eventdata.scraper_name
 document.querySelector('#eventid').textContent = eventdata.event_id
 document.querySelector('#purchasealltime').textContent = eventdata.purchase_total
 document.querySelector('#presalecode').textContent = eventdata.presale_code
-document.querySelector('#notes').textContent = eventdata.purchase_notes
 
 document.querySelector('#purchaseurgency').textContent = eventdata.buying_urgency
 
