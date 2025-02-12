@@ -328,7 +328,7 @@ function getEvents(fetchurl) {
 
                 const charteventdate = card.getElementsByClassName('charteventdate')[0];
                 if (eventData.date) {
-                    charteventdate.textContent = '-' eventData.date;
+                    charteventdate.textContent = '-' + eventData.date;
                 } else {
                     card.getElementsByClassName('chart-datebox')[0].style.display = 'none';
                 }
