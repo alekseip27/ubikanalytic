@@ -202,9 +202,6 @@ function getEvents(fetchurl) {
                 }
 
                 const buybutton = card.getElementsByClassName('event-buy')[0];
-                buybutton.addEventListener('click', function() {
-                    window.location.assign('https://www.ubikanalytic.com/event?id=' + evid);
-                });
                 
                 buybutton.addEventListener('click', function() {
                 const url = 'https://www.ubikanalytic.com/event?id=' + evid;
