@@ -204,6 +204,7 @@ function populateEmails(items, selectedState, emailsused) {
             document.querySelector('#gender').textContent = accountInfo.gender;
             document.querySelector('#street').textContent = accountInfo.address;
             document.querySelector('#city').textContent = accountInfo.city;
+            document.querySelector('#state').textContent = accountInfo.state;
             document.querySelector('#zip').textContent = accountInfo.zip;
         } catch (error) {
             console.error('Error displaying buyer data:', error);
@@ -432,6 +433,7 @@ function erasedata(){
     document.querySelector('#gender').textContent = ''
     document.querySelector('#street').textContent = ''
     document.querySelector('#city').textContent = ''
+    document.querySelector('#state').textContent = ''
     document.querySelector('#zip').textContent = ''
     document.querySelector('#dnum3').textContent = ''
     document.querySelector('#dnum4').textContent = ''
@@ -553,7 +555,7 @@ function (data) {
     let evurl = data.results[0].event_url
     states = data.results[0].state
     state = getStateName(states)
-
+    
 
     emailsarray = []
     emailsused = data.results[0].used_emails
