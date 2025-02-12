@@ -603,6 +603,7 @@ document.querySelector('#purchasealltime').textContent = eventdata.purchase_tota
 document.querySelector('#presalecode').textContent = eventdata.presale_code
 
 document.querySelector('#purchaseurgency').textContent = eventdata.buying_urgency
+document.querySelector('#notes').textContent = eventdata.purchase_notes
 
 document.querySelector('#purchaserequest').textContent = eventdata.added_timestamp
 category = eventdata.category
@@ -1349,7 +1350,6 @@ function part4(url) {
     let results = response.results[0]
     let browser = results.browser
     let instructions = results.instructions
-    document.querySelector('#notes').textContent = eventdata.purchase_notes
     document.querySelector('#browser').textContent = browser
     document.querySelector('#instructions').textContent = instructions
 
