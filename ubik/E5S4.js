@@ -30,7 +30,8 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     let keywords4 = document.querySelector('#categoryselect').value
     let keywords5 = document.querySelector('#sourceselect').value
     let keywords6 = document.querySelector('#sortby').value
-
+    let keywords7 = encodeURIComponent(document.getElementById('searchbar3').value)
+ 
     let favoritecbox = document.getElementById('favorite').checked
     let preonsales = document.getElementById('preonsales').checked
     $('.event-box').hide()
@@ -66,7 +67,7 @@ if (keywords5 === 'ticketmaster') {
     params.push(`event_url__icontains=ticketmaster&event_url__icontains=livenation`);
 }
 
-    if (keywords5 === 'nontm') {
+if (keywords5 === 'nontm') {
     params.push(`event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster`);
 }
 
@@ -93,6 +94,9 @@ if (keywords6 === 'fastmovement' && keywords5 === 'seetickets') {
     params.push(`app_142_primary_amount__gt=0`);
 }
 
+if(keywords7.length>0){
+params.push('status__icontains=' + keywords7)
+}
 
 if (favoritecbox) {
     params.push('&favorites__iexact=true');
@@ -101,7 +105,7 @@ if (favoritecbox) {
 if (preonsales) {
     params.push('&is_preonsale__iexact=true');
 }
-
+        
     params.push('limit=100');
 
     xanoUrl = ''
