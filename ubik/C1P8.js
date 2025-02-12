@@ -205,10 +205,16 @@ function getEvents(fetchurl) {
                 buybutton.addEventListener('click', function() {
                     window.location.assign('https://www.ubikanalytic.com/event?id=' + evid);
                 });
-
+                
+                buybutton.addEventListener('click', function() {
+                const url = 'https://www.ubikanalytic.com/event?id=' + evid;
+                window.open(url, '_blank', 'noopener,noreferrer');
+                });
+                
                 const manualbuy = card.getElementsByClassName('event-manual')[0];
                 manualbuy.addEventListener('click', function() {
-                    window.location.assign('https://www.ubikanalytic.com/buy-manual?id=' + evid);
+                const url = 'https://www.ubikanalytic.com/buy-manual?id=' + evid
+                window.open(url, '_blank', 'noopener,noreferrer');
                 });
 
                 const favoriteIcon1 = card.getElementsByClassName('favorite-icon1')[0];
@@ -328,7 +334,7 @@ function getEvents(fetchurl) {
 
                 const charteventdate = card.getElementsByClassName('charteventdate')[0];
                 if (eventData.date) {
-                    charteventdate.textContent = '-' + eventData.date;
+                    charteventdate.textContent = eventData.date + '-'
                 } else {
                     card.getElementsByClassName('chart-datebox')[0].style.display = 'none';
                 }
