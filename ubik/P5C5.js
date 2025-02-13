@@ -322,6 +322,7 @@ card.querySelector('.main-text-qty').textContent = events.quantity;
 card.querySelector('.main-field-price').value = events.listPrice;
 card.querySelector('.main-text-cst').textContent = `$${events.cost}`;
 card.querySelector('.main-text-notes').textContent = events.notes;
+card.querySelector('.main-text-inhand').textContent = events.inHandDate;
 
 updateLowerableCheck(lowerableCheck, events, eventID);
 updateLastUpdated(card, events);
