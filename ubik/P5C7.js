@@ -1662,11 +1662,18 @@ fetch('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_events_purchdate')
       if (element) {
         // Calculate days difference and set as an attribute
         let curdate = item.days_purch;
+        let inhands = item.in_hand_date;
         const daysDiff = getDaysDifference(curdate);
         element.setAttribute('createddate', daysDiff);
 
         // Now, select the element with class 'main-text-pdate' inside the current element.
         const mainTextPdateElement = element.querySelector('.main-text-pdate');
+        const maintextinhands = element.querySelector('.main-text-inhands');
+
+          if(maintextinhands){
+          maintextinhands.textContent = inhands
+          }
+          
         if (mainTextPdateElement) {
         mainTextPdateElement.textContent = daysDiff + ' Days'
         element.setAttribute('purchdate',daysDiff)
