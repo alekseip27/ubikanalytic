@@ -54,7 +54,7 @@
               let marcus = data['marcus']
               let pricing = data['pricing']
               let emailsacc = data['emailsaccess']
-
+              pyeo = data['pyeo']
 if(emailsacc){
   $('#emaildropdown').css('display','flex');
   $('#manage-emails').css('display','flex');  
