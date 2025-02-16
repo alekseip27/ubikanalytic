@@ -1598,7 +1598,7 @@ function checkfeeitems(){
         });
 }
 
-async function fetchInventoryDataForEvents() {
+async function checkdates() {
     const eventBoxes = document.querySelectorAll('.event-box');
     const maxConcurrentRequests = 50;
     let concurrentRequestCount = 0;
