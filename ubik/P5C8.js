@@ -1379,6 +1379,7 @@ function displayChartLoadingFailed() {
 }
 
 // Function to get pdates
+
 async function getpdates() {
     const curUser = firebase.auth().currentUser;
     const myFS = firebase.firestore();
@@ -1395,6 +1396,9 @@ async function getpdates() {
         for (let i = 0; i < eventBoxes.length; i++) {
             const eventBox = eventBoxes[i];
             const pdateElement = eventBox.querySelector('.main-text-pdate');
+
+
+          
 
             if (pdateElement.textContent || eventBox.id === 'samplestyle') {
                 continue;
@@ -1594,62 +1598,66 @@ function checkfeeitems(){
         });
 }
 
-async function checkdates() {
-    const curUser = firebase.auth().currentUser;
-    const myFS = firebase.firestore();
-    const docRef = myFS.doc("users/" + curUser.uid);
+async function fetchInventoryDataForEvents() {
+    const eventBoxes = document.querySelectorAll('.event-box');
+    const maxConcurrentRequests = 50;
+    let concurrentRequestCount = 0;
+    const fetchPromises = [];
+    
+    for (const eventBox of eventBoxes) {
+      // Skip the event box with id 'samplestyle'
+      if (eventBox.id === 'samplestyle') continue;
 
-    try {
-        const docSnap = await docRef.get();
-        const data = docSnap.data();
-        const pauth = data['pyeo'];
-        const emails = data['Email'];
-        const eventBoxes = document.querySelectorAll('.event-box');
-        const maxConcurrentRequests = 50;
-        let concurrentRequestCount = 0;
+      const eventId = eventBox.id;
+      const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_inventory_purchdate?searchkey=${eventId}&user=aleksei@ubikanalytic.com`;
 
-        for (let i = 0; i < eventBoxes.length; i++) {
-            const eventBox = eventBoxes[i];
-            const pdateElement = eventBox.querySelector('.main-text-pdate');
+      // Wait until the number of concurrent requests is below the limit
+      while (concurrentRequestCount >= maxConcurrentRequests) {
+        await new Promise(resolve => setTimeout(resolve, 50)); // wait 50ms before checking again
+      }
 
-            if (pdateElement.textContent || eventBox.id === 'samplestyle') {
-                continue;
-            }
+      concurrentRequestCount++;
 
-            const eventId = eventBox.id;
-            const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_inventory_purchdate?searchkey=${eventId}&user=${emails}`;
-
-            if (concurrentRequestCount >= maxConcurrentRequests) {
-                await sleep(1000);
-            }
-
-            try {
-                const response = await fetch(url, {
-                    headers: {
-                        'Authorization': pauth
-                    }
-                });
-
-                if (!response.ok) {
-                    throw new Error('Response not OK');
-                }
-
-                // Handle the response as needed
-                // const data = await response.json();
-                // processData(data);
-
-            } catch (error) {
-                console.error('Error:', error);
-            } finally {
-                concurrentRequestCount--;
-            }
-
-            concurrentRequestCount++;
+      const fetchPromise = fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${pyeo}`
         }
-    } catch (error) {
-        console.error('Error:', error);
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          const inhands = eventBox.querySelector('.main-text-inhands');
+          if (inhands) {
+            inhands.textContent = data.in_hand_date
+          }
+
+          const pdate = eventBox.querySelector('.main-text-pdate');
+          if (pdate) {
+            const daysDiff = getDaysDifference(curdate);
+            pdate.textContent = daysDiff + ' Days'
+          }
+
+        })
+        .catch(error => {
+        })
+        .finally(() => {
+          concurrentRequestCount--;
+        });
+
+      fetchPromises.push(fetchPromise);
     }
-}
+
+    // Wait for all fetch requests to complete
+    await Promise.all(fetchPromises);
+    console.log('All fetch requests completed.');
+  }
+
+
+
 
 function checkpurchdates(){
 
@@ -1666,7 +1674,6 @@ fetch('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_events_purchdate')
         const daysDiff = getDaysDifference(curdate);
         element.setAttribute('createddate', daysDiff);
 
-        // Now, select the element with class 'main-text-pdate' inside the current element.
         const mainTextPdateElement = element.querySelector('.main-text-pdate');
         const maintextinhands = element.querySelector('.main-text-inhands');
 
