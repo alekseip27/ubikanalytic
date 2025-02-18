@@ -539,7 +539,6 @@ http.onload = function() {
                 checkexp()
                 checkfeeitems()
                 checkpurchdates()
-                checkdates()
                 $('#mainpricing').css("display", "block");
                 $('#loadingpricing').css("display", "none");
                 $('#samplestyle2').hide();
@@ -1597,66 +1596,6 @@ function checkfeeitems(){
             console.error('Error:', error);
         });
 }
-
-async function checkdates() {
-    const eventBoxes = document.querySelectorAll('.event-box');
-    const maxConcurrentRequests = 50;
-    let concurrentRequestCount = 0;
-    const fetchPromises = [];
-    
-    for (const eventBox of eventBoxes) {
-      // Skip the event box with id 'samplestyle'
-      if (eventBox.id === 'samplestyle') continue;
-
-      const eventId = eventBox.id;
-      const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_inventory_purchdate?searchkey=${eventId}&user=aleksei@ubikanalytic.com`;
-
-      // Wait until the number of concurrent requests is below the limit
-      while (concurrentRequestCount >= maxConcurrentRequests) {
-        await new Promise(resolve => setTimeout(resolve, 50)); // wait 50ms before checking again
-      }
-
-      concurrentRequestCount++;
-
-      const fetchPromise = fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${pyeo}`
-        }
-      })
-        .then(response => {
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          return response.json();
-        })
-        .then(data => {
-          const inhands = eventBox.querySelector('.main-text-inhands');
-          if (inhands) {
-            inhands.textContent = data.in_hand_date
-          }
-
-          const pdate = eventBox.querySelector('.main-text-pdate');
-          if (pdate) {
-            const daysDiff = getDaysDifference(curdate);
-            pdate.textContent = daysDiff + ' Days'
-          }
-
-        })
-        .catch(error => {
-        })
-        .finally(() => {
-          concurrentRequestCount--;
-        });
-
-      fetchPromises.push(fetchPromise);
-    }
-
-    // Wait for all fetch requests to complete
-    await Promise.all(fetchPromises);
-    console.log('All fetch requests completed.');
-  }
-
-
 
 
 function checkpurchdates(){
