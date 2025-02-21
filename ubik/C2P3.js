@@ -90,7 +90,7 @@ function constructURL(next) {
     }
 
     if (keywords6 === 'fastmovement') {
-        params.push(`app_142_difference_per_day__sort=-1`);
+    params.push(`app_142_scrape_date__ote=10&app_142_difference_per_day__sort=-1`);
     }
     if (keywords6 === 'fastmovement' && keywords5 === 'seetickets') {
         params.push(`app_142_primary_amount__gt=0`);
