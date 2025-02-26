@@ -299,7 +299,6 @@ if (preonsales) {
             card.setAttribute('time', events.time.slice(0, 8));
             }
             card.setAttribute('venue', events.venue_name);
-            card.setAttribute('source', events.scraper_name);
             card.setAttribute('vivid_id', events.vdid);
             card.setAttribute('capacity', events.venue_capacity);
 
@@ -1077,6 +1076,7 @@ const scrapetm = (eventid) => {
 
                 if(prefixes && prefixes.source){
                 txtsource.textContent = prefixes.source
+                card.setAttribute('source', prefixes.source);
                 }
 
 
