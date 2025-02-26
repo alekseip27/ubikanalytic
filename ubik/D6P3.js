@@ -3,7 +3,7 @@ let intervalIds;
 
 function retryClickingSearchBar() {
     if (token.length === 40) {
-
+initializeSourceInstructions()
 
 document.getElementById('purchasetotal').setAttribute('min', '0');
 document.getElementById('quantityper').setAttribute('min', '0');
@@ -37,7 +37,7 @@ document.getElementById('urlx').addEventListener('click', function() {
 });
 
 document.getElementById('url2').addEventListener('click', function() {
-    copyToClipboard(document.getElementById('url2').textContent);
+    copyToClipboard(document.getElementById('url2x').textContent);
 });
 
 var pkid = new URLSearchParams(window.location.search).get('id');
@@ -51,7 +51,21 @@ headers: {
         const eventData = data.results[0];
         document.getElementById('event').textContent = eventData.event_name;
         document.getElementById('venue').textContent = eventData.venue_name;
-        getsource(eventData.event_url)
+
+        let eventUrl = eventData.event_url
+        let prefixes = retrievefetch(eventUrl);
+
+        if(prefixes && prefixes.source){
+        document.getElementById('source').textContent = prefixes.source
+        }
+
+
+        if(prefixes && prefixes.source.includes('TM')) {
+            document.getElementById('url2x').textContent = 'http://142.93.115.105:8100/event/' + pkid + '/details/';
+            document.getElementById('url2box').style.display = 'flex';
+        }
+
+
         document.getElementById('date').textContent = eventData.date;
         document.getElementById('time').textContent = eventData.time;
 
@@ -82,11 +96,6 @@ dategoal = `${month}/${day}/${year}, ${formattedHours}:${minutes} ${amPm}`;
   estdates = `${month}/${day}/${year} ${hours}:${minutes}`;
 
 
-
-        if(eventData.Event_Other_Master_Source_Formula === 'TM') {
-            document.getElementById('url2').textContent = 'http://142.93.115.105:8100/event/' + pkid + '/details/';
-            document.getElementById('url2box').style.display = 'flex';
-        }
         document.getElementById('url').textContent = eventData.event_url;
         document.getElementById('pref1rem').textContent = eventData.Event_Other_Master_Pref1_Remaining;
         document.getElementById('pref2rem').textContent = eventData.Event_Other_Master_Pref2_Remaining;
@@ -168,99 +177,63 @@ console.log(error)
 
 
 
-function getsource(eventUrl) {
-    const purchaseSource = document.querySelector('#source');
+let sourceInstructions = [];
 
-    switch (true) {
-        case eventUrl.includes('showclix'):
-            purchaseSource.textContent = 'SHOW';
-            break;
-        case eventUrl.includes('thecomplexslc'):
-            purchaseSource.textContent = 'SHOW';
-            break;
-        case eventUrl.includes('ticketmaster.co.uk'):
-            purchaseSource.textContent = 'TM-UK';
-            break;
-        case eventUrl.includes('ticketmaster.ca'):
-            purchaseSource.textContent = 'TM';
-            break;
-        case eventUrl.includes('ticketmaster.de'):
-            purchaseSource.textContent = 'TM-DE';
-            break;
-        case eventUrl.includes('ticketmaster.com.mx'):
-            purchaseSource.textContent = 'TM-MX';
-            break;
-        case eventUrl.includes('ticketmaster.com'):
-            purchaseSource.textContent = 'TM';
-            break;
-        case eventUrl.includes('livenation'):
-            purchaseSource.textContent = 'TM';
-            break;
-        case eventUrl.includes('24tix'):
-            purchaseSource.textContent = '24TIX';
-            break;
-        case eventUrl.includes('admitone'):
-            purchaseSource.textContent = 'ADMIT1';
-            break;
-        case eventUrl.includes('axs'):
-            purchaseSource.textContent = 'AXS';
-            break;
-        case eventUrl.includes('dice'):
-            purchaseSource.textContent = 'DICE';
-            break;
-        case eventUrl.includes('etix'):
-            purchaseSource.textContent = 'ETIX';
-            break;
-        case eventUrl.includes('eventbrite'):
-            purchaseSource.textContent = 'EBRITE';
-            break;
-        case eventUrl.includes('freshtix'):
-            purchaseSource.textContent = 'FRESH';
-            break;
-        case eventUrl.includes('frontgate'):
-            purchaseSource.textContent = 'FGATE';
-            break;
-        case eventUrl.includes('holdmyticket'):
-            purchaseSource.textContent = 'HOLDMT';
-            break;
-        case eventUrl.includes('prekindle'):
-            purchaseSource.textContent = 'PRE';
-            break;
-        case eventUrl.includes('seetickets'):
-            purchaseSource.textContent = 'SEETIX';
-            break;
-        case eventUrl.includes('ticketweb'):
-            purchaseSource.textContent = 'TWEB';
-            break;
-        case eventUrl.includes('ticketswest'):
-            purchaseSource.textContent = 'TWEST';
-            break;
-        case eventUrl.includes('tixr'):
-            purchaseSource.textContent = 'TIXR';
-            break;
-        case eventUrl.includes('stubwire'):
-            purchaseSource.textContent = 'STUBW';
-            break;
-        case eventUrl.includes('fgtix'):
-            purchaseSource.textContent = 'FGATE';
-            break;
-        case eventUrl.includes('evenue'):
-            purchaseSource.textContent = 'EVENUE';
-            break;
-        case eventUrl.includes('gruenehall'):
-            purchaseSource.textContent = 'gruenehall';
-            break;
-        case eventUrl.includes('meowwolf'):
-            purchaseSource.textContent = 'MEOW';
-            break;
-        case eventUrl.includes('thevogue.com'):
-            purchaseSource.textContent = 'thevogue';
-            break;
-        case eventUrl.includes('bigtickets.com'):
-            purchaseSource.textContent = 'big';
-            break;
-        default:
-            purchaseSource.textContent = 'OTHER';
-            break;
+function initializeSourceInstructions() {
+  return fetch('https://ubik.wiki/api/source-instructions/?limit=100', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
     }
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok: ' + response.statusText);
+      }
+      return response.json();
+    })
+    .then(data => {
+      sourceInstructions = data.results;
+      console.log("Source instructions loaded.");
+    })
+    .catch(error => {
+      console.error('Error occurred during fetch:', error);
+    });
 }
+
+function retrievefetch(url) {
+  if (!sourceInstructions.length) {
+    console.log("Source instructions not loaded yet.");
+    return {
+      event_prefix: "other",
+      venue_prefix: "other",
+      url: url
+    };
+  }
+
+  let matchingRecord = sourceInstructions.find(record => {
+    if (record.contains) {
+      let tokens = record.contains.split(',');
+      return tokens.some(token => url.includes(token.trim()));
+    }
+    return false;
+  });
+
+  if (matchingRecord) {
+    return {
+      source: matchingRecord.source,
+      event_prefix: matchingRecord.event_prefix,
+      venue_prefix: matchingRecord.venue_prefix,
+      url: url
+    };
+  } else {
+    return {
+      source:"OTHER",
+      event_prefix: "other",
+      venue_prefix: "other",
+      url: url
+    };
+  }
+}
+
+
