@@ -1,4 +1,64 @@
 let xanoUrl = new URL('https://ubik.wiki/api/buying-queue/?completed__iexact=false&limit=1000');
+
+let sourceInstructions = [];
+
+function initializeSourceInstructions() {
+  return fetch('https://ubik.wiki/api/source-instructions/?limit=100', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok: ' + response.statusText);
+      }
+      return response.json();
+    })
+    .then(data => {
+      sourceInstructions = data.results;
+      console.log("Source instructions loaded.");
+    })
+    .catch(error => {
+      console.error('Error occurred during fetch:', error);
+    });
+}
+
+function retrievefetch(url) {
+  if (!sourceInstructions.length) {
+    console.log("Source instructions not loaded yet.");
+    return {
+      event_prefix: "other",
+      venue_prefix: "other",
+      url: url
+    };
+  }
+
+  let matchingRecord = sourceInstructions.find(record => {
+    if (record.contains) {
+      let tokens = record.contains.split(',');
+      return tokens.some(token => url.includes(token.trim()));
+    }
+    return false;
+  });
+
+  if (matchingRecord) {
+    return {
+      source: matchingRecord.source,
+      event_prefix: matchingRecord.event_prefix,
+      venue_prefix: matchingRecord.venue_prefix,
+      url: url
+    };
+  } else {
+    return {
+      source:"OTHER",
+      event_prefix: "other",
+      venue_prefix: "other",
+      url: url
+    };
+  }
+}
+
 function getEvents() {
 let request = new XMLHttpRequest();
 
@@ -63,99 +123,11 @@ card.setAttribute('dateposted', events.added_timestamp)
 let txtsource = card.getElementsByClassName('main-text-src')[0]
 
 let eventUrl = events.event_url
+let prefixes = retrievefetch(eventUrl);
 
-
-switch(true) {
-  case eventUrl.includes('showclix'):
-  txtsource.textContent = 'SHOW';
-  break;
-  case eventUrl.includes('thecomplexslc'):
-  txtsource.textContent = 'SHOW';
-  break;
-  case eventUrl.includes('TM'):
-    txtsource.textContent = 'TM';
-  break;
-  case eventUrl.includes('ticketmaster.ca'):
-    txtsource.textContent = 'TM';
-  break;
-  case eventUrl.includes('ticketmaster'):
-    txtsource.textContent = 'TM';
-    break;
-  case eventUrl.includes('livenation'):
-    txtsource.textContent = 'TM';
-    break;
-  case eventUrl.includes('24tix'):
-    txtsource.textContent = '24TIX';
-    break;
-  case eventUrl.includes('admitone'):
-    txtsource.textContent = 'ADMIT1';
-    break;
-  case eventUrl.includes('axs'):
-    txtsource.textContent = 'AXS';
-    break;
-  case eventUrl.includes('dice'):
-    txtsource.textContent = 'DICE';
-    break;
-  case eventUrl.includes('etix'):
-    txtsource.textContent = 'ETIX';
-    break;
-  case eventUrl.includes('eventbrite'):
-    txtsource.textContent = 'EBRITE';
-    break;
-  case eventUrl.includes('freshtix'):
-    txtsource.textContent = 'FRESH';
-    break;
-  case eventUrl.includes('frontgate'):
-    txtsource.textContent = 'FGATE';
-    break;
-  case eventUrl.includes('holdmyticket'):
-    txtsource.textContent = 'HOLDMT';
-    break;
-  case eventUrl.includes('prekindle'):
-    txtsource.textContent = 'PRE';
-    break;
-  case eventUrl.includes('seetickets'):
-    txtsource.textContent = 'SEETIX';
-    break;
-  case eventUrl.includes('showclix'):
-    txtsource.textContent = 'SHOW';
-    break;
-  case eventUrl.includes('ticketweb'):
-    txtsource.textContent = 'TWEB';
-    break;
-  case eventUrl.includes('ticketswest'):
-    txtsource.textContent = 'TWEST';
-    break;
-  case eventUrl.includes('tixr'):
-    txtsource.textContent = 'TIXR';
-    break;
-  case eventUrl.includes('stubwire'):
-    txtsource.textContent = 'STUBW';
-    break;
-  case eventUrl.includes('fgtix'):
-    txtsource.textContent = 'FGATE';
-    break;
-  case eventUrl.includes('evenue'):
-    txtsource.textContent = 'EVENUE';
-    break;
-  case eventUrl.includes('gruenehall'):
-    txtsource.textContent = 'gruenehall';
-    break;
-  case eventUrl.includes('meowwolf'):
-    txtsource.textContent = 'MEOW';
-    break;
-  case eventUrl.includes('thevogue.com'):
-    txtsource.textContent = 'thevogue';
-    break;
-  case eventUrl.includes('bigtickets.com'):
-  txtsource.textContent = 'big';
-  break;
-  default:
-    txtsource.textContent = 'OTHER';
-    break;
+if(prefixes && prefixes.source){
+    txtsource.textContent = prefixes.source
 }
-
-//
 
 const eventvenue = card.getElementsByClassName('main-text-venue')[0]
 eventvenue.textContent = events.event_venue
@@ -316,6 +288,7 @@ let intervalIds;
 function retryClickingSearchBar() {
     if (token.length === 40) {
 getEvents()
+initializeSourceInstructions()
     clearInterval(intervalIds);
     }}
 
