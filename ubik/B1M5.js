@@ -1,3 +1,68 @@
+
+
+
+let sourceInstructions = [];
+
+function initializeSourceInstructions() {
+  return fetch('https://ubik.wiki/api/source-instructions/?limit=100', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok: ' + response.statusText);
+      }
+      return response.json();
+    })
+    .then(data => {
+      sourceInstructions = data.results;
+      console.log("Source instructions loaded.");
+    })
+    .catch(error => {
+      console.error('Error occurred during fetch:', error);
+    });
+}
+
+function retrievefetch(url) {
+  if (!sourceInstructions.length) {
+    console.log("Source instructions not loaded yet.");
+    return {
+      event_prefix: "other",
+      venue_prefix: "other",
+      url: url
+    };
+  }
+
+  let matchingRecord = sourceInstructions.find(record => {
+    if (record.contains) {
+      let tokens = record.contains.split(',');
+      return tokens.some(token => url.includes(token.trim()));
+    }
+    return false;
+  });
+
+  if (matchingRecord) {
+    return {
+      source: matchingRecord.source,
+      event_prefix: matchingRecord.event_prefix,
+      venue_prefix: matchingRecord.venue_prefix,
+      url: url
+    };
+  } else {
+    return {
+      source:"OTHER",
+      event_prefix: "other",
+      venue_prefix: "other",
+      url: url
+    };
+  }
+}
+
+
+
+
 function getdata(){
 
     step1 = false
@@ -25,8 +90,13 @@ function getdata(){
     document.querySelector('#venue').textContent =  events.venue_name
     document.querySelector('#time').textContent =  events.time
     document.querySelector('#url').textContent =  events.event_url
-    document.querySelector('#purchasesource').textContent = events.source_site
-    
+
+    let prefixes = retrievefetch(events.event_url);
+    if(prefixes && prefixes.source){
+    document.getElementById('purchasesource').textContent = prefixes.source
+    }
+
+        
     let pam = events.purchased_amount
     if(pam){
     document.querySelector('#purchasetotal').textContent = parseInt(pam,10)
@@ -62,6 +132,8 @@ function getdata(){
     function retryClickingSearchBar() {
     if (token.length === 40) {
     getdata()
+    initializeSourceInstructions()
+
     clearInterval(intervalIds);
     }}
     
