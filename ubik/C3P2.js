@@ -1,3 +1,64 @@
+
+let sourceInstructions = [];
+
+function initializeSourceInstructions() {
+  return fetch('https://ubik.wiki/api/source-instructions/?limit=100', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Network response was not ok: ' + response.statusText);
+      }
+      return response.json();
+    })
+    .then(data => {
+      sourceInstructions = data.results;
+      console.log("Source instructions loaded.");
+    })
+    .catch(error => {
+      console.error('Error occurred during fetch:', error);
+    });
+}
+
+function retrievefetch(url) {
+  if (!sourceInstructions.length) {
+    console.log("Source instructions not loaded yet.");
+    return {
+      event_prefix: "other",
+      venue_prefix: "other",
+      url: url
+    };
+  }
+
+  let matchingRecord = sourceInstructions.find(record => {
+    if (record.contains) {
+      let tokens = record.contains.split(',');
+      return tokens.some(token => url.includes(token.trim()));
+    }
+    return false;
+  });
+
+  if (matchingRecord) {
+    return {
+      source: matchingRecord.source,
+      event_prefix: matchingRecord.event_prefix,
+      venue_prefix: matchingRecord.venue_prefix,
+      url: url
+    };
+  } else {
+    return {
+      source:"OTHER",
+      event_prefix: "other",
+      venue_prefix: "other",
+      url: url
+    };
+  }
+}
+
+
 let abortControllers = [];
 
 // Global pagination variables
@@ -137,6 +198,7 @@ if (keywords6 === 'before10') {
 
 document.querySelector('#search-button').addEventListener("click", () => {
     savedevents = [];
+    initializeSourceInstructions()
     constructURL();
 });
 
@@ -212,12 +274,12 @@ function getEvents(fetchurl) {
                 }
 
                 const buybutton = card.getElementsByClassName('event-buy')[0];
-                
+
                 buybutton.addEventListener('click', function() {
                 const url = 'https://www.ubikanalytic.com/event?id=' + evid;
                 window.open(url, '_blank', 'noopener,noreferrer');
                 });
-                
+
                 const manualbuy = card.getElementsByClassName('event-manual')[0];
                 manualbuy.addEventListener('click', function() {
                 const url = 'https://www.ubikanalytic.com/buy-manual?id=' + evid
@@ -314,8 +376,8 @@ function getEvents(fetchurl) {
                 }
 
                 const txtsource = card.getElementsByClassName('chart-venueid')[0];
-                txtsource.textContent = eventData.scraper_name;
                 let eventUrl = eventData.event_url;
+
 
                 let prefs = [];
                 let pref1 = eventData.pref_section1;
@@ -353,98 +415,12 @@ function getEvents(fetchurl) {
                     card.getElementsByClassName('chart-time-box')[0].style.display = 'none';
                 }
 
-                switch (true) {
-                    case eventUrl.includes('showclix'):
-                        txtsource.textContent = 'SHOW';
-                        break;
-                    case eventUrl.includes('thecomplexslc'):
-                        txtsource.textContent = 'SHOW';
-                        break;
-                    case eventUrl.includes('ticketmaster.co.uk'):
-                        txtsource.textContent = 'TM-UK';
-                        break;
-                    case eventUrl.includes('ticketmaster.ca'):
-                        txtsource.textContent = 'TM';
-                        break;
-                    case eventUrl.includes('ticketmaster.de'):
-                        txtsource.textContent = 'TM-DE';
-                        break;
-                    case eventUrl.includes('ticketmaster.com.mx'):
-                        txtsource.textContent = 'TM-MX';
-                        break;
-                    case eventUrl.includes('ticketmaster.com'):
-                        txtsource.textContent = 'TM';
-                        break;
-                    case eventUrl.includes('livenation'):
-                        txtsource.textContent = 'TM';
-                        break;
-                    case eventUrl.includes('24tix'):
-                        txtsource.textContent = '24TIX';
-                        break;
-                    case eventUrl.includes('admitone'):
-                        txtsource.textContent = 'ADMIT1';
-                        break;
-                    case eventUrl.includes('axs.'):
-                        txtsource.textContent = 'AXS';
-                        break;
-                    case eventUrl.includes('dice'):
-                        txtsource.textContent = 'DICE';
-                        break;
-                    case eventUrl.includes('etix'):
-                        txtsource.textContent = 'ETIX';
-                        break;
-                    case eventUrl.includes('eventbrite'):
-                        txtsource.textContent = 'EBRITE';
-                        break;
-                    case eventUrl.includes('freshtix'):
-                        txtsource.textContent = 'FRESH';
-                        break;
-                    case eventUrl.includes('frontgate'):
-                        txtsource.textContent = 'FGATE';
-                        break;
-                    case eventUrl.includes('holdmyticket'):
-                        txtsource.textContent = 'HOLDMT';
-                        break;
-                    case eventUrl.includes('prekindle'):
-                        txtsource.textContent = 'PRE';
-                        break;
-                    case eventUrl.includes('seetickets'):
-                        txtsource.textContent = 'SEETIX';
-                        break;
-                    case eventUrl.includes('ticketweb'):
-                        txtsource.textContent = 'TWEB';
-                        break;
-                    case eventUrl.includes('ticketswest'):
-                        txtsource.textContent = 'TWEST';
-                        break;
-                    case eventUrl.includes('tixr'):
-                        txtsource.textContent = 'TIXR';
-                        break;
-                    case eventUrl.includes('stubwire'):
-                        txtsource.textContent = 'STUBW';
-                        break;
-                    case eventUrl.includes('fgtix'):
-                        txtsource.textContent = 'FGATE';
-                        break;
-                    case eventUrl.includes('evenue'):
-                        txtsource.textContent = 'EVENUE';
-                        break;
-                    case eventUrl.includes('gruenehall'):
-                        txtsource.textContent = 'gruenehall';
-                        break;
-                    case eventUrl.includes('meowwolf'):
-                        txtsource.textContent = 'MEOW';
-                        break;
-                    case eventUrl.includes('thevogue.com'):
-                        txtsource.textContent = 'thevogue';
-                        break;
-                    case eventUrl.includes('bigtickets.com'):
-                        txtsource.textContent = 'big';
-                        break;
-                    default:
-                        txtsource.textContent = 'OTHER';
-                        break;
+                let prefixes = retrievefetch(eventUrl);
+
+                if(prefixes && prefixes.source){
+                txtsource.textContent = prefixes.source
                 }
+
 
                 if (eventData.event_url.includes('ticketmaster') || eventData.event_url.includes('livenation')) {
                     eventname.addEventListener('click', function () {
@@ -606,10 +582,10 @@ function updateChartWithPrimaryAndPreferred(eventData, chart) {
     let combinedDates = new Set();
     let preferredDataArr = [];
     let counts = eventData.counts;
-    let source = eventData.scraper_name.toLowerCase();
     let venueid = eventData.site_venue_id;
+    let prefixes = retrievefetch(eventData.event_url);
 
-    chart.data.datasets[0].label = `${source.toUpperCase()} Primary`;
+    chart.data.datasets[0].label = `${prefixes.source} Primary`;
     chart.data.datasets.splice(1, 3);
 
     counts.forEach(count => {
