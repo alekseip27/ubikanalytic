@@ -299,6 +299,7 @@ if (preonsales) {
             card.setAttribute('time', events.time.slice(0, 8));
             }
             card.setAttribute('venue', events.venue_name);
+            card.setAttribute('source', events.scraper_name);
             card.setAttribute('vivid_id', events.vdid);
             card.setAttribute('capacity', events.venue_capacity);
 
@@ -485,14 +486,11 @@ function normalizeDate(date) {
           let combinedDates = new Set();
           let preferredData = [];
           let counts = events.counts;
-        
           let source = events.scraper_name.toLowerCase();
-          let prefixes = retrievefetch(events.event_url);
-
           let venueid = events.site_venue_id;
 
           // Reset the chart for primary and preferred datasets
-          chart.data.datasets[0].label = `${prefixes.source} Primary`;
+          chart.data.datasets[0].label = `${source.toUpperCase()} Primary`;
           chart.data.datasets.splice(1, 3); // Remove old preferred datasets
           chart.update();
 
@@ -1076,7 +1074,6 @@ const scrapetm = (eventid) => {
 
                 if(prefixes && prefixes.source){
                 txtsource.textContent = prefixes.source
-                card.setAttribute('source', prefixes.source);
                 }
 
 
@@ -1279,4 +1276,3 @@ http.send(params);
             document.getElementById("search-button").click();
             }
             });
-
