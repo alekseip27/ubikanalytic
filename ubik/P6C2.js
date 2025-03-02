@@ -572,7 +572,7 @@ async function getchartprimary() {
     let vdid = document.querySelector('#selectedevent').getAttribute('vdid');
 
     try {
-        const response = await fetch(`https://ubik.wiki/api/primary-events/?vdid__iexact=${vdid}`, {
+        const response = await fetch(`https://api.ubik.wiki/api/primary-events/?vdid__iexact=${vdid}`, {
             method: 'GET',
             headers: { 'Authorization': `Bearer ${token}` },
             signal: controller.signal
@@ -660,7 +660,7 @@ function updateChartWithPrimaryAndPreferred(counts, venueid, evids) {
 
     // Step 1: Fetch preferred sections
     var http = new XMLHttpRequest();
-    var url = `https://ubik.wiki/api/venues/${venueid}/`;
+    var url = `https://api.ubik.wiki/api/venues/${venueid}/`;
     http.open("GET", url, true);
     http.setRequestHeader("Content-type", "application/json; charset=utf-8");
     http.setRequestHeader('Authorization', `Bearer ${token}`);
@@ -677,7 +677,7 @@ function updateChartWithPrimaryAndPreferred(counts, venueid, evids) {
         console.log("Preferred sections:", prefSections);
 
         // Step 2: Fetch counts for preferred sections from another API
-        fetch(`https://ubik.wiki/api/primary-counts/?tickets_by_sections__icontains={&event_id__icontains=${evids}&limit=1000&format=json`, {
+        fetch(`https://api.ubik.wiki/api/primary-counts/?tickets_by_sections__icontains={&event_id__icontains=${evids}&limit=1000&format=json`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -1287,7 +1287,7 @@ async function getchartvs() {
     abortControllers.push(controller);
 
     try {
-        const response = await fetch(`https://ubik.wiki/api/sbox-data/?limit=1000&vividseats_event_url__icontains=${evurl}`, {
+        const response = await fetch(`https://api.ubik.wiki/api/sbox-data/?limit=1000&vividseats_event_url__icontains=${evurl}`, {
             method: 'GET',
             headers: {
                 'Content-type': 'application/json; charset=utf-8',
