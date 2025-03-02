@@ -41,7 +41,7 @@ document.getElementById('url2').addEventListener('click', function() {
 });
 
 var pkid = new URLSearchParams(window.location.search).get('id');
-fetch('https://ubik.wiki/api/event-venue/?site_event_id__iexact=' + encodeURIComponent(pkid), {
+fetch('https://api.ubik.wiki/api/event-venue/?site_event_id__iexact=' + encodeURIComponent(pkid), {
 headers: {
 'Authorization': `Bearer ${token}`
 }
@@ -120,7 +120,7 @@ intervalIds = setInterval(retryClickingSearchBar, 1000);
 document.getElementById('buybtn').addEventListener('click', function() {
     this.style.pointerEvents = 'none';
     var pkid = new URLSearchParams(window.location.search).get('id');
-    const url = 'https://ubik.wiki/api/create/buying-queue/';
+    const url = 'https://api.ubik.wiki/api/create/buying-queue/';
 const requestData = {
 purchase_total: document.getElementById('purchasetotal').value,
 quantity_per: document.getElementById('quantityper').value,
@@ -180,7 +180,7 @@ console.log(error)
 let sourceInstructions = [];
 
 function initializeSourceInstructions() {
-  return fetch('https://ubik.wiki/api/source-instructions/?limit=100', {
+  return fetch('https://api.ubik.wiki/api/source-instructions/?limit=100', {
     method: 'GET',
     headers: {
       'Authorization': `Bearer ${token}`
