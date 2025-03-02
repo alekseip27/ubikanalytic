@@ -3,7 +3,7 @@ function getevent(){
 var pkid = document.location.href.split('https://www.ubikanalytic.com/edit-event?id=')[1];
 
 var request = new XMLHttpRequest();
-let xanoUrl = new URL('https://ubik.wiki/api/buying-queue/' + encodeURIComponent(pkid) + '/');
+let xanoUrl = new URL('https://api.ubik.wiki/api/buying-queue/' + encodeURIComponent(pkid) + '/');
 
 request.open('GET', xanoUrl.toString(), true);
 request.setRequestHeader("Content-type", "application/json; charset=utf-8");
@@ -71,7 +71,7 @@ request.send();
 }
 
 var eventid = document.location.href.split('https://www.ubikanalytic.com/edit-event?id=')[1];
-var urltwo = "https://ubik.wiki/api/update/buying-queue/"
+var urltwo = "https://api.ubik.wiki/api/update/buying-queue/"
 
 document.querySelector('#buybtn').addEventListener("click", () => {
     $('#buybtn').css({pointerEvents: "none"});
