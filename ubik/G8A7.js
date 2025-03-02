@@ -1,7 +1,7 @@
 let purcharray = []
 let abortControllers = [];
 
-const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false';
+const apiUrl = 'https://api.ubik.wiki/api/purchasing-accounts/?closed__iexact=false';
 let headers;
 
 // Function to initialize headers and proceed with code
@@ -480,7 +480,7 @@ var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-eve
 document.querySelector('#evids').value = eventid;
 document.querySelector('#queueid').value = eventid;
 var request = new XMLHttpRequest()
-let xanoUrl = new URL("https://ubik.wiki/api/buying-queue/" + encodeURIComponent(eventid) + "/")
+let xanoUrl = new URL("https://api.ubik.wiki/api/buying-queue/" + encodeURIComponent(eventid) + "/")
 
 console.log(xanoUrl.toString())
 request.open('GET', xanoUrl.toString(), true)
@@ -542,7 +542,7 @@ sendRequest();
 }
 
 // Example usage for the first request
-const eventVenueUrl = `https://ubik.wiki/api/event-venue/?site_event_id__iexact=${encodedthiseventid}`;
+const eventVenueUrl = `https://api.ubik.wiki/api/event-venue/?site_event_id__iexact=${encodedthiseventid}`;
 makeRequest(
 eventVenueUrl,
 function (data) {
@@ -896,7 +896,7 @@ intervalIds = setInterval(retryClickingSearchBar, 1000);
 
 function emailpart1() {
 let purchacc = document.querySelector('#purchaseaccounts').value
-const emailurl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&email__iexact=' + purchacc;
+const emailurl = 'https://api.ubik.wiki/api/purchasing-accounts/?closed__iexact=false&email__iexact=' + purchacc;
 let http = new XMLHttpRequest();
 
 http.open("GET", emailurl, true);
@@ -945,7 +945,7 @@ function emailpart2() {
         });
     }
 
-    const emailurl2 = 'https://ubik.wiki/api/update/purchasing-accounts/';
+    const emailurl2 = 'https://api.ubik.wiki/api/update/purchasing-accounts/';
         params = {
             "id": emailid,
             "purchases_tracking": purcharray
@@ -977,7 +977,7 @@ let combined = bought+cpr
 let limit = Number(document.querySelector('#amountbought2').textContent)
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1]
 var http = new XMLHttpRequest();
-var urll = "https://ubik.wiki/api/update/buying-queue/"
+var urll = "https://api.ubik.wiki/api/update/buying-queue/"
 
 var params = {
 "id": eventid,
@@ -1007,7 +1007,7 @@ let pthistime = Number(document.querySelector('#purchasequantity').value)
 let purchacc = document.querySelector('#purchaseaccounts').value
 let pcombined = palltime + pthistime
 var http = new XMLHttpRequest();
-var urll = "https://ubik.wiki/api/update/primary-events/"
+var urll = "https://api.ubik.wiki/api/update/primary-events/"
 
 var params = {
 "site_event_id": thiseventid,
@@ -1092,7 +1092,7 @@ function part3(){
 
 
 
-    var endpointUrl = "https://ubik.wiki/api/create/order-history/"
+    var endpointUrl = "https://api.ubik.wiki/api/create/order-history/"
 
     var param = {
     "event_name":eventname,
@@ -1338,7 +1338,7 @@ function getsource(eventUrl) {
 function part4(url) {
     let keyToCheck = getsourceid(url);
     console.log(keyToCheck)
-        const sourceurl = 'https://ubik.wiki/api/source-instructions/?id__iexact=' + keyToCheck;
+        const sourceurl = 'https://api.ubik.wiki/api/source-instructions/?id__iexact=' + keyToCheck;
 
         let http = new XMLHttpRequest();
         http.open("GET", sourceurl, true);
