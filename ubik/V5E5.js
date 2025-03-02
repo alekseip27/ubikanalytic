@@ -24,7 +24,7 @@ $('#event_date').datepicker({
   
       let eventid = encodeURIComponent(document.querySelector('#prefix-event').value) + encodeURIComponent(document.querySelector('#checkeventid').value)
   
-      var url = "https://ubik.wiki/api/primary-events/?site_event_id__icontains=" + eventid
+      var url = "https://api.ubik.wiki/api/primary-events/?site_event_id__icontains=" + eventid
   
       fetch(url, {
           method: "GET",
@@ -63,7 +63,7 @@ $('#event_date').datepicker({
   
       let venueid = encodeURIComponent(document.querySelector('#venueprefixsearch').value) + encodeURIComponent(document.querySelector('#checkvenueid').value)
   
-      var url = "https://ubik.wiki/api/venues/?site_venue_id__iexact=" + venueid
+      var url = "https://api.ubik.wiki/api/venues/?site_venue_id__iexact=" + venueid
   
       fetch(url, {
           method: "GET",
@@ -353,7 +353,7 @@ source = 'other'
   let eventdate = document.querySelector('#event_date').value;
   let addedby = document.querySelector('#username').textContent;
   
-  var endpointUrl = "https://ubik.wiki/api/create/primary-events/";
+  var endpointUrl = "https://api.ubik.wiki/api/create/primary-events/";
   
   var params = {
     "site_event_id": prefix + eventid,
@@ -602,7 +602,7 @@ source = 'other'
       let vsid = document.querySelector('#vividseatsurl').value.split('performer/')[1].replace("/", "");
       }
   
-      var endpointUrl = "https://ubik.wiki/api/create/venues/";
+      var endpointUrl = "https://api.ubik.wiki/api/create/venues/";
       
       var params = {
           "site_venue_id": venueids,
