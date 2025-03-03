@@ -1,4 +1,4 @@
-let xanoUrl = new URL('https://api.ubik.wiki/api/buying-queue/?completed__iexact=false&limit=1000');
+let xanoUrl = new URL('https://ubik.wiki/api/buying-queue/?completed__iexact=false&limit=1000');
 function getEvents() {
 let request = new XMLHttpRequest();
 
@@ -293,7 +293,7 @@ deletebutton.style.display = "flex";
 
 deletebutton.addEventListener('click', function() {
     var http = new XMLHttpRequest();
-    var url = "https://api.ubik.wiki/api/delete/buying-queue/"
+    var url = "https://ubik.wiki/api/delete/buying-queue/"
     var params = JSON.stringify({
     "id": eventid
     })
