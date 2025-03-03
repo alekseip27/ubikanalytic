@@ -36,7 +36,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     let preonsales = document.getElementById('preonsales').checked
     $('.event-box').hide()
 
-    let baseUrl = 'https://api.ubik.wiki/api/event-venue/?';
+    let baseUrl = 'https://ubik.wiki/api/event-venue/?';
     params = [];
 
     if (keywords1.length > 0) {
@@ -294,7 +294,7 @@ function vschartdata(VDID) {
     document.querySelector('#vserror').style.display = 'none';
     document.querySelector('#vschart').style.display = 'none';
 
-const url = `https://api.ubik.wiki/api/vividseats/?vdid__iexact=${VDID}&format=json`;
+const url = `https://ubik.wiki/api/vividseats/?vdid__iexact=${VDID}&format=json`;
 
 
 const headers = new Headers({
@@ -447,7 +447,7 @@ function normalizeDate(date) {
 
           // Step 1: Fetch preferred sections
           var http = new XMLHttpRequest();
-          var url = `https://api.ubik.wiki/api/venues/${venueid}/`;
+          var url = `https://ubik.wiki/api/venues/${venueid}/`;
           http.open("GET", url, true);
           http.setRequestHeader("Content-type", "application/json; charset=utf-8");
           http.setRequestHeader('Authorization', `Bearer ${token}`);
@@ -464,7 +464,7 @@ function normalizeDate(date) {
               console.log("Preferred sections:", prefSections);
 
               // Step 2: Fetch counts for preferred sections
-              fetch(`https://api.ubik.wiki/api/primary-counts/?tickets_by_sections__icontains={&event_id__icontains=${events.site_event_id}&limit=1000&format=json`, {
+              fetch(`https://ubik.wiki/api/primary-counts/?tickets_by_sections__icontains={&event_id__icontains=${events.site_event_id}&limit=1000&format=json`, {
                   method: 'GET',
                   headers: {
                       'Content-Type': 'application/json',
@@ -855,7 +855,7 @@ charticon.style.display = 'none'
         };
 
 function updatedata(eventid){
-    const url = 'https://api.ubik.wiki/api/update/primary-events/'
+    const url = 'https://ubik.wiki/api/update/primary-events/'
 
     const date1 = new Date();
     let date2 =
@@ -1180,7 +1180,7 @@ card.setAttribute('perday',events.app_142_difference_per_day)
 
 
             var http = new XMLHttpRequest();
-            var url = "https://api.ubik.wiki/api/update/primary-events/"
+            var url = "https://ubik.wiki/api/update/primary-events/"
             var params = JSON.stringify({
             "site_event_id": eventid,
             "hidden": "true"
@@ -1207,7 +1207,7 @@ checkbox.addEventListener('click', function() {
 
 
 var http = new XMLHttpRequest();
-var url = "https://api.ubik.wiki/api/update/primary-events/"
+var url = "https://ubik.wiki/api/update/primary-events/"
 var params = JSON.stringify({
 "site_event_id": eventids,
 "favorites": checkbox.checked
