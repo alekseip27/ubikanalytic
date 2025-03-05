@@ -922,7 +922,7 @@ function emailpart2() {
 
     http.onreadystatechange = function () {
         if (http.readyState == 4) {
-            if (http.status == 200) {
+            if (http.status == 200 || http.status == 201) {
                 emailchecked = true;
             }
         }
