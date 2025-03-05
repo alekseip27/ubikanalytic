@@ -1114,14 +1114,13 @@ document.querySelector('#buybtn').addEventListener("click", () => {
       retrieveamounts();
       retrieveamount();
 
-      // After running the retrieve functions, wait for 3 seconds before continuing
       setTimeout(() => {
         part1();
         part2();
         part3();
-      }, 3000);
+      }, 2000);
 
-    }, 10000);
+    }, 5000);
   });
 
 const checkStepsInterval = setInterval(() => {
