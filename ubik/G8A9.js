@@ -4,34 +4,26 @@ let abortControllers = [];
 const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false';
 let headers;
 
-// Function to initialize headers and proceed with code
 function initialize() {
     headers = {
         'Authorization': `Bearer ${token}`,
         'Content-type': 'application/json; charset=utf-8'
     };
-
-    // Your main code that requires headers goes here
-  //  initializeStates(); // Example function call
 }
 
-// Set interval to check for token length
 const tokenCheckInterval = setInterval(() => {
     if (token && token.length === 40) {
-        clearInterval(tokenCheckInterval); // Clear interval once token is valid
-        initialize(); // Call function to initialize headers and proceed
+        clearInterval(tokenCheckInterval);
+        initialize();
     }
-}, 1000); // Check every 1 second
+}, 1000);
 
 
-    // Fetch data from the API
     async function fetchData(url) {
         const response = await fetch(url.toString(), { method: 'GET', headers });
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         return response.json();
     }
-
-
 
 
     async function initializeStates(states,emails,account) {
@@ -81,22 +73,19 @@ fetch('https://shibuy.co:8443/rba', {
             const buyerStateSelect = document.getElementById('buyer_state');
             buyerStateSelect.innerHTML = '';
 
-            // Add "Select one..." as the first option
             const defaultOption = document.createElement('option');
             defaultOption.value = '';
             defaultOption.textContent = 'Select one...';
             buyerStateSelect.appendChild(defaultOption);
 
-            // If specified `states` is in the list, add it as the first selectable option
             if (states && stateCounts[states]) {
                 const specifiedStateOption = document.createElement('option');
                 specifiedStateOption.value = states;
                 specifiedStateOption.textContent = `${states} (${stateCounts[states]})`;
                 buyerStateSelect.appendChild(specifiedStateOption);
-                delete stateCounts[states]; // Remove from the list to avoid duplication
+                delete stateCounts[states];
             }
 
-            // Populate other states in alphabetical order
             Object.keys(stateCounts).sort().forEach(state => {
                 const option = document.createElement('option');
                 option.value = state;
@@ -104,23 +93,19 @@ fetch('https://shibuy.co:8443/rba', {
                 buyerStateSelect.appendChild(option);
             });
 
-            // Convert emailsused string to an array for easy filtering
             const usedEmails = emails.split(',').map(email => email.trim());
-            // Add change event listener to filter out used emails
             buyerStateSelect.addEventListener('change', () => {
                 erasedata();
                 const selectedState = buyerStateSelect.value.split(" (")[0];
                 if (selectedState) populateEmails(items, selectedState, usedEmails);
             });
 
-            // If `states` is specified, set it as the selected option and trigger the event
             if (states) {
                 buyerStateSelect.value = states;
             } else {
-                buyerStateSelect.value = ''; // Default to "Select one..."
+                buyerStateSelect.value = '';
             }
 
-            // Trigger change event to populate based on initial selection
             const event = new Event("change");
             buyerStateSelect.dispatchEvent(event);
 
@@ -146,15 +131,13 @@ function populateEmails(items, selectedState, emailsused) {
         year: 'numeric',
         month: '2-digit',
         day: '2-digit'
-    }); // Get today's date in EST (YYYY-MM-DD)
+    });
 
-    const source = getsource(document.querySelector('#url').textContent); // Get the source
+    const source = getsource(document.querySelector('#url').textContent);
 
-    // Collect emails and their counts
     const emailOptions = items.filter(item => item.state === selectedState).map(item => {
         let count = 0;
 
-        // Check if purchases_tracking exists and process it
         if (item.purchases_tracking && Array.isArray(item.purchases_tracking)) {
             item.purchases_tracking.forEach(purchase => {
                 if (purchase[source]) {
@@ -167,26 +150,19 @@ function populateEmails(items, selectedState, emailsused) {
             });
         }
 
-        // Return the email and its count (default 0 if no purchases_tracking)
         return { email: item.email.trim(), count };
     });
 
-    // Exclude emails already used
     const filteredEmailOptions = emailOptions.filter(option => !emailsused.map(email => email.trim()).includes(option.email));
-    // Sort by count (ascending)
     filteredEmailOptions.sort((a, b) => a.count - b.count);
 
-    // Populate dropdown
     filteredEmailOptions.forEach(option => {
         const emailOption = document.createElement('option');
-        emailOption.value = option.email; // Set plain email as value
-        emailOption.textContent = option.count > 0 ? `${option.email} (${option.count})` : option.email; // Add count if > 0
+        emailOption.value = option.email;
+        emailOption.textContent = option.count > 0 ? `${option.email} (${option.count})` : option.email;
         buyerEmailSelect.appendChild(emailOption);
     });
 }
-
-
-
 
     async function displayBuyerData(buyerEmail) {
         try {
@@ -214,7 +190,7 @@ function populateEmails(items, selectedState, emailsused) {
     document.getElementById('buyer_email').addEventListener('change', function() {
         abortAllRequests();
         erasedata();
-        const buyerEmail = this.value; // Get the plain email as the value
+        const buyerEmail = this.value;
 
         if (buyerEmail) {
             retrievedatato(buyerEmail,credit_account);
@@ -234,7 +210,6 @@ async function retrievedatato(buyerEmail, provider) {
     const delay = 1000;
     let attempts = 0;
 
-    // Validate email format
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(buyerEmail)) {
     console.error("Invalid email format.");
     return;
@@ -242,7 +217,7 @@ async function retrievedatato(buyerEmail, provider) {
 
     const controller = new AbortController();
     const signal = controller.signal;
-    const abortTimeout = setTimeout(() => controller.abort(), 10000); // Timeout after 10 seconds
+    const abortTimeout = setTimeout(() => controller.abort(), 10000);
 
     const url = `https://shibuy.co:8443/retrievedata`;
     const requestOptions = {
@@ -251,7 +226,7 @@ async function retrievedatato(buyerEmail, provider) {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${token}`,
     },
-    body: JSON.stringify({ id: buyerEmail, provider }), // Include provider in the body
+    body: JSON.stringify({ id: buyerEmail, provider }),
     signal,
     };
 
@@ -266,7 +241,6 @@ async function retrievedatato(buyerEmail, provider) {
         const data = await response.json();
         const cd = data.data;
 
-        // Dynamically handle based on provider
         if (provider !== "slash") {
         document.querySelector('#dnum3').textContent = cd.n2 || "N/A";
         document.querySelector('#dnum4').textContent = 'Ramp';
@@ -306,11 +280,11 @@ async function retrievedatato(buyerEmail, provider) {
         unlockElement2.style.display = 'flex';
         }
 
-        return; // Exit function upon successful response
+        return;
     } catch (error) {
         if (error.name === 'AbortError') {
         console.warn('Request was aborted due to timeout.');
-        return; // Exit function on timeout
+        return;
         }
 
         attempts += 1;
@@ -389,7 +363,6 @@ while (attempts < maxRetries) {
 
     const text = await response.text();
 
-    // Check if the response is JSON
     let data;
     try {
         data = JSON.parse(text);
@@ -418,9 +391,6 @@ while (attempts < maxRetries) {
     }
 }
 }
-
-
-
 
 
 
@@ -473,9 +443,9 @@ $("#purchasequantity").attr({"min" : 0});
     step3 = false
     emailchecked = false
 
-    function retryClickingSearchBar() {
-        if (token.length === 40) {
-        clearInterval(intervalIds);
+function retryClickingSearchBar() {
+if (token.length === 40) {
+clearInterval(intervalIds);
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1];
 document.querySelector('#evids').value = eventid;
 document.querySelector('#queueid').value = eventid;
@@ -541,7 +511,6 @@ function sendRequest() {
 sendRequest();
 }
 
-// Example usage for the first request
 const eventVenueUrl = `https://ubik.wiki/api/event-venue/?site_event_id__iexact=${encodedthiseventid}`;
 makeRequest(
 eventVenueUrl,
@@ -555,7 +524,7 @@ function (data) {
     let evurl = data.results[0].event_url
     states = data.results[0].state
     state = getStateName(states)
-    
+
 
     emailsarray = []
     emailsused = data.results[0].used_emails
@@ -616,7 +585,6 @@ document.querySelector('#purchasealltime').textContent = '0'
 }
 
 let urgency = eventdata.buying_urgency
-
 let buytimestamp = eventdata.added_timestamp
 let date = moment(buytimestamp).format('MM/DD/YYYY HH:mm:ss')
 const thnd = new Date();
@@ -921,18 +889,13 @@ emailpart2();
 http.send();
 }
 
-
-
-
 function emailpart2() {
     let keyToCheck = getsource(document.querySelector('#url').textContent);
     let date = document.getElementById('date').textContent.trim();
     let found = false;
 
-    // Check if the source already exists in purcharray
     for (let item of purcharray) {
         if (item[keyToCheck] !== undefined) {
-            // Add new event with eventid as the key
             item[keyToCheck][encodedthiseventid] = date;
             found = true;
             break;
@@ -992,7 +955,6 @@ http.open("PUT", urll, true);
 http.setRequestHeader("Content-type", "application/json; charset=utf-8");
 http.setRequestHeader('Authorization', `Bearer ${token}`);
 
-// Add response and error handling
 http.onreadystatechange = function() {
 if (http.readyState == 4) {
 if (http.status == 200) {
@@ -1144,14 +1106,23 @@ function part3(){
 }
 
 
-
 document.querySelector('#buybtn').addEventListener("click", () => {
-$('#buybtn').css({pointerEvents: "none"})
-emailpart1()
-part1()
-part2()
-part3()
-})
+    $('#buybtn').css({ pointerEvents: "none" });
+    document.getElementById('buybtn').textContent = "Checking...";
+
+    setTimeout(() => {
+      retrieveamounts();
+      retrieveamount();
+
+      // After running the retrieve functions, wait for 3 seconds before continuing
+      setTimeout(() => {
+        part1();
+        part2();
+        part3();
+      }, 3000);
+
+    }, 10000);
+  });
 
 const checkStepsInterval = setInterval(() => {
 if (step1 && step2 && step3 && emailchecked) {
@@ -1450,3 +1421,6 @@ function getsourceid(eventUrl) {
         return('30');
         break;
     }}
+
+
+
