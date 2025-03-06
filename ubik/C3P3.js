@@ -111,11 +111,11 @@ function constructURL(next) {
 
     if (keywords3 === 'uscanada') {
         // This adds two filters in one string; adjust as needed.
-        params.push('country__icontains=USA&country__icontains=Canada');
+        params.push('country__icontains=US&country__icontains=Canada');
     }
 
     if (keywords3 === 'international') {
-        params.push('country__idoesnotcontains=USA&country__idoesnotcontains=Canada');
+        params.push('country__idoesnotcontains=US&country__idoesnotcontains=Canada');
     }
 
     if (keywords4) {
