@@ -420,6 +420,15 @@ const b = 0.8123;
 const predictedPrice = (a + b * listPrice).toFixed(2);
 
 viewPrice.textContent = predictedPrice;
+
+    
+
+if (card.classList.contains("includesfees")) {
+const feespricing =  2.5 + (listPrice x 1.18)
+viewPrice.textContent = feespricing;
+}
+
+    
 }
 
 function checkPricingStatus(card, ticketID) {
