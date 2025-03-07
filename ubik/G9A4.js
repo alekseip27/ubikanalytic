@@ -1,7 +1,7 @@
 let purcharray = []
 let abortControllers = [];
 
-const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false';
+const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&paused__iexact=false';
 let headers;
 
 function initialize() {
@@ -864,7 +864,7 @@ intervalIds = setInterval(retryClickingSearchBar, 1000);
 
 function emailpart1() {
 let purchacc = document.querySelector('#purchaseaccounts').value
-const emailurl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&email__iexact=' + purchacc;
+const emailurl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&paused__iexact=false&email__iexact=' + purchacc;
 let http = new XMLHttpRequest();
 
 http.open("GET", emailurl, true);
@@ -1124,7 +1124,7 @@ document.querySelector('#buybtn').addEventListener("click", () => {
   });
 
 const checkStepsInterval = setInterval(() => {
-if (step1 && step2 && step3) {
+if (step1 && step2 && step3 && emailchecked) {
     clearInterval(checkStepsInterval);
     setTimeout(() => {
     window.location.href = "/buy-queue";
@@ -1420,6 +1420,5 @@ function getsourceid(eventUrl) {
         return('30');
         break;
     }}
-
 
 
