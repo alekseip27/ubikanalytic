@@ -424,7 +424,7 @@ viewPrice.textContent = predictedPrice;
     
 
 if (card.classList.contains("includesfees")) {
-const feespricing =  2.5 + (listPrice x 1.18)
+const feespricing =  2.5 + (listPrice * 1.18)
 viewPrice.textContent = feespricing;
 }
 
