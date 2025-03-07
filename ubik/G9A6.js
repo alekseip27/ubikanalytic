@@ -1115,6 +1115,7 @@ document.querySelector('#buybtn').addEventListener("click", () => {
       retrieveamount();
 
       setTimeout(() => {
+        emailpart1()
         part1();
         part2();
         part3();
@@ -1124,7 +1125,7 @@ document.querySelector('#buybtn').addEventListener("click", () => {
   });
 
 const checkStepsInterval = setInterval(() => {
-if (step1 && step2 && step3) {
+if (step1 && step2 && step3 && emailchecked) {
     clearInterval(checkStepsInterval);
     setTimeout(() => {
     window.location.href = "/buy-queue";
