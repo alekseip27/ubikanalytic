@@ -326,7 +326,7 @@ card.querySelector('.main-text-inhand').textContent = events.inHandDate;
 
 updateLowerableCheck(lowerableCheck, events, eventID);
 updateLastUpdated(card, events);
-updateViewPrice(card, events);
+updateViewPrice(eventID,card, events);
 checkPricingStatus(card, events.id);
 
 const savePriceButton = card.querySelector('.save-price-button');
@@ -406,7 +406,7 @@ const updatedTime = moment.utc(events.lastPriceUpdate).subtract(5, 'hours').form
 lastUpdated.textContent = updatedTime;
 }
 
-function updateViewPrice(card, events) {
+function updateViewPrice(selectedcard,card, events) {
 const viewPrice = card.querySelector('.main-text-vw');
 const listPrice = Math.round(Number(events.listPrice));
 
@@ -422,10 +422,11 @@ const predictedPrice = (a + b * listPrice).toFixed(2);
 viewPrice.textContent = predictedPrice;
 
     
+let curitem = document.getElementById(selectedcard);
 
-if (card.classList.contains("includesfees")) {
-const feespricing =  2.5 + (listPrice * 1.18)
-viewPrice.textContent = feespricing;
+if (curitem && curitem.classList.contains("includesfees")) {
+    const feespricing = 2.5 + (listPrice * 1.18);
+    viewPrice.textContent = feespricing;
 }
 
     
