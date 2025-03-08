@@ -174,7 +174,12 @@ else if(eventurl.includes('axs.com')){
 prefix = 'axs'
 venueprefix = 'axs'
 source = 'AXS'
+}
 
+ else if(eventurl.includes('universe.com')){
+prefix = 'unv'
+venueprefix = 'unv'
+source = 'universe'
 }
 
 else if(eventurl.includes('24tix')){
@@ -424,7 +429,12 @@ source = 'other'
   result = "tm";
   result2 = "TM";
   }
+  else if (venueUrl.includes("universe.com")) {
+      result = "unv";
+      result2 = "universe";
+  }
 
+   
   else if (venueUrl.includes("axs.com")) {
       result = "axs";
       result2 = "AXS";
