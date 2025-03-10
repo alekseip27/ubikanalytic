@@ -495,7 +495,7 @@ source = 'other'
 
 
    else if (venueUrl.includes("seetickets.us")) {
-    result = "";
+    result = "see";
     result2 = "SEETIX";
    }
 
