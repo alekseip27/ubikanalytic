@@ -43,6 +43,8 @@ const source = events.source;
 const id = events.id;
 const eventprefix = events.event_prefix;
 const venueprefix = events.venue_prefix;
+const backupone = events.backup_one;
+const backuptwo = events.backup_two;
 
 const sourcecard = card.getElementsByClassName('main-text-sourcei')[0]
 sourcecard.textContent = source
@@ -56,6 +58,15 @@ browsercard.textContent = browser
 const instructionscard = card.getElementsByClassName('main-text-instruction')[0]
 instructionscard.textContent = instructions
 
+const backupcardone = card.getElementsByClassName('main-text-backup1')[0]
+backupcardone.textContent = backupone
+
+const backupcardtwo = card.getElementsByClassName('main-text-backup2')[0]
+backupcardtwo.textContent = backuptwo
+
+
+
+    
 const eventprefixcard = card.getElementsByClassName('main-text-eprefix')[0]
 eventprefixcard.textContent = eventprefix
 
@@ -76,6 +87,8 @@ card.addEventListener('click', function(){
     document.querySelector('#edit-venue-prefix').value = ''
     document.querySelector('#edit-instructions').value = ''
     document.querySelector('#edit-contains').value = ''
+    document.querySelector('#edit-backup1').value = ''
+    document.querySelector('#edit-backup2').value = ''
 
     if (event.target.closest('.main-text-delete')) {
     return;
@@ -91,6 +104,8 @@ card.addEventListener('click', function(){
     document.querySelector('#edit-contains').value = contains
     document.querySelector('#edit-event-prefix').value = eventprefix
     document.querySelector('#edit-venue-prefix').value = venueprefix
+    document.querySelector('#edit-backup1').value = backupone
+    document.querySelector('#edit-backup2').value = backuptwo
     })
 
 
@@ -190,6 +205,8 @@ let source = document.querySelector('#edit-source').value
 let browser = document.querySelector('#edit-browser').value
 let instructions = document.querySelector('#edit-instructions').value
 let contains = document.querySelector('#edit-contains').value
+let backupone = document.querySelector('#edit-backup1').value
+let backuptwo = document.querySelector('#edit-backup2').value
 let eventprefix = document.querySelector('#edit-event-prefix').value
 let venueprefix = document.querySelector('#edit-venue-prefix').value
 const endpointUrl = 'https://ubik.wiki/api/update/source-instructions/'
@@ -200,6 +217,8 @@ source: source,
 browser: browser,
 instructions: instructions,
 contains: contains,
+backup_one: backupone,
+backup_two: backuptwo,
 event_prefix: eventprefix,
 venue_prefix: venueprefix
 };
@@ -252,14 +271,17 @@ function createInstruction() {
     let instructions = document.querySelector('#add-instructions').value
     let vprefix = document.querySelector('#add-venue-prefix').value
     let eprefix = document.querySelector('#add-event-prefix').value
-
+    let backupone = document.querySelector('#add-backup1').value
+    let backuptwo = document.querySelector('#add-backup2').value
 
     const newRowData = {
         source: source,
         browser: browser,
         instructions: instructions,
         event_prefix: eprefix,
-        venue_prefix: vprefix
+        venue_prefix: vprefix,
+        backup_one: backupone,
+        backup_two: backuptwo,
     };
 
     fetch(endpointUrl, {
@@ -300,6 +322,8 @@ document.querySelector('#editwrapper2').style.display = 'flex';
 document.querySelector('#errortext2').textContent = ''
 document.querySelector('#add-source').value = ''
 document.querySelector('#add-browser').value = ''
+document.querySelector('#add-backup1').value = ''
+document.querySelector('#add-backup2').value = ''
 document.querySelector('#add-instructions').value = ''
 document.querySelector('#add-venue-prefix').value = ''
 document.querySelector('#add-event-prefix').value = ''
