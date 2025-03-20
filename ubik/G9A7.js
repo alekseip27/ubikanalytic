@@ -1323,6 +1323,10 @@ function part4(url) {
     let results = response.results[0]
     let browser = results.browser
     let instructions = results.instructions
+    let backupone = results.backup_one
+    let backuptwo = results.backup_two
+    document.querySelector('#backup-1').textContent = backupone
+    document.querySelector('#backup-2').textContent = backuptwo
     document.querySelector('#browser').textContent = browser
     document.querySelector('#instructions').textContent = instructions
 
