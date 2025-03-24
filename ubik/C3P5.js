@@ -138,6 +138,10 @@ function constructURL(next) {
         params.push(`event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=axs`);
     }
 
+      if (keywords5 === 'seatgeek') {
+        params.push(`event_url__icontains=ticketmaster&event_url__icontains=seatgeek.com`);
+    }
+
 if (keywords5 === 'nonseeticketstmaxsgeek') {
     params.push(`event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=axs&event_url__idoesnotcontains=seetickets&event_url__idoesnotcontains=seatgeek`);
 }
