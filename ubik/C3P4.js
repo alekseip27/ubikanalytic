@@ -138,9 +138,9 @@ function constructURL(next) {
         params.push(`event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=axs`);
     }
 
-    if (keywords5 === 'nonseeticketstmaxs') {
-        params.push(`event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=axs&event_url__idoesnotcontains=seetickets`);
-    }
+if (keywords5 === 'nonseeticketstmaxsgeek') {
+    params.push(`event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=axs&event_url__idoesnotcontains=seetickets&event_url__idoesnotcontains=seatgeek`);
+}
 
     if (keywords6 === 'recentlyadded') {
         params.push(`date_created__sort=-1`);
