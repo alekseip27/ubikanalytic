@@ -339,14 +339,14 @@ let intervalIds;
 let intervalIdx;
 let initsource = false
 
-function initsource() {
+function initsources() {
     if (token.length === 40) {
 		    initializeSourceInstructions()
     clearInterval(intervalIdx);
     initsource = true
     }}
 
-intervalIdx = setInterval(initsource, 1000);
+intervalIdx = setInterval(initsources, 1000);
 
 
 function retryClickingSearchBar() {
