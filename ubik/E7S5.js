@@ -5,6 +5,7 @@ function initsource() {
     if (token.length === 40) {
 		    initializeSourceInstructions()
     clearInterval(intervalIdx);
+    initsource = true
     }}
 
 intervalIdx = setInterval(initsource, 1000);
