@@ -1,3 +1,77 @@
+
+let intervalIdx;
+
+function initsource() {
+    if (token.length === 40) {
+		    initializeSourceInstructions()
+    clearInterval(intervalIdx);
+    }}
+
+intervalIdx = setInterval(initsource, 1000);
+
+
+const DEFAULT_SOURCE_DETAILS = {
+    source: "OTHER",
+    event_prefix: "other",
+    venue_prefix: "other",
+    url: ""
+  };
+
+  let sourceInstructionsMap = new Map();
+
+
+ async function initializeSourceInstructions() {
+    try {
+      const response = await fetch('https://ubik.wiki/api/source-instructions/?limit=100', {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const results = data.results || [];
+
+      sourceInstructionsMap = new Map();
+      results.forEach(record => {
+        if (record.contains) {
+          const tokens = record.contains.split(',').map(token => token.trim());
+          tokens.forEach(token => {
+            sourceInstructionsMap.set(token, {
+              source: record.source,
+              event_prefix: record.event_prefix,
+              venue_prefix: record.venue_prefix
+            });
+          });
+        }
+      });
+
+      console.log(`Loaded ${results.length} source instructions.`);
+      return true;
+    } catch (error) {
+      console.error('Error fetching source instructions:', error);
+      return false;
+    }
+  }
+
+
+  function getSourceDetails(url) {
+    if (sourceInstructionsMap.size === 0) {
+      console.log("Source instructions not loaded yet.");
+      return { ...DEFAULT_SOURCE_DETAILS, url };
+    }
+
+    for (const [token, details] of sourceInstructionsMap) {
+      if (url.includes(token)) {
+        return { ...details, url };
+      }
+    }
+    return { ...DEFAULT_SOURCE_DETAILS, url };
+}
+
+
 let abortControllers = [];
 
 document.getElementById('rightarrow').addEventListener('click', function() {
@@ -31,7 +105,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     let keywords5 = document.querySelector('#sourceselect').value
     let keywords6 = document.querySelector('#sortby').value
     let keywords7 = encodeURIComponent(document.getElementById('searchbar3').value)
- 
+
     let favoritecbox = document.getElementById('favorite').checked
     let preonsales = document.getElementById('preonsales').checked
     $('.event-box').hide()
@@ -69,7 +143,7 @@ if (keywords5 === 'ticketmaster') {
 if (keywords5 === 'seatgeek') {
     params.push(`event_url__icontains=seatgeek.com`);
 }
-        
+
 if (keywords5 === 'nontm') {
     params.push(`event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster`);
 }
@@ -102,7 +176,7 @@ if (keywords6 === 'before10') {
     params.push(`app_142_scrape_date__ote=10&app_142_difference_per_day__sort=-1`);
 }
 
-        
+
 if (keywords6 === 'fastmovement' && keywords5 === 'seetickets') {
     params.push(`app_142_primary_amount__gt=0`);
 }
@@ -118,7 +192,7 @@ if (favoritecbox) {
 if (preonsales) {
     params.push('&is_preonsale__iexact=true');
 }
-        
+
     params.push('limit=100');
 
     xanoUrl = ''
@@ -239,9 +313,16 @@ if (preonsales) {
             card.setAttribute('time', events.time.slice(0, 8));
             }
             card.setAttribute('venue', events.venue_name);
-            card.setAttribute('source', events.scraper_name);
             card.setAttribute('vivid_id', events.vdid);
             card.setAttribute('capacity', events.venue_capacity);
+
+            const txtsource = card.getElementsByClassName('main-textsource')[0]
+
+            const details = getSourceDetails(events.event_url);
+            txtsource.textContent = details.source;
+            card.setAttribute('source', details.source);
+
+
 
 
     const purchasedamount = card.getElementsByClassName('main-text-purchased')[0];
@@ -426,11 +507,12 @@ function normalizeDate(date) {
           let combinedDates = new Set();
           let preferredData = [];
           let counts = events.counts;
-          let source = events.scraper_name.toLowerCase();
           let venueid = events.site_venue_id;
 
+          const detailstwo = getSourceDetails(events.event_url);
+
           // Reset the chart for primary and preferred datasets
-          chart.data.datasets[0].label = `${source.toUpperCase()} Primary`;
+          chart.data.datasets[0].label = `${detailstwo.source.toUpperCase()} Primary`;
           chart.data.datasets.splice(1, 3); // Remove old preferred datasets
           chart.update();
 
@@ -994,6 +1076,7 @@ const scrapetm = (eventid) => {
                 let eventtime = card.getElementsByClassName('main-text-time')[0]
                 eventtime.textContent = events.time.slice(0, 8)
                 }
+
                 const eventvenue = card.getElementsByClassName('main-text-venue')[0]
                 eventvenue.textContent = events.venue_name
                 if(eventvenue.textContent.length>13) {
@@ -1005,109 +1088,6 @@ const scrapetm = (eventid) => {
 
                 const capacity = card.getElementsByClassName('main-text-capacity')[0]
                 capacity.textContent = events.venue_capacity
-
-                let txtsource = card.getElementsByClassName('main-textsource')[0]
-                txtsource.textContent = events.scraper_name
-
-                let eventUrl = events.event_url
-
-                switch(true) {
-                    case eventUrl.includes('showclix'):
-                    txtsource.textContent = 'SHOW';
-                    break;
-                    case eventUrl.includes('thecomplexslc'):
-                    txtsource.textContent = 'SHOW';
-                    break;
-                    case eventUrl.includes('ticketmaster.co.uk'):
-                    txtsource.textContent = 'TM-UK';
-                    break;
-                    case eventUrl.includes('ticketmaster.ca'):
-                    txtsource.textContent = 'TM';
-                    break;
-                    case eventUrl.includes('ticketmaster.de'):
-                    txtsource.textContent = 'TM-DE';
-                    break;
-                    case eventUrl.includes('ticketmaster.com.mx'):
-                    txtsource.textContent = 'TM-MX';
-                    break;
-                    case eventUrl.includes('ticketmaster.com'):
-                    txtsource.textContent = 'TM';
-                    break;
-                    case eventUrl.includes('livenation'):
-                    txtsource.textContent = 'TM';
-                    break;
-                    case eventUrl.includes('24tix'):
-                    txtsource.textContent = '24TIX';
-                    break;
-                    case eventUrl.includes('admitone'):
-                    txtsource.textContent = 'ADMIT1';
-                    break;
-                    case eventUrl.includes('axs.'):
-                    txtsource.textContent = 'AXS';
-                    break;
-                    case eventUrl.includes('dice'):
-                    txtsource.textContent = 'DICE';
-                    break;
-                    case eventUrl.includes('etix'):
-                    txtsource.textContent = 'ETIX';
-                    break;
-                    case eventUrl.includes('eventbrite'):
-                    txtsource.textContent = 'EBRITE';
-                    break;
-                    case eventUrl.includes('freshtix'):
-                    txtsource.textContent = 'FRESH';
-                    break;
-                    case eventUrl.includes('frontgate'):
-                    txtsource.textContent = 'FGATE';
-                    break;
-                    case eventUrl.includes('holdmyticket'):
-                    txtsource.textContent = 'HOLDMT';
-                    break;
-                    case eventUrl.includes('prekindle'):
-                    txtsource.textContent = 'PRE';
-                    break;
-                    case eventUrl.includes('seetickets'):
-                    txtsource.textContent = 'SEETIX';
-                    break;
-                    case eventUrl.includes('showclix'):
-                    txtsource.textContent = 'SHOW';
-                    break;
-                    case eventUrl.includes('ticketweb'):
-                    txtsource.textContent = 'TWEB';
-                    break;
-                    case eventUrl.includes('ticketswest'):
-                    txtsource.textContent = 'TWEST';
-                    break;
-                    case eventUrl.includes('tixr'):
-                    txtsource.textContent = 'TIXR';
-                    break;
-                    case eventUrl.includes('stubwire'):
-                    txtsource.textContent = 'STUBW';
-                    break;
-                    case eventUrl.includes('fgtix'):
-                    txtsource.textContent = 'FGATE';
-                    break;
-                    case eventUrl.includes('evenue'):
-                    txtsource.textContent = 'EVENUE';
-                    break;
-                    case eventUrl.includes('gruenehall'):
-                    txtsource.textContent = 'gruenehall';
-                    break;
-                    case eventUrl.includes('meowwolf'):
-                    txtsource.textContent = 'MEOW';
-                    break;
-                    case eventUrl.includes('thevogue.com'):
-                    txtsource.textContent = 'thevogue';
-                    break;
-                    case eventUrl.includes('bigtickets.com'):
-                    txtsource.textContent = 'big';
-                    break;
-                default:
-                    txtsource.textContent = 'OTHER';
-                    break;
-                }
-
-            //
 
 
             function getLatestCount(counts) {
