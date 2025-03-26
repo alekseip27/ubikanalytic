@@ -336,9 +336,21 @@ function getEvents() {
 
 let intervalIds;
 
-function retryClickingSearchBar() {
+let intervalIdx;
+let initsource = false
+
+function initsource() {
     if (token.length === 40) {
-        initializeSourceInstructions()
+		    initializeSourceInstructions()
+    clearInterval(intervalIdx);
+    initsource = true
+    }}
+
+intervalIdx = setInterval(initsource, 1000);
+
+
+function retryClickingSearchBar() {
+    if (token.length === 40 && !!initsource) {
         getEvents();
         clearInterval(intervalIds);
     }
