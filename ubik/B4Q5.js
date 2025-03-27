@@ -244,6 +244,7 @@ function getEvents() {
                     "2 hrs": 120,
                     "3 hrs": 180,
                     "4 hrs": 240,
+                    "5 hrs": 300,
                     "6 hrs": 360,
                     "7 hrs": 420,
                     "8 hrs": 480,
