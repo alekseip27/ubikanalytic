@@ -1,4 +1,120 @@
 
+let intervalIds;
+function retryClickingSearchBar() {
+    if (token.length === 40) {
+	initializeSourceInstructions()
+    clearInterval(intervalIds);
+    }}
+
+intervalIds = setInterval(retryClickingSearchBar, 1000);
+
+
+
+const DEFAULT_SOURCE_DETAILS = {
+    source: "OTHER",
+    event_prefix: "other",
+    venue_prefix: "other",
+    url: ""
+};
+
+let sourceInstructionsMap = new Map();
+async function initializeSourceInstructions() {
+    try {
+        const response = await fetch('https://ubik.wiki/api/source-instructions/?limit=100', {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Network response was not ok: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+        const results = data.results || [];
+
+        sourceInstructionsMap = new Map();
+
+
+        const prefixEventSelect = document.getElementById('prefix-event');
+        const venuePrefixSelect = document.getElementById('venueprefixsearch');
+
+
+       // Create and append default option for event prefix select
+const eventDefaultOption = document.createElement('option');
+eventDefaultOption.value = '';
+eventDefaultOption.text = 'Prefix';
+prefixEventSelect.appendChild(eventDefaultOption);
+
+// Create and append default option for venue prefix select
+const venueDefaultOption = document.createElement('option');
+venueDefaultOption.value = '';
+venueDefaultOption.text = 'Prefix';
+venuePrefixSelect.appendChild(venueDefaultOption);
+
+
+        const eventPrefixes = new Map();
+        const venuePrefixes = new Map();
+
+        results.forEach(record => {
+            if (record.contains) {
+                const tokens = record.contains.split(',').map(token => token.trim());
+                tokens.forEach(token => {
+                    sourceInstructionsMap.set(token, {
+                        source: record.source,
+                        event_prefix: record.event_prefix,
+                        venue_prefix: record.venue_prefix
+                    });
+
+                    if (record.event_prefix) eventPrefixes.set(record.event_prefix, record.source);
+                    if (record.venue_prefix) venuePrefixes.set(record.venue_prefix, record.source);
+                });
+            }
+        });
+
+        // Populate event prefix select with prefix and source
+        eventPrefixes.forEach((source, prefix) => {
+            const option = document.createElement('option');
+            option.value = prefix;
+            option.text = `${source} (${prefix})`;
+            prefixEventSelect.appendChild(option);
+        });
+
+        // Populate venue prefix select with prefix and source
+        venuePrefixes.forEach((source, prefix) => {
+            const option = document.createElement('option');
+            option.value = prefix;
+            option.text = `${source} (${prefix})`;
+            venuePrefixSelect.appendChild(option);
+        });
+
+        console.log(`Loaded ${results.length} source instructions.`);
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('Item-Container').style.display = 'flex';
+        return true;
+    } catch (error) {
+        console.error('Error fetching source instructions:', error);
+        return false;
+    }
+}
+  function getSourceDetails(url) {
+    if (sourceInstructionsMap.size === 0) {
+      console.log("Source instructions not loaded yet.");
+      return { ...DEFAULT_SOURCE_DETAILS, url };
+    }
+
+    for (const [token, details] of sourceInstructionsMap) {
+      if (url.includes(token)) {
+        return { ...details, url };
+      }
+    }
+    return { ...DEFAULT_SOURCE_DETAILS, url };
+}
+
+
+
+
+
+
 let currentDate = new Date();
 
 // Adjust date to EST timezone
@@ -18,14 +134,14 @@ $('#event_date').datepicker({
   dateFormat: 'yy-mm-dd'
   });
 
-  
-   
+
+
   document.querySelector('#search-buttoneventid').addEventListener("click", () => {
-  
+
       let eventid = encodeURIComponent(document.querySelector('#prefix-event').value) + encodeURIComponent(document.querySelector('#checkeventid').value)
-  
+
       var url = "https://ubik.wiki/api/primary-events/?site_event_id__icontains=" + eventid
-  
+
       fetch(url, {
           method: "GET",
           headers: {
@@ -55,16 +171,16 @@ $('#event_date').datepicker({
           .catch(function (error) {
               console.error(error);
           });
-      
+
   })
-  
-  
+
+
   document.querySelector('#search-buttonvenueid').addEventListener("click", () => {
-  
+
       let venueid = encodeURIComponent(document.querySelector('#venueprefixsearch').value) + encodeURIComponent(document.querySelector('#checkvenueid').value)
-  
+
       var url = "https://ubik.wiki/api/venues/?site_venue_id__iexact=" + venueid
-  
+
       fetch(url, {
           method: "GET",
           headers: {
@@ -95,9 +211,9 @@ $('#event_date').datepicker({
           .catch(function (error) {
               console.error(error);
           });
-      
+
   })
-  
+
   document.addEventListener("input", () => {
   const fld1 = !!document.querySelector("#site_event_id").value
   const fld2 = !!document.querySelector("#site_venue_id").value
@@ -113,7 +229,7 @@ $('#event_date').datepicker({
   $("#buybtn").css("display", "none");
   }
   })
-  
+
   document.addEventListener("input", () => {
   const fld11 = !!document.querySelector("#venueid").value;
   const fld22 = !!document.querySelector("#venuename").value;
@@ -132,8 +248,8 @@ $('#event_date').datepicker({
   $("#buybtn2").css("display", "none");
   }
   })
-  
-  
+
+
   document.querySelector('#venueurl').addEventListener('keyup', (event) => {
   let val = document.querySelector('#venueurl').value
   if(val.includes('etix') && val.includes('/v/')){
@@ -141,21 +257,21 @@ $('#event_date').datepicker({
   let vsid = val.split('v/')[1]
   document.querySelector('#venueurl').value = val1 + vsid.split('/')[0]
   }if(val.includes('seetickets') && val.includes('=yes&s=')){
-  
+
   let val1 = 'https://www.seetickets.us/wafform.aspx?_act=fullsearchv3&v3=yes&s='
-  
+
   document.querySelector('#venueurl').value = val1 + (val.split('=yes&s=')[1])
   }
   });
-  
+
   let venueid = document.querySelector('#venueid');
   let venueurl = document.querySelector('#venueurl');
 
-  
+
   document.querySelector('#buybtn').addEventListener("click", () => {
-  
-  
-  var inputElement = document.getElementById('event_date'); 
+
+
+  var inputElement = document.getElementById('event_date');
   var inputValue = inputElement.value;
   var formattedValue = inputValue.replace(/\//g, '-');
   inputElement.value = formattedValue;
@@ -164,191 +280,12 @@ $('#event_date').datepicker({
   let venueprefix;
   let source;
 
-if(eventurl.includes('ticketmaster.com') || eventurl.includes('ticketmaster.ca') || eventurl.includes('livenation.com')){
-prefix = 'tm'
-venueprefix = 'tm'
-source = 'TM'
-}
-
-else if(eventurl.includes('axs.com')){
-prefix = 'axs'
-venueprefix = 'axs'
-source = 'AXS'
-}
-
- else if(eventurl.includes('universe.com')){
-prefix = 'unv'
-venueprefix = 'unv'
-source = 'universe'
-}
-
-else if(eventurl.includes('24tix')){
-prefix = '24tix'
-venueprefix = ''
-source = '24tix'
-}
-
-else if(eventurl.includes('dice.fm')){
-prefix = ''
-venueprefix = ''
-source = 'dice'
-}
-
-else if(eventurl.includes('bigtickets.com')){
-prefix = 'big-'
-venueprefix = 'big-'
-source = 'big'
-}
+const details = getSourceDetails(eventurl);
+source = details.source;
+venueprefix = details.venue_prefix
+prefix = details.event_prefix
 
 
-else if(eventurl.includes('etix.com')){
-prefix = 'etix'
-venueprefix = 'etix'
-source = 'etix'
-}
-
-else if(eventurl.includes('seetickets.us')){
-prefix = 'see'
-venueprefix = ''
-source = 'seetickets'
-}
-
-else if(eventurl.includes('evenue.net')){
-prefix = ''
-venueprefix = ''
-source = "evenue";
-}
-
-
-else if(eventurl.includes('admitone')){
-prefix = 'admit'
-venueprefix = ''
-source = 'admitone'
-}
-
-else if(eventurl.includes('eventbrite')){
-prefix = 'ebrite'
-venueprefix = 'ebrite'
-source = "eventbrite";
-}
-
-
-
-else if(eventurl.includes('freshtix')){
-prefix = ''
-venueprefix = ''
-source = 'freshtix'
-}
-
-
-else if(eventurl.includes('holdmyticket')){
-prefix = 'hold'
-venueprefix = ''
-source = 'holdmyticket'
-}
-
-
-else if(eventurl.includes('prekindle')){
-prefix = 'pre'
-venueprefix = ''
-source = 'prekindle'
-}
-
-else if(eventurl.includes('showclix')){
-prefix = 'show'
-venueprefix = 'show'
-source = 'showclix'
-}
-
-else if(eventurl.includes('ticketweb')){
-prefix = 'tweb'
-venueprefix = 'tweb'
-source = "ticketweb";
-}
-
-else if(eventurl.includes('ticketswest')){
-prefix = ''
-venueprefix = ''
-source = "ticketwest";
-}
-
-else if(eventurl.includes('tixr')){
-prefix = 'tixr'
-venueprefix = 'tixr'
-source = 'tixr'
-}
-
-
-else if(eventurl.includes('gruenehall')){
-prefix = ''
-venueprefix = ''
-source = "gruenehall"
-}
-
-
-else if(eventurl.includes('meowwolf')){
-prefix = ''
-venueprefix = ''
-source = 'MEOW'
-}
-
-else if(eventurl.includes('stubs.net')){
-prefix = 'stubs'
-venueprefix = 'stubs'
-source = 'stubs'
-}
-
-
-else if(eventurl.includes('stubwire')){
-prefix = 'stub'
-venueprefix = ''
-source = 'stubwire'
-}
-
-
-else if(eventurl.includes('universe.com')){
-prefix = 'unv'
-venueprefix = ''
-source = 'universe'
-}
-
-else if(eventurl.includes('thevogue')){
-prefix = ''
-venueprefix = ''
-source = 'vogue'
-}
-
-else if(eventurl.includes('mpv.tickets')){
-prefix = 'mpv'
-venueprefix = ''
-source = 'mpv'
-}
-
-else if(eventurl.includes('frontgatetickets')){
-prefix = ''
-venueprefix = ''
-source = 'frontgate'
-}
-
-else if(eventurl.includes('amptickets')){
-prefix = 'amp'
-venueprefix = ''
-source = 'amptickets'
-}
-
-else if(eventurl.includes('zoukgrouplv')){
-prefix = 'zouk-'
-venueprefix = 'zouk-'
-source = 'zouk'
-}
-
-else {
-prefix = 'other'
-venueprefix = ''
-source = 'other'
-}
-
- 
 
   let venueid =  document.querySelector('#site_venue_id').value;
   let eventid =  document.querySelector('#site_event_id').value;
@@ -357,9 +294,9 @@ source = 'other'
   let eventtime = document.querySelector('#event_time').value;
   let eventdate = document.querySelector('#event_date').value;
   let addedby = document.querySelector('#username').textContent;
-  
+
   var endpointUrl = "https://ubik.wiki/api/create/primary-events/";
-  
+
   var params = {
     "site_event_id": prefix + eventid,
     "site_venue_id": venueprefix + venueid,
@@ -371,7 +308,7 @@ source = 'other'
     "date_created": formattedDate,
     "scraper_name": source
   };
-  
+
   fetch(endpointUrl, {
     method: 'POST',
     headers: {
@@ -393,201 +330,43 @@ source = 'other'
   setTimeout(() => {
   window.location.href = "/add-event";
   }, 2000);
-  
+
     } else {
 
   document.querySelector('#loading').style.display = "none";
   document.querySelector('#Item-Container').style.display = "flex";
     document.querySelector('#errortext').style.display = 'flex';
-  
+
     }
   })
   .then(data => {
     // Handle the response data or error message here
   })
   .catch(error => {
-      
+
     console.log(error);
     document.querySelector('#loading').style.display = "none";
     document.querySelector('#Item-Container').style.display = "flex";
-  
+
     document.querySelector('#errortext').style.display = 'flex';
-  
+
     document.querySelector('#errortext').textContent = error;
   });
   })
-  
-  
-  
+
+
+
   document.querySelector('#buybtn2').addEventListener("click", () => {
-  
+
   var venueUrl = document.querySelector('#venueurl').value
-  var result = "";
-  var result2 = "";
-  
-  if (venueUrl.includes("ticketmaster.com") || venueUrl.includes('ticketmaster.ca') || venueUrl.includes("livenation.com")) {
-  result = "tm";
-  result2 = "TM";
-  }
-  else if (venueUrl.includes("universe.com")) {
-      result = "unv";
-      result2 = "universe";
-  }
 
-   
-  else if (venueUrl.includes("axs.com")) {
-      result = "axs";
-      result2 = "AXS";
-  }
-
-  else if (venueUrl.includes("24tix")) {
-    result = "";
-    result2 = "24TIX";
-   }
-
-   else if (venueUrl.includes("admitone")) {
-    result = "";
-    result2 = "ADMIT1";
-   }
-
-   else if (venueUrl.includes("dice.fm")) {
-    result = "";
-    result2 = "DICE";
-
-   }
+  const details = getSourceDetails(venueUrl);
+  source2 = details.source;
+  venueprefix2 = details.venue_prefix
 
 
-   else if (venueUrl.includes("etix.com")) {
-      result = "etix";
-      result2 = "ETIX";
-   }
+      venueids = venueprefix2 + document.querySelector('#venueid').value
 
-   else if (venueUrl.includes("eventbrite")) {
-      result = "ebrite";
-      result2 = "EBRITE";
-   }   
-
-
-   else if (venueUrl.includes("evenue.net")) {
-    result = "";
-    result2 = "EVENUE";
-
-   }
-
-
-   else if (venueUrl.includes("freshtix")) {
-    result = "";
-    result2 = "FRESH";
-   }
-
-
-   else if (venueUrl.includes("holdmyticket")) {
-    result = "";
-    result2 = "HOLDMT";
-   }
-
-
-   else if (venueUrl.includes("prekindle")) {
-    result = "";
-    result2 = "PRE";
-
-   }
-
-
-   else if (venueUrl.includes("seetickets.us")) {
-    result = "see";
-    result2 = "SEETIX";
-   }
-
-   else if (venueUrl.includes("showclix")) {
-      result = "show";
-      result2 = "SHOW";
-
-   }
-
-   else if (venueUrl.includes("ticketweb")) {
-      result = "tweb";
-      result2 = "TWEB";
-   }
-   
-   
-   else if (venueUrl.includes("ticketswest")) {
-      result = "";
-      result2 = "TWEST";
-   }
-   
-   
-   else if (venueUrl.includes("tixr")) {
-      result = "tixr";
-      result2 = "TIXR";
-
-   }
-
-   else if (venueUrl.includes("gruenehall")) {
-    result = "";
-    result2 = "gruenehall"
-   }
-
-   else if (venueUrl.includes("bigtickets.com")) {
-    result = "big-";
-    result2 = "big"
-   }
-    
-
-   else if (venueUrl.includes("meowwolf")) {
-    result = "";
-    result2 = "MEOW";
-   }
-
-   else if (venueUrl.includes("stubs.net")) {
-    result = "stubs";
-    result2 = "stubs";
-   }
-
-   else if (venueUrl.includes("stubwire")) {
-   result = "";
-   result2 = "STUBW";
-   
-   }
-   else if (venueUrl.includes("universe.com")) {
-    result = "";
-    result2 = "universe";
-   }
-
-   else if (venueUrl.includes("thevogue")) {
-    result = "";
-    result2 = "vogue";
-   }
-
-   else if (venueUrl.includes("mpv.tickets")) {
-    result = "";
-    result2 = "mpv";
-   }
-
-   else if (venueUrl.includes("frontgatetickets")) {
-    result = "";
-    result2 = "frontgate";
-   }
-
-   else if (venueUrl.includes("amptickets")) {
-    result = "";
-    result2 = "amptickets";
-   }
-
-
-   else if (venueUrl.includes("zoukgrouplv")) {
-      result = "zouk-";
-      result2 = "zouk";
-   }
-
-
-   else {
-      result = "";
-      result2 = "other";
-   }
-
-      venueids = result + document.querySelector('#venueid').value    
-      
       let venuename = document.querySelector('#venuename').value
       let venueurl = document.querySelector('#venueurl').value
       let venuecity = document.querySelector('#venuecity').value
@@ -600,20 +379,20 @@ source = 'other'
       let vividseatsurl = document.querySelector('#vividseatsurl').value
       let addedbyt = document.querySelector('#username').textContent
       let shid = document.querySelector('#stubhuburl').value.replace(/[^0-9]/g, '');
-      
+
       if(document.querySelector('#stubhuburl').value.includes('/venue/')){
       let shid = document.querySelector('#stubhuburl').value.split('venue/')[1].replace("/", "")}
       let vsid = document.querySelector('#vividseatsurl').value.replace(/[^0-9]/g, '');
-      
+
       if(document.querySelector('#vividseatsurl').value.includes('/venue/')){
       let vsid = document.querySelector('#vividseatsurl').value.split('venue/')[1].replace("/", "")}
-      
+
       else if(document.querySelector('#vividseatsurl').value.includes('/performer/')){
       let vsid = document.querySelector('#vividseatsurl').value.split('performer/')[1].replace("/", "");
       }
-  
+
       var endpointUrl = "https://ubik.wiki/api/create/venues/";
-      
+
       var params = {
           "site_venue_id": venueids,
           "added_by":addedbyt,
@@ -630,9 +409,9 @@ source = 'other'
           "stubhub_url":stubhuburl,
           "vivid_venue_id":vsid,
           "stubhub_venue_id":shid,
-          "source_site":result2
+          "source_site":source2
       }
-      
+
       fetch(endpointUrl, {
         method: 'POST',
         headers: {
@@ -645,14 +424,14 @@ source = 'other'
           response.text().then(text => {
           document.querySelector('#errortext2').textContent = "Error: " + text;
           });
-          
+
         if (response.status === 200 || response.status === 201) {
       document.querySelector('#loading').style.display = "flex";
       document.querySelector('#Item-Container').style.display = "none";
       setTimeout(() => {
       window.location.href = "/add-event";
       }, 2000);
-      
+
       } else {
 
       document.querySelector('#loading').style.display = "none";
@@ -664,7 +443,7 @@ source = 'other'
         // Handle the response data or error message here
       })
       .catch(error => {
-      
+
         console.log(error);
         document.querySelector('#loading').style.display = "none";
         document.querySelector('#Item-Container').style.display = "flex";
@@ -672,6 +451,5 @@ source = 'other'
         document.querySelector('#errortext2').textContent = "Error: Venue Already Exists:"
       });
       })
-      
-  
-  
+
+
