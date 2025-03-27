@@ -158,6 +158,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     document.querySelector('#edit-gender').value = events.gender
     document.querySelector('#edit-bday').value = events.birthdate
     document.querySelector('#edit-pnumber').value = events.phone_number
+    document.querySelector('#edit-tm-number').value = events.tm_phone_number
     document.querySelector('#edit-plocation').value = events.phone_location
     document.querySelector('#edit-country').value = events.country
     document.querySelector('#edit-address').value = events.address
@@ -174,6 +175,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
     const numbercard = card.getElementsByClassName('main-text-numbers')[0]
     numbercard.textContent = events.phone_number;
+    
 
     const fname = card.getElementsByClassName('main-text-fname')[0]
     fname.textContent = events.first_name
