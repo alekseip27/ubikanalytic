@@ -175,8 +175,10 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
     const numbercard = card.getElementsByClassName('main-text-numbers')[0]
     numbercard.textContent = events.phone_number;
-    
 
+    const tmnumbercard = card.getElementsByClassName('main-text-tmnum')[0]
+    tmnumbercard.textContent = events.tm_phone_number;
+    
     const fname = card.getElementsByClassName('main-text-fname')[0]
     fname.textContent = events.first_name
 
