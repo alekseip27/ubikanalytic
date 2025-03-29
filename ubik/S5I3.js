@@ -2,16 +2,8 @@
 function getEvents() {
     document.querySelector('#sampleitem').style.display = 'none'
 
-    let keywords1 = document.getElementById('source').value
-    let baseUrl = 'https://ubik.wiki/api/source-instructions/?';
-    let params = [];
+    let mainurl = 'https://ubik.wiki/api/source-instructions/?limit=100';
 
-    if (keywords1.length > 0) {
-    params.push('source__iexact=' + keywords1)
-    }
-
-    params.push('limit=100');
-    let mainurl = baseUrl + params.join('&');
 
 let request = new XMLHttpRequest();
 
@@ -212,7 +204,7 @@ getEvents();
 document.querySelector('#edit-id').disabled = true
 
 document.querySelector('#editbtn').addEventListener('click', function() {
-    document.querySelector('#editbtn').style.pointerEvents = "none";
+document.querySelector('#editbtn').style.pointerEvents = "none";
 let itemid = document.querySelector('#edit-id').value
 let source = document.querySelector('#edit-source').value
 let eventprefix = document.querySelector('#edit-event-prefix').value
@@ -252,8 +244,8 @@ response.text().then(text => {
 document.querySelector('#errortext').textContent = "Error: " + text;
 });
 
-        document.querySelector('#editbtn').style.pointerEvents = "auto";
-    document.querySelector('#search-button').click()
+document.querySelector('#editbtn').style.pointerEvents = "auto";
+document.querySelector('#search-button').click()
 document.querySelector('#editwrapper1').style.display = 'none';
 document.querySelector("#editwrapper2").style.display = 'none'
     return response.text();
