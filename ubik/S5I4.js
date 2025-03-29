@@ -169,13 +169,6 @@ getEvents()
 clearInterval(intervalIds);
 }}
 
-document.getElementById('source').addEventListener('change', async function () {
-let boxes = document.querySelectorAll('.listitem')
-for (let i = 0; i<boxes.length;i++) {
-boxes[i].style.display = 'none'
-}
-getEvents();
-});
 
 
 {
