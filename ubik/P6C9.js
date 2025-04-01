@@ -330,7 +330,7 @@ eventPrice.addEventListener('keyup', () => {
             }
 
             let X_predicted = (0.87 * Y_given);
-            let X_predicted_rounded = X_predicted.toFixed();
+            let X_predicted_rounded = X_predicted.toFixed(2);
             eventPrice.value = X_predicted_rounded;
         }, doneTypingInterval);
     }
