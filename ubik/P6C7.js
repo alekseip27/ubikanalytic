@@ -1,3 +1,79 @@
+
+let intervalIdx;
+
+function initsource() {
+    if (token.length === 40) {
+		    initializeSourceInstructions()
+    clearInterval(intervalIdx);
+    document.querySelector('#search-button').click()
+
+    }}
+
+intervalIdx = setInterval(initsource, 1000);
+
+
+const DEFAULT_SOURCE_DETAILS = {
+    source: "OTHER",
+    event_prefix: "other",
+    venue_prefix: "other",
+    url: ""
+  };
+
+  let sourceInstructionsMap = new Map();
+
+
+ async function initializeSourceInstructions() {
+    try {
+      const response = await fetch('https://ubik.wiki/api/source-instructions/?limit=100', {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+
+      if (!response.ok) {
+        throw new Error(`Network response was not ok: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      const results = data.results || [];
+
+      sourceInstructionsMap = new Map();
+      results.forEach(record => {
+        if (record.contains) {
+          const tokens = record.contains.split(',').map(token => token.trim());
+          tokens.forEach(token => {
+            sourceInstructionsMap.set(token, {
+              source: record.source,
+              event_prefix: record.event_prefix,
+              venue_prefix: record.venue_prefix
+            });
+          });
+        }
+      });
+
+      console.log(`Loaded ${results.length} source instructions.`);
+      return true;
+    } catch (error) {
+      console.error('Error fetching source instructions:', error);
+      return false;
+    }
+  }
+
+
+  function getSourceDetails(url) {
+    if (sourceInstructionsMap.size === 0) {
+      console.log("Source instructions not loaded yet.");
+      return { ...DEFAULT_SOURCE_DETAILS, url };
+    }
+
+    for (const [token, details] of sourceInstructionsMap) {
+      if (url.includes(token)) {
+        return { ...details, url };
+      }
+    }
+    return { ...DEFAULT_SOURCE_DETAILS, url };
+}
+
+
 let abortControllers = [];
 
 var input = document.getElementById("searchbar1");
@@ -222,7 +298,7 @@ if (events.tags && events.tags.includes('lowerable')) {
 
 eventPrice.addEventListener('keyup', () => {
     let crds = document.querySelectorAll('.event-box.selected.includesfees').length
-    
+
     clearTimeout(typingTimer);
     if (eventPrice.value && document.querySelector('#vspricing').checked && crds<=0) {
         typingTimer = setTimeout(() => {
@@ -421,7 +497,7 @@ const predictedPrice = (a + b * listPrice).toFixed(2);
 
 viewPrice.textContent = predictedPrice;
 
-    
+
 let curitem = document.getElementById(selectedcard);
 
 if (curitem && curitem.classList.contains("includesfees")) {
@@ -429,7 +505,7 @@ if (curitem && curitem.classList.contains("includesfees")) {
     viewPrice.textContent = feespricing;
 }
 
-    
+
 }
 
 function checkPricingStatus(card, ticketID) {
@@ -596,9 +672,12 @@ async function getchartprimary() {
         if (exists > 0) {
             const event = data.results[0];
             const counts = event.counts;
-            let source = event.scraper_name.toLowerCase();
+            let details = getSourceDetails(event.event_url)
+            let source = details.source
+            let evname = event.name
+            let evdate = event.date
             let venueid = event.site_venue_id;
-            chartprimary.data.datasets[0].label = `${source.toUpperCase()} Primary`;
+            chartprimary.data.datasets[0].label = `${evname} - ${evdate} (${source.toUpperCase()})`;
             let evids = event.site_event_id;
             let url = event.event_url
             if (evids.includes('tm')) evids = evids.substring(2);
@@ -847,6 +926,9 @@ function processTicketmasterData(data) {
         }
     }
 
+    let eventname = data[0].name
+    let eventdate = data[0].date.slice(0, 10)
+
     console.log(prefSections);
 
     chartprimary.data.datasets.splice(1, 3);
@@ -930,7 +1012,7 @@ function processTicketmasterData(data) {
     // Ensure primary dataset is always present
     chartprimary.data.datasets = [{
         data: sortedPrimaryData.sortedAmounts,
-        label: "TICKETMASTER Primary",
+        label: `${eventname} - ${eventdate} (TM)`,
         backgroundColor: 'rgba(0, 102, 51, 1)',
         borderColor: 'rgba(0, 102, 51, 1)',
         borderWidth: 1
@@ -1407,7 +1489,7 @@ async function getpdates() {
             const pdateElement = eventBox.querySelector('.main-text-pdate');
 
 
-          
+
 
             if (pdateElement.textContent || eventBox.id === 'samplestyle') {
                 continue;
@@ -1453,7 +1535,7 @@ function sleep(ms) {
 
 document.getElementById('scrapedates').addEventListener('click', getpdates);
 
-document.querySelector('#search-button').click()
+
 
 
 
@@ -1629,7 +1711,7 @@ fetch('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_events_purchdate')
           if(maintextinhands){
           maintextinhands.textContent = inhands
           }
-          
+
         if (mainTextPdateElement) {
         mainTextPdateElement.textContent = daysDiff + ' Days'
         element.setAttribute('purchdate',daysDiff)
