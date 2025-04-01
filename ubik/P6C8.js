@@ -677,7 +677,20 @@ async function getchartprimary() {
             let evname = event.name
             let evdate = event.date
             let venueid = event.site_venue_id;
-            chartprimary.data.datasets[0].label = `${evname} - ${evdate} (${source.toUpperCase()})`;
+            chartprimary.data.datasets[0].label = `${source.toUpperCase()} Primary`;
+
+            document.getElementById('primaryicon1').textContent = ''
+            document.getElementById('primaryicon2').textContent = ''
+            document.getElementById('primaryname').textContent = ''
+            document.getElementById('primarydate').textContent = ''
+
+                document.getElementById('primaryicon1').textContent = ''
+                document.getElementById('primaryicon2').textContent = ''
+                document.getElementById('primaryname').textContent = evname.slice(0, 10) + '...'
+                document.getElementById('primarydate').textContent = evdate
+
+
+
             let evids = event.site_event_id;
             let url = event.event_url
             if (evids.includes('tm')) evids = evids.substring(2);
@@ -926,8 +939,17 @@ function processTicketmasterData(data) {
         }
     }
 
-    let eventname = data[0].name
-    let eventdate = data[0].date.slice(0, 10)
+    document.getElementById('primaryicon1').textContente = ''
+    document.getElementById('primaryicon2').textContent = ''
+    document.getElementById('primaryname').textContent = ''
+    document.getElementById('primarydate').textContent = ''
+
+        let eventname = data[0].name
+        let eventdate = data[0].date.slice(0, 10)
+        document.getElementById('primaryicon1').textContent = ''
+        document.getElementById('primaryicon2').textContent = ''
+        document.getElementById('primaryname').textContent = eventname.slice(0, 10) + '...'
+        document.getElementById('primarydate').textContent = eventdate
 
     console.log(prefSections);
 
@@ -1012,7 +1034,7 @@ function processTicketmasterData(data) {
     // Ensure primary dataset is always present
     chartprimary.data.datasets = [{
         data: sortedPrimaryData.sortedAmounts,
-        label: `${eventname} - ${eventdate} (TM)`,
+        label: `TM Primary`,
         backgroundColor: 'rgba(0, 102, 51, 1)',
         borderColor: 'rgba(0, 102, 51, 1)',
         borderWidth: 1
