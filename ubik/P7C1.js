@@ -502,7 +502,7 @@ let curitem = document.getElementById(selectedcard);
 
 if (curitem && curitem.classList.contains("includesfees")) {
     const feespricing = 2.5 + (listPrice * 1.18);
-    viewPrice.textContent = feespricing;
+    viewPrice.textContent = feespricing.toFixed(2);
 }
 
 
