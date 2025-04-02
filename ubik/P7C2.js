@@ -1,12 +1,11 @@
 
 let intervalIdx;
+let sourcesinit = false
 
 function initsource() {
     if (token.length === 40) {
 		    initializeSourceInstructions()
     clearInterval(intervalIdx);
-    document.querySelector('#search-button').click()
-
     }}
 
 intervalIdx = setInterval(initsource, 1000);
@@ -51,6 +50,7 @@ const DEFAULT_SOURCE_DETAILS = {
       });
 
       console.log(`Loaded ${results.length} source instructions.`);
+      sourcesinit = true	    
       return true;
     } catch (error) {
       console.error('Error fetching source instructions:', error);
@@ -477,7 +477,7 @@ $('.event-box.selected').addClass('pricechange');
 
 function updateLastUpdated(card, events) {
 const lastUpdated = card.querySelector('.main-text-updated');
-const updatedTime = moment.utc(events.lastPriceUpdate).subtract(5, 'hours').format('MM-DD HH:mm');
+const updatedTime = moment.utc(events.lastPriceUpdate).subtract(4, 'hours').format('MM-DD HH:mm');
 
 lastUpdated.textContent = updatedTime;
 }
