@@ -173,10 +173,13 @@ if (keywords6 === 'fast10') {
     params.push(`app_142_scrape_date__yte=10&app_142_difference_per_day__sort=-1`);
 }
 
+if (keywords6 === 'fast3') {
+    params.push(`app_142_scrape_date__yte=3&app_142_difference_per_day__sort=-1`);
+}
+
 if (keywords6 === 'before10') {
     params.push(`app_142_scrape_date__ote=10&app_142_difference_per_day__sort=-1`);
 }
-
 
 if (keywords6 === 'fastmovement' && keywords5 === 'seetickets') {
     params.push(`app_142_primary_amount__gt=0`);
