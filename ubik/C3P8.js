@@ -141,7 +141,10 @@ function constructURL(next) {
 if (keywords5 === 'seatgeek') {
     params.push(`event_url__icontains=seatgeek.com`);
 }
-  
+if (keywords5 === 'ticketmaster-mexico') {
+    params.push(`site_event_id__icontains=tm-mx`);
+}
+
 
 if (keywords5 === 'nonseeticketstmaxsgeek') {
     params.push(`event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=axs&event_url__idoesnotcontains=seetickets&event_url__idoesnotcontains=seatgeek`);
