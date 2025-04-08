@@ -141,6 +141,11 @@ if (keywords5 === 'axs' || keywords5 === 'seetickets') {
 if (keywords5 === 'ticketmaster') {
     params.push(`event_url__icontains=ticketmaster&event_url__icontains=livenation`);
 }
+
+if (keywords5 === 'ticketmaster-mexico') {
+    params.push(`site_event_id__icontains=tm-mx`);
+}
+	    
 if (keywords5 === 'seatgeek') {
     params.push(`event_url__icontains=seatgeek.com`);
 }
