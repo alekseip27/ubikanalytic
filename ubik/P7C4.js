@@ -1731,7 +1731,7 @@ fetch('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_events_purchdate')
         const mainTextPdateElement = element.querySelector('.main-text-pdate');
         const maintextinhands = element.querySelector('.main-text-inhands');
 	
-	if(feesincl){
+	if(feesincl === 'true' || feesincl === true){
 	element.classList.add('includesfees');
 	}
           if(maintextinhands){
