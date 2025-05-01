@@ -1724,12 +1724,16 @@ fetch('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_events_purchdate')
         // Calculate days difference and set as an attribute
         let curdate = item.days_purch;
         let inhands = item.in_hand_date;
+	let feesincl = item.feesincluded
         const daysDiff = getDaysDifference(curdate);
         element.setAttribute('createddate', daysDiff);
 
         const mainTextPdateElement = element.querySelector('.main-text-pdate');
         const maintextinhands = element.querySelector('.main-text-inhands');
-
+	
+	if(feesincl){
+	element.classList.add('includesfees');
+	}
           if(maintextinhands){
           maintextinhands.textContent = inhands
           }
