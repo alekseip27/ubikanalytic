@@ -321,6 +321,14 @@ function copyToClipboard2(text) {
     document.body.removeChild(tempInput2);
 }
 
+function copyToClipboard3(text) {
+    const tempInput3 = document.createElement('input');
+    document.body.appendChild(tempInput3);
+    tempInput3.value = text;
+    tempInput3.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput3);
+}
 
 document.querySelector('#unlock').addEventListener("click", () => {
 let id = document.querySelector('#unlock').getAttribute('retrieve')
@@ -332,6 +340,10 @@ let id = document.querySelector('#unlock2').getAttribute('retrieve')
 copyToClipboard2(id)
 })
 
+document.querySelector('#primobrowser').addEventListener("click", () => {
+    let id = document.querySelector('#primobrowser').textContent
+    copyToClipboard3(id)
+})
 
 
 async function retrievezip(id,provider) {
@@ -431,6 +443,22 @@ function setvalue(buyerEmail){
 document.querySelector('#purchaseaccounts').value = buyerEmail
 document.querySelector('#failedemail').value = buyerEmail
 copyToClipboard(buyerEmail)
+
+let eventurl = document.getElementById('url').textContent
+if(eventurl.includes('ticketmaster.com')) {
+document.getElementById('primobrowser').textContent = buyerEmail + ' - TM US'
+}
+if(eventurl.includes('ticketmaster.ca')) {
+document.getElementById('primobrowser').textContent = buyerEmail + ' - TM CA'
+}
+
+if(eventurl.includes('livenation.com')) {
+document.getElementById('primobrowser').textContent = buyerEmail + ' - LN'
+}
+
+if(eventurl.includes('axs.com')) {
+document.getElementById('primobrowser').textContent = buyerEmail + ' - AXS'
+}
 }
 
 
@@ -542,6 +570,8 @@ function (data) {
     document.querySelector('#evurl').value = evurl
     document.querySelector('#evtime').value = evtime
     document.querySelector('#vename').value = vename
+
+
 
     }
 },
@@ -845,6 +875,7 @@ $temp.val(text).select();
 document.execCommand("copy");
 $temp.remove();
 }
+
 $('#url').click(function () { copyToClipboard($('#url').text()); });
 
 document.querySelector('#loading').style.display = "none";
