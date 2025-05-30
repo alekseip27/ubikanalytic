@@ -403,6 +403,7 @@ lowerableCheck.style.display = isAuthorizedUser ? 'flex' : 'none';
 card.querySelector('.main-text-id').textContent = events.id;
 card.querySelector('.main-text-section').textContent = events.section;
 card.querySelector('.main-text-rows').textContent = events.row;
+card.querySelector('.main-text-seats').textContent = events.lowSeat + ' - ' + events.highSeat;
 card.querySelector('.main-text-qty').textContent = events.quantity;
 card.querySelector('.main-field-price').value = events.listPrice;
 card.querySelector('.main-text-cst').textContent = `$${events.cost}`;
