@@ -215,6 +215,15 @@ document.querySelector('#search-button').addEventListener("click", () => {
                     eventcost.textContent = '$' + events.cost;
 
 
+                    if (events.venue.country === "CA") {
+			card.addClass('canada');
+                    }
+			
+			
+                    if (eventvenue.textContent.length > 10) {
+                        eventvenue.textContent = events.venue.name.slice(0, 10) + '...';
+                    }
+
                     function abortAllRequests() {
                         abortControllers.forEach(controller => controller.abort());
                         abortControllers = []; // Clear the array after aborting
