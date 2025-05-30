@@ -216,7 +216,7 @@ document.querySelector('#search-button').addEventListener("click", () => {
 
 
                     if (events.venue.country === "CA") {
-			card.addClass('canada');
+			card.classList.add('canada');
                     }
 			
 			
