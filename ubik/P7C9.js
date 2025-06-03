@@ -50,7 +50,7 @@ const DEFAULT_SOURCE_DETAILS = {
       });
 
       console.log(`Loaded ${results.length} source instructions.`);
-      sourcesinit = true	    
+      sourcesinit = true
       return true;
     } catch (error) {
       console.error('Error fetching source instructions:', error);
@@ -218,8 +218,8 @@ document.querySelector('#search-button').addEventListener("click", () => {
                     if (events.venue.country === "CA") {
 			card.classList.add('canada');
                     }
-			
-			
+
+
                     if (eventvenue.textContent.length > 10) {
                         eventvenue.textContent = events.venue.name.slice(0, 10) + '...';
                     }
@@ -540,6 +540,7 @@ http.onload = function() {
                     card.addEventListener('click', function() {
                         abortAllRequests();
                         document.querySelector('#vividclick').style.display = 'none';
+                        document.querySelector('#stubhubclick').style.display = 'none';
                         document.querySelector('#mainurl').value = '';
                         document.querySelector('#urlmain').style.display = 'none';
                         document.querySelector('#changedata').style.display = 'none';
@@ -629,11 +630,11 @@ http.onload = function() {
 
                         vividsections();
                         retrievetickets()
+                        stubhubsections()
                     });
                     cardContainer.appendChild(card);
                 });
                 checkexp()
-                checkfeeitems()
                 checkpurchdates()
                 $('#mainpricing').css("display", "block");
                 $('#loadingpricing').css("display", "none");
@@ -1092,32 +1093,6 @@ function processTicketmasterData(data) {
     document.querySelector("#loadingfailed3").style.display = "none";
 }
 
-function addfees(eventid){
-fetch('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/add_to_includesfees', {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-        eventid: eventid
-    })
-})
-.then(response => response.json())
-.then(data => {
-console.log('Success:', data);
-
-if(data.eventid && data.eventid.length>5){
-const element = document.getElementById(String(data.eventid));
-if (element) {
-element.classList.add('includesfees');
-}
-}
-
-})
-.catch((error) => {
-    console.error('Error:', error);
-});
-}
 
 // Helper function to display loading failed
 function displayLoadingFailed() {
@@ -1128,7 +1103,7 @@ function displayLoadingFailed() {
 }
 
 // Function to fetch weather data and update the DOM
-async function fetchWeatherData(q, dt) {
+async function fetchWeatherData(q, dt,source) {
     document.querySelector('#vivid-weather').textContent = '';
     document.querySelector('#vivid-weathericon').src = '';
     document.querySelector('#vivid-weathericon').style.display = 'none';
@@ -1158,9 +1133,18 @@ async function fetchWeatherData(q, dt) {
         let hresult = findClosestWeatherByTime(hourarray, time);
         if (hresult) {
             let temperature = hresult.temp_f;
-            document.querySelector('#vivid-weather').textContent = `${weather} ${temperature}°F`;
-            document.querySelector('#vivid-weathericon').src = icon;
-            document.querySelector('#vivid-weathericon').style.display = 'flex';
+
+            if(source === 'vivid'){
+                document.querySelector('#vivid-weather').textContent = `${weather} ${temperature}°F`;
+                document.querySelector('#vivid-weathericon').src = icon;
+                document.querySelector('#vivid-weathericon').style.display = 'flex';
+            } else if(source === 'stub'){
+                document.querySelector('#vivid-weather2').textContent = `${weather} ${temperature}°F`;
+                document.querySelector('#vivid-weathericon2').src = icon;
+                document.querySelector('#vivid-weathericon2').style.display = 'flex';
+            }
+
+
         } else {
             console.error('Time not found in the data.');
         }
@@ -1186,8 +1170,6 @@ async function vividsections() {
     abortControllers.push(controller);
 
     document.getElementById('event-clickable').href = ''
-    document.getElementById('pricewithfeestrue').style.display = 'none'
-    document.getElementById('pricewithfeesfalse').style.display = 'none'
     document.querySelector('#seatinghide').style.display = 'none';
     document.querySelector('#vividevent').textContent = '';
     document.querySelector('#vividlocation').textContent = '';
@@ -1240,22 +1222,11 @@ async function vividsections() {
         let tickets = [];
         const vdcapacity = globalDetails.venueCapacity;
         const seatchart = globalDetails.staticMapUrl;
-        const pricewithfees = globalDetails.showAip
 
         document.getElementById('event-clickable').addEventListener('click', function() {
             let url = document.querySelector('#vseats').getAttribute('url')
             if (url.length > 10) window.open(url, 'vividmain');
         });
-
-        if (pricewithfees === 'true') {
-            addfees(vivid_id)
-            document.getElementById('pricewithfeestrue').style.display = 'flex';
-            document.getElementById('pricewithfeesfalse').style.display = 'none';
-
-        } else if (pricewithfees === 'false') {
-            document.getElementById('pricewithfeestrue').style.display = 'none';
-            document.getElementById('pricewithfeesfalse').style.display = 'flex';
-        }
 
 
         ticketsDetails.forEach(ticket => {
@@ -1278,52 +1249,157 @@ async function vividsections() {
 }
 
 
-async function checkAip(eventid) {
+
+
+async function stubhubsections() {
     const controller = new AbortController();
     abortControllers.push(controller);
 
-    const csvUrl = `https://ubikdata.wiki:3000/listing/${eventid}`;
+    document.getElementById('event-clickable2').href = '';
+    document.querySelector('#seatinghide2').style.display = 'none';
+    document.querySelector('#vividevent2').textContent = '';
+    document.querySelector('#vividlocation2').textContent = '';
+    document.querySelector('#vividdate2').textContent = '';
+    document.querySelector('#vividtime2').textContent = '';
+    document.querySelector('#vivid-tix2').textContent = '';
+    document.querySelector('#vivid-tl2').textContent = '';
+    document.querySelector('#vivid-min2').textContent = '';
+    document.querySelector('#vivid-max2').textContent = '';
+    document.querySelector('#vivid-median2').textContent = '';
+    document.querySelector('#vivid-avg2').textContent = '';
+    document.querySelector('#vivid-dow2').textContent = '';
+    document.querySelector('.seatingmap2').src = '';
 
-    // Function to fetch data with retry logic
+    let elements = document.querySelectorAll('.top-part-section-stub');
+    elements.forEach(element => {
+        if (element.id !== 'sampleitem3') {
+            element.parentNode.removeChild(element);
+        } else if (element.id === 'sampleitem3') {
+            element.style.display = 'flex';
+        }
+    });
+
+    let stub_id = document.querySelector('#shub').getAttribute('url').split('/event/')[1].split('/')[0];
+    const csvUrl = `https://ubik.wiki/api/query/stubhub/?q=E-${stub_id}`;
+
+    // Function to fetch data with retries
     const fetchData = async (url, options, retries) => {
         for (let i = 0; i < retries; i++) {
             try {
                 const response = await fetch(url, options);
                 if (!response.ok) throw new Error('Network response was not ok');
-                return await response.text(); // Return text from the response if successful
+                return await response.text();
             } catch (error) {
-                if (i === retries - 1) throw error; // Rethrow the error if retries are exhausted
-                console.error(`Retrying... (${i + 1})`); // Log retry attempts
+                if (i === retries - 1) throw error;
+                console.error(`Retrying... (${i + 1})`);
             }
         }
     };
 
     try {
         const signal = controller.signal;
-        const data = await fetchData(csvUrl, { signal }, 5); // Fetch data with retries and abort signal
-        const evd = JSON.parse(data); // Parse the response data to JSON
+        const data = await fetchData(
+            csvUrl,
+            {
+                signal,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            },
+            5
+        );
+        const evd = JSON.parse(data);
+        eventDetailshub = evd;
 
-        if (!evd.global || !evd.global[0] || typeof evd.global[0].showAip === 'undefined') {
-            console.error('Invalid response structure:', evd);
-            return false; // Return false if the expected structure is not found
-        }
+        const ticketsDetails = eventDetailshub.grid.items
 
-        const globalDetails = evd.global[0];
-        const pricewithfees = globalDetails.showAip;
+        let tickets = [];
 
-        if (pricewithfees === 'true') {
-            return true;
-        } else if (pricewithfees === 'false') {
-            return false;
-        } else {
-            console.error('Unexpected value for showAip:', pricewithfees);
-            return false; // Return false for unexpected values
-        }
+        const seatchart = eventDetailshub.svgMapUrl;
 
+        document.getElementById('event-clickable2').addEventListener('click', function() {
+            let url = document.querySelector('#shub').getAttribute('url');
+            if (url.length > 10) window.open(url, 'vividmain');
+        });
+
+        ticketsDetails.forEach(ticket => {
+            if (ticket.availableTickets > 0) {
+                tickets.push({
+                    "section": ticket.section,
+                    "row": ticket.row,
+                    "price": ticket.rawPrice,
+                    "quantity": ticket.availableTickets
+                });
+            }
+        });
+        tickets.sort((a, b) => a.price - b.price);
+
+        processPreferredInfo2(tickets, seatchart);
+
+
+        document.querySelector('#sampleitem3').style.display = 'none';
+        document.querySelector('#stubhubclick').style.display = 'flex';
     } catch (error) {
         console.error("Error fetching data: ", error);
-        return false; // Return false if an error occurs during fetch
     }
+}
+
+
+
+function processPreferredInfo2(tickets, seatchart) {
+    let eventdate = document.querySelector('#eventdate').textContent;
+    document.querySelector('#vividevent2').textContent = document.querySelector('#selectedevent').textContent;
+    document.querySelector('#vividlocation2').textContent = document.querySelector('#eventlocation').textContent;
+    document.querySelector('#vividdate2').textContent = eventdate;
+    document.querySelector('#vivid-dow2').textContent = getDayOfWeek(eventdate);
+    document.querySelector('#vividtime2').textContent = document.querySelector('#eventtime').textContent;
+    document.querySelector('.seatingmap2').src = seatchart;
+    document.querySelector('#seatinghide2').style.display = 'flex';
+
+    let container = document.querySelector('.sections-wrapper2');
+    let allPrices = [];
+    let totalQuantity = 0;
+
+    tickets.forEach(ticket => {
+        let quantity = parseInt(ticket.quantity, 10);
+        let section = ticket.section;
+        let row = ticket.row;
+        let price = parseFloat(ticket.price);
+
+        totalQuantity += quantity;
+        allPrices.push(price);
+
+        let clone = document.querySelector('.top-part-section-stub').cloneNode(true);
+        clone.id = '';
+        clone.setAttribute('section', section);
+        clone.setAttribute('row', row);
+        clone.setAttribute('quantity', quantity);
+        clone.querySelector('.main-text-vivid-section2').textContent = section;
+        clone.querySelector('.main-text-vivid-row2').textContent = row;
+        clone.querySelector('.main-text-vivid-quantity2').textContent = quantity.toString();
+        clone.querySelector('.main-text-vivid-price2').textContent = '$' + price.toFixed(2);
+
+
+
+        container.appendChild(clone);
+    });
+
+    let lowestPrice = Math.min(...allPrices);
+    let highestPrice = Math.max(...allPrices);
+    let medianPrice = calculateMedian(allPrices);
+    let averagePrice = allPrices.reduce((acc, cur) => acc + cur, 0) / allPrices.length;
+
+    document.querySelector('#vivid-tl2').textContent = tickets.length;
+    document.querySelector('#vivid-tix2').textContent = totalQuantity;
+    document.querySelector('#vivid-min2').textContent = `$${lowestPrice.toFixed(2)}`;
+    document.querySelector('#vivid-max2').textContent = `$${highestPrice.toFixed(2)}`;
+    document.querySelector('#vivid-median2').textContent = `$${medianPrice.toFixed(2)}`;
+    document.querySelector('#vivid-avg2').textContent = `$${averagePrice.toFixed(2)}`;
+
+
+
+    let city = document.querySelector('#vividlocation2').textContent.split(',')[0];
+    fetchWeatherData(city, eventdate,"stub");
 }
 
 
@@ -1384,7 +1460,7 @@ function processPreferredInfo(tickets, vdcapacity, seatchart) {
 
 
     let city = document.querySelector('#vividlocation').textContent.split(',')[0];
-    fetchWeatherData(city, eventdate);
+    fetchWeatherData(city, eventdate,"vivid");
 }
 
 // Helper function to calculate median
@@ -1705,22 +1781,6 @@ request.onerror = function() {
 request.send();
 }
 
-function checkfeeitems(){
-    fetch('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_events_w_fees')
-        .then(response => response.json())
-        .then(data => {
-            data.forEach(item => {
-                const element = document.getElementById(String(item.eventid));
-                if (element) {
-                    element.classList.add('includesfees');
-                }
-            });
-        })
-        .catch((error) => {
-            console.error('Error:', error);
-        });
-}
-
 
 function checkpurchdates(){
 
@@ -1740,7 +1800,7 @@ fetch('https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/get_events_purchdate')
 
         const mainTextPdateElement = element.querySelector('.main-text-pdate');
         const maintextinhands = element.querySelector('.main-text-inhands');
-	
+
 	if(feesincl === 'true' || feesincl === true){
 	element.classList.add('includesfees');
 	}
@@ -1801,3 +1861,92 @@ http.onerror = function() {
 
 http.send();
 }
+
+
+
+
+
+document.querySelector('.closestubhub').addEventListener('click',function(){
+    document.querySelector('#searchbarvivid2').value = ''
+    document.querySelector('#filterquantity2').value = '99999'
+    })
+     document.getElementById('filterquantity2').addEventListener('change', function () {
+        var selectedValue = parseInt(this.value);
+
+        var sections = document.querySelectorAll('.top-part-section-stub');
+        sections.forEach(function(section) {
+            var quantity = parseInt(section.getAttribute('quantity'));
+            if (quantity <= selectedValue) {
+                section.style.display = 'flex';
+            } else {
+                section.style.display = 'none';
+            }
+        });
+    });
+
+
+    function updateSections2() {
+        let searchValue = document.querySelector('#searchbarvivid2').value.toLowerCase();
+        let selectedValue = parseInt(document.getElementById('filterquantity2').value);
+        let sections = document.querySelectorAll('.top-part-section-stub');
+        let totalQuantity = 0;
+        let allPrices = [];
+
+        sections.forEach(section => {
+            // Skip the section if its id is 'sampleitem'
+            if (section.id === 'sampleitem3') {
+                return;
+            }
+
+            let sectionAttribute = section.getAttribute('section');
+            let rowattr = section.getAttribute('row');
+            let quantity = parseInt(section.getAttribute('quantity'));
+
+            // Check both search and filter conditions
+            let matchesSearch = sectionAttribute && sectionAttribute.toLowerCase().includes(searchValue);
+            let matchesSearcht = rowattr && rowattr.toLowerCase().includes(searchValue);
+            let matchesQuantity = quantity <= selectedValue;
+
+            if ((matchesSearch || matchesSearcht) && matchesQuantity) {
+                section.style.display = '';
+                let sectionQuantity = parseInt(section.querySelector('.main-text-vivid-quantity2').textContent, 10);
+                let price = parseFloat(section.querySelector('.main-text-vivid-price2').textContent.replace('$', ''));
+                totalQuantity += sectionQuantity;
+                allPrices.push(price);
+            } else {
+                section.style.display = 'none';
+            }
+        });
+
+
+        // Update the total tickets and other stats
+        document.querySelector('#vivid-tix2').textContent = totalQuantity;
+        document.querySelector('#vivid-tl2').textContent = allPrices.length;
+        if (allPrices.length > 0) {
+            let lowestPrice = Math.min(...allPrices);
+            let highestPrice = Math.max(...allPrices);
+            let medianPrice = calculateMedian2(allPrices);
+            let averagePrice = allPrices.reduce((acc, cur) => acc + cur, 0) / allPrices.length;
+            document.querySelector('#vivid-min2').textContent = `$${lowestPrice.toFixed(2)}`;
+            document.querySelector('#vivid-max2').textContent = `$${highestPrice.toFixed(2)}`;
+            document.querySelector('#vivid-median2').textContent = `$${medianPrice.toFixed(2)}`;
+            document.querySelector('#vivid-avg2').textContent = `$${averagePrice.toFixed(2)}`;
+        } else {
+            document.querySelector('#vivid-min2').textContent = '';
+            document.querySelector('#vivid-max2').textContent = '';
+            document.querySelector('#vivid-median2').textContent = '';
+            document.querySelector('#vivid-avg2').textContent = '';
+        }
+    }
+
+    function calculateMedian2(arr) {
+        arr.sort((a, b) => a - b);
+        let mid = Math.floor(arr.length / 2);
+        return arr.length % 2 !== 0 ? arr[mid] : (arr[mid - 1] + arr[mid]) / 2;
+    }
+
+    document.querySelector('#searchbarvivid2').addEventListener('input', updateSections2);
+    document.getElementById('filterquantity2').addEventListener('change', updateSections2);
+    document.querySelector('#stubhubclick').addEventListener('click',function(){
+    updateSections2()
+    })
