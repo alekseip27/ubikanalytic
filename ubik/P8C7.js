@@ -319,6 +319,9 @@ eventPrice.addEventListener('keyup', () => {
             }
 
             let X_predicted = (1.16 * Y_given) - (0.0329 * Y_given);
+const a = 1.3513;
+const b = 0.8123;
+const X_predicted = (a + b * Y_given).toFixed(2);
 
             let X_predicted_rounded = X_predicted.toFixed(2);
             eventPrice.value = X_predicted_rounded;
