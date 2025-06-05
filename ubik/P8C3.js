@@ -307,9 +307,10 @@ if (events.tags && events.tags.includes('lowerable')) {
 
 eventPrice.addEventListener('keyup', () => {
     let crds = document.querySelectorAll('.event-box.selected.includesfees').length
+    let crd2 = document.querySelectorAll('.event-box.selected.canada').length
 
     clearTimeout(typingTimer);
-    if (eventPrice.value && !events.classList.contains('canada')) {
+    if (eventPrice.value && crds2 === 0) {
         typingTimer = setTimeout(() => {
             var Y_given = Number(eventPrice.value);
             if (isNaN(Y_given)) {
