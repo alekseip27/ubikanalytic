@@ -327,24 +327,6 @@ eventPrice.addEventListener('keyup', () => {
 });
 
 
-eventPrice.addEventListener('keyup', () => {
-
-    clearTimeout(typingTimer2);
-    if (eventPrice.value && document.querySelector('#vspricing').checked) {
-        typingTimer = setTimeout(() => {
-            var Y_given = Number(eventPrice.value);
-            if (isNaN(Y_given)) {
-                console.error('Y_given is not a number');
-                return;
-            }
-
-            let X_predicted = (0.87 * Y_given);
-            let X_predicted_rounded = X_predicted.toFixed(2);
-            eventPrice.value = X_predicted_rounded;
-        }, doneTypingInterval);
-    }
-});
-
 
 
             eventPrice.addEventListener("keypress", (event) => {
