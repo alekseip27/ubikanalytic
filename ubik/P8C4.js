@@ -310,7 +310,7 @@ eventPrice.addEventListener('keyup', () => {
     let crd2 = document.querySelectorAll('.event-box.selected.canada').length
 
     clearTimeout(typingTimer);
-    if (eventPrice.value && crds2 === 0) {
+    if (eventPrice.value && crd2 === 0) {
         typingTimer = setTimeout(() => {
             var Y_given = Number(eventPrice.value);
             if (isNaN(Y_given)) {
