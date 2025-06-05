@@ -309,7 +309,7 @@ eventPrice.addEventListener('keyup', () => {
     let crds = document.querySelectorAll('.event-box.selected.includesfees').length
 
     clearTimeout(typingTimer);
-    if (eventPrice.value && !events.tags.includes('canada') ) {
+    if (eventPrice.value && !events.classList.contains('canada')) {
         typingTimer = setTimeout(() => {
             var Y_given = Number(eventPrice.value);
             if (isNaN(Y_given)) {
@@ -1364,10 +1364,7 @@ function processPreferredInfo2(tickets, seatchart) {
         let quantity = parseInt(ticket.quantity, 10);
         let section = ticket.section;
         let row = ticket.row;
-	    
-	if (events.venue.country === "CA") {
-	card.setAttribute('canada','true');
-        }
+
         let price = parseFloat(ticket.price);
 
         totalQuantity += quantity;
