@@ -310,7 +310,7 @@ eventPrice.addEventListener('keyup', () => {
     let crd2 = document.querySelectorAll('.event-box.selected.canada').length
 
     clearTimeout(typingTimer);
-    if (eventPrice.value && crd2 === 0) {
+    if (eventPrice.value && crd2 === 0 && document.querySelector('#vspricing').checked) {
         typingTimer = setTimeout(() => {
             var Y_given = Number(eventPrice.value);
             if (isNaN(Y_given)) {
@@ -328,10 +328,9 @@ eventPrice.addEventListener('keyup', () => {
 
 
 eventPrice.addEventListener('keyup', () => {
-    let crds = document.querySelectorAll('.event-box.selected.includesfees').length
 
     clearTimeout(typingTimer2);
-    if (eventPrice.value && document.querySelector('#vspricing').checked && crds>0) {
+    if (eventPrice.value && document.querySelector('#vspricing').checked) {
         typingTimer = setTimeout(() => {
             var Y_given = Number(eventPrice.value);
             if (isNaN(Y_given)) {
