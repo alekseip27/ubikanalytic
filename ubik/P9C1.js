@@ -307,10 +307,9 @@ if (events.tags && events.tags.includes('lowerable')) {
 
 eventPrice.addEventListener('keyup', () => {
     let crds = document.querySelectorAll('.event-box.selected.includesfees').length
-    let crd2 = document.querySelectorAll('.event-box.selected.canada').length
 
     clearTimeout(typingTimer);
-    if (eventPrice.value && crd2 === 0 && document.querySelector('#vspricing').checked) {
+    if (eventPrice.value && document.querySelector('#vspricing').checked && crds<=0) {
         typingTimer = setTimeout(() => {
             var Y_given = Number(eventPrice.value);
             if (isNaN(Y_given)) {
@@ -326,6 +325,25 @@ eventPrice.addEventListener('keyup', () => {
     }
 });
 
+
+eventPrice.addEventListener('keyup', () => {
+    let crds = document.querySelectorAll('.event-box.selected.includesfees').length
+
+    clearTimeout(typingTimer2);
+    if (eventPrice.value && document.querySelector('#vspricing').checked && crds>0) {
+        typingTimer = setTimeout(() => {
+            var Y_given = Number(eventPrice.value);
+            if (isNaN(Y_given)) {
+                console.error('Y_given is not a number');
+                return;
+            }
+
+            let X_predicted = (0.87 * Y_given);
+            let X_predicted_rounded = X_predicted.toFixed(2);
+            eventPrice.value = X_predicted_rounded;
+        }, doneTypingInterval);
+    }
+});
 
 
 
@@ -1346,7 +1364,6 @@ function processPreferredInfo2(tickets, seatchart) {
         let quantity = parseInt(ticket.quantity, 10);
         let section = ticket.section;
         let row = ticket.row;
-
         let price = parseFloat(ticket.price);
 
         totalQuantity += quantity;
