@@ -1,4 +1,3 @@
-
 let intervalIdx;
 let sourcesinit = false
 
