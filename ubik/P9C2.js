@@ -304,34 +304,13 @@ if (events.tags && events.tags.includes('lowerable')) {
             let typingTimer;
             let typingTimer2;
             const doneTypingInterval = 1000
-/**
-eventPrice.addEventListener('keyup', () => {
-    let crds = document.querySelectorAll('.event-box.selected.includesfees').length
-
-    clearTimeout(typingTimer);
-    if (eventPrice.value && document.querySelector('#vspricing').checked && crds<=0) {
-        typingTimer = setTimeout(() => {
-            var Y_given = Number(eventPrice.value);
-            if (isNaN(Y_given)) {
-                console.error('Y_given is not a number');
-                return;
-            }
-
-            let X_predicted = (1.16 * Y_given) - (0.0329 * Y_given);
-
-            let X_predicted_rounded = X_predicted.toFixed(2);
-            eventPrice.value = X_predicted_rounded;
-        }, doneTypingInterval);
-    }
-});
-**/
 
 eventPrice.addEventListener('keyup', () => {
     let crds = document.querySelectorAll('.event-box.selected.includesfees').length
 
     clearTimeout(typingTimer2);
     if (eventPrice.value && document.querySelector('#vspricing').checked && crds>0) {
-        typingTimer = setTimeout(() => {
+        typingTimer2 = setTimeout(() => {
             var Y_given = Number(eventPrice.value);
             if (isNaN(Y_given)) {
                 console.error('Y_given is not a number');
