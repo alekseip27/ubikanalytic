@@ -304,7 +304,7 @@ if (events.tags && events.tags.includes('lowerable')) {
             let typingTimer;
             let typingTimer2;
             const doneTypingInterval = 1000
-
+/**
 eventPrice.addEventListener('keyup', () => {
     let crds = document.querySelectorAll('.event-box.selected.includesfees').length
 
@@ -324,7 +324,7 @@ eventPrice.addEventListener('keyup', () => {
         }, doneTypingInterval);
     }
 });
-
+**/
 
 eventPrice.addEventListener('keyup', () => {
     let crds = document.querySelectorAll('.event-box.selected.includesfees').length
