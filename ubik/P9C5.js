@@ -485,10 +485,9 @@ const predictedPrice = (a + b * listPrice).toFixed(2);
 
 viewPrice.textContent = predictedPrice;
 
-
 let curitem = document.getElementById(selectedcard);
 
-if (curitem && curitem.classList.contains("includesfees")) {
+if (curitem) {
     const feespricing = 2.5 + (listPrice * 1.18);
     viewPrice.textContent = feespricing.toFixed(2);
 }
@@ -1227,8 +1226,6 @@ async function vividsections() {
 }
 
 
-
-
 async function stubhubsections() {
     const controller = new AbortController();
     abortControllers.push(controller);
@@ -1258,7 +1255,7 @@ async function stubhubsections() {
     });
 
     let stub_id = document.querySelector('#shub').getAttribute('url').split('/event/')[1].split('/')[0];
-    const csvUrl = `https://ubik.wiki/api/query/stubhub/?q=E-${stub_id}`;
+    const baseCsvUrl = `https://ubik.wiki/api/query/stubhub/?q=${stub_id}`;
 
     // Function to fetch data with retries
     const fetchData = async (url, options, retries) => {
@@ -1276,44 +1273,57 @@ async function stubhubsections() {
 
     try {
         const signal = controller.signal;
-        const data = await fetchData(
-            csvUrl,
-            {
-                signal,
-                headers: {
-                    'Authorization': `Bearer ${token}`
+        let allTickets = [];
+        let currentPage = 1;
+        let totalPages = 1;
+        let seatchart = '';
+
+        do {
+            let pageUrl = `${baseCsvUrl}&p=${currentPage}`;
+            const data = await fetchData(
+                pageUrl,
+                {
+                    signal,
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                },
+                5
+            );
+
+            const evd = JSON.parse(data);
+            if (currentPage === 1) {
+                eventDetailshub = evd;
+                seatchart = eventDetailshub.svgMapUrl;
+            }
+
+            const ticketsDetails = evd.grid.items;
+
+            ticketsDetails.forEach(ticket => {
+                if (ticket.availableTickets > 0) {
+                    allTickets.push({
+                        "section": ticket.section,
+                        "row": ticket.row,
+                        "price": ticket.rawPrice,
+                        "quantity": ticket.availableTickets
+                    });
                 }
-            },
-            5
-        );
-        const evd = JSON.parse(data);
-        eventDetailshub = evd;
+            });
 
-        const ticketsDetails = eventDetailshub.grid.items
+            totalPages = evd.totalUbikPages || 1;
+            if (!evd.nextPage) break;
 
-        let tickets = [];
+            currentPage++;
+        } while (currentPage <= totalPages);
 
-        const seatchart = eventDetailshub.svgMapUrl;
+        allTickets.sort((a, b) => a.price - b.price);
 
         document.getElementById('event-clickable2').addEventListener('click', function() {
             let url = document.querySelector('#shub').getAttribute('url');
             if (url.length > 10) window.open(url, 'vividmain');
         });
 
-        ticketsDetails.forEach(ticket => {
-            if (ticket.availableTickets > 0) {
-                tickets.push({
-                    "section": ticket.section,
-                    "row": ticket.row,
-                    "price": ticket.rawPrice,
-                    "quantity": ticket.availableTickets
-                });
-            }
-        });
-        tickets.sort((a, b) => a.price - b.price);
-
-        processPreferredInfo2(tickets, seatchart);
-
+        processPreferredInfo2(allTickets, seatchart);
 
         document.querySelector('#sampleitem3').style.display = 'none';
         document.querySelector('#stubhubclick').style.display = 'flex';
@@ -1321,7 +1331,6 @@ async function stubhubsections() {
         console.error("Error fetching data: ", error);
     }
 }
-
 
 
 function processPreferredInfo2(tickets, seatchart) {
