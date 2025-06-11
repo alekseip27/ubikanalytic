@@ -1225,7 +1225,6 @@ async function vividsections() {
     }
 }
 
-
 async function stubhubsections() {
     const controller = new AbortController();
     abortControllers.push(controller);
@@ -1274,47 +1273,36 @@ async function stubhubsections() {
     try {
         const signal = controller.signal;
         let allTickets = [];
-        let currentPage = 1;
-        let totalPages = 1;
         let seatchart = '';
 
-        do {
-            let pageUrl = `${baseCsvUrl}&p=${currentPage}`;
-            const data = await fetchData(
-                pageUrl,
-                {
-                    signal,
-                    headers: {
-                        'Authorization': `Bearer ${token}`
-                    }
-                },
-                5
-            );
-
-            const evd = JSON.parse(data);
-            if (currentPage === 1) {
-                eventDetailshub = evd;
-                seatchart = eventDetailshub.svgMapUrl;
-            }
-
-            const ticketsDetails = evd.grid.items;
-
-            ticketsDetails.forEach(ticket => {
-                if (ticket.availableTickets > 0) {
-                    allTickets.push({
-                        "section": ticket.section,
-                        "row": ticket.row,
-                        "price": ticket.rawPrice,
-                        "quantity": ticket.availableTickets
-                    });
+        let pageUrl = `${baseCsvUrl}&p=1`;  // Only fetch first page
+        const data = await fetchData(
+            pageUrl,
+            {
+                signal,
+                headers: {
+                    'Authorization': `Bearer ${token}`
                 }
-            });
+            },
+            5
+        );
 
-            totalPages = evd.totalUbikPages || 1;
-            if (!evd.nextPage) break;
+        const evd = JSON.parse(data);
+        eventDetailshub = evd;
+        seatchart = eventDetailshub.svgMapUrl;
 
-            currentPage++;
-        } while (currentPage <= totalPages);
+        const ticketsDetails = evd.grid.items;
+
+        ticketsDetails.forEach(ticket => {
+            if (ticket.availableTickets > 0) {
+                allTickets.push({
+                    "section": ticket.section,
+                    "row": ticket.row,
+                    "price": ticket.rawPrice,
+                    "quantity": ticket.availableTickets
+                });
+            }
+        });
 
         allTickets.sort((a, b) => a.price - b.price);
 
