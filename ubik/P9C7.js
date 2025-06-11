@@ -1275,7 +1275,7 @@ async function stubhubsections() {
         let allTickets = [];
         let seatchart = '';
 
-        let pageUrl = `${baseCsvUrl}&p=1`;  // Only fetch first page
+        let pageUrl = `${baseCsvUrl}`;  // Only fetch first page
         const data = await fetchData(
             pageUrl,
             {
