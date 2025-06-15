@@ -505,7 +505,7 @@ function calculateSkyboxPrice(skybox) {
 			
 function updateViewPrice(selectedcard,card, events) {
 const viewPrice = card.querySelector('.main-text-vw');
-const listPrice = calculateSkyboxPrice(Number(events.listPrice));
+const listPrice = calculateSkyboxPrice(events.listPrice);
 
 if (isNaN(listPrice)) {
     console.error('listPrice is not a number');
