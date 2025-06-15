@@ -1725,20 +1725,26 @@ document.querySelector("#pricecancel").addEventListener('click', function() {
     http.send();
     })
 
-    const ids = ['vseats', 'shub', 'vseatsmobile', 'shubmobile'];
+const ids = ['vseats', 'shub', 'vseatsmobile', 'shubmobile'];
 
-    ids.forEach(id => {
-        const element = document.querySelector(`#${id}`);
-        element.addEventListener('click', function handleClick() {
-        const url = element.getAttribute('url');
-        if(url.length>10){
-        window.open(url,id)
-        element.style.pointerEvents = "cursor";
-        } else {
-        element.style.pointerEvents = "none";
+ids.forEach(id => {
+    const element = document.querySelector(`#${id}`);
+    element.addEventListener('click', function handleClick() {
+        let url = element.getAttribute('url');
+
+        if (id === 'shub' || id === 'shubmobile') {
+            url += '/?quantity=0&sortBy=NEWPRICE&sortDirection=0';
         }
-    })
-})
+
+        if (url.length > 10) {
+            window.open(url, id);
+            element.style.pointerEvents = "cursor";
+        } else {
+            element.style.pointerEvents = "none";
+        }
+    });
+});
+
 
 
 
