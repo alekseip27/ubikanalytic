@@ -305,24 +305,50 @@ if (events.tags && events.tags.includes('lowerable')) {
             const doneTypingInterval = 1000
 
 eventPrice.addEventListener('keyup', () => {
-    let crds = document.querySelectorAll('.event-box.selected.canada').length
+    let crds = document.querySelectorAll('.event-box.selected.canada').length;
 
     clearTimeout(typingTimer2);
     if (eventPrice.value && document.querySelector('#vspricing').checked && crds === 0) {
         typingTimer2 = setTimeout(() => {
-            var Y_given = Number(eventPrice.value);
-            if (isNaN(Y_given)) {
-                console.error('Y_given is not a number');
+            let PE = Number(eventPrice.value);
+            if (isNaN(PE)) {
+                console.error('PE is not a number');
                 return;
             }
 
-            let X_predicted = (0.87 * Y_given);
-            let X_predicted_rounded = X_predicted.toFixed(2);
-            eventPrice.value = X_predicted_rounded;
+            let adjustedPE;
+
+            if (PE >= 0 && PE <= 60) {
+                adjustedPE = (PE - 3) / 1.14;
+            } else if (PE >= 61 && PE <= 150) {
+                adjustedPE = (PE - 4) / 1.14;
+            } else if (PE >= 151 && PE <= 250) {
+                adjustedPE = (PE - 5) / 1.14;
+            } else if (PE >= 251 && PE <= 400) {
+                adjustedPE = (PE - 6) / 1.14;
+            } else if (PE >= 401 && PE <= 550) {
+                adjustedPE = (PE - 7) / 1.14;
+            } else if (PE >= 551 && PE <= 650) {
+                adjustedPE = (PE - 8) / 1.14;
+            } else if (PE >= 651 && PE <= 800) {
+                adjustedPE = (PE - 9) / 1.14;
+            } else if (PE >= 801 && PE <= 900) {
+                adjustedPE = (PE - 10) / 1.14;
+            } else if (PE >= 901 && PE <= 999) {
+                adjustedPE = (PE - 11) / 1.14;
+            } else if (PE >= 1000) {
+                adjustedPE = (PE - 12) / 1.14;
+            } else {
+                console.error('PE is out of expected range');
+                return;
+            }
+
+            let rounded = adjustedPE.toFixed(2);
+            eventPrice.value = rounded;
+
         }, doneTypingInterval);
     }
 });
-
 
 
             eventPrice.addEventListener("keypress", (event) => {
@@ -1274,7 +1300,7 @@ async function stubhubsections() {
     });
 
     let stub_id = document.querySelector('#shub').getAttribute('url').split('/event/')[1].split('/')[0];
-    const baseCsvUrl = `https://ubik.wiki/api/query/stubhub/?q=${stub_id}`;
+    const baseCsvUrl = `https://ubik.wiki/api/query/stubhub/?q=${stub_id}/?quantity=0&sortBy=NEWPRICE&sortDirection=0`;
 
     // Function to fetch data with retries
     const fetchData = async (url, options, retries) => {
