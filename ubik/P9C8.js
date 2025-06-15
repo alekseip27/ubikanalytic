@@ -470,9 +470,42 @@ const updatedTime = moment.utc(events.lastPriceUpdate).subtract(4, 'hours').form
 lastUpdated.textContent = updatedTime;
 }
 
+function calculateSkyboxPrice(skybox) {
+  let result;
+
+  if (skybox >= 0 && skybox <= 85) {
+    result = Math.round(skybox * 1.14 + 3);
+  } else if (skybox >= 86 && skybox <= 199) {
+    result = Math.round(skybox * 1.14 + 4);
+  } else if (skybox >= 200 && skybox <= 299) {
+    result = Math.round(skybox * 1.14 + 5);
+  } else if (skybox >= 300 && skybox <= 399) {
+    result = Math.round(skybox * 1.14 + 6);
+  } else if (skybox >= 400 && skybox <= 499) {
+    result = Math.round(skybox * 1.14 + 7);
+  } else if (skybox >= 500 && skybox <= 599) {
+    result = Math.round(skybox * 1.14 + 8);
+  } else if (skybox >= 600 && skybox <= 699) {
+    result = Math.round(skybox * 1.14 + 9);
+  } else if (skybox >= 700 && skybox <= 799) {
+    result = Math.round(skybox * 1.14 + 10);
+  } else if (skybox >= 800 && skybox <= 899) {
+    result = Math.round(skybox * 1.14 + 11);
+  } else if (skybox >= 900 && skybox <= 999) {
+    result = Math.round(skybox * 1.14 + 12);
+  } else if (skybox >= 1000) {
+    result = Math.round(skybox * 1.14 + 13);
+  } else {
+    throw new Error("Invalid Skybox value");
+  }
+
+  return result;
+}
+
+			
 function updateViewPrice(selectedcard,card, events) {
 const viewPrice = card.querySelector('.main-text-vw');
-const listPrice = Math.round(Number(events.listPrice));
+const listPrice = calculateSkyboxPrice(Number(events.listPrice));
 
 if (isNaN(listPrice)) {
     console.error('listPrice is not a number');
