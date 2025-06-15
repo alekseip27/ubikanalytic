@@ -512,20 +512,7 @@ if (isNaN(listPrice)) {
     return;
 }
 
-const a = 1.3513;
-const b = 0.8123;
-const predictedPrice = (a + b * listPrice).toFixed(2);
-
-viewPrice.textContent = predictedPrice;
-
-let curitem = document.getElementById(selectedcard);
-
-if (curitem) {
-    const feespricing = 2.5 + (listPrice * 1.18);
-    viewPrice.textContent = feespricing.toFixed(2);
-}
-
-
+viewPrice.textContent = listPrice;
 }
 
 function checkPricingStatus(card, ticketID) {
