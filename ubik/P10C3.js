@@ -1300,7 +1300,7 @@ async function stubhubsections() {
     });
 
     let stub_id = document.querySelector('#shub').getAttribute('url').split('/event/')[1].split('/')[0];
-    const baseCsvUrl = `https://ubik.wiki/api/query/stubhub/?q=${stub_id}/?quantity=0&sortBy=NEWPRICE&sortDirection=0`;
+    const baseCsvUrl = `https://ubik.wiki/api/query/stubhub/?q=${stub_id}`;
 
     // Function to fetch data with retries
     const fetchData = async (url, options, retries) => {
@@ -1353,7 +1353,7 @@ async function stubhubsections() {
         allTickets.sort((a, b) => a.price - b.price);
 
         document.getElementById('event-clickable2').addEventListener('click', function() {
-            let url = document.querySelector('#shub').getAttribute('url');
+            let url = document.querySelector('#shub').getAttribute('url') + '/?quantity=0&sortBy=NEWPRICE&sortDirection=0'
             if (url.length > 10) window.open(url, 'vividmain');
         });
 
