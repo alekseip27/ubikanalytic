@@ -496,6 +496,8 @@ const updatedTime = moment.utc(events.lastPriceUpdate).subtract(4, 'hours').form
 lastUpdated.textContent = updatedTime;
 }
 
+
+			
 function calculateSkyboxPrice(skybox) {
   let result;
 
@@ -532,7 +534,12 @@ function calculateSkyboxPrice(skybox) {
 function updateViewPrice(selectedcard,card, events) {
 const viewPrice = card.querySelector('.main-text-vw');
 const listPrice = calculateSkyboxPrice(events.listPrice);
-
+const profitText = card.querySelector('.main-text-profit');
+	
+const profit = (listPrice * 0.9) - events.cost;
+profitText.textContent = profit.toFixed(2);
+profitText.style.color = profit < 0 ? 'red' : '';
+	
 if (isNaN(listPrice)) {
     console.error('listPrice is not a number');
     return;
