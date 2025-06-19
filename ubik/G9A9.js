@@ -330,6 +330,15 @@ function copyToClipboard3(text) {
     document.body.removeChild(tempInput3);
 }
 
+function copyToClipboard4(text) {
+    const tempInput4 = document.createElement('input');
+    document.body.appendChild(tempInput4);
+    tempInput4.value = text;
+    tempInput4.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput4);
+}
+
 document.querySelector('#unlock').addEventListener("click", () => {
 let id = document.querySelector('#unlock').getAttribute('retrieve')
 retrievezip(id,credit_account)
@@ -345,6 +354,10 @@ document.querySelector('#primobrowser').addEventListener("click", () => {
     copyToClipboard3(id)
 })
 
+document.querySelector('#primobrowser2').addEventListener("click", () => {
+    let id = document.querySelector('#primobrowser2').textContent
+    copyToClipboard4(id)
+})
 
 async function retrievezip(id,provider) {
 const maxRetries = 5;
@@ -463,6 +476,7 @@ document.getElementById('primobrowser').textContent = buyerEmail + ' - AXS'
 
 
 
+
 $("#purchasequantity").attr({"min" : 0});
 {
     let intervalIds;
@@ -554,6 +568,7 @@ function (data) {
     state = getStateName(states)
 
 
+        
     emailsarray = []
     emailsused = data.results[0].used_emails
 
@@ -570,6 +585,7 @@ function (data) {
     document.querySelector('#evurl').value = evurl
     document.querySelector('#evtime').value = evtime
     document.querySelector('#vename').value = vename
+    document.getElementById('primobrowser2').textContent = data.results[0].event_name + ' ' + data.results[0].city
 
 
 
