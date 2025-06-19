@@ -126,9 +126,19 @@ function getEvents() {
                 eventtl.textContent = events.added_timestamp;
                 card.setAttribute('dateposted', events.added_timestamp);
 
+                let assigncard = card.getElementsByClassName("main-text-assign")[0];
 
+		if(events.assign){
+                assigncard.textContent = events.assign;
+                card.setAttribute('assign', events.assign);
+		}
 
+                let tagscard = card.getElementsByClassName("main-text-tags")[0];
 
+		if(events.tags){
+                tagscard.textContent = events.tags;
+                card.setAttribute('tags', events.tags);
+		}
                 
 
                 const eventvenue = card.getElementsByClassName('main-text-venue')[0];
