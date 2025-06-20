@@ -536,7 +536,7 @@ const viewPrice = card.querySelector('.main-text-vw');
 const listPrice = calculateSkyboxPrice(events.listPrice);
 const profitText = card.querySelector('.main-text-profit');
 	
-const profit = (listPrice * 0.9) - events.cost;
+const profit = (events.listPrice * 0.9) - events.cost;
 profitText.textContent = profit.toFixed(2);
 profitText.style.color = profit < 0 ? 'red' : '';
 	
