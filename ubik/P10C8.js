@@ -535,19 +535,23 @@ function updateViewPrice(selectedcard,card, events) {
 const viewPrice = card.querySelector('.main-text-vw');
 const listPrice = calculateSkyboxPrice(events.listPrice);
 const profitText = card.querySelector('.main-text-profit');
+
+    const rawDticket = events.cost / events.quantity;
 	
-const profit = (events.listPrice * 0.9) - events.taxedCostAverage;
-profitText.textContent = profit.toFixed(2);
-profitText.style.color = profit < 0 ? 'red' : '';
-	
-if (isNaN(listPrice)) {
-    console.error('listPrice is not a number');
-    return;
+const profit = (events.listPrice * 0.9) - rawDticket;
+    profitText.textContent = profit.toFixed(2);
+    profitText.style.color = profit < 0 ? 'red' : '';
+
+    // sanity-check listPrice
+    if (isNaN(listPrice)) {
+        console.error('listPrice is not a number');
+        return;
+    }
+
+    viewPrice.textContent = listPrice;
 }
 
-viewPrice.textContent = listPrice;
-}
-
+			
 function checkPricingStatus(card, ticketID) {
 const user = datas['Email'];
 const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_check_item?ticket_id=${ticketID}&user=${user}`;
