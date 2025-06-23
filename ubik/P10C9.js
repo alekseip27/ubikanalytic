@@ -497,37 +497,30 @@ lastUpdated.textContent = updatedTime;
 }
 
 
-			
-function calculateSkyboxPrice(skybox) {
-  let result;
+	function calculateSkyboxPrice(skybox) {
+  const value = typeof skybox === 'string'
+    ? parseFloat(skybox)
+    : Number(skybox);
 
-  if (skybox >= 0 && skybox <= 85) {
-    result = Math.round(skybox * 1.14 + 3);
-  } else if (skybox >= 86 && skybox <= 199) {
-    result = Math.round(skybox * 1.14 + 4);
-  } else if (skybox >= 200 && skybox <= 299) {
-    result = Math.round(skybox * 1.14 + 5);
-  } else if (skybox >= 300 && skybox <= 399) {
-    result = Math.round(skybox * 1.14 + 6);
-  } else if (skybox >= 400 && skybox <= 499) {
-    result = Math.round(skybox * 1.14 + 7);
-  } else if (skybox >= 500 && skybox <= 599) {
-    result = Math.round(skybox * 1.14 + 8);
-  } else if (skybox >= 600 && skybox <= 699) {
-    result = Math.round(skybox * 1.14 + 9);
-  } else if (skybox >= 700 && skybox <= 799) {
-    result = Math.round(skybox * 1.14 + 10);
-  } else if (skybox >= 800 && skybox <= 899) {
-    result = Math.round(skybox * 1.14 + 11);
-  } else if (skybox >= 900 && skybox <= 999) {
-    result = Math.round(skybox * 1.14 + 12);
-  } else if (skybox >= 1000) {
-    result = Math.round(skybox * 1.14 + 13);
-  } else {
-    throw new Error("Invalid Skybox value");
+  if (Number.isNaN(value) || value < 0) {
+    throw new Error("Invalid Skybox value: must be a non-negative number");
   }
 
-  return result;
+  // 2) figure out which surcharge to apply
+  let surcharge;
+  if (value >= 0   && value <  86)  surcharge = 3;
+  else if (value >= 86  && value <= 199) surcharge = 4;
+  else if (value >= 200 && value <= 299) surcharge = 5;
+  else if (value >= 300 && value <= 399) surcharge = 6;
+  else if (value >= 400 && value <= 499) surcharge = 7;
+  else if (value >= 500 && value <= 599) surcharge = 8;
+  else if (value >= 600 && value <= 699) surcharge = 9;
+  else if (value >= 700 && value <= 799) surcharge = 10;
+  else if (value >= 800 && value <= 899) surcharge = 11;
+  else if (value >= 900 && value <= 999) surcharge = 12;
+  else surcharge = 13;
+		
+  return Math.round(value * 1.14 + surcharge);
 }
 
 			
@@ -664,7 +657,7 @@ http.onload = function() {
 
                         vividsections();
                         retrievetickets()
-                        stubhubsections()
+                        //stubhubsections()
                     });
                     cardContainer.appendChild(card);
                 });
