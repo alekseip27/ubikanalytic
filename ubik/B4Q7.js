@@ -96,7 +96,7 @@ function getEvents() {
                 txtsource.textContent = details.source;
                 card.setAttribute('source', details.source);
 
-                
+
                 const buybutton = card.getElementsByClassName('main-buy-button')[0];
                 buybutton.addEventListener('click', function() {
                     window.location.assign("https://www.ubikanalytic.com/buy-event?id=" + events.id);
@@ -133,13 +133,38 @@ function getEvents() {
                 card.setAttribute('assign', events.assign);
 		}
 
-                let tagscard = card.getElementsByClassName("main-text-tags")[0];
+                let tagurgent = card.getElementsByClassName("tags-urgent")[0];
+                let tag950 = card.getElementsByClassName("tags-950")[0];
+                let tag1050 = card.getElementsByClassName("tags-1050")[0];
+                let tag1150 = card.getElementsByClassName("tags-1150")[0];
+                let tag1250 = card.getElementsByClassName("tags-1250")[0];
+                let tag1350 = card.getElementsByClassName("tags-1350")[0];
 
-		if(events.tags){
-                tagscard.textContent = events.tags;
-                card.setAttribute('tags', events.tags);
+
+        if(events.tags.includes('urgent')){
+        tagurgent.style.display = 'flex';
+            }
+
+		if(events.tags.includes('queue-9:50')){
+        tag950.style.display = 'flex';
 		}
-                
+		if(events.tags.includes('queue-10:50')){
+            tag1050.style.display = 'flex';
+        }
+
+		if(events.tags.includes('queue-11:50')){
+            tag1150.style.display = 'flex';
+        }
+
+
+		if(events.tags.includes('queue-12:50')){
+            tag1250.style.display = 'flex';
+        }
+
+		if(events.tags.includes('queue-13:50')){
+            tag1350.style.display = 'flex';
+        }
+
 
                 const eventvenue = card.getElementsByClassName('main-text-venue')[0];
                 eventvenue.textContent = events.event_venue;
@@ -278,21 +303,21 @@ function getEvents() {
                         card.setAttribute('timeleft', "999999999");
                         card.setAttribute('error', "true");
                         break;
-                
+
                     case 'Extremely Urgent':
                         eventstatus.textContent = 'URGENT';
                         eventstatus.style.color = "red";
                         card.setAttribute('timeleft', "-1");
                         card.setAttribute('asap', "true");
                         break;
-                
+
                     case 'Immediate':
                         eventstatus.textContent = 'ASAP';
                         eventstatus.style.color = "red";
                         card.setAttribute('timeleft', "0");
                         card.setAttribute('asap', "true");
                         break;
-                
+
                     default:
                         const interval = urgencyMap[urgency];
                         if (interval) {
