@@ -115,6 +115,20 @@ dategoal = `${month}/${day}/${year}, ${formattedHours}:${minutes} ${amPm}`;
     clearInterval(intervalIds);
 }}
 
+
+    document.getElementById('tags').addEventListener('click', function() {
+      var select = document.getElementById('tags');
+       selected = [];
+      for (var i = 0; i < select.options.length; i++) {
+        var opt = select.options[i];
+        if (opt.selected) {
+          selected.push(opt.value);
+        }
+      }
+
+    }
+)
+
 intervalIds = setInterval(retryClickingSearchBar, 1000);
 
 document.getElementById('buybtn').addEventListener('click', function() {
@@ -138,7 +152,8 @@ event_time: document.getElementById('time').textContent,
 event_source: document.getElementById('source').textContent,
 purchase_account: document.getElementById('purchaseaccs').value,
 credit_account: document.getElementById('purchaseaccs').value,
-assign: document.getElementById('assign').value
+assign: document.getElementById('assign').value,
+tags: selected.join(',')
 };
 
     fetch(url, {
