@@ -1,4 +1,4 @@
-
+let selected = []
 let intervalIds;
 
 function retryClickingSearchBar() {
