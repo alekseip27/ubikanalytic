@@ -19,6 +19,7 @@ const DEFAULT_SOURCE_DETAILS = {
 
   let sourceInstructionsMap = new Map();
 
+
  async function initializeSourceInstructions() {
     try {
       const response = await fetch('https://ubik.wiki/api/source-instructions/?limit=100', {
@@ -1442,7 +1443,20 @@ async function fetchViagogoTickets() {
       }
     });
 
-    allTickets.sort((a, b) => a.price - b.price);
+
+const uniqueTickets = [];
+const seen = new Set();
+
+for (const ticket of allTickets) {
+  const key = `${ticket.section}|${ticket.row}|${ticket.price}|${ticket.quantity}`;
+  if (!seen.has(key)) {
+    seen.add(key);
+    uniqueTickets.push(ticket);
+  }
+}
+
+
+    uniqueTickets.sort((a, b) => a.price - b.price);
 
     document.getElementById('event-clickable2').addEventListener('click', function () {
       let eventUrl = document.querySelector('#shub').getAttribute('url') + '/?quantity=0&sortBy=NEWPRICE&sortDirection=0';
@@ -1450,7 +1464,7 @@ async function fetchViagogoTickets() {
     });
 
     // ✅ Only now: pass to processor
-    processPreferredInfo2(allTickets, seatchart);
+    processPreferredInfo2(uniqueTickets, seatchart);
 
     document.querySelector('#sampleitem3').style.display = 'none';
     document.querySelector('#stubhubclick').style.display = 'flex';
