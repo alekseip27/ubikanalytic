@@ -519,18 +519,18 @@ lastUpdated.textContent = updatedTime;
   else if (value >= 800 && value <= 899) surcharge = 11;
   else if (value >= 900 && value <= 999) surcharge = 12;
   else surcharge = 13;
-		
+
   return Math.round(value * 1.14 + surcharge);
 }
 
-			
+
 function updateViewPrice(selectedcard,card, events) {
 const viewPrice = card.querySelector('.main-text-vw');
 const listPrice = calculateSkyboxPrice(events.listPrice);
 const profitText = card.querySelector('.main-text-profit');
 
     const rawDticket = events.cost / events.quantity;
-	
+
 const profit = (events.listPrice * 0.9) - rawDticket;
     profitText.textContent = profit.toFixed(2);
     profitText.style.color = profit < 0 ? 'red' : '';
@@ -544,7 +544,7 @@ const profit = (events.listPrice * 0.9) - rawDticket;
     viewPrice.textContent = listPrice;
 }
 
-			
+
 function checkPricingStatus(card, ticketID) {
 const user = datas['Email'];
 const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_check_item?ticket_id=${ticketID}&user=${user}`;
@@ -657,7 +657,7 @@ http.onload = function() {
 
                         vividsections();
                         retrievetickets()
-                        //stubhubsections()
+                        fetchViagogoTickets()
                     });
                     cardContainer.appendChild(card);
                 });
@@ -1274,100 +1274,191 @@ async function vividsections() {
         console.error("Error fetching data: ", error);
     }
 }
+const proxyPrefix = "https://shibuy.co:8444/proxy";
 
-async function stubhubsections() {
-    const controller = new AbortController();
-    abortControllers.push(controller);
+// Extract Viagogo Event ID
 
-    document.getElementById('event-clickable2').href = '';
-    document.querySelector('#seatinghide2').style.display = 'none';
-    document.querySelector('#vividevent2').textContent = '';
-    document.querySelector('#vividlocation2').textContent = '';
-    document.querySelector('#vividdate2').textContent = '';
-    document.querySelector('#vividtime2').textContent = '';
-    document.querySelector('#vivid-tix2').textContent = '';
-    document.querySelector('#vivid-tl2').textContent = '';
-    document.querySelector('#vivid-min2').textContent = '';
-    document.querySelector('#vivid-max2').textContent = '';
-    document.querySelector('#vivid-median2').textContent = '';
-    document.querySelector('#vivid-avg2').textContent = '';
-    document.querySelector('#vivid-dow2').textContent = '';
-    document.querySelector('.seatingmap2').src = '';
+function getViagogoEventId() {
+  const el = document.getElementById("shub");
+  if (!el) throw new Error("#shub element not found");
+  const url = el.getAttribute("url");
+  if (!url || !url.includes("/event/")) throw new Error("Invalid Viagogo URL");
+  return url.split("/event/")[1].split("/")[0];
+}
 
-    let elements = document.querySelectorAll('.top-part-section-stub');
-    elements.forEach(element => {
-        if (element.id !== 'sampleitem3') {
-            element.parentNode.removeChild(element);
-        } else if (element.id === 'sampleitem3') {
-            element.style.display = 'flex';
+function generateUUIDv4() {
+  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
+    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+  );
+}
+
+
+async function fetchViagogoTickets() {
+  const controller = new AbortController();
+  abortControllers.push(controller);
+  const signal = controller.signal;
+
+  // 🧼 Reset DOM content
+  document.getElementById('event-clickable2').href = '';
+  document.querySelector('#seatinghide2').style.display = 'none';
+  document.querySelector('#vividevent2').textContent = '';
+  document.querySelector('#vividlocation2').textContent = '';
+  document.querySelector('#vividdate2').textContent = '';
+  document.querySelector('#vividtime2').textContent = '';
+  document.querySelector('#vivid-tix2').textContent = '';
+  document.querySelector('#vivid-tl2').textContent = '';
+  document.querySelector('#vivid-min2').textContent = '';
+  document.querySelector('#vivid-max2').textContent = '';
+  document.querySelector('#vivid-median2').textContent = '';
+  document.querySelector('#vivid-avg2').textContent = '';
+  document.querySelector('#vivid-dow2').textContent = '';
+  document.querySelector('.seatingmap2').src = '';
+
+  let elements = document.querySelectorAll('.top-part-section-stub');
+  elements.forEach(element => {
+    if (element.id !== 'sampleitem3') {
+      element.parentNode.removeChild(element);
+    } else {
+      element.style.display = 'flex';
+    }
+  });
+
+  // 🔍 Extract Event ID
+  const url = document.querySelector('#shub').getAttribute('url');
+  const match = url.match(/\/event\/(\d+)/);
+  if (!match || !match[1]) {
+    console.error("Could not extract event ID from URL:", url);
+    return;
+  }
+  const eventId = match[1];
+  const realUrl = `https://www.viagogo.com/Concert-Tickets/E-${eventId}`;
+  const proxyUrl = `https://shibuy.co:8444/proxy?url=${encodeURIComponent(realUrl)}`;
+  const pageVisitId = crypto.randomUUID();
+  const pageSize = 20;
+
+  const buildRequestBody = page => ({
+    ShowAllTickets: true,
+    HideDuplicateTicketsV2: false,
+    Quantity: 0,
+    IsInitialQuantityChange: false,
+    PageVisitId: pageVisitId,
+    PageSize: pageSize,
+    CurrentPage: page,
+    SortBy: "NEWPRICE",
+    SortDirection: 0,
+    Sections: "",
+    Rows: "",
+    Seats: "",
+    SeatTypes: "",
+    TicketClasses: "",
+    ListingNotes: "",
+    PriceRange: "0,100000",
+    InstantDelivery: false,
+    EstimatedFees: true,
+    BetterValueTickets: false,
+    PriceOption: "",
+    HasFlexiblePricing: false,
+    ExcludeSoldListings: false,
+    RemoveObstructedView: false,
+    NewListingsOnly: false,
+    PriceDropListingsOnly: false,
+    ConciergeTickets: false,
+    Favorites: false,
+    Method: "IndexSh"
+  });
+
+  const retryFetch = async (url, options, retries = 3, delay = 1000) => {
+    for (let i = 0; i < retries; i++) {
+      try {
+        const res = await fetch(url, options);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const contentType = res.headers.get("content-type") || "";
+        if (!contentType.includes("application/json")) {
+          throw new Error("Unexpected non-JSON response");
         }
+        return res.json();
+      } catch (err) {
+        if (i < retries - 1) {
+          console.warn(`Retry ${i + 1} failed. Retrying in ${delay}ms...`);
+          await new Promise(res => setTimeout(res, delay));
+        } else {
+          throw err;
+        }
+      }
+    }
+  };
+
+  try {
+    console.log("📡 Fetching initial Viagogo page 1...");
+    const firstPage = await retryFetch(proxyUrl, {
+      method: 'POST',
+      signal,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(buildRequestBody(1))
     });
 
-    let stub_id = document.querySelector('#shub').getAttribute('url').split('/event/')[1].split('/')[0];
-    const baseCsvUrl = `https://ubik.wiki/api/query/stubhub/?q=${stub_id}`;
+    let items = firstPage.items || [];
+    const itemsRemaining = firstPage.itemsRemaining || 0;
+    const totalItems = items.length + itemsRemaining;
+    const totalPages = Math.ceil(totalItems / pageSize);
 
-    // Function to fetch data with retries
-    const fetchData = async (url, options, retries) => {
-        for (let i = 0; i < retries; i++) {
-            try {
-                const response = await fetch(url, options);
-                if (!response.ok) throw new Error('Network response was not ok');
-                return await response.text();
-            } catch (error) {
-                if (i === retries - 1) throw error;
-                console.error(`Retrying... (${i + 1})`);
-            }
-        }
-    };
+    console.log(`✅ Page 1 received ${items.length} items. Total Pages: ${totalPages}`);
 
-    try {
-        const signal = controller.signal;
-        let allTickets = [];
-        let seatchart = '';
-
-        let pageUrl = `${baseCsvUrl}`;  // Only fetch first page
-        const data = await fetchData(
-            pageUrl,
-            {
-                signal,
-                headers: {
-                    'Authorization': `Bearer ${token}`
-                }
-            },
-            5
-        );
-
-        const evd = JSON.parse(data);
-        eventDetailshub = evd;
-        seatchart = eventDetailshub.svgMapUrl;
-
-        const ticketsDetails = evd.grid.items;
-
-        ticketsDetails.forEach(ticket => {
-            if (ticket.availableTickets > 0) {
-                allTickets.push({
-                    "section": ticket.section,
-                    "row": ticket.row,
-                    "price": ticket.rawPrice,
-                    "quantity": ticket.availableTickets
-                });
-            }
-        });
-
-        allTickets.sort((a, b) => a.price - b.price);
-
-        document.getElementById('event-clickable2').addEventListener('click', function() {
-            let url = document.querySelector('#shub').getAttribute('url') + '/?quantity=0&sortBy=NEWPRICE&sortDirection=0'
-            if (url.length > 10) window.open(url, 'vividmain');
-        });
-
-        processPreferredInfo2(allTickets, seatchart);
-
-        document.querySelector('#sampleitem3').style.display = 'none';
-        document.querySelector('#stubhubclick').style.display = 'flex';
-    } catch (error) {
-        console.error("Error fetching data: ", error);
+    const fetches = [];
+    for (let page = 2; page <= totalPages; page++) {
+      fetches.push(
+        retryFetch(proxyUrl, {
+          method: 'POST',
+          signal,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(buildRequestBody(page))
+        }).then(data => {
+          console.log(`✅ Page ${page} fetched (${data.items?.length || 0} items)`);
+          return data.items || [];
+        }).catch(err => {
+          console.error(`❌ Page ${page} failed:`, err.message);
+          return [];
+        })
+      );
     }
+
+    const pagesData = await Promise.all(fetches);
+    pagesData.forEach(pageItems => items.push(...pageItems));
+
+    let allTickets = [];
+    let seatchart = '';
+
+    items.forEach(item => {
+      if (item.availableTickets > 0) {
+        allTickets.push({
+          section: item.section,
+          row: item.row,
+          price: item.rawPrice,
+          quantity: item.availableTickets
+        });
+
+        if (!seatchart && item.svgMapPngUrl) {
+          seatchart = item.svgMapPngUrl;
+        }
+      }
+    });
+
+    allTickets.sort((a, b) => a.price - b.price);
+
+    document.getElementById('event-clickable2').addEventListener('click', function () {
+      let eventUrl = document.querySelector('#shub').getAttribute('url') + '/?quantity=0&sortBy=NEWPRICE&sortDirection=0';
+      if (eventUrl.length > 10) window.open(eventUrl, 'vividmain');
+    });
+
+    // ✅ Only now: pass to processor
+    processPreferredInfo2(allTickets, seatchart);
+
+    document.querySelector('#sampleitem3').style.display = 'none';
+    document.querySelector('#stubhubclick').style.display = 'flex';
+
+  } catch (error) {
+    console.error("❌ Viagogo fetch error:", error.message || error);
+  }
 }
 
 
