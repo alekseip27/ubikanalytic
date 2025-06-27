@@ -1291,8 +1291,6 @@ function generateUUIDv4() {
     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
   );
 }
-
-
 async function fetchViagogoTickets() {
   const controller = new AbortController();
   abortControllers.push(controller);
@@ -1429,7 +1427,7 @@ async function fetchViagogoTickets() {
     let seatchart = '';
 
     items.forEach(item => {
-      if (item.availableTickets > 0) {
+      if (item.availableTickets > 0 && !item.showRecentlySold) {
         allTickets.push({
           section: item.section,
           row: item.row,
@@ -1443,18 +1441,17 @@ async function fetchViagogoTickets() {
       }
     });
 
+    // 🧹 Deduplicate tickets
+    const uniqueTickets = [];
+    const seen = new Set();
 
-const uniqueTickets = [];
-const seen = new Set();
-
-for (const ticket of allTickets) {
-  const key = `${ticket.section}|${ticket.row}|${ticket.price}|${ticket.quantity}`;
-  if (!seen.has(key)) {
-    seen.add(key);
-    uniqueTickets.push(ticket);
-  }
-}
-
+    for (const ticket of allTickets) {
+      const key = `${ticket.section}|${ticket.row}|${ticket.price}|${ticket.quantity}`;
+      if (!seen.has(key)) {
+        seen.add(key);
+        uniqueTickets.push(ticket);
+      }
+    }
 
     uniqueTickets.sort((a, b) => a.price - b.price);
 
@@ -1463,7 +1460,7 @@ for (const ticket of allTickets) {
       if (eventUrl.length > 10) window.open(eventUrl, 'vividmain');
     });
 
-    // ✅ Only now: pass to processor
+    // ✅ Now that all requests and processing are done, invoke processing
     processPreferredInfo2(uniqueTickets, seatchart);
 
     document.querySelector('#sampleitem3').style.display = 'none';
@@ -1473,6 +1470,7 @@ for (const ticket of allTickets) {
     console.error("❌ Viagogo fetch error:", error.message || error);
   }
 }
+
 
 
 function processPreferredInfo2(tickets, seatchart) {
