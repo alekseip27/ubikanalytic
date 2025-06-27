@@ -19,7 +19,6 @@ const DEFAULT_SOURCE_DETAILS = {
 
   let sourceInstructionsMap = new Map();
 
-
  async function initializeSourceInstructions() {
     try {
       const response = await fetch('https://ubik.wiki/api/source-instructions/?limit=100', {
