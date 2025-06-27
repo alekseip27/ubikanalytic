@@ -1387,12 +1387,12 @@ async function fetchViagogoTickets() {
   };
 
   try {
-    console.log("📡 Fetching initial Viagogo page 1...");
+    console.log("📡 Fetching initial Viagogo page 0...");
     const firstPage = await retryFetch(proxyUrl, {
       method: 'POST',
       signal,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(buildRequestBody(1))
+      body: JSON.stringify(buildRequestBody(0))
     });
 
     let items = firstPage.items || [];
