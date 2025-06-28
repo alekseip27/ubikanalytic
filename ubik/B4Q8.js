@@ -134,6 +134,7 @@ function getEvents() {
 		}
 
                 let tagurgent = card.getElementsByClassName("tags-urgent")[0];
+                let tagdontbuy = card.getElementsByClassName("tags-dontbuy")[0];
                 let tag950 = card.getElementsByClassName("tags-950")[0];
                 let tag1050 = card.getElementsByClassName("tags-1050")[0];
                 let tag1150 = card.getElementsByClassName("tags-1150")[0];
@@ -164,7 +165,9 @@ function getEvents() {
 		if(events.tags.includes('queue-13:50')){
             tag1350.style.display = 'flex';
         }
-
+		if(events.tags.includes('dont-buy')){
+            tagdontbuy.style.display = 'flex';
+        }
 
                 const eventvenue = card.getElementsByClassName('main-text-venue')[0];
                 eventvenue.textContent = events.event_venue;
