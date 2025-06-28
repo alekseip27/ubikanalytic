@@ -53,7 +53,7 @@ request.onload = function() {
     
 function applyEventTags(tags) {
       const select = document.getElementById('tags');
-      const tagsArr = eventtags
+      const tagsArr = tags
         .split(',')
         .map(t => t.trim())
         .filter(t => t.length > 0);
