@@ -49,7 +49,6 @@ request.onload = function() {
 
         
         document.querySelector('#assign').value =  events.assign;
-        document.querySelector('#tags').value =  events.tags;
     
 function applyEventTags(tags) {
       const select = document.getElementById('tags');
