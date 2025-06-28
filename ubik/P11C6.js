@@ -74,6 +74,8 @@ const DEFAULT_SOURCE_DETAILS = {
 
 
 let abortControllers = [];
+let abortControllers2 = [];
+let currentFetchId   = 0;
 
 var input = document.getElementById("searchbar1");
 input.addEventListener("keyup", function(event) {
@@ -566,6 +568,7 @@ http.onload = function() {
 }
                     card.addEventListener('click', function() {
                         abortAllRequests();
+                        abortAllRequests2();
                         document.querySelector('#vividclick').style.display = 'none';
                         document.querySelector('#stubhubclick').style.display = 'none';
                         document.querySelector('#mainurl').value = '';
@@ -1292,11 +1295,22 @@ function generateUUIDv4() {
   );
 }
 
+function abortAllRequests2() {
+  abortControllers2.forEach(controller => controller.abort());
+  abortControllers2 = [];
+  currentFetchId++;
+}
+
+
 async function fetchViagogoTickets() {
-abortAllRequests();
-  const controller = new AbortController();
-  abortControllers.push(controller);
-  const signal = controller.signal;
+  // Cancel any previous batch and bump generation
+  abortAllRequests2();
+  const fetchId = currentFetchId;
+
+  // Create controller for the first page
+  const firstController = new AbortController();
+  abortControllers2.push(firstController);
+  const signal = firstController.signal;
 
   // 🧼 Reset DOM content
   document.getElementById('event-clickable2').href = '';
@@ -1314,12 +1328,11 @@ abortAllRequests();
   document.querySelector('#vivid-dow2').textContent = '';
   document.querySelector('.seatingmap2').src = '';
 
-  let elements = document.querySelectorAll('.top-part-section-stub');
-  elements.forEach(element => {
-    if (element.id !== 'sampleitem3') {
-      element.parentNode.removeChild(element);
+  document.querySelectorAll('.top-part-section-stub').forEach(el => {
+    if (el.id !== 'sampleitem3') {
+      el.parentNode.removeChild(el);
     } else {
-      element.style.display = 'flex';
+      el.style.display = 'flex';
     }
   });
 
@@ -1330,11 +1343,11 @@ abortAllRequests();
     console.error("Could not extract event ID from URL:", url);
     return;
   }
-  const eventId = match[1];
-  const realUrl = `https://www.viagogo.com/Concert-Tickets/E-${eventId}`;
-  const proxyUrl = `https://shibuy.co:8444/proxy?url=${encodeURIComponent(realUrl)}`;
+  const eventId    = match[1];
+  const realUrl    = `https://www.viagogo.com/Concert-Tickets/E-${eventId}`;
+  const proxyUrl   = `https://shibuy.co:8444/proxy?url=${encodeURIComponent(realUrl)}`;
   const pageVisitId = crypto.randomUUID();
-  const pageSize = 20;
+  const pageSize   = 20;
 
   const buildRequestBody = page => ({
     ShowAllTickets: true,
@@ -1372,15 +1385,13 @@ abortAllRequests();
       try {
         const res = await fetch(url, options);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const contentType = res.headers.get("content-type") || "";
-        if (!contentType.includes("application/json")) {
-          throw new Error("Unexpected non-JSON response");
-        }
+        const ct = res.headers.get("content-type") || "";
+        if (!ct.includes("application/json")) throw new Error("Unexpected non-JSON response");
         return res.json();
       } catch (err) {
         if (i < retries - 1) {
           console.warn(`Retry ${i + 1} failed. Retrying in ${delay}ms...`);
-          await new Promise(res => setTimeout(res, delay));
+          await new Promise(r => setTimeout(r, delay));
         } else {
           throw err;
         }
@@ -1396,26 +1407,36 @@ abortAllRequests();
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(buildRequestBody(0))
     });
+    // STALE CHECK: if a newer fetch started, bail out
+    if (fetchId !== currentFetchId) return;
 
-    let items = firstPage.items || [];
+    let items           = firstPage.items || [];
     const itemsRemaining = firstPage.itemsRemaining || 0;
-    const totalItems = items.length + itemsRemaining;
-    const totalPages = Math.ceil(totalItems / pageSize);
+    const totalItems     = items.length + itemsRemaining;
+    const totalPages     = Math.ceil(totalItems / pageSize);
 
     console.log(`✅ Page 1 received ${items.length} items. Total Pages: ${totalPages}`);
 
+    // Fetch remaining pages in parallel, each with its own controller
     const fetches = [];
     for (let page = 2; page <= totalPages; page++) {
+      const pageController = new AbortController();
+      abortControllers.push(pageController);
+
       fetches.push(
         retryFetch(proxyUrl, {
           method: 'POST',
-          signal,
+          signal: pageController.signal,
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(buildRequestBody(page))
-        }).then(data => {
+        })
+        .then(data => {
+          if (fetchId !== currentFetchId) return [];
           console.log(`✅ Page ${page} fetched (${data.items?.length || 0} items)`);
           return data.items || [];
-        }).catch(err => {
+        })
+        .catch(err => {
+          if (fetchId !== currentFetchId) return [];
           console.error(`❌ Page ${page} failed:`, err.message);
           return [];
         })
@@ -1423,11 +1444,13 @@ abortAllRequests();
     }
 
     const pagesData = await Promise.all(fetches);
+    if (fetchId !== currentFetchId) return;
+
     pagesData.forEach(pageItems => items.push(...pageItems));
 
-    let allTickets = [];
+    // Collate tickets
+    const allTickets = [];
     let seatchart = '';
-
     items.forEach(item => {
       if (item.availableTickets > 0 && !item.showRecentlySold) {
         allTickets.push({
@@ -1436,17 +1459,15 @@ abortAllRequests();
           price: item.rawPrice,
           quantity: item.availableTickets
         });
-
         if (!seatchart && item.svgMapPngUrl) {
           seatchart = item.svgMapPngUrl;
         }
       }
     });
 
-    // 🧹 Deduplicate tickets
-    const uniqueTickets = [];
+    // 🧹 Deduplicate & sort
     const seen = new Set();
-
+    const uniqueTickets = [];
     for (const ticket of allTickets) {
       const key = `${ticket.section}|${ticket.row}|${ticket.price}|${ticket.quantity}`;
       if (!seen.has(key)) {
@@ -1454,21 +1475,26 @@ abortAllRequests();
         uniqueTickets.push(ticket);
       }
     }
-
     uniqueTickets.sort((a, b) => a.price - b.price);
 
-    document.getElementById('event-clickable2').addEventListener('click', function () {
-      let eventUrl = document.querySelector('#shub').getAttribute('url') + '/?quantity=0&sortBy=NEWPRICE&sortDirection=0';
+    // Attach click handler
+    document.getElementById('event-clickable2').addEventListener('click', () => {
+      const eventUrl = document.querySelector('#shub').getAttribute('url') +
+                       '/?quantity=0&sortBy=NEWPRICE&sortDirection=0';
       if (eventUrl.length > 10) window.open(eventUrl, 'vividmain');
     });
 
-    // ✅ Now that all requests and processing are done, invoke processing
-    processPreferredInfo2(uniqueTickets, seatchart);
+    // FINAL STALE CHECK before updating UI
+    if (fetchId !== currentFetchId) return;
 
+    // ✅ Hand off to your display logic
+    processPreferredInfo2(uniqueTickets, seatchart);
     document.querySelector('#sampleitem3').style.display = 'none';
     document.querySelector('#stubhubclick').style.display = 'flex';
 
   } catch (error) {
+    // Ignore errors from stale batches
+    if (fetchId !== currentFetchId) return;
     console.error("❌ Viagogo fetch error:", error.message || error);
   }
 }
