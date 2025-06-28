@@ -1291,7 +1291,9 @@ function generateUUIDv4() {
     (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
   );
 }
+
 async function fetchViagogoTickets() {
+abortAllRequests();
   const controller = new AbortController();
   abortControllers.push(controller);
   const signal = controller.signal;
