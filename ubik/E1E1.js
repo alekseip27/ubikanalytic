@@ -47,6 +47,38 @@ request.onload = function() {
 
         document.querySelector('#notes').value =  events.purchase_notes;
 
+        
+        document.querySelector('#assign').value =  events.assign;
+        document.querySelector('#tags').value =  events.tags;
+    
+function applyEventTags(tags) {
+      const select = document.getElementById('tags');
+      const tagsArr = eventtags
+        .split(',')
+        .map(t => t.trim())
+        .filter(t => t.length > 0);
+
+      // For each <option>, select it if its value is in tagsArr
+      Array.from(select.options).forEach(opt => {
+        opt.selected = tagsArr.includes(opt.value);
+      });
+    };
+
+applyEventTags(events.tags)
+    
+ document.getElementById('tags').addEventListener('click', function() {
+      var select = document.getElementById('tags');
+       selected = [];
+      for (var i = 0; i < select.options.length; i++) {
+        var opt = select.options[i];
+        if (opt.selected) {
+          selected.push(opt.value);
+        }
+      }
+
+    }
+)
+
         itemContainer.appendChild(item);
 
         function copyToClipboard(text) {
@@ -108,7 +140,9 @@ const formattedHours = nowInEastern.format('hh');
         "credit_account": creditacc,
         "presale_code": presale,
         "purchase_notes": note,
-        "added_timestamp": dategoal
+        "added_timestamp": dategoal,
+        assign: document.getElementById('assign').value,
+        tags: selected.join(',')
     });
 
     fetch(urltwo, {
