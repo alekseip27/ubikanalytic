@@ -1,4 +1,4 @@
-
+let selected = []
 function getevent(){
 var pkid = document.location.href.split('https://www.ubikanalytic.com/edit-event?id=')[1];
 
