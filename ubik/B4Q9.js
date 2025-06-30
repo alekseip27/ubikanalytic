@@ -133,6 +133,59 @@ function getEvents() {
                 card.setAttribute('assign', events.assign);
 		}
 
+
+const checkEmailLoaded = setInterval(() => {
+  const emailElement = document.getElementById('email');
+  if (emailElement && emailElement.textContent.includes('@')) {
+    clearInterval(checkEmailLoaded);
+
+    let currentuser = emailElement.textContent.trim();
+    let assign = events.assign;
+
+    card.style.display = 'none';
+
+    const roleAccess = {
+      'prohyrph-all': [
+        'tim@ubikanalytic.com',
+        'aleksei@ubikanalytic.com',
+        'prohyrph1@ubikanalytic.com',
+        'prohyrph2@ubikanalytic.com'
+      ],
+      'Prohypr1': [
+        'tim@ubikanalytic.com',
+        'aleksei@ubikanalytic.com',
+        'prohyrph1@ubikanalytic.com'
+      ],
+      'Prohypr2': [
+        'tim@ubikanalytic.com',
+        'aleksei@ubikanalytic.com',
+        'prohyrph2@ubikanalytic.com'
+      ],
+      'Remote': [
+        'tim@ubikanalytic.com',
+        'aleksei@ubikanalytic.com',
+        'daryl@ubikanalytic.com',
+        'jan@ubikanalytic.com',
+        'jen@ubikanalytic.com'
+      ],
+      'Self': [
+        'aleksei@ubikanalytic.com',
+        'tim@ubikanalytic.com'
+      ]
+    };
+
+    if (roleAccess[assign] && roleAccess[assign].includes(currentuser)) {
+      card.style.display = 'flex';
+    }
+  }
+}, 300);
+
+
+
+
+
+
+
                 let tagurgent = card.getElementsByClassName("tags-urgent")[0];
                 let tagdontbuy = card.getElementsByClassName("tags-dontbuy")[0];
                 let tag950 = card.getElementsByClassName("tags-950")[0];
