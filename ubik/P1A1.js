@@ -52,6 +52,7 @@ const firebaseConfig = {
           let marcus = data['marcus']
           let pricing = data['pricing']
           let emailsacc = data['emailsaccess']
+          let prohyrph = data['prohyrph']
 
 
   if(email.includes('@ubikanalytic.com')){
@@ -155,7 +156,18 @@ if(emailsacc){
   $('#datacleaning').css('display','none');
   $('#ptool').css('display','none');
   }
-  
+
+
+  if(!!prohyrph) {
+  $('#buyerlogo').show()
+  $('#buying').css('display','flex');
+  $('#queue').css('display','flex');
+  $('#142scraping').css('display','none');
+  $('#datalabeling').css('display','none');
+  $('#datacleaning').css('display','none');
+  $('#ptool').css('display','none')
+  }
+            
           
   if(!!buyer) {
   $('#buyerlogo').show()
@@ -177,9 +189,6 @@ if(emailsacc){
   $('#editevents').css('display','flex');
   $('#editvenues').css('display','flex');
   $('#edithistory').css('display','flex');
-    
-  
-    
   }
   
   if(!!entry) {
