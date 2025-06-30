@@ -145,18 +145,18 @@ const checkEmailLoaded = setInterval(() => {
     card.style.display = 'none';
 
     const roleAccess = {
-      'prohyrph-all': [
+      'Prohyrph All': [
         'tim@ubikanalytic.com',
         'aleksei@ubikanalytic.com',
         'prohyrph1@ubikanalytic.com',
         'prohyrph2@ubikanalytic.com'
       ],
-      'Prohypr1': [
+      'Prohyrph 1': [
         'tim@ubikanalytic.com',
         'aleksei@ubikanalytic.com',
         'prohyrph1@ubikanalytic.com'
       ],
-      'Prohypr2': [
+      'Prohyrph 2': [
         'tim@ubikanalytic.com',
         'aleksei@ubikanalytic.com',
         'prohyrph2@ubikanalytic.com'
