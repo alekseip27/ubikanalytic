@@ -164,9 +164,9 @@ const checkEmailLoaded = setInterval(() => {
       'Remote': [
         'tim@ubikanalytic.com',
         'aleksei@ubikanalytic.com',
-        'daryl@ubikanalytic.com',
         'jan@ubikanalytic.com',
-        'jen@ubikanalytic.com'
+        'jen@ubikanalytic.com',
+	'danielle@ubikanalytic.com'
       ],
       'Self': [
         'aleksei@ubikanalytic.com',
