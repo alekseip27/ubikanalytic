@@ -26,6 +26,8 @@ const tokenCheckInterval = setInterval(() => {
     }
 
 
+
+
     async function initializeStates(states,emails,account) {
         try {
             const url = new URL(`${apiUrl}&limit=1000&`);
@@ -191,9 +193,9 @@ function populateEmails(items, selectedState, emailsused) {
         abortAllRequests();
         erasedata();
         const buyerEmail = this.value;
-
+        const provider = document.getElementById("issuer")?.value || credit_account
         if (buyerEmail) {
-            retrievedatato(buyerEmail,credit_account);
+            retrievedatato(buyerEmail, provider)
             displayBuyerData(buyerEmail);
             setvalue(buyerEmail);
             fetchProxiesByCurrentEmail();
@@ -342,7 +344,9 @@ function copyToClipboard4(text) {
 
 document.querySelector('#unlock').addEventListener("click", () => {
 let id = document.querySelector('#unlock').getAttribute('retrieve')
-retrievezip(id,credit_account)
+const provider = document.getElementById("issuer")?.value
+retrievezip(id,provider)
+
 })
 
 document.querySelector('#unlock2').addEventListener("click", () => {
@@ -510,6 +514,18 @@ const item = document.getElementById('samplestyle')
 thiseventid = eventdata.event_id
 credit_account = eventdata.credit_account
 
+const issuerElement = document.getElementById("issuer");
+
+if (![...issuerElement.options].some(opt => opt.value === credit_account)) {
+    const newOption = document.createElement("option");
+    newOption.value = credit_account;
+    newOption.textContent = credit_account.charAt(0).toUpperCase() + credit_account.slice(1);
+    issuerElement.appendChild(newOption);
+}
+
+// Set value and trigger change
+issuerElement.value = credit_account || '';
+issuerElement.dispatchEvent(new Event("change"));
 encodedthiseventid = encodeURIComponent(eventdata.event_id)
 
 
@@ -618,7 +634,12 @@ document.querySelector('#section').textContent =  eventdata.section
 document.querySelector('#purchasesource').textContent = eventdata.scraper_name
 document.querySelector('#eventid').textContent = eventdata.event_id
 document.querySelector('#purchasealltime').textContent = eventdata.purchase_total
+
+
+if(eventdata.presale_code){
 document.querySelector('#presalecode').textContent = eventdata.presale_code
+}
+
 
 document.querySelector('#purchaseurgency').textContent = eventdata.buying_urgency
 document.querySelector('#notes').textContent = eventdata.purchase_notes
@@ -1373,10 +1394,26 @@ function part4(url) {
     let instructions = results.instructions
     let backupone = results.backup_one
     let backuptwo = results.backup_two
-    document.querySelector('#backup-1').textContent = backupone
-    document.querySelector('#backup-2').textContent = backuptwo
-    document.querySelector('#browser').textContent = browser
-    document.querySelector('#instructions').textContent = instructions
+
+if(instructions){
+document.querySelector('#instructions').textContent = instructions
+} else {
+document.querySelector('#headerbar1').style.display = 'none'
+}
+
+if(backupone){
+document.querySelector('#backup-1').textContent = backupone
+} else {
+document.querySelector('#headerbar2').style.display = 'none'
+}
+
+if(backuptwo){
+document.querySelector('#backup-2').textContent = backuptwo
+} else {
+document.querySelector('#headerbar3').style.display = 'none'
+}
+
+document.querySelector('#browser').textContent = browser
 
                 }
             }
@@ -1633,5 +1670,22 @@ async function fetchFirstUnassignedProxy() {
   }
 }
 
-// 🔘 Button to trigger proxy replacement
 document.getElementById("proxychange").addEventListener("click", fetchFirstUnassignedProxy);
+
+
+document.getElementById("issuer").addEventListener("change", () => {
+    const selectedIssuer = document.getElementById("issuer").value;
+
+    // Extract previous selected state & used emails
+    const selectedState = document.getElementById("buyer_state")?.value?.split(" (")[0] || '';
+    const usedEmailsRaw = document.getElementById("purchaseaccounts")?.value || '';
+    const usedEmails = usedEmailsRaw.split(",").map(e => e.trim()).join(',');
+
+    if (!selectedIssuer) {
+        console.warn("Issuer selection is empty.");
+        return;
+    }
+
+    erasedata(); // optional, depending if you want to reset state
+    initializeStates(selectedState, usedEmails, selectedIssuer);
+});
