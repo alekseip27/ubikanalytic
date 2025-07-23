@@ -108,6 +108,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     let keywords7 = encodeURIComponent(document.getElementById('searchbar3').value)
 
     let favoritecbox = document.getElementById('favorite').checked
+    let hotlistcheckbox = document.getElementById('hotlisted').checked
     let preonsales = document.getElementById('preonsales').checked
     $('.event-box').hide()
 
@@ -197,6 +198,12 @@ params.push('status__icontains=' + keywords7)
 if (favoritecbox) {
     params.push('&favorites__iexact=true');
 }
+
+	    
+if (hotlistcheckbox) {
+    params.push('&hotlist__iexact=true');
+}
+
 
 if (preonsales) {
     params.push('&is_preonsale__iexact=true');
