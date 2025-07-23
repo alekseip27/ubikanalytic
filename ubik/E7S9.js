@@ -1212,7 +1212,29 @@ http.send(params);
 
 //
 
+		    {
+const checkboxhotlist = card.getElementsByClassName('main-checkbox-hotlist')[0]
 
+checkboxhotlist.checked = events.hotlist
+let eventidsd = evid
+
+
+checkboxhotlist.addEventListener('click', function() {
+
+
+var http = new XMLHttpRequest();
+var url = "https://ubik.wiki/api/update/primary-events/"
+var params = JSON.stringify({
+"site_event_id": eventidsd,
+"hotlist": checkboxhotlist.checked
+})
+http.open("PUT", url, true);
+http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+http.setRequestHeader('Authorization', `Bearer ${token}`);
+http.send(params);
+});
+		    }
+//
 
             function copyToClipboard(text) {
             var $temp = $("<input>");
