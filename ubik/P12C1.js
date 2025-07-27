@@ -651,7 +651,7 @@ http.onload = function() {
                         document.querySelector('#fwicon3').textContent = '';
                         document.querySelector('#fwicon4').textContent = '';
 
-                        lowerableview = document.querySelector('#lowerable').checked
+                        lowerableview = false
 
                         if(lowerableview === false){
                         getchartprimary();
