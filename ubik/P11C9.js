@@ -288,6 +288,7 @@ if (events.tags && events.tags.includes('lowerable')) {
                 containslowerable = true;
 }
 
+
             const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
             let dticket = String((events.cost/events.quantity))
 
@@ -650,7 +651,7 @@ http.onload = function() {
                         document.querySelector('#fwicon3').textContent = '';
                         document.querySelector('#fwicon4').textContent = '';
 
-                        lowerableview = false
+                        lowerableview = document.querySelector('#lowerable').checked
 
                         if(lowerableview === false){
                         getchartprimary();
