@@ -288,7 +288,6 @@ if (events.tags && events.tags.includes('lowerable')) {
                 containslowerable = true;
 }
 
-
             const eventpriceticket = card.getElementsByClassName('main-text-priceticket')[0]
             let dticket = String((events.cost/events.quantity))
 
