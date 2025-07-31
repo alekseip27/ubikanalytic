@@ -311,7 +311,12 @@ if (preonsales) {
             card.setAttribute('city', events.city);
             card.setAttribute('state', events.state);
 
+if(events.no_map === true){
+const eventsnomap = card.getElementsByClassName('main-text-nomap')[0]
+eventsnomap.style.display = 'flex'
+}
 
+		    
         if(events.date){
             card.setAttribute('date', events.date.slice(0, 10).replaceAll("-","/"));
             card.setAttribute('vivid_ed', events.date.slice(0,10));
