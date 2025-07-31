@@ -122,9 +122,14 @@ function constructURL(next) {
         params.push(`category__iexact=${keywords4}`);
     }
 
-    if (keywords5 === 'axs' || keywords5 === 'seetickets') {
-        params.push(`event_url__icontains=${keywords5}`);
-    }
+if (keywords5 === 'axs') {
+    params.push(`event_url__icontains=${keywords5}`);
+}
+
+if (keywords5 === 'seetickets') {
+    params.push(`event_url__icontains=eventim.us&event_url__icontains=seetickets.us`);
+}
+
 
     if (keywords5 === 'ticketmaster') {
         params.push(`event_url__icontains=ticketmaster&event_url__icontains=livenation`);
@@ -147,8 +152,9 @@ if (keywords5 === 'ticketmaster-mexico') {
 
 
 if (keywords5 === 'nonseeticketstmaxsgeek') {
-    params.push(`event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=axs&event_url__idoesnotcontains=seetickets&event_url__idoesnotcontains=seatgeek`);
+    params.push(`event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=axs&event_url__idoesnotcontains=seetickets&event_url__idoesnotcontains=eventim.us&event_url__idoesnotcontains=seatgeek`);
 }
+
 
     if (keywords6 === 'recentlyadded') {
         params.push(`date_created__sort=-1`);
