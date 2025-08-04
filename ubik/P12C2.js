@@ -397,34 +397,84 @@ eventPrice.addEventListener('keyup', () => {
 };
 request.send();
 
-}
+}function updateCardContent(card, events, isAuthorizedUser) {
+    const lowerableCheck = card.querySelector('.main-checkbox-lowerprice');
+    const eventID = document.querySelector('#selectedevent').getAttribute('eventid');
 
-function updateCardContent(card, events, isAuthorizedUser) {
-const lowerableCheck = card.querySelector('.main-checkbox-lowerprice');
-const eventID = document.querySelector('#selectedevent').getAttribute('eventid');
+    lowerableCheck.setAttribute('id', "check" + events.id);
+    lowerableCheck.style.display = isAuthorizedUser ? 'flex' : 'none';
 
-lowerableCheck.setAttribute('id', "check" + events.id);
-lowerableCheck.style.display = isAuthorizedUser ? 'flex' : 'none';
+    card.querySelector('.main-text-id').textContent = events.id;
+    card.querySelector('.main-text-section').textContent = events.section;
+    card.querySelector('.main-text-rows').textContent = events.row;
+    card.querySelector('.main-text-seats').textContent = events.lowSeat + ' - ' + events.highSeat;
+    card.querySelector('.main-text-qty').textContent = events.quantity;
+    card.querySelector('.main-field-price').value = events.listPrice;
+    card.querySelector('.main-text-cst').textContent = `$${events.cost}`;
+    card.querySelector('.main-text-notes').textContent = events.notes;
+    card.querySelector('.main-text-inhand').textContent = events.inHandDate;
 
-card.querySelector('.main-text-id').textContent = events.id;
-card.querySelector('.main-text-section').textContent = events.section;
-card.querySelector('.main-text-rows').textContent = events.row;
-card.querySelector('.main-text-seats').textContent = events.lowSeat + ' - ' + events.highSeat;
-card.querySelector('.main-text-qty').textContent = events.quantity;
-card.querySelector('.main-field-price').value = events.listPrice;
-card.querySelector('.main-text-cst').textContent = `$${events.cost}`;
-card.querySelector('.main-text-notes').textContent = events.notes;
-card.querySelector('.main-text-inhand').textContent = events.inHandDate;
+    updateLowerableCheck(lowerableCheck, events, eventID);
+    updateLastUpdated(card, events);
+    updateViewPrice(eventID, card, events);
+    checkPricingStatus(card, events.id);
 
-updateLowerableCheck(lowerableCheck, events, eventID);
-updateLastUpdated(card, events);
-updateViewPrice(eventID,card, events);
-checkPricingStatus(card, events.id);
+    const savePriceButton = card.querySelector('.save-price-button');
+    const eventPrice = card.querySelector('.main-field-price');
 
-const savePriceButton = card.querySelector('.save-price-button');
-savePriceButton.addEventListener('click', function() {
-    handleSavePriceButtonClick(card);
-});
+    let originalPrice = parseFloat(events.listPrice);
+    let debounceTimer = null;
+
+    eventPrice.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+
+        debounceTimer = setTimeout(() => {
+            const newPrice = parseFloat(eventPrice.value);
+
+            if (originalPrice !== 999 && !isNaN(newPrice) && newPrice > 0) {
+                if (originalPrice !== 0 && newPrice < originalPrice) {
+                    const percentDrop = ((originalPrice - newPrice) / originalPrice) * 100;
+
+                    if (percentDrop > 50) {
+                        document.querySelector('#warning-price').style.display = 'flex';
+
+                        const continueBtn = document.querySelector('#warningcontinue');
+                        const cancelBtn = document.querySelector('#warningcancel');
+
+                        // Remove previous listeners first to prevent stacking
+                        continueBtn.replaceWith(continueBtn.cloneNode(true));
+                        cancelBtn.replaceWith(cancelBtn.cloneNode(true));
+
+                        const newContinueBtn = document.querySelector('#warningcontinue');
+                        const newCancelBtn = document.querySelector('#warningcancel');
+
+                        const continueHandler = () => {
+                            document.querySelector('#warning-price').style.display = 'none';
+                            newContinueBtn.removeEventListener('click', continueHandler);
+                            newCancelBtn.removeEventListener('click', cancelHandler);
+
+                            eventPrice.value = newPrice;
+                            savePriceButton.click();
+                        };
+
+                        const cancelHandler = () => {
+                            eventPrice.value = originalPrice;
+                            document.querySelector('#warning-price').style.display = 'none';
+                            newContinueBtn.removeEventListener('click', continueHandler);
+                            newCancelBtn.removeEventListener('click', cancelHandler);
+                        };
+
+                        newContinueBtn.addEventListener('click', continueHandler);
+                        newCancelBtn.addEventListener('click', cancelHandler);
+                    }
+                }
+            }
+        }, 2000); // 2 second debounce
+    });
+
+    savePriceButton.addEventListener('click', function () {
+        handleSavePriceButtonClick(card);
+    });
 }
 
 
@@ -454,42 +504,46 @@ async function updateLowerableCheck(lowerableCheck, events, eventID) {
     });
 }
 
-
 function handleSavePriceButtonClick(card) {
-const savePriceButton = card.querySelector('.save-price-button');
-const eventPrice = card.querySelector('.main-field-price');
+    const savePriceButton = card.querySelector('.save-price-button');
+    const eventPrice = card.querySelector('.main-field-price');
 
-savePriceButton.addEventListener("click", (event) => {
     if (!eventPrice.readOnly) {
         document.querySelector('#isfocus').textContent = '1';
         setTimeout(() => document.querySelector('#isfocus').textContent = '0', 5000);
     }
-});
 
-$(savePriceButton).closest('div').find(".main-field-price").prop("readonly", true);
-$(savePriceButton).hide();
-$(savePriceButton).closest('div').find(".notbt").css("display", "flex");
-document.querySelector(".confirmation-pricing").style.display = 'flex';
+    // Make price field read-only and update UI
+    $(savePriceButton).closest('div').find(".main-field-price").prop("readonly", true);
+    $(savePriceButton).hide();
+    $(savePriceButton).closest('div').find(".notbt").css("display", "flex");
+    document.querySelector(".confirmation-pricing").style.display = 'flex';
 
-let eventsAmount = Number(document.querySelector("#eventsamount").textContent);
-eventsAmount++;
-document.querySelector("#eventtext").textContent = eventsAmount === 1 ? "event" : "events";
-document.querySelector("#eventsamount").textContent = eventsAmount;
+    // Update counter UI
+    let eventsAmount = Number(document.querySelector("#eventsamount").textContent);
+    eventsAmount++;
+    document.querySelector("#eventtext").textContent = eventsAmount === 1 ? "event" : "events";
+    document.querySelector("#eventsamount").textContent = eventsAmount;
 
-const activeEvent = document.querySelector('.event-box.selected').id
-const activeTicket = $(savePriceButton).closest(".event-box-pricing").attr('id');
-const price = eventPrice.value;
-const user = datas['Email'];
-const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_add_to_queue?ticket-id=${activeTicket}&price=${price}&user=${user}&eventid=${activeEvent}`;
-const http = new XMLHttpRequest();
-const apiToken = datas['pyeo'];
+    // Prepare API call
+    const activeEvent = document.querySelector('.event-box.selected').id;
+    const activeTicket = $(savePriceButton).closest(".event-box-pricing").attr('id');
+    const price = eventPrice.value;
+    const user = datas['Email'];
+    const apiToken = datas['pyeo'];
 
-http.open("PUT", url, true);
-http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-http.setRequestHeader("Authorization", apiToken);
-http.send();
-$('.event-box.selected').addClass('pricechange');
+    const url = `https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_add_to_queue?ticket-id=${activeTicket}&price=${price}&user=${user}&eventid=${activeEvent}`;
+
+    const http = new XMLHttpRequest();
+    http.open("PUT", url, true);
+    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    http.setRequestHeader("Authorization", apiToken);
+    http.send();
+
+    // Mark visually as changed
+    $('.event-box.selected').addClass('pricechange');
 }
+
 
 function updateLastUpdated(card, events) {
 const lastUpdated = card.querySelector('.main-text-updated');
