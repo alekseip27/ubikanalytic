@@ -55,11 +55,11 @@ document.getElementById('rightarrow').addEventListener('click', function() {
         }
         
         if (keywords4 === 'true') {
-        params.push("not_one_ticket__iexact="+keywords4)
+        params.push("not_in_automatiq__iexact="+keywords4)
         }
         
         if (keywords5 === 'false') {
-        params.push("one_ticket__iexact="+keywords5)
+        params.push("automatiq__iexact="+keywords5)
         }
 
         if (keywords6.length > 0) {
@@ -164,8 +164,8 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     card.setAttribute('requested', events.purchase_requested)
     card.setAttribute('bought', events.purchased_by)
     card.setAttribute('confirmation', events.confirmation)
-    card.setAttribute('oneticket', events.one_ticket)
-    card.setAttribute('notoneticket', events.not_one_ticket)
+    card.setAttribute('oneticket', events.automatiq)
+    card.setAttribute('notoneticket', events.not_in_automatiq)
     
     card.style.display = 'flex';
     
@@ -226,10 +226,10 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     purchasedby.textContent = events.purchased_by
     
     let oneticket = card.getElementsByClassName('main-checkbox-1ticket')[0]
-    oneticket.checked = events.one_ticket
+    oneticket.checked = events.automatiq
     
     let onenotticket = card.getElementsByClassName('main-checkbox-not-1ticket')[0]
-    onenotticket.checked = events.not_one_ticket
+    onenotticket.checked = events.not_in_automatiq
     
     let purchrequested = card.getElementsByClassName('main-text-event-date-requested')[0]
     purchrequested.textContent = events.purchase_requested
@@ -245,7 +245,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     
     var params = {
     "id": errorid,
-    "one_ticket": selector.checked,
+    "automatiq": selector.checked,
     "one_ticket_id": events.one_ticket_id
     };
     
@@ -264,7 +264,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     
     var paramst = {
     "id": errorid,
-    "not_one_ticket": selector2.checked,
+    "not_in_automatiq": selector2.checked,
     "one_ticket_id": events.one_ticket_id
     };
     
