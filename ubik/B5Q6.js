@@ -92,10 +92,10 @@ function getEvents() {
 		card.setAttribute('checked','false')
                 card.style.display = 'flex';
 		    
-           	card.setAttribute('eventid', evid);
+           	card.setAttribute('eventid', events.event_id);
 
-		if (evid.startsWith("tm")) {
-            	card.setAttribute('eventid', evid.substring(2));
+		if (events.event_id.startsWith("tm")) {
+            	card.setAttribute('eventid', events.event_id.substring(2));
     		}
 		    
 
