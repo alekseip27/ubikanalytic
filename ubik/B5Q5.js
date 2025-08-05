@@ -91,7 +91,13 @@ function getEvents() {
                 card.setAttribute('url', events.event_url);
 		card.setAttribute('checked','false')
                 card.style.display = 'flex';
+		    
+           	card.setAttribute('eventid', evid);
 
+		if (evid.startsWith("tm")) {
+            	card.setAttribute('eventid', evid.substring(2));
+    		}
+		    
 
                 const txtsource = card.getElementsByClassName('main-text-src')[0];
                 const details = getSourceDetails(events.event_url);
@@ -446,6 +452,7 @@ intervalIdx = setInterval(initsources, 1000);
 function retryClickingSearchBar() {
     if (token.length === 40 && initsource === true) {
         getEvents();
+	searchcompleted = true
         clearInterval(intervalIds);
     }
 }
