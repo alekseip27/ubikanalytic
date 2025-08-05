@@ -88,6 +88,7 @@ function getEvents() {
                 card.setAttribute('id', '');
                 card.setAttribute('name', events.event_name);
                 card.setAttribute('venue', events.event_venue);
+                card.setAttribute('url', events.event_url);
                 card.style.display = 'flex';
 
 
