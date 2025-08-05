@@ -147,7 +147,8 @@ if(events.event_url.includes('ticketmaster') || events.event_url.includes('liven
 document.querySelector('#eventicon').style.display = 'none'
 document.querySelector('#tmurl').style.display = 'block'
 document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + eventidv + "/details/"
-fetchTicketmasterData(eventidv)
+fetchTicketmasterData(eventidtwo.slice(2));
+
 } else {
 updateChartWithPrimaryAndPreferred()
 document.querySelector('#eventicon').style.display = 'none'
@@ -1233,3 +1234,107 @@ let currentdate = date2.replace(',','')
 
 
 }
+
+
+async function fetchEventVenueData() {
+
+
+const eventBoxes = document.querySelectorAll('.event-box');
+const validEventIds = [];
+
+eventBoxes.forEach(function(box) {
+
+    const eventId = box.getAttribute('eventid');
+
+        if (eventId) {
+            validEventIds.push(eventId);
+        }
+    })
+
+    const baseUrl = 'https://ubik.wiki/api/event-venue/?site_event_id__iexact=';
+    const allResults = [];
+
+    function fetchWithXHR(url, token) {
+        return new Promise((resolve, reject) => {
+            const request = new XMLHttpRequest();
+            request.open('GET', url, true);
+            request.setRequestHeader("Content-type", "application/json; charset=utf-8");
+            request.setRequestHeader('Authorization', `Bearer ${token}`);
+
+            request.onreadystatechange = function () {
+                if (request.readyState === 4) {
+                    if (request.status >= 200 && request.status < 300) {
+                        try {
+                            const responseJson = JSON.parse(request.responseText);
+                            resolve(responseJson.results || []);
+                        } catch (e) {
+                            reject(e);
+                        }
+                    } else {
+                        reject(new Error(`Request failed with status ${request.status}`));
+                    }
+                }
+            };
+
+            request.send();
+        });
+    }
+
+    const fetchPromises = validEventIds.map(eventId => {
+        const fetchUrl = baseUrl + encodeURIComponent(eventId);
+
+        return fetchWithXHR(fetchUrl, token)
+            .then(results => {
+                allResults.push(...results);
+
+                // Add attributes to the DOM element for each result
+                results.forEach(result => {
+                    // Use the raw eventId directly as the element ID, escaped for querySelector
+                    const selector = '#' + CSS.escape(eventId);
+                    const el = document.querySelector(selector);
+
+                    if (el) {
+                        el.setAttribute('vdid', result.vdid || '');
+                        el.setAttribute('counts', result.counts || '');
+                        el.setAttribute('city', result.city || '');
+                        el.setAttribute('state', result.state || '');
+
+
+                        if(result.app_142_primary_amount>0) {
+                        el.querySelector('.re-box').style.display = 'flex'
+                        el.querySelector('.main-text-chart').style.display = 'none'
+
+                        el.querySelector('.main-text-primary').style.display = 'flex'
+                        el.querySelector('.main-text-primary').textContent = parseInt(result.app_142_primary_amount)
+                   }
+
+                    } else {
+                        console.warn(`Element with ID ${eventId} not found`);
+                    }
+                });
+            })
+            .catch(err => {
+                console.error(`Failed to fetch for event ID ${eventId}:`, err);
+            });
+    });
+
+    await Promise.all(fetchPromises);
+
+    console.log('All venue data added to DOM elements');
+    return allResults;
+}
+
+
+const intervalVenueReady = setInterval(() => {
+    const sample = document.getElementById('samplestyle');
+    const eventBoxes = document.querySelectorAll('.event-box');
+
+    if (
+        sample &&
+        sample.style.display === 'none' &&
+        eventBoxes.length > 1 // ignore the sample itself
+    ) {
+        clearInterval(intervalVenueReady);
+        fetchEventVenueData();
+    }
+}, 1000);
