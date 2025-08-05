@@ -1238,18 +1238,23 @@ let currentdate = date2.replace(',','')
 
 async function fetchEventVenueData() {
 
-
 const eventBoxes = document.querySelectorAll('.event-box');
 const validEventIds = [];
 
 eventBoxes.forEach(function(box) {
-
+    const eventUrl = box.getAttribute('url');
     const eventId = box.getAttribute('eventid');
 
+    if (
+        eventUrl &&
+        !eventUrl.includes('ticketmaster') &&
+        !eventUrl.includes('livenation')
+    ) {
         if (eventId) {
             validEventIds.push(eventId);
         }
-    })
+    }
+});
 
     const baseUrl = 'https://ubik.wiki/api/event-venue/?site_event_id__iexact=';
     const allResults = [];
