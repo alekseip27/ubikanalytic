@@ -83,7 +83,7 @@ function getEvents() {
                 const style = document.getElementById('samplestyle');
                 const card = style.cloneNode(true);
 
-                card.setAttribute('id', '');
+                card.setAttribute('id', events.event_id);
                 card.setAttribute('name', events.event_name);
                 card.setAttribute('venue', events.event_venue);
                 card.setAttribute('url', events.event_url);
