@@ -97,7 +97,7 @@ function bindChartIconClick(card, events) {
         document.querySelector('#chart-date').textContent = daten;
         document.querySelector('#chart-event').textContent = eventn;
         document.querySelector('#chart-venue').textContent = venuen;
-        document.querySelector('#chart-location').textContent = cityn + ',' + staten;
+        document.querySelector('#chart-location').textContent = cityn + ', ' + staten;
         document.querySelector('#chart-time').textContent = timen;
 
         chart.data.datasets[0].label = '';
@@ -1347,6 +1347,8 @@ eventBoxes.forEach(function(box) {
         el.setAttribute('state', result.state || '');
         el.setAttribute('vdid', result.vdid || '');
         el.setAttribute('counts', JSON.stringify(result.counts));
+        const primaryAmount = parseInt(result.app_142_primary_amount);
+        el.setAttribute('primaryamount', isNaN(primaryAmount) ? -2 : primaryAmount);
 
         if(result.app_142_primary_amount > 0) {
             el.querySelector('.re-box').style.display = 'flex';
@@ -1381,6 +1383,7 @@ eventBoxesToBind.forEach(box => {
             counts: box.getAttribute('counts'),
             city: box.getAttribute('city'),
             state: box.getAttribute('state'),
+            primary_amount: box.getAttribute('primaryamount'),
         };
 
         bindChartIconClick(box, mockEvent);
