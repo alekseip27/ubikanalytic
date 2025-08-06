@@ -1,4 +1,5 @@
 initsource = false
+let abortControllers = [];
 
 const DEFAULT_SOURCE_DETAILS = {
     source: "OTHER",
@@ -48,21 +49,100 @@ const DEFAULT_SOURCE_DETAILS = {
   }
 
 
-  function getSourceDetails(url) {
-    if (sourceInstructionsMap.size === 0) {
-      console.log("Source instructions not loaded yet.");
-      return { ...DEFAULT_SOURCE_DETAILS, url };
-    }
+function getSourceDetails(url) {
+  if (!url || typeof url !== 'string') {
+    console.warn("Invalid or missing URL passed to getSourceDetails:", url);
+    return { ...DEFAULT_SOURCE_DETAILS, url: url || "" };
+  }
 
-    for (const [token, details] of sourceInstructionsMap) {
-      if (url.includes(token)) {
-        return { ...details, url };
-      }
-    }
+  if (sourceInstructionsMap.size === 0) {
+    console.log("Source instructions not loaded yet.");
     return { ...DEFAULT_SOURCE_DETAILS, url };
+  }
+
+  for (const [token, details] of sourceInstructionsMap) {
+    if (url.includes(token)) {
+      return { ...details, url };
+    }
+  }
+  return { ...DEFAULT_SOURCE_DETAILS, url };
 }
 
-let abortControllers = [];
+function bindChartIconClick(card, events) {
+    const charticon = card.getElementsByClassName('main-text-chart')[0];
+
+    if (!charticon) return;
+
+    charticon.addEventListener('click', function () {
+        document.querySelector('#chart-date').textContent = '';
+        document.querySelector('#chart-event').textContent = '';
+        document.querySelector('#chart-venue').textContent = '';
+        document.querySelector('#chart-location').textContent = '';
+        document.querySelector('#chart-time').textContent = '';
+        chart.data.datasets.splice(1, 3);
+        chart.data.labels.splice(0, 100);
+        chart.update();
+
+        const eventBoxParent = charticon.closest('.event-box');
+        const daten = eventBoxParent.getAttribute('date');
+        const eventn = eventBoxParent.getAttribute('name');
+        const venuen = eventBoxParent.getAttribute('venue');
+        const cityn = eventBoxParent.getAttribute('city');
+        const staten = eventBoxParent.getAttribute('state');
+        const timen = eventBoxParent.getAttribute('time');
+        const eventurl = eventBoxParent.getAttribute('url');
+        const eventidv = eventBoxParent.getAttribute('eventid');
+        const vdid = eventBoxParent.getAttribute('vdid');
+
+        document.querySelector('#chart-date').textContent = daten;
+        document.querySelector('#chart-event').textContent = eventn;
+        document.querySelector('#chart-venue').textContent = venuen;
+        document.querySelector('#chart-location').textContent = cityn + ',' + staten;
+        document.querySelector('#chart-time').textContent = timen;
+
+        chart.data.datasets[0].label = '';
+        chart.data.datasets[0].data = [];
+        chart.config.data.labels = [];
+        chart.update();
+        document.querySelector('#tmloader').style.display = 'flex';
+        document.querySelector('#tmerror').style.display = 'none';
+        document.querySelector('#tmchart').style.display = 'none';
+
+        document.querySelector('#graph-overlay').style.display = 'flex';
+        document.querySelector('#closecharts').style.display = 'flex';
+
+        if (eventurl.includes('ticketmaster') || eventurl.includes('livenation')) {
+            document.querySelector('#eventicon').style.display = 'none';
+            document.querySelector('#tmurl').style.display = 'block';
+            document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + eventidv + "/details/";
+            fetchTicketmasterData(eventidv.substring(2));
+            vschartdata(vdid)
+
+       } else {
+            const parsedCounts = JSON.parse(eventBoxParent.getAttribute('counts') || '[]');
+            const siteVenueId = eventBoxParent.getAttribute('venueid');
+            const eventUrl = eventBoxParent.getAttribute('url');
+            const eventId = eventBoxParent.getAttribute('eventid');
+
+    const eventData = {
+        event_id: eventId,
+        event_url: eventUrl,
+        counts: parsedCounts,
+        site_venue_id: siteVenueId
+    };
+
+    updateChartWithPrimaryAndPreferred(eventData);
+    vschartdata(vdid)
+
+            document.querySelector('#eventicon').style.display = 'none';
+            document.querySelector('#tmurl').style.display = 'block';
+            document.querySelector('#tmurl').href = eventurl;
+        }
+    });
+
+    charticon.setAttribute('listener-bound', 'true');
+}
+
 
 
 let xanoUrl = new URL('https://ubik.wiki/api/buying-queue/?completed__iexact=false&limit=1000');
@@ -93,69 +173,13 @@ function getEvents() {
                 card.style.display = 'flex';
                	card.setAttribute('eventid', events.event_id);
 
-		    if (events.event_id.startsWith("tm")) {
-            	card.setAttribute('eventid', events.event_id.substring(2));
-    		}
-
                const eventurltwo = events.event_url
                const eventidtwo = events.event_id
 
                 charticon = card.getElementsByClassName('main-text-chart')[0];
 
 
- charticon.addEventListener('click', function () {
-
-                    document.querySelector('#chart-date').textContent = ''
-                    document.querySelector('#chart-event').textContent = ''
-                    document.querySelector('#chart-venue').textContent = ''
-                    document.querySelector('#chart-location').textContent = ''
-                    document.querySelector('#chart-time').textContent = ''
-                    chart.data.datasets.splice(1,3)
-                    chart.data.labels.splice(0,100)
-                    chart.update();
-                    const eventBoxParent = charticon.closest('.event-box')
-                    const daten = eventBoxParent.getAttribute('date')
-                    const eventn = eventBoxParent.getAttribute('name')
-                    const venuen = eventBoxParent.getAttribute('venue')
-                    const cityn = eventBoxParent.getAttribute('city')
-                    const staten = eventBoxParent.getAttribute('state')
-                    const timen = eventBoxParent.getAttribute('time')
-                    const eventurl = eventBoxParent.getAttribute('url')
-                    const eventidv = eventBoxParent.getAttribute('eventid')
-                    document.querySelector('#chart-date').textContent = daten
-                    document.querySelector('#chart-event').textContent = eventn
-                    document.querySelector('#chart-venue').textContent = venuen
-                    document.querySelector('#chart-location').textContent = cityn + ',' + staten
-                    document.querySelector('#chart-time').textContent = timen
-
-
-                    chart.data.datasets[0].label = ''
-                    chart.data.datasets[0].data = []
-                    chart.config.data.labels = []
-                    chart.update();
-                    document.querySelector('#tmloader').style.display = 'flex';
-                    document.querySelector('#tmerror').style.display = 'none';
-                    document.querySelector('#tmchart').style.display = 'none';
-                    document.querySelector('#vsloader').style.display = 'none';
-
-            //vschartdata(events.vdid)
-            document.querySelector('#graph-overlay').style.display = 'flex';
-            document.querySelector('#closecharts').style.display = 'flex'
-
-
-if(events.event_url.includes('ticketmaster') || events.event_url.includes('livenation')) {
-document.querySelector('#eventicon').style.display = 'none'
-document.querySelector('#tmurl').style.display = 'block'
-document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + eventidv + "/details/"
-fetchTicketmasterData(eventidtwo.slice(2));
-
-} else {
-updateChartWithPrimaryAndPreferred()
-document.querySelector('#eventicon').style.display = 'none'
-document.querySelector('#tmurl').style.display = 'block'
-document.querySelector('#tmurl').href = eventurl
-}
-});
+                bindChartIconClick(card, events);
 
 
 let count = events.counts
@@ -168,7 +192,7 @@ charticon.style.display = 'none'
 
 
                 const txtsource = card.getElementsByClassName('main-text-src')[0];
-                const details = getSourceDetails(events.event_url);
+                const details = getSourceDetails(card.getAttribute('url'));
                 txtsource.textContent = details.source;
                 card.setAttribute('source', details.source);
 
@@ -305,16 +329,28 @@ const checkEmailLoaded = setInterval(() => {
             let scrapebutton = card.getElementsByClassName('scrape-div-fresh')[0]
 
 
-            scrapebutton.addEventListener('click',function(){
-            scrapetm(eventidtwo.substring(2))
-            primrem.textContent = ''
-            })
+   scrapebutton.addEventListener('click', async function () {
+    const eventId = eventidtwo.substring(2);
+    primrem.textContent = ''; // Clear while fetching
+    try {
+        const result = await scrapetm(eventId);
+        primrem.textContent = result;
+    } catch (error) {
+        console.log('Scrape failed:', error);
+        primrem.textContent = 'unavailable';
+    }
+});
 
-
-            rescrapebutton.addEventListener('click',function(){
-            primrem.textContent = ''
-            scrapeurl(eventidtwo.substring(2))
-            })
+rescrapebutton.addEventListener('click', async function () {
+    primrem.textContent = '';
+    try {
+        const result = await scrapeurl(eventidtwo.substring(2));
+        primrem.textContent = result;
+    } catch (error) {
+        console.log('Rescrape failed:', error);
+        primrem.textContent = 'unknown';
+    }
+});
 
             if(!events.event_url.includes('ticketmaster.com.mx') && (events.event_url.includes('ticketmaster.com') || events.event_url.includes('livenation'))) {
             topbox.style.display = 'flex'
@@ -787,7 +823,7 @@ function normalizeDate(date) {
     return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
 
-      function updateChartWithPrimaryAndPreferred() {
+      function updateChartWithPrimaryAndPreferred(events) {
           let amountsPrimary = [];
           let datesPrimary = [];
           let combinedDates = new Set();
@@ -803,11 +839,13 @@ function normalizeDate(date) {
           chart.update();
 
           // Populate primary amounts and dates
-          counts.forEach(count => {
-              amountsPrimary.push(Math.round(count.primary_amount));
-              datesPrimary.push(normalizeDate(count.scrape_date)); // Normalize dates
-              combinedDates.add(normalizeDate(count.scrape_date));
-          });
+counts.forEach(count => {
+    let primary = parseInt(count.primary_amount || "0");
+    amountsPrimary.push(primary);
+    const normalizedDate = normalizeDate(count.scrape_date);
+    datesPrimary.push(normalizedDate);
+    combinedDates.add(normalizedDate);
+});
 
           console.log("Primary data amounts:", amountsPrimary);
           console.log("Primary data dates:", datesPrimary);
@@ -1135,62 +1173,71 @@ function processTicketmasterData(data) {
     document.querySelector("#tmerror").style.display = "none";
 }
 
-const scrapetm = (eventid) => {
+
+const scrapetm = async (eventid) => {
     const url = 'https://shibuy.co:8443/scrapeurl';
-    let eventidscrape = eventid
-    if(eventidscrape.startsWith('tm')){
-    let eventidscrape = eventid.substring(2)
-    }
+    let eventidscrape = eventid.startsWith('tm') ? eventid.substring(2) : eventid;
+
     const data = {
-    eventid: eventidscrape
+        eventid: eventidscrape
     };
 
     const requestOptions = {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`
-    },
-    body: JSON.stringify(data) // Convert data to JSON format
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(data)
     };
 
-    const request = fetch(url, requestOptions)
-    .then(response => response.json())
-    .then(data => {
-        scrapeurl(eventid)
-        console.log(data);
-        const checktrue = data.amounts.some(item => item.amount === undefined || item.amount < 50);
-        if(checktrue){
-        updatedata(eventid)
-    }})
-    .catch(error => {
-        const searchText = 'No amounts available';
-        const includesText = Object.keys(data).some(key => key.includes(searchText));
-        if(includesText){
-        console.log(error)
-        primrem.textContent = 'unavailable';
+    try {
+        const response = await fetch(url, requestOptions);
+        const responseData = await response.json();
+
+        // Handle array response
+        if (!Array.isArray(responseData) || responseData.length === 0) {
+            return 'unknown';
         }
-    });
+
+        const eventData = responseData[0];
+
+        // Sum all amounts in sections where type !== 'resale'
+        const totalPrimaryAmount = eventData.sections
+            .filter(section => section.type !== 'resale' && typeof section.amount === 'number')
+            .reduce((sum, section) => sum + section.amount, 0);
+
+        const checktrue = eventData.amounts.some(item => item.amount === undefined || item.amount < 50);
+        if (checktrue) {
+            updatedata(eventid);
+        }
+
+        return totalPrimaryAmount;
+    } catch (error) {
+        console.error('Error scraping:', error);
+        return 'unavailable';
+    }
 };
 
 
- const scrapeurl = (eventid) => {
-            const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid;
 
-            const request = fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                if (typeof data.count === 'number' && data.count !== 0) {
-                primrem.textContent = data.count;
-                } else {
-                primrem.textContent = 'unknown'
-                }
-            })
-            .catch(error => {
-                console.log('Error:', error);
-            });
-        };
+const scrapeurl = async (eventid) => {
+    const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid;
 
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+
+        if (typeof data.count === 'number' && data.count !== 0) {
+            return data.count;
+        } else {
+            return 'unknown';
+        }
+    } catch (error) {
+        console.error('Error fetching primary url:', error);
+        return 'unknown';
+    }
+};
 
 function updatedata(eventid){
     const url = 'https://ubik.wiki/api/update/primary-events/'
@@ -1244,12 +1291,7 @@ const validEventIds = [];
 eventBoxes.forEach(function(box) {
     const eventUrl = box.getAttribute('url');
     const eventId = box.getAttribute('eventid');
-
-    if (
-        eventUrl &&
-        !eventUrl.includes('ticketmaster') &&
-        !eventUrl.includes('livenation')
-    ) {
+    {
         if (eventId) {
             validEventIds.push(eventId);
         }
@@ -1293,31 +1335,31 @@ eventBoxes.forEach(function(box) {
                 allResults.push(...results);
 
                 // Add attributes to the DOM element for each result
-                results.forEach(result => {
-                    // Use the raw eventId directly as the element ID, escaped for querySelector
-                    const selector = '#' + CSS.escape(eventId);
-                    const el = document.querySelector(selector);
+             results.forEach(result => {
+    const normalizedId = eventId;
+    const selector = '#' + CSS.escape(normalizedId);
+    const el = document.querySelector(selector);
 
-                    if (el) {
-                        el.setAttribute('vdid', result.vdid || '');
-                        el.setAttribute('counts', result.counts || '');
-                        el.setAttribute('city', result.city || '');
-                        el.setAttribute('state', result.state || '');
+    if (el) {
+        el.setAttribute('venueid', result.site_venue_id || '');
+        el.setAttribute('counts', result.counts || '');
+        el.setAttribute('city', result.city || '');
+        el.setAttribute('state', result.state || '');
+        el.setAttribute('vdid', result.vdid || '');
+        el.setAttribute('counts', JSON.stringify(result.counts));
 
+        if(result.app_142_primary_amount > 0) {
+            el.querySelector('.re-box').style.display = 'flex';
+            el.querySelector('.main-text-chart').style.display = 'flex';
 
-                        if(result.app_142_primary_amount>0) {
-                        el.querySelector('.re-box').style.display = 'flex'
-                        el.querySelector('.main-text-chart').style.display = 'none'
-
-                        el.querySelector('.main-text-primary').style.display = 'flex'
-                        el.querySelector('.main-text-primary').textContent = parseInt(result.app_142_primary_amount)
-                   }
-
-                    } else {
-                        console.warn(`Element with ID ${eventId} not found`);
-                    }
-                });
-            })
+            el.querySelector('.main-text-primary').style.display = 'flex';
+            el.querySelector('.main-text-primary').textContent = parseInt(result.app_142_primary_amount);
+        }
+    } else {
+        console.warn(`Element with ID ${normalizedId} not found`);
+    }
+});
+})
             .catch(err => {
                 console.error(`Failed to fetch for event ID ${eventId}:`, err);
             });
@@ -1326,6 +1368,27 @@ eventBoxes.forEach(function(box) {
     await Promise.all(fetchPromises);
 
     console.log('All venue data added to DOM elements');
+
+const eventBoxesToBind = document.querySelectorAll('.event-box');
+eventBoxesToBind.forEach(box => {
+    const charticon = box.querySelector('.main-text-chart');
+    if (charticon && charticon.getAttribute('listener-bound') !== 'true') {
+        const mockEvent = {
+            event_id: box.getAttribute('eventid'),
+            event_url: box.getAttribute('url'),
+            vdid: box.getAttribute('vdid'),
+            site_venue_id: box.getAttribute('venueid'),
+            counts: box.getAttribute('counts'),
+            city: box.getAttribute('city'),
+            state: box.getAttribute('state'),
+        };
+
+        bindChartIconClick(box, mockEvent);
+    }
+});
+
+
+
     return allResults;
 }
 
