@@ -310,6 +310,7 @@ if (preonsales) {
             card.setAttribute('country', events.country);
             card.setAttribute('city', events.city);
             card.setAttribute('state', events.state);
+            card.setAttribute('pendingid', events.site_event_id);
 
 if(events.no_map === true){
 const eventsnomap = card.getElementsByClassName('main-text-nomap')[0]
