@@ -150,7 +150,7 @@ if (keywords5 === 'ticketmaster') {
 if (keywords5 === 'ticketmaster-mexico') {
     params.push(`site_event_id__icontains=tm-mx`);
 }
-	    
+
 if (keywords5 === 'seatgeek') {
     params.push(`event_url__icontains=seatgeek.com`);
 }
@@ -203,7 +203,7 @@ if (favoritecbox) {
     params.push('&favorites__iexact=true');
 }
 
-	    
+
 if (hotlistcheckbox) {
     params.push('&hotlist__iexact=true');
 }
@@ -237,6 +237,8 @@ if (preonsales) {
     document.querySelector('#search-button').addEventListener("click", () => {
     savedevents = []
     constructURL()
+    abortControllers.forEach(controller => controller.abort());
+    abortControllers = [];
     })
 
 
@@ -317,7 +319,7 @@ const eventsnomap = card.getElementsByClassName('main-text-nomap')[0]
 eventsnomap.style.display = 'flex'
 }
 
-		    
+
         if(events.date){
             card.setAttribute('date', events.date.slice(0, 10).replaceAll("-","/"));
             card.setAttribute('vivid_ed', events.date.slice(0,10));
@@ -1265,7 +1267,7 @@ http.send(params);
 
             cardContainer.appendChild(card);
             })
-
+fetchEventVenueData()
 
             } else if(request.status>400){
             document.querySelector('#loading').style.display = "none";
@@ -1341,3 +1343,100 @@ http.send(params);
             document.getElementById("search-button").click();
             }
             });
+
+
+
+async function fetchEventVenueData() {
+
+abortControllers.forEach(controller => controller.abort());
+abortControllers = [];
+
+// Create a new controller for current run
+const controller = new AbortController();
+abortControllers.push(controller);
+const signal = controller.signal;
+
+
+    const eventBoxes = document.querySelectorAll('.event-box');
+    const validEventIds = [];
+
+    eventBoxes.forEach(function (box) {
+        const eventId = box.getAttribute('pendingid');
+        if (eventId) {
+            validEventIds.push(eventId);
+        }
+    });
+
+    const baseUrl = 'https://ubik.wiki/api/buying-queue/?completed__iexact=false&event_id__iexact=';
+    const allResults = [];
+function fetchWithXHR(url, token, signal) {
+    return new Promise((resolve, reject) => {
+        const request = new XMLHttpRequest();
+        request.open('GET', url, true);
+        request.setRequestHeader("Content-type", "application/json; charset=utf-8");
+        request.setRequestHeader('Authorization', `Bearer ${token}`);
+
+        signal.addEventListener('abort', () => {
+            request.abort();
+            reject(new DOMException('Request aborted', 'AbortError'));
+        });
+
+        request.onreadystatechange = function () {
+            if (request.readyState === 4) {
+                if (request.status >= 200 && request.status < 300) {
+                    try {
+                        const responseJson = JSON.parse(request.responseText);
+                        resolve(responseJson.results || []);
+                    } catch (e) {
+                        reject(e);
+                    }
+                } else {
+                    reject(new Error(`Request failed with status ${request.status}`));
+                }
+            }
+        };
+
+        request.send();
+    });
+}
+
+    const fetchPromises = validEventIds.map(eventId => {
+        const fetchUrl = baseUrl + encodeURIComponent(eventId);
+
+	return fetchWithXHR(fetchUrl, token, signal)
+            .then(results => {
+                allResults.push(...results);
+
+                results.forEach(result => {
+                    const normalizedId = eventId;
+                    const selector = `.event-box[pendingid="${CSS.escape(normalizedId)}"]`;
+                    const el = document.querySelector(selector);
+
+                    if (el) {
+                        let purchasetotal = result.purchase_total;
+                        let purchasedtotal = result.purchased_amount;
+                        let remaining = purchasetotal - purchasedtotal;
+
+                        if (purchasedtotal >= 0) {
+                            const purchasedEl = el.querySelector('.main-text-pending');
+                            if (purchasedEl) {
+                                purchasedEl.textContent = parseInt(remaining);
+                            }
+                        }
+                    } else {
+                        console.warn(`Element with eventid="${normalizedId}" not found`);
+                    }
+                });
+            })
+            .catch(err => {
+                console.error(`Failed to fetch for event ID ${eventId}:`, err);
+            });
+    });
+
+    await Promise.all(fetchPromises);
+
+    console.log('All venue data added to DOM elements');
+
+    return allResults;
+}
+
