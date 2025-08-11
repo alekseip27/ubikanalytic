@@ -52,8 +52,15 @@ const firebaseConfig = {
           let marcus = data['marcus']
           let pricing = data['pricing']
           let emailsacc = data['emailsaccess']
+          let toolsaccess = data['tools']
           let prohyrph = data['prohyrph']
 
+
+if(toolsaccess){
+document.getElementById('scrapeurls').style.display = 'flex'
+document.getElementById('src-instructions').style.display = 'flex' 
+}
+  
 
   if(email.includes('@ubikanalytic.com')){
     token = data["token"]
