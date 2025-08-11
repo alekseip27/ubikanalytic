@@ -54,12 +54,18 @@
               let marcus = data['marcus']
               let pricing = data['pricing']
               let emailsacc = data['emailsaccess']
+              let toolsaccess = data['tools']
               pyeo = data['pyeo']
 if(emailsacc){
   $('#emaildropdown').css('display','flex');
   $('#manage-emails').css('display','flex');  
 }
-    
+
+if(toolsaccess){
+document.getElementById('scrapeurls').style.display = 'flex'
+document.getElementById('src-instructions').style.display = 'flex' 
+}
+            
       if(email.includes('@ubikanalytic.com')){
         token = data["token"]
       } else {
