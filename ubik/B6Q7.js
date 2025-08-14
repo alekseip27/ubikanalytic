@@ -251,6 +251,7 @@ const checkEmailLoaded = setInterval(() => {
         'prohyrph1@ubikanalytic.com',
         'prohyrph2@ubikanalytic.com',
         'arcel@ubikanalytic.com',
+        'jj@ubikanalytic.com',
         'franz@ubikanalytic.com'
       ],
       'Prohyrph 1': [
@@ -258,6 +259,7 @@ const checkEmailLoaded = setInterval(() => {
         'aleksei@ubikanalytic.com',
         'prohyrph1@ubikanalytic.com',
         'arcel@ubikanalytic.com',
+        'jj@ubikanalytic.com',
         'franz@ubikanalytic.com'
       ],
       'Prohyrph 2': [
@@ -265,6 +267,7 @@ const checkEmailLoaded = setInterval(() => {
         'aleksei@ubikanalytic.com',
         'prohyrph2@ubikanalytic.com',
         'arcel@ubikanalytic.com',
+        'jj@ubikanalytic.com',
         'franz@ubikanalytic.com'
       ],
       'Remote': [
@@ -274,12 +277,14 @@ const checkEmailLoaded = setInterval(() => {
         'jen@ubikanalytic.com',
 		'danielle@ubikanalytic.com',
         'arcel@ubikanalytic.com',
+        'jj@ubikanalytic.com',
         'franz@ubikanalytic.com'
       ],
       'Self': [
         'aleksei@ubikanalytic.com',
         'tim@ubikanalytic.com',
         'arcel@ubikanalytic.com',
+        'jj@ubikanalytic.com',
         'franz@ubikanalytic.com'
       ]
     };
