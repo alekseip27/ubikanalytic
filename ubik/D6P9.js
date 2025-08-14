@@ -14,12 +14,13 @@ function updateBuyButtonVisibility() {
     const fld3 = document.getElementById('section').value.trim() !== '';
     const fld4 = document.getElementById('buyingurgency').value.trim() !== '';
     const fld5 = document.getElementById('purchaseaccs').value.trim() !== '';
+    const fld6 = document.getElementById('assign').value.trim() !== '';
 
-    document.getElementById('buyfake').style.display = fld1 && fld2 && fld3 && fld4 && fld5 ? 'none' : 'flex';
-    document.getElementById('buybtn').style.display = fld1 && fld2 && fld3 && fld4 && fld5 ? 'flex' : 'none';
+    document.getElementById('buyfake').style.display = fld1 && fld2 && fld3 && fld4 && fld5 && fld6 ? 'none' : 'flex';
+    document.getElementById('buybtn').style.display = fld1 && fld2 && fld3 && fld4 && fld5 && fld6 ? 'flex' : 'none';
 }
 
-['purchasetotal', 'quantityper', 'section', 'buyingurgency','purchaseaccs'].forEach(function(id) {
+['purchasetotal', 'quantityper', 'section', 'buyingurgency','purchaseaccs','assign'].forEach(function(id) {
     document.getElementById(id).addEventListener('input', updateBuyButtonVisibility);
 });
 
