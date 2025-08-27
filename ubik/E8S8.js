@@ -353,10 +353,10 @@ eventsnomap.style.display = 'flex'
             const venuetags = card.getElementsByClassName('tags-venue')[0]
             const venuetext = card.getElementsByClassName('tag-text')[0]
 				
-			if(events.venue_tags){
+			if(events.venue_tags && events.venue_tags.length>0){
 			venuetext.textContent = events.venue_tags
 			} else {
-			venuetext.textContent = ' '
+			venuetext.style.display = 'none'
 			}
 
 
