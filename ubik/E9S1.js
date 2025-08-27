@@ -350,13 +350,13 @@ eventsnomap.style.display = 'flex'
             txtsource.textContent = details.source;
             card.setAttribute('source', details.source);
 
-            const venuetags = card.getElementsByClassName('tags-venue')[0]
+            const venuetags = card.getElementsByClassName('main-text-tags')[0]
             const venuetext = card.getElementsByClassName('tag-text')[0]
 				
 			if(events.venue_tags && events.venue_tags.length>0){
 			venuetext.textContent = events.venue_tags
 			} else {
-			venuetext.remove();
+			venuetags.remove();
 			}
 
 
