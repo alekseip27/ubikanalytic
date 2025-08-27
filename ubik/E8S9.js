@@ -356,7 +356,7 @@ eventsnomap.style.display = 'flex'
 			if(events.venue_tags && events.venue_tags.length>0){
 			venuetext.textContent = events.venue_tags
 			} else {
-			venuetext.style.display = 'none'
+			venuetext.remove();
 			}
 
 
