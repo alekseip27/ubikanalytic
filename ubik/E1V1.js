@@ -149,7 +149,7 @@ function checkresults() {
     document.querySelector('#editurl').value = events.venue_url
     document.querySelector('#editurlsh').value = events.stubhub_url
     document.querySelector('#editurlvs').value = events.vivid_url
-    
+
     document.querySelector('#editname').value = events.name
     document.querySelector('#editcity').value = events.city
     document.querySelector('#editsource').value = events.source_site
@@ -160,6 +160,9 @@ function checkresults() {
     document.querySelector('#edit-capacity').value = events.capacity
     document.querySelector('#edit-addedby').value = events.created_by
     document.querySelector('#edit-addedtime').value = events.created_date
+        
+    document.querySelector('#edit-venuetags').value = events.venue_tags
+        
     })
     
     card.style.display = 'flex';
