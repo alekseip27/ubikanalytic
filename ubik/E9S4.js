@@ -314,18 +314,29 @@ if (preonsales) {
             card.setAttribute('state', events.state);
             card.setAttribute('pendingid', events.site_event_id);
 
-const eventsnomap = card.getElementsByClassName('main-text-nomap')[0]		
-				
-eventsnomap.addEventListener('click', () => {
-const warningPricing = document.querySelector('.warning-pricing').style.display = 'flex';
-	
-});
-				
+
+
+const eventsnomap = card.getElementsByClassName('main-text-nomap')[0];
+
+if (eventsnomap) {
+  eventsnomap.addEventListener('click', () => {
+    // show warning
+    const warningPricing = document.querySelector('.warning-pricing');
+    if (warningPricing) {
+      warningPricing.style.display = 'flex';
+    }
+
+    const btn = document.querySelector('#warningcontinue');
+    if (btn) {
+      btn.dataset.siteEventId = events.site_event_id;
+      btn._nomapEl = eventsnomap;
+    }
+  });
+}
+
 if(events.no_map === true){
 eventsnomap.style.display = 'flex'
 }
-
-
 
 
 
@@ -1308,6 +1319,60 @@ fetchEventVenueData()
             }, 100);
             }
 
+
+function updatenomap(siteEventId) {
+  return fetch("https://ubik.wiki/api/update/primary-events/", {
+    method: "PUT",
+    headers: {
+      "Authorization": `Bearer ${token}`,
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify({
+      site_event_id: siteEventId,
+      no_map: false
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log("Success:", data);
+    const warningPricing = document.querySelector('.warning-pricing');
+    if (warningPricing) warningPricing.style.display = 'none';
+    return data; // pass along data for next then()
+  })
+  .catch(error => {
+    console.error("Error:", error);
+    throw error;
+  });
+}
+
+const globalWarningContinueBtn = document.querySelector('#warningcontinue');
+
+if (globalWarningContinueBtn) {
+  globalWarningContinueBtn.addEventListener('click', () => {
+    const siteEventId = globalWarningContinueBtn.dataset.siteEventId;
+    if (siteEventId) {
+      updatenomap(siteEventId)
+        .then(() => {
+          // hide the element after success
+          if (globalWarningContinueBtn._nomapEl) {
+            globalWarningContinueBtn._nomapEl.style.display = 'none';
+            globalWarningContinueBtn._nomapEl = null;
+          }
+
+          // clear saved id
+          delete globalWarningContinueBtn.dataset.siteEventId;
+        });
+    } else {
+      console.error('No event id set on #warningcontinue');
+    }
+  });
+}
 
 
 
