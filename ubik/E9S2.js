@@ -314,10 +314,84 @@ if (preonsales) {
             card.setAttribute('state', events.state);
             card.setAttribute('pendingid', events.site_event_id);
 
+const eventsnomap = card.getElementsByClassName('main-text-nomap')[0]		
+				
+eventsnomap.addEventListener('click', () => {
+const warningPricing = document.querySelector('.warning-pricing').style.display = 'flex';
+	
+});
+				
 if(events.no_map === true){
-const eventsnomap = card.getElementsByClassName('main-text-nomap')[0]
 eventsnomap.style.display = 'flex'
 }
+
+const warningContinue = document.querySelector('.warningcontinue');
+
+// Define the function
+				
+function updatenomap(eventid) {
+  fetch("https://ubik.wiki/api/update/primary-events/", {
+    method: "PUT",
+    headers: {
+      "Authorization": "Bearer acf84a57bf2522fe825ea158d1dc38ef9c9a41e6",
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify({
+      site_event_id: events.site_event_id,
+      no_map: false
+    })
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return response.json();
+  })
+  .then(data => {
+    console.log("Success:", data);
+  })
+  .catch(error => {
+    console.error("Error:", error);
+  });
+}
+
+// Add the click listener so it triggers the function
+if (warningContinue) {
+  warningContinue.addEventListener('click', updatenomap);
+}
+
+				
+function updatenomap() {
+fetch("https://ubik.wiki/api/update/primary-events/", {
+  method: "PUT",
+  headers: {
+    "Authorization": "Bearer acf84a57bf2522fe825ea158d1dc38ef9c9a41e6",
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+  },
+  body: JSON.stringify({
+    site_event_id: "eventid", ( get attribute from parent event-box called pendingid
+    no_map: false
+
+  })
+})
+.then(response => {
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+})
+.then(data => {
+  console.log("Success:", data);
+})
+.catch(error => {
+  console.error("Error:", error);
+});
+}
+
+
+
 
 
         if(events.date){
