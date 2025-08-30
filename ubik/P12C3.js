@@ -1355,16 +1355,15 @@ function abortAllRequests2() {
   currentFetchId++;
 }
 
-
 async function fetchViagogoTickets() {
   // Cancel any previous batch and bump generation
   abortAllRequests2();
   const fetchId = currentFetchId;
 
-  // Create controller for the first page
-  const firstController = new AbortController();
-  abortControllers2.push(firstController);
-  const signal = firstController.signal;
+  // Create controller for this request
+  const controller = new AbortController();
+  abortControllers2.push(controller);
+  const signal = controller.signal;
 
   // 🧼 Reset DOM content
   document.getElementById('event-clickable2').href = '';
@@ -1397,44 +1396,13 @@ async function fetchViagogoTickets() {
     console.error("Could not extract event ID from URL:", url);
     return;
   }
-  const eventId    = match[1];
-  const realUrl    = `https://www.viagogo.com/Concert-Tickets/E-${eventId}`;
-  const proxyUrl   = `https://shibuy.co:8444/proxy?url=${encodeURIComponent(realUrl)}`;
-  const pageVisitId = crypto.randomUUID();
-  const pageSize   = 20;
+  const eventId = match[1];
 
-  const buildRequestBody = page => ({
-    ShowAllTickets: true,
-    HideDuplicateTicketsV2: false,
-    Quantity: 0,
-    IsInitialQuantityChange: false,
-    PageVisitId: pageVisitId,
-    PageSize: pageSize,
-    CurrentPage: page,
-    SortBy: "NEWPRICE",
-    SortDirection: 0,
-    Sections: "",
-    Rows: "",
-    Seats: "",
-    SeatTypes: "",
-    TicketClasses: "",
-    ListingNotes: "",
-    PriceRange: "0,100000",
-    InstantDelivery: false,
-    EstimatedFees: true,
-    BetterValueTickets: false,
-    PriceOption: "",
-    HasFlexiblePricing: false,
-    ExcludeSoldListings: false,
-    RemoveObstructedView: false,
-    NewListingsOnly: false,
-    PriceDropListingsOnly: false,
-    ConciergeTickets: false,
-    Favorites: false,
-    Method: "IndexSh"
-  });
+  // ✅ New direct endpoint (no proxy, no POST pagination)
+  const apiUrl = `https://ubikdata.wiki:3000/viagogo/${eventId}`;
 
-  const retryFetch = async (url, options, retries = 3, delay = 1000) => {
+  // Simple JSON fetch with retry
+  const retryFetchJson = async (url, options = {}, retries = 3, delay = 1000) => {
     for (let i = 0; i < retries; i++) {
       try {
         const res = await fetch(url, options);
@@ -1444,7 +1412,7 @@ async function fetchViagogoTickets() {
         return res.json();
       } catch (err) {
         if (i < retries - 1) {
-          console.warn(`Retry ${i + 1} failed. Retrying in ${delay}ms...`);
+          console.warn(`Retry ${i + 1} failed. Retrying in ${delay}ms...`, err.message || err);
           await new Promise(r => setTimeout(r, delay));
         } else {
           throw err;
@@ -1454,72 +1422,43 @@ async function fetchViagogoTickets() {
   };
 
   try {
-    console.log("📡 Fetching initial Viagogo page 0...");
-    const firstPage = await retryFetch(proxyUrl, {
-      method: 'POST',
-      signal,
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(buildRequestBody(0))
-    });
+    console.log("📡 Fetching Viagogo data from UbikData…", apiUrl);
+    const data = await retryFetchJson(apiUrl, { method: 'GET', signal });
+
     // STALE CHECK: if a newer fetch started, bail out
     if (fetchId !== currentFetchId) return;
 
-    let items           = firstPage.items || [];
-    const itemsRemaining = firstPage.itemsRemaining || 0;
-    const totalItems     = items.length + itemsRemaining;
-    const totalPages     = Math.ceil(totalItems / pageSize);
+    // Expected shape:
+    // {
+    //   "stubhub_id":"158593038",
+    //   "scrape_date":"8/30/2025, 4:57:32 AM",
+    //   "total_amount":19,
+    //   "tickets_by_sections":[
+    //     {"section":"General Admission","price":"71.72","amount":1},
+    //     ...
+    //   ]
+    // }
 
-    console.log(`✅ Page 1 received ${items.length} items. Total Pages: ${totalPages}`);
+    const ticketsBySections = Array.isArray(data?.tickets_by_sections)
+      ? data.tickets_by_sections
+      : [];
 
-    // Fetch remaining pages in parallel, each with its own controller
-    const fetches = [];
-    for (let page = 2; page <= totalPages; page++) {
-      const pageController = new AbortController();
-      abortControllers.push(pageController);
+    // Transform to the structure expected by processPreferredInfo2
+    // We don't have row or seat-level detail here, so set row to ''.
+    const allTickets = ticketsBySections
+      .filter(t => t && t.amount > 0 && t.price != null)
+      .map(t => {
+        const priceNum = Number(String(t.price).replace(/[^\d.]/g, ''));
+        return {
+          section: t.section || '',
+          row: '',
+          price: isNaN(priceNum) ? 0 : priceNum,
+          quantity: Number(t.amount) || 0
+        };
+      })
+      .filter(t => t.quantity > 0 && t.price > 0);
 
-      fetches.push(
-        retryFetch(proxyUrl, {
-          method: 'POST',
-          signal: pageController.signal,
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(buildRequestBody(page))
-        })
-        .then(data => {
-          if (fetchId !== currentFetchId) return [];
-          console.log(`✅ Page ${page} fetched (${data.items?.length || 0} items)`);
-          return data.items || [];
-        })
-        .catch(err => {
-          if (fetchId !== currentFetchId) return [];
-          console.error(`❌ Page ${page} failed:`, err.message);
-          return [];
-        })
-      );
-    }
-
-    const pagesData = await Promise.all(fetches);
-    if (fetchId !== currentFetchId) return;
-
-    pagesData.forEach(pageItems => items.push(...pageItems));
-
-    // Collate tickets
-    const allTickets = [];
-    let seatchart = '';
-    items.forEach(item => {
-      if (item.availableTickets > 0 && !item.showRecentlySold) {
-        allTickets.push({
-          section: item.section,
-          row: item.row,
-          price: item.rawPrice,
-          quantity: item.availableTickets
-        });
-        if (!seatchart && item.svgMapPngUrl) {
-          seatchart = item.svgMapPngUrl;
-        }
-      }
-    });
-
-    // 🧹 Deduplicate & sort
+    // 🧹 Deduplicate & sort (dedupe by section|row|price|quantity)
     const seen = new Set();
     const uniqueTickets = [];
     for (const ticket of allTickets) {
@@ -1531,7 +1470,7 @@ async function fetchViagogoTickets() {
     }
     uniqueTickets.sort((a, b) => a.price - b.price);
 
-    // Attach click handler
+    // Attach click handler (open original event page)
     document.getElementById('event-clickable2').addEventListener('click', () => {
       const eventUrl = document.querySelector('#shub').getAttribute('url') +
                        '/?quantity=0&sortBy=NEWPRICE&sortDirection=0';
@@ -1541,17 +1480,28 @@ async function fetchViagogoTickets() {
     // FINAL STALE CHECK before updating UI
     if (fetchId !== currentFetchId) return;
 
+    // Since the new endpoint doesn't include a seating chart URL, pass empty string
+    const seatchart = '';
+
     // ✅ Hand off to your display logic
     processPreferredInfo2(uniqueTickets, seatchart);
+
+    // UI toggles
     document.querySelector('#sampleitem3').style.display = 'none';
     document.querySelector('#stubhubclick').style.display = 'flex';
 
+    // Optional: if you want to surface metadata
+    // document.querySelector('#vivid-tix2').textContent = data.total_amount ?? uniqueTickets.length;
+    // document.querySelector('#vividdate2').textContent = data.scrape_date || '';
+
+    console.log(`✅ Received ${uniqueTickets.length} unique ticket group(s) from UbikData.`);
   } catch (error) {
     // Ignore errors from stale batches
     if (fetchId !== currentFetchId) return;
     console.error("❌ Viagogo fetch error:", error.message || error);
   }
 }
+
 
 
 
