@@ -81,28 +81,28 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     })
     function getEvents(fetchurl) {
       let request = new XMLHttpRequest();
-  
+
       request.open('GET', fetchurl, true);
       request.setRequestHeader("Content-type", "application/json; charset=utf-8");
       request.setRequestHeader('Authorization', `Bearer ${token}`);
       request.onload = function () {
           let data = JSON.parse(this.response);
-  
+
           if (request.status >= 200 && request.status < 400) {
               $('.event-box').hide();
-  
+
               nexturl = data.next;
               prevurl = data.previous;
-  
+
               // Calculate total pages
               const totalResults = data.count;
               const resultsPerPage = 100;
               const totalPages = Math.ceil(totalResults / resultsPerPage);
-  
+
               document.getElementById('maxpages').textContent = totalPages;
-  
+
               let currentPage = 1;
-  
+
               if (nexturl) {
                   const match = nexturl.match(/offset=(\d+)/);
                   if (match && match[1]) {
@@ -113,15 +113,15 @@ document.getElementById('rightarrow').addEventListener('click', function() {
                   // If `nexturl` is missing but `prevurl` exists, we're on the last page
                   currentPage = totalPages;
               }
-  
+
               document.getElementById('curpage').textContent = currentPage;
-  
+
               if (!nexturl && !prevurl) {
                   // For single-page result
                   document.getElementById('maxpages').textContent = '1';
                   document.getElementById('curpage').textContent = '1';
               }
-  
+
 
         document.querySelector('#loading').style.display = "none";
         document.querySelector('#flexbox').style.display = "flex";
@@ -145,10 +145,20 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     return;
     }
 
+    if (event.target.closest('.main-text-ip')) {
+    return;
+    }
+
+    if (event.target.closest('.fwrefresh')) {
+    return;
+    }
+
+    fwrefresh
+
     document.querySelector('#errortext').textContent = ''
     document.querySelector(".edit-wrapper").style.display = 'flex'
 
-        
+
  		document.querySelector('#closed').checked = events.closed
     document.querySelector('#paused').checked = events.paused
     document.querySelector('#editid').value = events.id
@@ -178,7 +188,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
     const tmnumbercard = card.getElementsByClassName('main-text-tmnum')[0]
     tmnumbercard.textContent = events.tm_phone_number;
-    
+
     const fname = card.getElementsByClassName('main-text-fname')[0]
     fname.textContent = events.first_name
 
@@ -246,6 +256,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
     cardContainer.appendChild(card);
     })
+retrieveProxys()
    }}
 
   request.send();
@@ -295,3 +306,97 @@ intervalIds = setInterval(retryClickingSearchBar, 1000);
   document.getElementById("search-button").click();
   }
   });
+
+
+
+
+async function retrieveProxys() {
+  if (typeof token === 'undefined') {
+    console.error('token is not defined. Define token (Bearer) before running this script.');
+    return;
+  }
+
+  const url = 'https://ubik.wiki/api/proxy-manager/?active__icontains=yes&limit=1000';
+
+  function findEventBoxByEmail(email) {
+    if (window.CSS && CSS.escape) {
+      try {
+        return document.querySelector(`.event-box[email="${CSS.escape(email)}"]`);
+      } catch (e) {}
+    }
+    const boxes = document.querySelectorAll('.event-box');
+    for (const b of boxes) {
+      if (b.getAttribute('email') === email) return b;
+    }
+    return null;
+  }
+
+  async function fetchAllResults(startUrl) {
+    const all = [];
+    let next = startUrl;
+    while (next) {
+      console.log('Fetching', next);
+      const resp = await fetch(next, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json'
+        }
+      });
+      if (!resp.ok) {
+        throw new Error(`Fetch failed for ${next} — status ${resp.status} ${resp.statusText}`);
+      }
+      const data = await resp.json();
+      if (!data || !Array.isArray(data.results)) {
+        throw new Error('Unexpected response format (no results array)');
+      }
+      all.push(...data.results);
+      next = data.next;
+    }
+    return all;
+  }
+
+  try {
+    const proxies = await fetchAllResults(url);
+    console.log(`Fetched ${proxies.length} proxy items.`);
+
+    let updatedCount = 0;
+    let notFoundCount = 0;
+
+    for (const item of proxies) {
+      const email = item.email;
+      if (!email) {
+        console.warn('Skipping item without email:', item);
+        continue;
+      }
+
+      const box = findEventBoxByEmail(email);
+      if (!box) {
+        notFoundCount++;
+        continue;
+      }
+
+      const ip = item.ip ?? '';
+      const username = item.name ?? '';
+
+      const ipText = ip;
+      const proxyText = ipText;
+
+      const ipNode = box.querySelector('.main-text-ip');
+      const proxyNode = box.querySelector('.main-text-proxy');
+
+      if (ipNode) {
+        ipNode.textContent = proxyText || '\u00A0';
+      }
+      if (proxyNode) {
+        proxyNode.textContent = username || '\u00A0';
+      }
+
+      updatedCount++;
+    }
+
+    console.log(`Update complete. Updated: ${updatedCount}, Not found in DOM: ${notFoundCount}`);
+  } catch (err) {
+    console.error('Error during fetch/update:', err);
+  }
+}
