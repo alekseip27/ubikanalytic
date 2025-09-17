@@ -226,6 +226,10 @@ charticon.style.display = 'none'
                 eventtl.textContent = events.added_timestamp;
                 card.setAttribute('dateposted', events.added_timestamp);
 
+				let eventaddedby = card.getElementsByClassName("main-text-postedby")[0];
+                eventaddedby.textContent = events.added_by;
+
+
                 let assigncard = card.getElementsByClassName("main-text-assign")[0];
 
 		if(events.assign){
