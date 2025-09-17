@@ -153,8 +153,6 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     return;
     }
 
-    fwrefresh
-
     document.querySelector('#errortext').textContent = ''
     document.querySelector(".edit-wrapper").style.display = 'flex'
 
