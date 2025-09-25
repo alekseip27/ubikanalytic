@@ -646,6 +646,8 @@ http.onload = function() {
                         document.querySelector("#loading3").style.display = "flex";
                         document.querySelector("#loadingfailed3").style.display = "none";
 
+
+
                         chartvs.data.datasets[0].data = '';
                         chartvs.data.datasets[1].data = '';
                         chartvs.config.data.labels = '';
@@ -655,8 +657,8 @@ http.onload = function() {
                         chartprimary.config.data.labels = '';
                         chartprimary.data.datasets[0].label = '';
                         chartprimary.data.datasets.splice(1,3)
-
                         chartprimary.update();
+
 
                         $('#mainpricing').hide();
                         $('#loadingpricing').css("display", "flex");
@@ -698,7 +700,6 @@ http.onload = function() {
                         document.querySelector('#vseats').setAttribute('url', events.vividSeatsEventUrl);
                         document.querySelector('#shubmobile').setAttribute('url', events.stubhubEventUrl);
                         document.querySelector('#vseatsmobile').setAttribute('url', events.vividSeatsEventUrl);
-                        vividseatsurl = events.vividSeatsEventUrl
                         $(".platform-icon").css('display', 'flex');
                         document.querySelector('#fwicon1').textContent = '';
                         document.querySelector('#fwicon2').textContent = '';
@@ -709,7 +710,6 @@ http.onload = function() {
 
                         if(lowerableview === false){
                         getchartprimary();
-                        getchartvs();
                         }
 
                         vividsections();
@@ -1398,6 +1398,9 @@ async function fetchViagogoTickets() {
   }
   const eventId = match[1];
 
+if(lowerableview === false){
+  getchartvs(eventId);
+}
   // ✅ New direct endpoint (no proxy, no POST pagination)
   const apiUrl = `https://ubikdata.wiki:3000/viagogo/${eventId}`;
 
@@ -1636,44 +1639,179 @@ function getDayOfWeek(dateString) {
     const dayIndex = date.getDay();
     return daysOfWeek[dayIndex];
 }
+const sleeps = (ms) => new Promise(res => setTimeout(res, ms));
 
-async function getchartvs() {
-    let venuecap = 0;
-    let dataEntries = [];
-    let evurl = vividseatsurl;
+async function getchartvs(eventid) {
+  let venuecap = 0;
+  const selected = document.querySelector('#selectedevent');
+  const shid = selected?.getAttribute('stubhub-id');
 
-    const controller = new AbortController();
-    abortControllers.push(controller);
+  const controller = new AbortController();
+  abortControllers.push(controller);
 
-    try {
-        const response = await fetch(`https://ubik.wiki/api/sbox-data/?limit=1000&vividseats_event_url__icontains=${evurl}`, {
-            method: 'GET',
-            headers: {
-                'Content-type': 'application/json; charset=utf-8',
-                'Authorization': `Bearer ${token}`
-            },
-            signal: controller.signal
-        });
+  try {
+    const resp = await fetch(
+      `https://ubik.wiki/api/stubhub-data/?stubhub_id__iexact=${encodeURIComponent(eventid)}&limit=1000`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-type': 'application/json; charset=utf-8',
+          'Authorization': `Bearer ${token}`
+        },
+        signal: controller.signal
+      }
+    );
+    if (!resp.ok) throw new Error('HTTP error! status: ' + resp.status);
+    const payload = await resp.json();
 
-        if (!response.ok) throw new Error('HTTP error! status: ' + response.status);
+    // results[]
+    const results = Array.isArray(payload)
+      ? payload
+      : (payload && Array.isArray(payload.results) ? payload.results : []);
 
-        const vividresponse = await response.json();
-        const commits = vividresponse.results;
-
-        if (commits.length > 0) {
-            processVividChartData(commits, dataEntries, venuecap);
-        } else {
-            displayChartLoadingFailed();
-        }
-    } catch (error) {
-        if (error.name === 'AbortError') {
-            console.log('Fetch aborted');
-        } else {
-            console.error('There was an error fetching the vivid chart data:', error);
-            displayChartLoadingFailed();
-        }
+    // ---- robust date parsing for "M/D/YYYY, H:MM:SS AM/PM"
+    function parseUSDateTime(s) {
+      if (!s) return null;
+      // eg "8/18/2025, 3:07:11 AM"
+      const m = String(s).match(
+        /^\s*(\d{1,2})\/(\d{1,2})\/(\d{4}),\s*(\d{1,2}):(\d{2}):(\d{2})\s*(AM|PM)\s*$/i
+      );
+      if (!m) {
+        const dt = new Date(s);
+        if (isNaN(dt)) return null;
+        return { ts: dt.getTime(), label: dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' }) };
+      }
+      let [ , mm, dd, yyyy, hh, min, ss, ap ] = m;
+      mm = +mm; dd = +dd; yyyy = +yyyy; hh = +hh; min = +min; ss = +ss;
+      if (/pm/i.test(ap) && hh < 12) hh += 12;
+      if (/am/i.test(ap) && hh === 12) hh = 0;
+      const dt = new Date(yyyy, mm - 1, dd, hh, min, ss);
+      if (isNaN(dt)) return null;
+      return {
+        ts: dt.getTime(),
+        // include year to avoid collisions
+        label: dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' })
+      };
     }
+    const parseDate = (typeof parseStubhubScrapeDate === 'function')
+      ? parseStubhubScrapeDate
+      : parseUSDateTime;
+
+    const toNum = (x) => {
+      const n = Number(x);
+      return Number.isFinite(n) ? n : null;
+    };
+    const parsePrice = (p) => {
+      if (p == null) return null;
+      const n = Number(String(p).replace(/[^\d.]/g, ''));
+      return Number.isFinite(n) ? n : null;
+    };
+
+    const coerceToSections = (item) => {
+      if (Array.isArray(item.tickets_by_sections)) return item.tickets_by_sections;
+      // fallback if not present
+      const amt = toNum(item.amount);
+      const lp  = parsePrice(item.price);
+      return (amt != null || lp != null) ? [{ amount: amt ?? 0, price: lp ?? null }] : [];
+    };
+
+    const points = [];
+    for (const item of results) {
+      const sections = coerceToSections(item);
+      if (sections.length === 0) continue;
+
+      const parsed = parseDate(item.scrape_date || item.date || item.created_on);
+      if (!parsed) continue;
+
+      let total = toNum(item.total_amount ?? item.total ?? item.total_tickets);
+      if (total == null) {
+        let sum = 0;
+        for (const s of sections) sum += toNum(s.amount) ?? 0;
+        total = sum;
+      }
+
+      let min2 = null;
+      for (const sec of sections) {
+        const amt = toNum(sec.amount);
+        const price = parsePrice(sec.price);
+        if (amt != null && amt >= 2 && price != null) {
+          if (min2 == null || price < min2) min2 = price;
+        }
+      }
+      if (min2 == null) {
+        for (const sec of sections) {
+          const price = parsePrice(sec.price);
+          if (price != null) { min2 = price; break; }
+        }
+      }
+
+      points.push({ ts: parsed.ts, label: parsed.label, total, min2 });
+    }
+
+    if (points.length === 0) {
+      console.warn("getchartvs: no valid points to chart.");
+      displayChartLoadingFailed?.();
+      return;
+    }
+
+    // sort & dedupe by label
+    points.sort((a, b) => a.ts - b.ts);
+    const byLabel = new Map();
+    for (const p of points) byLabel.set(p.label, p);
+    const series = Array.from(byLabel.values());
+
+    const labels   = series.map(p => p.label);
+    const barData  = series.map(p => p.total ?? 0);
+    const lineData = series.map(p => p.min2  ?? null);
+
+    // 3-day slope
+    const threeDaysAgoIndex = Math.max(0, barData.length - 4);
+    const todayIndex = Math.max(0, barData.length - 1);
+    const movingAverage = (barData[threeDaysAgoIndex] - barData[todayIndex]) / 3;
+
+    // KPIs from the *latest* sorted series
+    const latest = series[series.length - 1];
+    const lastTotal = latest?.total ?? 0;
+
+    const elResale = document.getElementById("venueresale");
+    if (elResale) elResale.textContent = venuecap ? Math.round((lastTotal / venuecap) * 100) + "%" : "—";
+    const elCap = document.getElementById("venuecap");
+    if (elCap) elCap.textContent = String(venuecap || "—");
+
+    const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+    setTxt("fwicontotal3day", "");
+    setTxt("total3daytext", "Total 3 Day:");
+    setTxt("total3dayamount", Number.isFinite(movingAverage) ? movingAverage.toFixed(2) : "—");
+
+    if (chartvs) {
+      chartvs.data.labels = labels;
+      if (chartvs.data.datasets[0]) chartvs.data.datasets[0].data = barData;
+      if (chartvs.data.datasets[1]) chartvs.data.datasets[1].data = lineData;
+      chartvs.update();
+    } else if (typeof Chart !== 'undefined') {
+      const ctx = document.getElementById('vivid-chart')?.getContext('2d');
+      if (ctx) {
+        chartvs = new Chart(ctx, {/* ...same config as before... */});
+      }
+    }
+
+    // success UI: show chart, hide spinners
+    const show = (sel, disp) => { const el = document.querySelector(sel); if (el) el.style.display = disp; };
+    show("#chart2", "flex");
+    show("#chartloading2", "none");
+    show("#loading2", "none");          // <-- hide spinner on success
+    show("#loadingfailed2", "none");
+
+  } catch (error) {
+    if (error.name === 'AbortError') {
+      console.log('Fetch aborted');
+    } else {
+      console.error('There was an error fetching the vivid chart data:', error);
+      displayChartLoadingFailed?.();
+    }
+  }
 }
+
 
 
 // Helper function to process vivid chart data
@@ -1683,9 +1821,7 @@ function processVividChartData(commits, dataEntries, venuecap) {
             dataEntries.push({
                 date: commits[i].date_scraped,
                 amount: Math.round(commits[i].ticket_count),
-                pref: Math.round(commits[i].preferred_count),
                 lowestPrice: Math.round(commits[i].lowest_price),
-                lowestPricePref: Math.round(commits[i].lowest_preferred_price)
             });
         }
     }
@@ -1694,9 +1830,7 @@ function processVividChartData(commits, dataEntries, venuecap) {
 
     const datesvs = dataEntries.map(entry => entry.date);
     const amountsvs = dataEntries.map(entry => entry.amount);
-    const prefvs = dataEntries.map(entry => entry.pref);
     const lowestprice = dataEntries.map(entry => entry.lowestPrice);
-    const lowestpricepref = dataEntries.map(entry => entry.lowestPricePref);
 
     const lastCommit = commits[commits.length - 1];
     document.getElementById("venueresale").textContent = Math.round((lastCommit.ticket_count / venuecap) * 100) + "%";
@@ -1705,7 +1839,6 @@ function processVividChartData(commits, dataEntries, venuecap) {
     const threeDaysAgoIndex = Math.max(0, amountsvs.length - 4);
     const todayIndex = Math.max(0, amountsvs.length - 1);
     const movingAverage = (amountsvs[threeDaysAgoIndex] - amountsvs[todayIndex]) / 3;
-    const movingAveragePref = (prefvs[threeDaysAgoIndex] - prefvs[todayIndex]) / 3;
 
     document.getElementById("fwicontotal3day").textContent = "";
     document.getElementById("total3daytext").textContent = "Total 3 Day:";
@@ -1716,9 +1849,7 @@ function processVividChartData(commits, dataEntries, venuecap) {
     document.getElementById("preferred3dayamount").textContent = movingAveragePref.toFixed(2);
 
     chartvs.data.datasets[0].data = amountsvs;
-    chartvs.data.datasets[1].data = prefvs;
-    chartvs.data.datasets[2].data = lowestprice;
-    chartvs.data.datasets[3].data = lowestpricepref;
+    chartvs.data.datasets[1].data = lowestprice;
     chartvs.config.data.labels = datesvs;
     chartvs.update();
 
