@@ -1957,7 +1957,10 @@ document.querySelector('#priceconfirm').addEventListener("click", () => {
 
     let selected = document.getElementsByClassName("event-box pricing selected")
     if(selected.length>0 && http.status >= 200 && http.status < 400) {
-        selected[0].click()
+            setTimeout(() => {
+                selected[0].click()
+                document.querySelector("#eventsamount").textContent = '0'
+            }, 1500);
     document.querySelector("#eventsamount").textContent = '0'
 
     }
