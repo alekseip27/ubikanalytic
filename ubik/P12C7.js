@@ -718,7 +718,7 @@ http.onload = function() {
                     });
                     cardContainer.appendChild(card);
                 });
-                checkexp()
+                //checkexp()
                 checkpurchdates()
                 $('#mainpricing').css("display", "block");
                 $('#loadingpricing').css("display", "none");
