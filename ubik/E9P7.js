@@ -389,7 +389,7 @@ async function retrieveProxys() {
       }
       if (proxyNode) {
         proxyNode.textContent = username || '\u00A0';
-        proxyNode.setAttribute('"data-id",dataid')
+        proxyNode.setAttribute('"data-id",dataid)
       }
 
       updatedCount++;
