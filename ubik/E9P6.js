@@ -376,6 +376,7 @@ async function retrieveProxys() {
 
       const ip = item.ip ?? '';
       const username = item.name ?? '';
+      const dataid = item.id ?? '';
 
       const ipText = ip;
       const proxyText = ipText;
@@ -388,6 +389,7 @@ async function retrieveProxys() {
       }
       if (proxyNode) {
         proxyNode.textContent = username || '\u00A0';
+        proxyNode.setAttribute('"data-id",dataid')
       }
 
       updatedCount++;
