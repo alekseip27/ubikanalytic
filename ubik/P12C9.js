@@ -1936,15 +1936,37 @@ document.getElementById('scrapedates').addEventListener('click', getpdates);
 
 
 
+function retrieveactive(){
+
+const pricingBoxes = document.querySelectorAll('.event-box-pricing');
+
+const matchingBoxes = Array.from(pricingBoxes).filter(box => {
+  const boxStyle = window.getComputedStyle(box);
+  if (boxStyle.display !== 'flex') return false;
+
+  const saveBtn = box.querySelector('.save-price-button');
+  if (!saveBtn) return false;
+
+  const saveStyle = window.getComputedStyle(saveBtn);
+  return saveStyle.display === 'none';
+});
+
+const results = matchingBoxes.map(box => {
+  const mainText = box.querySelector('.main-text-id');
+  return mainText ? mainText.textContent.trim() : null;
+}).filter(Boolean);
+return results;
+}
 
 document.querySelector('#priceconfirm').addEventListener("click", () => {
     $('#priceconfirm').css({pointerEvents: "none"})
     $('.event-box-pricing').css({pointerEvents: "none"})
     $('.event-box').removeClass('pricechange');
+    let activeid = retrieveactive()
 
     let uszz = datas['Email']
     var http = new XMLHttpRequest();
-    var urll = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_confirm?user=" + uszz;
+    var urll = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_confirm?user=" + uszz + '&activeid=' + activeid
     pa = datas['pyeo']
     http.open("PUT", urll, true);
     http.setRequestHeader("Content-type", "application/json; charset=utf-8");
@@ -1958,7 +1980,7 @@ document.querySelector('#priceconfirm').addEventListener("click", () => {
     let selected = document.getElementsByClassName("event-box pricing selected")
     if(selected.length>0 && http.status >= 200 && http.status < 400) {
                 selected[0].click()
-                document.querySelector("#eventsamount").textContent = '0'
+    document.querySelector("#eventsamount").textContent = '0'
     document.querySelector("#eventsamount").textContent = '0'
 
     }
