@@ -396,7 +396,135 @@ async function retrieveProxys() {
     }
 
     console.log(`Update complete. Updated: ${updatedCount}, Not found in DOM: ${notFoundCount}`);
+    document.querySelectorAll(".event-box .fwrefresh").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const eventBox = btn.closest(".event-box");
+    if (!eventBox) {
+      console.warn("⚠️ .fwrefresh clicked but no parent .event-box found.");
+      return; // graceful skip
+    }
+    fetchFirstUnassignedProxy(eventBox);
+  });
+});
   } catch (err) {
     console.error('Error during fetch/update:', err);
+  }
+}
+
+
+// Optional: tiny helper to sanity-check email-ish strings
+const looksLikeEmail = (str) => typeof str === "string" && /\S+@\S+\.\S+/.test(str);
+
+async function fetchFirstUnassignedProxy(eventBox) {
+  if (!eventBox) {
+    console.warn("⚠️ fetchFirstUnassignedProxy called without an eventBox.");
+    return;
+  }
+
+  // Get email text from this event box (gracefully handle missing)
+  const emailNode = eventBox.querySelector(".main-text-acc");
+  const current_email = emailNode?.textContent?.trim();
+
+  if (!current_email) {
+    console.warn("⚠️ Skipping: .main-text-acc missing or empty in this .event-box.", eventBox);
+    return; // graceful skip
+  }
+  if (!looksLikeEmail(current_email)) {
+    console.warn("⚠️ Skipping: .main-text-acc text doesn't look like an email:", current_email, eventBox);
+    return; // graceful skip
+  }
+
+  // Scoped elements for this box
+  const proxyElement = eventBox.querySelector(".main-text-proxy");
+  const ipElement = eventBox.querySelector(".main-text-ip");
+
+  if (!proxyElement || !ipElement) {
+    console.warn("⚠️ Skipping: Required elements (.main-text-proxy / .main-text-ip) not found in this .event-box.", eventBox);
+    return; // graceful skip
+  }
+
+  const url = "https://ubik.wiki/api/proxy-manager/?email__isblank=true&active__idoesnotcontains=no";
+
+  try {
+    const res = await fetch(url, {
+      method: "GET",
+      headers: { "Authorization": `Bearer ${token}` }
+    });
+
+    if (!res.ok) {
+      console.error("❌ Failed to fetch unassigned proxies:", await res.text());
+      return;
+    }
+
+    const json = await res.json();
+    const result = json.results?.[0];
+
+    if (!result) {
+      console.warn("⚠️ No unassigned proxies found.");
+      return;
+    }
+
+    const oldProxy = proxyElement.textContent.trim();
+    const oldIp = ipElement.textContent.trim();
+    const oldID = proxyElement.getAttribute("data-id") || "";
+
+    console.log("🔁 Replacing old values:", { oldProxy, oldIp, oldID });
+
+    // Unassign old proxy (if any)
+    if (oldID) {
+      const unassignPayload = { id: oldID, email: "", active: "no" };
+      try {
+        const putRes = await fetch("https://ubik.wiki/api/update/proxy-manager/", {
+          method: "PUT",
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(unassignPayload)
+        });
+        if (!putRes.ok) {
+          console.error("❌ Failed to unassign old proxy:", await putRes.text());
+        } else {
+          console.log("✅ Old proxy unassigned.");
+        }
+      } catch (err) {
+        console.error("❌ PUT network error (unassign):", err);
+      }
+    }
+
+    // Assign new proxy to this email
+    const newProxy = result.name || "[No Name]";
+    const newIp = result.ip || "[No IP]";
+    const newID = result.id;
+
+    const assignPayload = { id: newID, active: "yes", email: current_email };
+    try {
+      const assignRes = await fetch("https://ubik.wiki/api/update/proxy-manager/", {
+        method: "PUT",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(assignPayload)
+      });
+
+      if (!assignRes.ok) {
+        console.error("❌ Failed to assign new proxy:", await assignRes.text());
+        return;
+      }
+      console.log("✅ New proxy assigned to", current_email);
+    } catch (err) {
+      console.error("❌ PUT error assigning new proxy:", err);
+      return;
+    }
+
+    // Update UI in this box only
+    proxyElement.textContent = newProxy;
+    proxyElement.setAttribute("data-id", newID);
+    ipElement.textContent = newIp;
+
+    console.log("✅ Updated proxy:", newProxy, newIp);
+  } catch (err) {
+    console.error("❌ Network error while fetching unassigned proxy:", err);
   }
 }
