@@ -1958,35 +1958,124 @@ const results = matchingBoxes.map(box => {
 return results;
 }
 
-document.querySelector('#priceconfirm').addEventListener("click", () => {
-    $('#priceconfirm').css({pointerEvents: "none"})
-    $('.event-box-pricing').css({pointerEvents: "none"})
-    $('.event-box').removeClass('pricechange');
-    let activeid = retrieveactive()
+document.querySelector('#priceconfirm').addEventListener("click", async () => {
+  $('#priceconfirm').css({ pointerEvents: "none" });
+  $('.event-box-pricing').css({ pointerEvents: "none" });
+  $('.event-box').removeClass('pricechange');
 
-    let uszz = datas['Email']
-    var http = new XMLHttpRequest();
-    var urll = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_confirm?user=" + uszz + '&activeid=' + activeid
-    pa = datas['pyeo']
-    http.open("PUT", urll, true);
-    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-    http.setRequestHeader("Authorization", pa);
-    http.onload = function() {
+  // get active id(s)
+  const activeResult = retrieveactive();
+  const activeid = Array.isArray(activeResult) ? activeResult[0] : activeResult; // use first if array
 
-    document.querySelector(".confirmation-pricing").style.display = 'none'
-    $('#priceconfirm').css({pointerEvents: "auto"})
-    $('.event-box-pricing').css({pointerEvents: "auto"})
+  // get selected event-box id
+  const selectedBox = document.querySelector('.event-box.selected');
+  const selectedId = selectedBox ? selectedBox.getAttribute('id') : null;
 
-    let selected = document.getElementsByClassName("event-box pricing selected")
-    if(selected.length>0 && http.status >= 200 && http.status < 400) {
-                selected[0].click()
-    document.querySelector("#eventsamount").textContent = '0'
-    document.querySelector("#eventsamount").textContent = '0'
+  // safety: if either is missing, bail gracefully
+  if (!selectedId || !activeid) {
+    console.warn('Missing selectedId or activeid', { selectedId, activeid });
+    document.querySelector(".confirmation-pricing").style.display = 'none';
+    $('#priceconfirm').css({ pointerEvents: "auto" });
+    $('.event-box-pricing').css({ pointerEvents: "auto" });
+    return;
+  }
 
+  const fetchListPrice = async () => {
+    const sboxUrl = `https://shibuy.co:8443/sboxsearch?searchkey=${encodeURIComponent(selectedId)}&searchkey2=${encodeURIComponent(activeid)}`;
+    const resp = await fetch(sboxUrl, { method: 'GET' });
+    if (!resp.ok) throw new Error(`sboxsearch ${resp.status}`);
+    const json = await resp.json();
+    // expects { listPrice: number }
+    return (json && typeof json.listPrice !== 'undefined') ? Number(json.listPrice) : null;
+  };
+
+  const wait = (ms) => new Promise(res => setTimeout(res, ms));
+
+  // poll until listPrice changes, or timeout
+  const waitForPriceChange = async (opts = { interval: 1000, timeout: 2000 }) => {
+    const start = Date.now();
+    let baseline = null;
+
+    // establish baseline
+    try {
+      baseline = await fetchListPrice();
+      console.log('Baseline listPrice:', baseline);
+    } catch (e) {
+      console.warn('Failed to fetch baseline price, will still attempt polling.', e);
     }
+
+    while (Date.now() - start < opts.timeout) {
+      await wait(opts.interval);
+      try {
+        const current = await fetchListPrice();
+        if (baseline === null && current !== null) {
+          // if baseline was unknown, set it now and continue
+          baseline = current;
+          continue;
+        }
+        if (current !== null && baseline !== null && Number(current) !== Number(baseline)) {
+          return { oldPrice: baseline, newPrice: current };
+        }
+      } catch (e) {
+        // transient failures: continue polling
+        console.warn('Polling error (ignored):', e.message);
+      }
     }
-    http.send();
-    })
+    throw new Error('Timed out waiting for listPrice change');
+  };
+
+  // existing PUT request to pricing_confirm
+  let uszz = datas['Email'];
+  var http = new XMLHttpRequest();
+  var urll = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_confirm?user=" + encodeURIComponent(uszz) + '&activeid=' + encodeURIComponent(activeid);
+  pa = datas['pyeo'];
+  http.open("PUT", urll, true);
+  http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+  http.setRequestHeader("Authorization", pa);
+
+  http.onload = function () {
+    const done = () => {
+      document.querySelector(".confirmation-pricing").style.display = 'none';
+      $('#priceconfirm').css({ pointerEvents: "auto" });
+      $('.event-box-pricing').css({ pointerEvents: "auto" });
+    };
+
+    let selected = document.getElementsByClassName("event-box pricing selected");
+
+    // only proceed if PUT was successful
+    if (http.status >= 200 && http.status < 400) {
+      (async () => {
+        try {
+          const change = await waitForPriceChange({ interval: 1000, timeout: 2000 });
+          console.log(`listPrice changed: ${change.oldPrice} -> ${change.newPrice}`);
+        } catch (e) {
+          console.warn('Price did not change before timeout, continuing anyway.');
+        } finally {
+          if (selected.length > 0) {
+            selected[0].click();
+            document.querySelector("#eventsamount").textContent = '0';
+            document.querySelector("#eventsamount").textContent = '0';
+          }
+          done();
+        }
+      })();
+    } else {
+      // PUT failed, restore UI
+      console.warn('pricing_confirm failed:', http.status, http.responseText);
+      done();
+    }
+  };
+
+  http.onerror = function () {
+    console.warn('pricing_confirm network error');
+    document.querySelector(".confirmation-pricing").style.display = 'none';
+    $('#priceconfirm').css({ pointerEvents: "auto" });
+    $('.event-box-pricing').css({ pointerEvents: "auto" });
+  };
+
+  http.send();
+});
+
 
 
 document.querySelector("#pricecancel").addEventListener('click', function() {
