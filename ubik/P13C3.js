@@ -1933,59 +1933,196 @@ function sleep(ms) {
 
 document.getElementById('scrapedates').addEventListener('click', getpdates);
 
+// ---- helper you provided (kept as-is) ----
+function retrieveactive() {
+  const pricingBoxes = document.querySelectorAll('.event-box-pricing');
 
+  const matchingBoxes = Array.from(pricingBoxes).filter(box => {
+    const boxStyle = window.getComputedStyle(box);
+    if (boxStyle.display !== 'flex') return false;
 
+    const saveBtn = box.querySelector('.save-price-button');
+    if (!saveBtn) return false;
 
-function retrieveactive(){
+    const saveStyle = window.getComputedStyle(saveBtn);
+    return saveStyle.display === 'none';
+  });
 
-const pricingBoxes = document.querySelectorAll('.event-box-pricing');
+  const results = matchingBoxes.map(box => {
+    const mainText = box.querySelector('.main-text-id');
+    return mainText ? mainText.textContent.trim() : null;
+  }).filter(Boolean);
 
-const matchingBoxes = Array.from(pricingBoxes).filter(box => {
-  const boxStyle = window.getComputedStyle(box);
-  if (boxStyle.display !== 'flex') return false;
-
-  const saveBtn = box.querySelector('.save-price-button');
-  if (!saveBtn) return false;
-
-  const saveStyle = window.getComputedStyle(saveBtn);
-  return saveStyle.display === 'none';
-});
-
-const results = matchingBoxes.map(box => {
-  const mainText = box.querySelector('.main-text-id');
-  return mainText ? mainText.textContent.trim() : null;
-}).filter(Boolean);
-return results;
+  return results; // may be [], or array of active ids
 }
 
-document.querySelector('#priceconfirm').addEventListener("click", () => {
-    $('#priceconfirm').css({pointerEvents: "none"})
-    $('.event-box-pricing').css({pointerEvents: "none"})
-    $('.event-box').removeClass('pricechange');
+// ---- main flow ----
+document.querySelector('#priceconfirm').addEventListener("click", async () => {
+  // lock UI
+  $('#priceconfirm').css({ pointerEvents: "none" });
+  $('.event-box-pricing').css({ pointerEvents: "none" });
+  $('.event-box').removeClass('pricechange');
 
-    let uszz = datas['Email']
-    var http = new XMLHttpRequest();
-    var urll = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_confirm?user=" + uszz  
-    pa = datas['pyeo']
-    http.open("PUT", urll, true);
-    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-    http.setRequestHeader("Authorization", pa);
-    http.onload = function() {
+  const restoreUI = () => {
+    document.querySelector(".confirmation-pricing").style.display = 'none';
+    $('#priceconfirm').css({ pointerEvents: "auto" });
+    $('.event-box-pricing').css({ pointerEvents: "auto" });
+  };
 
-    document.querySelector(".confirmation-pricing").style.display = 'none'
-    $('#priceconfirm').css({pointerEvents: "auto"})
-    $('.event-box-pricing').css({pointerEvents: "auto"})
+  // selected event id from .event-box.selected
+  const selectedBox = document.querySelector('.event-box.selected');
+  const selectedId = selectedBox ? selectedBox.getAttribute('id') : null;
 
-    let selected = document.getElementsByClassName("event-box pricing selected")
-    if(selected.length>0 && http.status >= 200 && http.status < 400) {
-                selected[0].click()
-    document.querySelector("#eventsamount").textContent = '0'
-    document.querySelector("#eventsamount").textContent = '0'
+  // active ids (could be array/single/null)
+  const activeResult = retrieveactive();
+  const activeIds = (Array.isArray(activeResult) ? activeResult : [activeResult]).filter(Boolean);
 
+  const uszz = datas['Email'];
+  const pa = datas['pyeo'];
+
+  // ---- network helpers ----
+  const sendPricingConfirm = async () => {
+    const base = "https://x828-xess-evjx.n7.xano.io/api:Owvj42bm/pricing_confirm";
+    const url = new URL(base);
+    url.searchParams.set("user", uszz); // ⬅️ intentionally no activeid here
+
+    const resp = await fetch(url.toString(), {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': pa
+      }
+    });
+    if (!resp.ok) throw new Error(`pricing_confirm -> ${resp.status}`);
+    return true;
+  };
+
+  const fetchListPrice = async (activeid) => {
+    if (!selectedId || !activeid) return null; // need both to poll
+    const sboxUrl = `https://shibuy.co:8443/sboxsearch?searchkey=${encodeURIComponent(selectedId)}&searchkey2=${encodeURIComponent(activeid)}`;
+    const resp = await fetch(sboxUrl, { method: 'GET' });
+    if (!resp.ok) throw new Error(`sboxsearch(${activeid}) ${resp.status}`);
+    const json = await resp.json();
+    return (json && typeof json.listPrice !== 'undefined') ? Number(json.listPrice) : null;
+  };
+
+  const wait = (ms) => new Promise(res => setTimeout(res, ms));
+
+  /**
+   * Poll for listPrice change for a specific activeid.
+   * Returns:
+   *  - { status: "changed", activeid, oldPrice, newPrice }
+   *  - { status: "same",    activeid, price }  // only after minStablePollsForSame consecutive equal reads
+   * Throws on timeout.
+   */
+  const waitForPriceChange = async (
+    activeid,
+    {
+      interval = 1000,
+      timeout = 20000,
+      resolveOnSame = true,
+      minStablePollsForSame = 3  // 👈 require N consecutive equal reads before calling it "same"
+    } = {}
+  ) => {
+    if (!selectedId) return null; // can't poll w/o selected
+    const start = Date.now();
+    let baseline = null;
+    let stableCount = 0;          // counts consecutive equal reads AFTER baseline is known
+
+    try {
+      baseline = await fetchListPrice(activeid);
+      console.log(`Baseline listPrice [${activeid}]:`, baseline);
+    } catch (e) {
+      console.warn(`Baseline fetch failed [${activeid}] (will still poll):`, e.message);
     }
+
+    while (Date.now() - start < timeout) {
+      await wait(interval);
+
+      try {
+        const current = await fetchListPrice(activeid);
+
+        // if baseline wasn't established, set it now and keep polling
+        if (baseline === null && current !== null) {
+          baseline = current;
+          stableCount = 0; // reset stability when baseline just set
+          continue;
+        }
+
+        // price changed
+        if (current !== null && baseline !== null && Number(current) !== Number(baseline)) {
+          return { status: "changed", activeid, oldPrice: baseline, newPrice: current };
+        }
+
+        // equal reading — increment stability only when baseline exists
+        if (baseline !== null && current !== null && Number(current) === Number(baseline)) {
+          stableCount += 1;
+
+          // only resolve "same" after enough consecutive equal reads
+          if (resolveOnSame && stableCount >= minStablePollsForSame) {
+            return { status: "same", activeid, price: current };
+          }
+        }
+      } catch (e) {
+        console.warn(`Polling error [${activeid}] (ignored):`, e.message);
+        // transient errors don't affect stableCount; continue polling
+      }
     }
-    http.send();
-    })
+    throw new Error(`Timed out waiting for listPrice change [${activeid}]`);
+  };
+
+  try {
+    // 1) Always send pricing_confirm ONCE (no activeid)
+    await sendPricingConfirm();
+
+    // 2) For each active id, poll sboxsearch (selectedId + that activeid) in parallel
+    if (selectedId && activeIds.length) {
+      const pollResults = await Promise.allSettled(
+        activeIds.map(id =>
+          waitForPriceChange(id, {
+            interval: 1000,
+            timeout: 20000,
+            resolveOnSame: true,
+            minStablePollsForSame: 3 // 👈 prevents early resolution on first equal read
+          })
+        )
+      );
+
+      // optional logging/handling
+      pollResults.forEach((r, i) => {
+        const id = activeIds[i];
+        if (r.status === 'fulfilled') {
+          const v = r.value || {};
+          if (v.status === 'changed') {
+            console.log(`✅ Price changed for ${id}: ${v.oldPrice} -> ${v.newPrice}`);
+          } else if (v.status === 'same') {
+            console.log(`ℹ️ Price unchanged for ${id}: still ${v.price} (after ${3} consecutive reads)`);
+          }
+        } else {
+          console.warn(`⏱️ No result for ${id}:`, r.reason?.message || r.reason);
+        }
+      });
+    } else {
+      if (!selectedId) console.warn('No selectedId; skipping sboxsearch polling.');
+      if (!activeIds.length) console.warn('No activeIds; skipping sboxsearch polling.');
+    }
+
+    // 3) Proceed with your existing click + counters
+    const selected = document.getElementsByClassName("event-box pricing selected");
+    if (selected.length > 0) {
+      selected[0].click();
+      document.querySelector("#eventsamount").textContent = '0';
+      document.querySelector("#eventsamount").textContent = '0';
+    }
+  } catch (err) {
+    console.warn('Flow error:', err.message || err);
+  } finally {
+    restoreUI();
+  }
+});
+
+
+
 
 
 document.querySelector("#pricecancel").addEventListener('click', function() {
