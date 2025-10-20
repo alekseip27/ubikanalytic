@@ -28,7 +28,7 @@ const tokenCheckInterval = setInterval(() => {
 
 
 
-    async function initializeStates(states,emails,account) {
+async function initializeStates(states, emails, account, prevBuyerEmail = "") {
         try {
             const url = new URL(`${apiUrl}&limit=1000&`);
 
@@ -96,20 +96,30 @@ fetch('https://shibuy.co:8443/rba', {
             });
 
             const usedEmails = emails.split(',').map(email => email.trim());
-            buyerStateSelect.addEventListener('change', () => {
-                erasedata();
-                const selectedState = buyerStateSelect.value.split(" (")[0];
-                if (selectedState) populateEmails(items, selectedState, usedEmails);
-            });
 
-            if (states) {
-                buyerStateSelect.value = states;
-            } else {
-                buyerStateSelect.value = '';
-            }
+if (window.__buyerStateHandler) {
+  buyerStateSelect.removeEventListener('change', window.__buyerStateHandler);
+}
+window.__buyerStateHandler = () => {
+  const stateOnly = buyerStateSelect.value.split(" (")[0];
+  if (!stateOnly) return;            // don't clear if nothing is selected
+  clearEmailsUIOnly();               // scoped clear (doesn't change select.value)
+  const available = populateEmails(items, stateOnly, usedEmails, prevBuyerEmail);
+  // try to reselect the previous email if still available
+ const emailSelect = document.getElementById('buyer_email');
+  if (prevBuyerEmail && available.includes(prevBuyerEmail)) {
+    emailSelect.value = prevBuyerEmail;
+  }
+};
+            
+buyerStateSelect.addEventListener('change', window.__buyerStateHandler);
 
-            const event = new Event("change");
-            buyerStateSelect.dispatchEvent(event);
+if (states && Array.from(buyerStateSelect.options).some(o => o.value === states)) {
+  buyerStateSelect.value = states;
+  buyerStateSelect.dispatchEvent(new Event("change")); // valid → populate
+} else {
+  buyerStateSelect.value = ''; // invalid → show default, do nothing
+}
 
         } catch (error) {
             console.error('Error initializing states:', error);
@@ -123,10 +133,11 @@ fetch('https://shibuy.co:8443/rba', {
         selectElement.appendChild(option);
     }
 
-function populateEmails(items, selectedState, emailsused) {
+function populateEmails(items, selectedState, emailsused, prevEmail = "") {
     const buyerEmailSelect = document.getElementById('buyer_email');
     buyerEmailSelect.innerHTML = '';
     addDefaultOption(buyerEmailSelect, 'Select one...');
+    const cachedPrev = prevEmail?.trim() || buyerEmailSelect?.value?.trim() || "";
 
     const today = new Date().toLocaleDateString('en-CA', {
         timeZone: 'America/New_York',
@@ -154,17 +165,35 @@ function populateEmails(items, selectedState, emailsused) {
 
         return { email: item.email.trim(), count };
     });
-
-    const filteredEmailOptions = emailOptions.filter(option => !emailsused.map(email => email.trim()).includes(option.email));
+    
+    const usedSet = new Set(emailsused.map(e => e.trim()));
+    const filteredEmailOptions = emailOptions.filter(o => !usedSet.has(o.email) || o.email === cachedPrev);
+    
     filteredEmailOptions.sort((a, b) => a.count - b.count);
 
+    const rendered = [];
     filteredEmailOptions.forEach(option => {
         const emailOption = document.createElement('option');
         emailOption.value = option.email;
         emailOption.textContent = option.count > 0 ? `${option.email} (${option.count})` : option.email;
         buyerEmailSelect.appendChild(emailOption);
+        rendered.push(option.email);
     });
+
+if (cachedPrev && rendered.includes(cachedPrev)) {
+    buyerEmailSelect.value = cachedPrev;
+  }
+  return rendered;
+    
 }
+
+function clearEmailsUIOnly() {
+  const emailSelect = document.getElementById('buyer_email');
+  if (!emailSelect) return;
+  while (emailSelect.options.length > 0) emailSelect.remove(0);
+  addDefaultOption(emailSelect, 'Select one...');
+}
+
 
     async function displayBuyerData(buyerEmail) {
         try {
@@ -1675,7 +1704,7 @@ document.getElementById("proxychange").addEventListener("click", fetchFirstUnass
 
 document.getElementById("issuer").addEventListener("change", () => {
     const selectedIssuer = document.getElementById("issuer").value;
-
+    const prevBuyerEmail = document.getElementById("buyer_email")?.value?.trim() || "";
     // Extract previous selected state & used emails
     const selectedState = document.getElementById("buyer_state")?.value?.split(" (")[0] || '';
     const usedEmailsRaw = document.getElementById("purchaseaccounts")?.value || '';
@@ -1686,6 +1715,16 @@ document.getElementById("issuer").addEventListener("change", () => {
         return;
     }
 
-    erasedata(); // optional, depending if you want to reset state
-    initializeStates(selectedState, usedEmails, selectedIssuer);
+        abortAllRequests();
+        erasedata();
+    
+        const provider = document.getElementById("issuer")?.value || credit_account
+        if (prevBuyerEmail) {
+            retrievedatato(prevBuyerEmail, provider)
+            displayBuyerData(prevBuyerEmail);
+            setvalue(prevBuyerEmail);
+            fetchProxiesByCurrentEmail();
+        }
+    
+    initializeStates(selectedState, usedEmails, selectedIssuer, prevBuyerEmail);
 });
