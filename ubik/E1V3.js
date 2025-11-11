@@ -55,7 +55,7 @@ function checkresults() {
     }
     });
     }
-    
+
     
     document.querySelector('#search-button').addEventListener("click", () => {
     document.querySelector('#loading').style.display = "flex";
@@ -67,7 +67,8 @@ function checkresults() {
     searchbar2.value = searchbar2.value.trimEnd();
     var searchbar3 = document.getElementById('searchbar3');
     searchbar3.value = searchbar3.value.trimEnd();
-    
+    let cb1 = document.getElementById('tevo-id').checked
+        
     let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value)
     let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value)
     let keywords3 = encodeURIComponent(document.getElementById('searchbar3').value)
@@ -88,7 +89,9 @@ function checkresults() {
     params.push('source_site__icontains=' + keywords3)
     }
     
-    
+    if (cb1) {
+    params.push('&tevo_venue_id__isblank=true');
+    }
     
     params.push('limit=100');
     
