@@ -163,6 +163,8 @@ function checkresults() {
         
     document.querySelector('#edit-venuetags').value = events.venue_tags
         
+    document.querySelector('#edit-tevoid').value = events.tevo_venue_id
+        
     })
     
     card.style.display = 'flex';
@@ -209,7 +211,11 @@ function checkresults() {
     
     const addedby = card.getElementsByClassName('main-text-addedby')[0]
     addedby.textContent = events.created_by;
+
+    const tevoid = card.getElementsByClassName('main-text-tevo-id')[0]
+    tevoid.textContent = events.tevo_venue_id;
     
+        
     const addedtime = card.getElementsByClassName('main-text-timeadded')[0]
     addedtime.textContent = events.created_date;
     
