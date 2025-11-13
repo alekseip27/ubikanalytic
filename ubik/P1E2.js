@@ -82,11 +82,11 @@ function checkresults() {
     }
     
     if (keywords2.length > 0) {
-    params.push('sbox_id__icontains=' + keywords2)
+    params.push('artist_id__icontains=' + keywords2)
     }
     
     if (keywords3.length > 0) {
-    params.push('artist_id__icontains=' + keywords3)
+    params.push('sbox_id__icontains=' + keywords3)
     }
     
     if (cb1) {
@@ -137,6 +137,8 @@ function checkresults() {
     document.querySelector('#errortext').textContent = ''
     document.querySelector(".edit-wrapper").style.display = 'flex'
     
+    document.querySelector('#edit-id').value = events.id
+        
     document.querySelector('#edit-name').value = events.artist_name
     document.querySelector('#edit-aliases').value = events.artist_aliases
     
@@ -154,19 +156,20 @@ function checkresults() {
     const aliases = card.getElementsByClassName('main-text-aliases')[0]
     aliases.textContent = events.tevo_venue_id;
     
-    const tevoid = card.getElementsByClassName('main-text-tevo-id')[0]
+    const vividid = card.getElementsByClassName('main-text-vivid-id')[0]
+    vividid.textContent = events.artist_id;    
+
+   const tevoid = card.getElementsByClassName('main-text-tevo-id')[0]
     tevoid.textContent = events.sbox_id;
 
-    const vividid = card.getElementsByClassName('main-text-vivid-id')[0]
-    tevoid.textContent = events.artist_id;    
-
+        
 const deletebutton = card.getElementsByClassName('main-edit-button')[0];
 const evids = card.getAttribute('eventid');
 deletebutton.addEventListener('click', function() {
     document.querySelector('.edit-wrapper').style.display = 'none';
-    const url = `https://ubik.wiki/api/delete/venues/`;
+    const url = `https://ubik.wiki/api/delete/artists/`;
     const bodyData = JSON.stringify({
-        site_venue_id: evids
+        id: evids
     });
 
     fetch(url, {
