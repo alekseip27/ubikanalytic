@@ -82,15 +82,15 @@ function checkresults() {
     }
     
     if (keywords2.length > 0) {
-    params.push('artist_id__icontains=' + keywords2)
+    params.push('vivid_id__icontains=' + keywords2)
     }
     
     if (keywords3.length > 0) {
-    params.push('sbox_id__icontains=' + keywords3)
+    params.push('tevo_id__icontains=' + keywords3)
     }
     
     if (cb1) {
-    params.push('&sbox_id__isblank=true');
+    params.push('&tevo_id__isblank=true');
     }
     
     params.push('limit=100');
@@ -142,9 +142,9 @@ function checkresults() {
     document.querySelector('#edit-name').value = events.artist_name
     document.querySelector('#edit-aliases').value = events.artist_aliases
     
-    document.querySelector('#edit-vividid').value = events.artist_id
+    document.querySelector('#edit-vividid').value = events.vivid_id
       
-    document.querySelector('#edit-tevoid').value = events.sbox_id
+    document.querySelector('#edit-tevoid').value = events.tevo_id
         
     })
     
@@ -157,10 +157,10 @@ function checkresults() {
     aliases.textContent = events.tevo_venue_id;
     
     const vividid = card.getElementsByClassName('main-text-vivid-id')[0]
-    vividid.textContent = events.artist_id;    
+    vividid.textContent = events.vivid_id;    
 
    const tevoid = card.getElementsByClassName('main-text-tevo-id')[0]
-    tevoid.textContent = events.sbox_id;
+    tevoid.textContent = events.tevo_id;
 
         
 const deletebutton = card.getElementsByClassName('main-edit-button')[0];
