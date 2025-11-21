@@ -1173,6 +1173,15 @@ if(events.app_142_scrape_date.length<10){
 card.setAttribute('scrapedate','1998-09-09')
 }
 
+const scrapetime = card.getElementsByClassName('main-text-scrapetime')[0];
+
+if(events.app_142_scrape_time){
+scrapetime.textContent = events.app_142_scrape_date	
+}
+
+
+	
+
 let estDate = moment().tz('America/New_York').format('YYYY/MM/DD');
 
 let mOldDate = moment(oldDate);
