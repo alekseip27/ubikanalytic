@@ -285,6 +285,8 @@ document.querySelector('#search-button').addEventListener("click", () => {
   searchbar3.value = searchbar3.value.trimEnd();
 
   let cb1 = document.getElementById('tevo-id').checked;
+  let cb2 = document.getElementById('vivid-id').checked;
+  let cb3 = document.getElementById('shub-id').checked;
 
   let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value);
   let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value);
@@ -308,8 +310,15 @@ document.querySelector('#search-button').addEventListener("click", () => {
   }
 
   if (cb1) {
-    // note: no leading "&" needed here; params.join("&") will add separators
     params.push('tevo_venue_id__isblank=true');
+  }
+
+  if (cb1) {
+    params.push('vivid_venue_id__isblank=true');
+  }
+
+  if (cb3) {
+    params.push('stubhub_venue_id__isblank=true');
   }
 
   params.push('limit=' + pageLimit);
