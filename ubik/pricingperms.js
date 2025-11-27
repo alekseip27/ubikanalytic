@@ -84,7 +84,6 @@ let checks = document.querySelector('#checks')
 if (email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com') {
     document.querySelector('.totalcounts').style.display = 'flex';
     document.querySelector('#lowerbox').style.display = 'flex';
-    document.querySelector('#searchblock').style.display = 'flex';
     document.querySelector('#lowerable').checked = false
     checks.style.display = 'flex'
     presalelate.style.display = 'flex'
@@ -93,7 +92,6 @@ if (email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com') {
     favoritescheck.style.display = 'flex'
 } else {
     document.querySelector('#lowerbox').style.display = 'none';
-    document.querySelector('#searchblock').style.display = 'none';
     document.querySelector('.totalcounts').style.display = 'none';
     document.querySelector('.chart-tab').style.display = 'flex'
     document.querySelector('#lowerable').checked = true;
@@ -103,10 +101,8 @@ if (email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com') {
     if(email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com'){
     document.querySelector('.totalcounts').style.display = 'flex'
     document.querySelector('#lowerbox').style.display = 'flex'
-    document.querySelector('#searchblock').style.display = 'flex'
     } else {
     document.querySelector('#lowerbox').style.display = 'none'
-    document.querySelector('#searchblock').style.display = 'none'
     }
       
       if(marcus === true){
