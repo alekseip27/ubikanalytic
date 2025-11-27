@@ -313,7 +313,7 @@ document.querySelector('#search-button').addEventListener("click", () => {
     params.push('tevo_venue_id__isblank=true');
   }
 
-  if (cb1) {
+  if (cb2) {
     params.push('vivid_venue_id__isblank=true');
   }
 
