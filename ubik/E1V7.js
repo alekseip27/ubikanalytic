@@ -228,6 +228,12 @@ function getEvents(url) {
 
         const tevoid = card.getElementsByClassName('main-text-tevo-id')[0];
         tevoid.textContent = events.tevo_venue_id;
+        
+        const vividid = card.getElementsByClassName('main-text-vividid')[0];
+        vividid.textContent = events.vivid_venue_id;
+
+        const shubid = card.getElementsByClassName('main-text-shubid')[0];
+        shubid.textContent = events.stubhub_venue_id;
 
         const addedtime = card.getElementsByClassName('main-text-timeadded')[0];
         addedtime.textContent = events.created_date;
