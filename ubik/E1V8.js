@@ -297,7 +297,7 @@ document.querySelector('#search-button').addEventListener("click", () => {
   let keywords1 = encodeURIComponent(document.getElementById('searchbar1').value);
   let keywords2 = encodeURIComponent(document.getElementById('searchbar2').value);
   let keywords3 = encodeURIComponent(document.getElementById('searchbar3').value);
-
+  let keywords4 = document.getElementById('countryselect').value
   $('.event-box').hide();
 
   let baseUrl = 'https://ubik.wiki/api/venues/?';
@@ -314,6 +314,14 @@ document.querySelector('#search-button').addEventListener("click", () => {
   if (keywords3.length > 0) {
     params.push('source_site__icontains=' + keywords3);
   }
+
+    if (keywords4 === 'uscanada') {
+        params.push('country__icontains=US&country__icontains=Canada');
+    }
+
+    if (keywords4 === 'international') {
+        params.push('country__idoesnotcontains=US&country__idoesnotcontains=Canada');
+    }
 
   if (cb1) {
     params.push('tevo_venue_id__isblank=true');
