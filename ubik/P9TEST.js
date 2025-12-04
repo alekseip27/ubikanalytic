@@ -2551,8 +2551,8 @@ document.querySelector('.closetevo').addEventListener('click',function(){
         return arr.length % 2 !== 0 ? arr[mid] : (arr[mid - 1] + arr[mid]) / 2;
     }
 
-    document.querySelector('#searchbarvivid3').addEventListener('input', updateSections2);
-    document.getElementById('filterquantity3').addEventListener('change', updateSections2);
+    document.querySelector('#searchbarvivid3').addEventListener('input', updateSections3);
+    document.getElementById('filterquantity3').addEventListener('change', updateSections3);
     document.querySelector('#tevoclick').addEventListener('click',function(){
     updateSections3()
     })
