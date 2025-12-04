@@ -2472,6 +2472,93 @@ document.querySelector('.closestubhub').addEventListener('click',function(){
 
 
 
+document.querySelector('.closetevo').addEventListener('click',function(){
+    document.querySelector('#searchbarvivid3').value = ''
+    document.querySelector('#filterquantity3').value = '99999'
+    })
+     document.getElementById('filterquantity3').addEventListener('change', function () {
+        var selectedValue = parseInt(this.value);
+
+        var sections = document.querySelectorAll('.top-part-section-tevo');
+        sections.forEach(function(section) {
+            var quantity = parseInt(section.getAttribute('quantity'));
+            if (quantity <= selectedValue) {
+                section.style.display = 'flex';
+            } else {
+                section.style.display = 'none';
+            }
+        });
+    });
+
+
+    function updateSections3() {
+        let searchValue = document.querySelector('#searchbarvivid3').value.toLowerCase();
+        let selectedValue = parseInt(document.getElementById('filterquantity3').value);
+        let sections = document.querySelectorAll('.top-part-section-tevo');
+        let totalQuantity = 0;
+        let allPrices = [];
+
+        sections.forEach(section => {
+            // Skip the section if its id is 'sampleitem'
+            if (section.id === 'sampleitem4') {
+                return;
+            }
+
+            let sectionAttribute = section.getAttribute('section');
+            let rowattr = section.getAttribute('row');
+            let quantity = parseInt(section.getAttribute('quantity'));
+
+            // Check both search and filter conditions
+            let matchesSearch = sectionAttribute && sectionAttribute.toLowerCase().includes(searchValue);
+            let matchesSearcht = rowattr && rowattr.toLowerCase().includes(searchValue);
+            let matchesQuantity = quantity <= selectedValue;
+
+            if ((matchesSearch || matchesSearcht) && matchesQuantity) {
+                section.style.display = '';
+                let sectionQuantity = parseInt(section.querySelector('.main-text-vivid-quantity3').textContent, 10);
+                let price = parseFloat(section.querySelector('.main-text-vivid-price3').textContent.replace('$', ''));
+                totalQuantity += sectionQuantity;
+                allPrices.push(price);
+            } else {
+                section.style.display = 'none';
+            }
+        });
+
+
+        // Update the total tickets and other stats
+        document.querySelector('#vivid-tix3').textContent = totalQuantity;
+        document.querySelector('#vivid-tl3').textContent = allPrices.length;
+        if (allPrices.length > 0) {
+            let lowestPrice = Math.min(...allPrices);
+            let highestPrice = Math.max(...allPrices);
+            let medianPrice = calculateMedian3(allPrices);
+            let averagePrice = allPrices.reduce((acc, cur) => acc + cur, 0) / allPrices.length;
+            document.querySelector('#vivid-min3').textContent = `$${lowestPrice.toFixed(2)}`;
+            document.querySelector('#vivid-max3').textContent = `$${highestPrice.toFixed(2)}`;
+            document.querySelector('#vivid-median3').textContent = `$${medianPrice.toFixed(2)}`;
+            document.querySelector('#vivid-avg3').textContent = `$${averagePrice.toFixed(2)}`;
+        } else {
+            document.querySelector('#vivid-min3').textContent = '';
+            document.querySelector('#vivid-max3').textContent = '';
+            document.querySelector('#vivid-median3').textContent = '';
+            document.querySelector('#vivid-avg3').textContent = '';
+        }
+    }
+
+    function calculateMedian3(arr) {
+        arr.sort((a, b) => a - b);
+        let mid = Math.floor(arr.length / 2);
+        return arr.length % 2 !== 0 ? arr[mid] : (arr[mid - 1] + arr[mid]) / 2;
+    }
+
+    document.querySelector('#searchbarvivid3').addEventListener('input', updateSections2);
+    document.getElementById('filterquantity3').addEventListener('change', updateSections2);
+    document.querySelector('#tevoclick').addEventListener('click',function(){
+    updateSections3()
+    })
+
+
+
 
     async function FetchTEVOIDS(vivid_venue_id, vivid_id,eventdate) {
     const url = `https://ubik.wiki/api/tevo-combined/?venue_name__isblank=false&performer_name__isblank=false&vivid_venue_id__iexact=${vivid_venue_id}&vivid_id__iexact=${vivid_id}&event_date__iexact=${eventdate}`;
@@ -2578,89 +2665,3 @@ ticketsDetails.forEach(ticket => {
     }
 }
 
-
-
-document.querySelector('.closetevo').addEventListener('click',function(){
-    document.querySelector('#searchbarvivid3').value = ''
-    document.querySelector('#filterquantity3').value = '99999'
-    })
-     document.getElementById('filterquantity3').addEventListener('change', function () {
-        var selectedValue = parseInt(this.value);
-
-        var sections = document.querySelectorAll('.top-part-section-tevo');
-        sections.forEach(function(section) {
-            var quantity = parseInt(section.getAttribute('quantity'));
-            if (quantity <= selectedValue) {
-                section.style.display = 'flex';
-            } else {
-                section.style.display = 'none';
-            }
-        });
-    });
-
-
-    function updateSections3() {
-        let searchValue = document.querySelector('#searchbarvivid3').value.toLowerCase();
-        let selectedValue = parseInt(document.getElementById('filterquantity3').value);
-        let sections = document.querySelectorAll('.top-part-section-tevo');
-        let totalQuantity = 0;
-        let allPrices = [];
-
-        sections.forEach(section => {
-            // Skip the section if its id is 'sampleitem'
-            if (section.id === 'sampleitem4') {
-                return;
-            }
-
-            let sectionAttribute = section.getAttribute('section');
-            let rowattr = section.getAttribute('row');
-            let quantity = parseInt(section.getAttribute('quantity'));
-
-            // Check both search and filter conditions
-            let matchesSearch = sectionAttribute && sectionAttribute.toLowerCase().includes(searchValue);
-            let matchesSearcht = rowattr && rowattr.toLowerCase().includes(searchValue);
-            let matchesQuantity = quantity <= selectedValue;
-
-            if ((matchesSearch || matchesSearcht) && matchesQuantity) {
-                section.style.display = '';
-                let sectionQuantity = parseInt(section.querySelector('.main-text-vivid-quantity3').textContent, 10);
-                let price = parseFloat(section.querySelector('.main-text-vivid-price3').textContent.replace('$', ''));
-                totalQuantity += sectionQuantity;
-                allPrices.push(price);
-            } else {
-                section.style.display = 'none';
-            }
-        });
-
-
-        // Update the total tickets and other stats
-        document.querySelector('#vivid-tix3').textContent = totalQuantity;
-        document.querySelector('#vivid-tl3').textContent = allPrices.length;
-        if (allPrices.length > 0) {
-            let lowestPrice = Math.min(...allPrices);
-            let highestPrice = Math.max(...allPrices);
-            let medianPrice = calculateMedian3(allPrices);
-            let averagePrice = allPrices.reduce((acc, cur) => acc + cur, 0) / allPrices.length;
-            document.querySelector('#vivid-min3').textContent = `$${lowestPrice.toFixed(2)}`;
-            document.querySelector('#vivid-max3').textContent = `$${highestPrice.toFixed(2)}`;
-            document.querySelector('#vivid-median3').textContent = `$${medianPrice.toFixed(2)}`;
-            document.querySelector('#vivid-avg3').textContent = `$${averagePrice.toFixed(2)}`;
-        } else {
-            document.querySelector('#vivid-min3').textContent = '';
-            document.querySelector('#vivid-max3').textContent = '';
-            document.querySelector('#vivid-median3').textContent = '';
-            document.querySelector('#vivid-avg3').textContent = '';
-        }
-    }
-
-    function calculateMedian3(arr) {
-        arr.sort((a, b) => a - b);
-        let mid = Math.floor(arr.length / 2);
-        return arr.length % 2 !== 0 ? arr[mid] : (arr[mid - 1] + arr[mid]) / 2;
-    }
-
-    document.querySelector('#searchbarvivid3').addEventListener('input', updateSections2);
-    document.getElementById('filterquantity3').addEventListener('change', updateSections2);
-    document.querySelector('#tevoclick').addEventListener('click',function(){
-    updateSections3()
-    })
