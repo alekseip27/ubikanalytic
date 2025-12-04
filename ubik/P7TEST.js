@@ -2580,7 +2580,7 @@ ticketsDetails.forEach(ticket => {
 
 
 
-document.querySelector('.closestubhub').addEventListener('click',function(){
+document.querySelector('.closetevo').addEventListener('click',function(){
     document.querySelector('#searchbarvivid3').value = ''
     document.querySelector('#filterquantity3').value = '99999'
     })
