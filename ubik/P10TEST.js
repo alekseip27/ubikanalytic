@@ -1578,7 +1578,7 @@ function processPreferredInfo2(tickets, seatchart) {
 
 
 
-function processPreferredInfo3(tickets) {
+function processPreferredInfo3(tickets,eventdata) {
 
    let container = document.querySelector('.sections-wrapper3');
     let allPrices = [];
@@ -1618,14 +1618,15 @@ function processPreferredInfo3(tickets) {
     document.querySelector('#vivid-median3').textContent = `$${medianPrice.toFixed(2)}`;
     document.querySelector('#vivid-avg3').textContent = `$${averagePrice.toFixed(2)}`;
 
-    document.querySelector('#vividevent3').textContent = document.querySelector('#selectedevent').textContent;
-    document.querySelector('#vividlocation3').textContent = document.querySelector('#eventlocation').textContent;
-    document.querySelector('#vividdate3').textContent = eventdate.textContent
-    document.querySelector('#vivid-dow3').textContent = getDayOfWeek(eventdate.textContent);
-    document.querySelector('#vividtime3').textContent = document.querySelector('#eventtime').textContent;
+    let eventData = eventdata
+    document.querySelector('#vividevent3').textContent = eventData.event.name
+    document.querySelector('#vividlocation3').textContent = eventData.venue.location
+    document.querySelector('#vividdate3').textContent = eventData.event.datetime.split('T')[0];
+    document.querySelector('#vivid-dow3').textContent = getDayOfWeek(eventData.event.datetime.split('T')[0]);
+    document.querySelector('#vividtime3').textContent = eventData.event.datetime.split('T')[1];
 
-    let city = document.querySelector('#vividlocation3').textContent.split(',')[0];
-    let evdate = eventdate.textContent
+    let city = eventData.venue.city
+    let evdate = eventData.event.datetime.split('T')[0];
     fetchWeatherData(city, evdate,"tevo");
 }
 
@@ -2624,7 +2625,7 @@ async function tevosections(venueid,performerid,eventdate) {
     // Get the tevoif from the attribute
     let tevoid = await FetchTEVOIDS(venueid, performerid,eventdate);
 
-    const csvUrl = `https://ubikdata.wiki:3000/tevolisting/${tevoid}`;
+    const csvUrl = `https://ubikdata.wiki:3000/tevolisting/${tevoid}?all=true`;
 
     // Function to fetch data with retries
     const fetchData = async (url, options, retries) => {
@@ -2643,21 +2644,21 @@ async function tevosections(venueid,performerid,eventdate) {
     try {
         const signal = controller.signal;
         const eventDetailsText = await fetchData(csvUrl, { signal }, 5);
-        const eventDetails = JSON.parse(eventDetailsText);
-const ticketsDetails = eventDetails.tickets_by_sections;
-
+        const data = JSON.parse(eventDetailsText);
+const ticketsDetails = data.tickets;
+const eventDetails = data.eventInfo;
 let tickets = [];
 
 ticketsDetails.forEach(ticket => {
     tickets.push({
         section: ticket.section,
         row: ticket.row,
-        price: ticket.price,
-        quantity: ticket.amount
+        price: ticket.retail_price,
+        quantity: ticket.quantity
     });
 });
         tickets.sort((a, b) => a.price - b.price);
-        processPreferredInfo3(tickets);
+        processPreferredInfo3(tickets,eventDetails);
         document.querySelector('#sampleitem4').style.display = 'none';
         document.querySelector('#tevoclick').style.display = 'flex';
     } catch (error) {
