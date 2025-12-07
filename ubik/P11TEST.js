@@ -269,14 +269,23 @@ document.querySelector('.locked-content').style.display = 'none';
         document.querySelector('#lowerabletext').style.display = isAuthorizedUser ? 'flex' : 'none';
         containslowerable = false;
 
+	let ranTevo = false;
+	
+
         data.forEach(events => {
             const card = sampleStyle.cloneNode(true);
             card.setAttribute('id', events.id);
             const eventPrice = card.querySelector('.main-field-price');
 
             const shownquant = card.querySelector('.main-text-shownquantity');
-
-            tevosections(events.event.venue.id, events.event.performerId, events.event.date.split('T')[0]);
+   if (!ranTevo) {
+        tevosections(
+            events.event.venue.id,
+            events.event.performerId,
+            events.event.date.split('T')[0]
+        );
+        ranTevo = true;
+    }
 
 
             if(events.shownQuantity !== null){
