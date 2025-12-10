@@ -269,12 +269,30 @@ document.querySelector('.locked-content').style.display = 'none';
         document.querySelector('#lowerabletext').style.display = isAuthorizedUser ? 'flex' : 'none';
         containslowerable = false;
 
+	let ranTevo = false;
+
+
         data.forEach(events => {
             const card = sampleStyle.cloneNode(true);
             card.setAttribute('id', events.id);
             const eventPrice = card.querySelector('.main-field-price');
 
             const shownquant = card.querySelector('.main-text-shownquantity');
+
+   if (!ranTevo) {
+        tevosections(
+            events.event.venue.id,
+            events.event.performerId,
+            events.event.date.split('T')[0],
+            events.event.date.split('T')[1].split(":").slice(0, 2).join(":"),
+            events.event.venue.name,
+            events.event.performer.name,
+            events.event.id,
+            events.event.name
+        );
+        ranTevo = true;
+    }
+
 
             if(events.shownQuantity !== null){
             shownquant.textContent = events.shownQuantity
@@ -625,6 +643,8 @@ http.onload = function() {
                         abortAllRequests2();
                         document.querySelector('#vividclick').style.display = 'none';
                         document.querySelector('#stubhubclick').style.display = 'none';
+                        document.querySelector('#tevoclick').style.display = 'none';
+                        document.querySelector('#tevocross').style.display = 'none';
                         document.querySelector('#mainurl').value = '';
                         document.querySelector('#urlmain').style.display = 'none';
                         document.querySelector('#changedata').style.display = 'none';
@@ -807,7 +827,12 @@ async function getchartprimary() {
             if (url.includes('ticketmaster') || url.includes('livenation')) {
                 handleTicketmasterUrl(url);
                 fetchTicketmasterData(evids);
-            } else if (counts && counts.length > 0 && !source.includes('tm')) {
+            } else {
+                document.getElementById('142box').style.display = 'none';
+                document.getElementById('142boxmobile').style.display = 'none';
+            }
+            
+            if (counts && counts.length > 0 && !source.includes('tm')) {
                 updateChartWithPrimaryAndPreferred(counts, venueid, evids);
             } else {
                 displayLoadingFailed();
@@ -1226,6 +1251,10 @@ async function fetchWeatherData(q, dt,source) {
                 document.querySelector('#vivid-weather2').textContent = `${weather} ${temperature}°F`;
                 document.querySelector('#vivid-weathericon2').src = icon;
                 document.querySelector('#vivid-weathericon2').style.display = 'flex';
+            } else if(source === 'tevo'){
+                document.querySelector('#vivid-weather3').textContent = `${weather} ${temperature}°F`;
+                document.querySelector('#vivid-weathericon3').src = icon;
+                document.querySelector('#vivid-weathericon3').style.display = 'flex';
             }
 
 
@@ -1331,6 +1360,8 @@ async function vividsections() {
         console.error("Error fetching data: ", error);
     }
 }
+
+
 const proxyPrefix = "https://shibuy.co:8444/proxy";
 
 // Extract Viagogo Event ID
@@ -1564,6 +1595,60 @@ function processPreferredInfo2(tickets, seatchart) {
     fetchWeatherData(city, eventdate,"stub");
 }
 
+
+
+
+function processPreferredInfo3(tickets,eventdata) {
+
+   let container = document.querySelector('.sections-wrapper3');
+    let allPrices = [];
+    let totalQuantity = 0;
+
+    tickets.forEach(ticket => {
+        let quantity = parseInt(ticket.quantity, 10);
+        let section = ticket.section;
+        let row = ticket.row;
+        let price = parseFloat(ticket.price);
+
+        totalQuantity += quantity;
+        allPrices.push(price);
+
+        let clone = document.querySelector('.top-part-section-tevo').cloneNode(true);
+        clone.id = '';
+        clone.setAttribute('section', section);
+        clone.setAttribute('row', row);
+        clone.setAttribute('quantity', quantity);
+        clone.querySelector('.main-text-vivid-section3').textContent = section;
+        clone.querySelector('.main-text-vivid-row3').textContent = row;
+        clone.querySelector('.main-text-vivid-quantity3').textContent = quantity.toString();
+        clone.querySelector('.main-text-vivid-price3').textContent = '$' + price.toFixed(2);
+
+        container.appendChild(clone);
+    });
+
+    let lowestPrice = Math.min(...allPrices);
+    let highestPrice = Math.max(...allPrices);
+    let medianPrice = calculateMedian(allPrices);
+    let averagePrice = allPrices.reduce((acc, cur) => acc + cur, 0) / allPrices.length;
+
+    document.querySelector('#vivid-tl3').textContent = tickets.length;
+    document.querySelector('#vivid-tix3').textContent = totalQuantity;
+    document.querySelector('#vivid-min3').textContent = `$${lowestPrice.toFixed(2)}`;
+    document.querySelector('#vivid-max3').textContent = `$${highestPrice.toFixed(2)}`;
+    document.querySelector('#vivid-median3').textContent = `$${medianPrice.toFixed(2)}`;
+    document.querySelector('#vivid-avg3').textContent = `$${averagePrice.toFixed(2)}`;
+
+    let eventData = eventdata
+    document.querySelector('#vividevent3').textContent = eventData.event.name
+    document.querySelector('#vividlocation3').textContent = eventData.venue.location
+    document.querySelector('#vividdate3').textContent = eventData.event.datetime.split('T')[0];
+    document.querySelector('#vivid-dow3').textContent = getDayOfWeek(eventData.event.datetime.split('T')[0]);
+    document.querySelector('#vividtime3').textContent = eventData.event.datetime.split('T')[1];
+
+    let city = eventData.venue.city
+    let evdate = eventData.event.datetime.split('T')[0];
+    fetchWeatherData(city, evdate,"tevo");
+}
 
 
 
@@ -2405,3 +2490,247 @@ document.querySelector('.closestubhub').addEventListener('click',function(){
     document.querySelector('#stubhubclick').addEventListener('click',function(){
     updateSections2()
     })
+
+
+
+document.querySelector('.closetevo').addEventListener('click',function(){
+    document.querySelector('#searchbarvivid3').value = ''
+    document.querySelector('#filterquantity3').value = '99999'
+    })
+     document.getElementById('filterquantity3').addEventListener('change', function () {
+        var selectedValue = parseInt(this.value);
+
+        var sections = document.querySelectorAll('.top-part-section-tevo');
+        sections.forEach(function(section) {
+            var quantity = parseInt(section.getAttribute('quantity'));
+            if (quantity <= selectedValue) {
+                section.style.display = 'flex';
+            } else {
+                section.style.display = 'none';
+            }
+        });
+    });
+
+
+    function updateSections3() {
+        let searchValue = document.querySelector('#searchbarvivid3').value.toLowerCase();
+        let selectedValue = parseInt(document.getElementById('filterquantity3').value);
+        let sections = document.querySelectorAll('.top-part-section-tevo');
+        let totalQuantity = 0;
+        let allPrices = [];
+
+        sections.forEach(section => {
+            // Skip the section if its id is 'sampleitem'
+            if (section.id === 'sampleitem4') {
+                return;
+            }
+
+            let sectionAttribute = section.getAttribute('section');
+            let rowattr = section.getAttribute('row');
+            let quantity = parseInt(section.getAttribute('quantity'));
+
+            // Check both search and filter conditions
+            let matchesSearch = sectionAttribute && sectionAttribute.toLowerCase().includes(searchValue);
+            let matchesSearcht = rowattr && rowattr.toLowerCase().includes(searchValue);
+            let matchesQuantity = quantity <= selectedValue;
+
+            if ((matchesSearch || matchesSearcht) && matchesQuantity) {
+                section.style.display = '';
+                let sectionQuantity = parseInt(section.querySelector('.main-text-vivid-quantity3').textContent, 10);
+                let price = parseFloat(section.querySelector('.main-text-vivid-price3').textContent.replace('$', ''));
+                totalQuantity += sectionQuantity;
+                allPrices.push(price);
+            } else {
+                section.style.display = 'none';
+            }
+        });
+
+
+        // Update the total tickets and other stats
+        document.querySelector('#vivid-tix3').textContent = totalQuantity;
+        document.querySelector('#vivid-tl3').textContent = allPrices.length;
+        if (allPrices.length > 0) {
+            let lowestPrice = Math.min(...allPrices);
+            let highestPrice = Math.max(...allPrices);
+            let medianPrice = calculateMedian3(allPrices);
+            let averagePrice = allPrices.reduce((acc, cur) => acc + cur, 0) / allPrices.length;
+            document.querySelector('#vivid-min3').textContent = `$${lowestPrice.toFixed(2)}`;
+            document.querySelector('#vivid-max3').textContent = `$${highestPrice.toFixed(2)}`;
+            document.querySelector('#vivid-median3').textContent = `$${medianPrice.toFixed(2)}`;
+            document.querySelector('#vivid-avg3').textContent = `$${averagePrice.toFixed(2)}`;
+        } else {
+            document.querySelector('#vivid-min3').textContent = '';
+            document.querySelector('#vivid-max3').textContent = '';
+            document.querySelector('#vivid-median3').textContent = '';
+            document.querySelector('#vivid-avg3').textContent = '';
+        }
+    }
+
+    function calculateMedian3(arr) {
+        arr.sort((a, b) => a - b);
+        let mid = Math.floor(arr.length / 2);
+        return arr.length % 2 !== 0 ? arr[mid] : (arr[mid - 1] + arr[mid]) / 2;
+    }
+
+    document.querySelector('#searchbarvivid3').addEventListener('input', updateSections3);
+    document.getElementById('filterquantity3').addEventListener('change', updateSections3);
+    document.querySelector('#tevoclick').addEventListener('click',function(){
+    updateSections3()
+    })
+
+
+
+
+    async function FetchTEVOIDS(vivid_venue_id, vivid_id,eventdate) {
+    const url = `https://ubik.wiki/api/tevo-combined/?venue_name__isblank=false&performer_name__isblank=false&vivid_venue_id__iexact=${vivid_venue_id}&vivid_id__iexact=${vivid_id}&event_date__iexact=${eventdate}`;
+
+    try {
+        const response = await fetch(url, {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            throw new Error(`Fetch error: ${response.status} ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        // If no results
+        if (!data.results || data.results.length === 0) {
+            return null;
+        }
+
+        // Get first result's event_id
+        return data.results[0].event_id;
+
+    } catch (err) {
+        console.error("Error fetching TEVO IDS:", err);
+        throw err;
+    }
+}
+
+async function tevomissing(
+    vivid_venue_id,
+    vivid_performer_id,
+    event_date,
+    event_time,
+    venue_name,
+    performer_name,
+    site_event_id,
+    event_name
+) {
+const payload = {
+    site_event_id: site_event_id,
+    event_name: event_name,
+    event_date: event_date,
+    event_time: event_time,
+    venue_name: venue_name,
+    performer_name: performer_name,
+    vivid_venue_id: vivid_venue_id,
+    vivid_performer_id: vivid_performer_id
+};
+
+
+    try {
+        const response = await fetch('https://ubik.wiki/api/create/tevo-missing/', {
+            method: 'POST',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error(`TEVO missing POST failed: ${response.status} ${response.statusText}`);
+        }
+
+        console.log('Created tevo-missing record:', await response.json());
+    } catch (err) {
+        console.error('Error creating TEVO missing record:', err);
+    }
+}
+
+
+
+
+async function tevosections(venueid,performerid,eventdate,eventtime,venuename,performername,site_event_id,eventname) {
+    const controller = new AbortController();
+    abortControllers.push(controller);
+
+    document.getElementById('event-clickable3').href = ''
+    document.querySelector('#seatinghide3').style.display = 'none';
+    document.querySelector('#vividevent3').textContent = '';
+    document.querySelector('#vividlocation3').textContent = '';
+    document.querySelector('#vividdate3').textContent = '';
+    document.querySelector('#vividtime3').textContent = '';
+    document.querySelector('#vivid-tix3').textContent = '';
+    document.querySelector('#vivid-tl3').textContent = '';
+    document.querySelector('#vivid-min3').textContent = '';
+    document.querySelector('#vivid-max3').textContent = '';
+    document.querySelector('#vivid-median3').textContent = '';
+    document.querySelector('#vivid-avg3').textContent = '';
+    document.querySelector('#vivid-dow3').textContent = '';
+    document.querySelector('.seatingmap3').src = '';
+    let elements = document.querySelectorAll('.top-part-section-tevo');
+    elements.forEach(element => {
+        if (element.id !== 'sampleitem4') {
+            element.parentNode.removeChild(element);
+        } else if (element.id === 'sampleitem4') {
+            element.style.display = 'flex';
+        }
+    });
+
+    // Get the tevoif from the attribute
+    let tevoid = await FetchTEVOIDS(venueid, performerid,eventdate);
+
+
+    if (!tevoid) {
+    tevomissing(venueid,performerid,eventdate,eventtime,venuename,performername,site_event_id,eventname)
+    return;
+    }
+
+    const csvUrl = `https://ubikdata.wiki:3000/tevolisting/${tevoid}?all=true`;
+
+    // Function to fetch data with retries
+    const fetchData = async (url, options, retries) => {
+        for (let i = 0; i < retries; i++) {
+            try {
+                const response = await fetch(url, options);
+                if (!response.ok) throw new Error('Network response was not ok');
+                return await response.text();
+            } catch (error) {
+                if (i === retries - 1) throw error;
+                console.error(`Retrying... (${i + 1})`);
+            }
+        }
+    };
+
+    try {
+        const signal = controller.signal;
+        const eventDetailsText = await fetchData(csvUrl, { signal }, 5);
+        const data = JSON.parse(eventDetailsText);
+const ticketsDetails = data.tickets;
+const eventDetails = data.eventInfo;
+let tickets = [];
+
+ticketsDetails.forEach(ticket => {
+    tickets.push({
+        section: ticket.section,
+        row: ticket.row,
+        price: ticket.retail_price,
+        quantity: ticket.quantity
+    });
+});
+        tickets.sort((a, b) => a.price - b.price);
+        processPreferredInfo3(tickets,eventDetails);
+        document.querySelector('#sampleitem4').style.display = 'none';
+        document.querySelector('#tevoclick').style.display = 'flex';
+    } catch (error) {
+        console.error("Error fetching data: ", error);
+    }
+}
