@@ -1492,17 +1492,11 @@ if(lowerableview === false){
       })
       .filter(t => t.quantity > 0 && t.price > 0);
 
-    // 🧹 Deduplicate & sort (dedupe by section|row|price|quantity)
-    const seen = new Set();
-    const uniqueTickets = [];
-    for (const ticket of allTickets) {
-      const key = `${ticket.section}|${ticket.row}|${ticket.price}|${ticket.quantity}`;
-      if (!seen.has(key)) {
-        seen.add(key);
-        uniqueTickets.push(ticket);
-      }
-    }
-    uniqueTickets.sort((a, b) => a.price - b.price);
+
+const uniqueTickets = allTickets
+  .slice() // shallow copy (safe)
+  .sort((a, b) => a.price - b.price);
+
 
     // Attach click handler (open original event page)
     document.getElementById('event-clickable2').addEventListener('click', () => {
