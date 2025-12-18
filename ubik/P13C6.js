@@ -128,9 +128,11 @@ document.querySelector('#search-button').addEventListener("click", () => {
     document.getElementById('mainurl').value = '';
 
     $('.event-box-pricing').hide();
-    chartvs.data.datasets[0].data = '';
-    chartvs.data.datasets[1].data = '';
-    chartvs.config.data.labels = '';
+    chartvs.data.labels = [];
+
+    chartvs.data.datasets.forEach(ds => {
+    ds.data = [];
+    });
     chartvs.update();
 
     let curUser = firebase.auth().currentUser;
@@ -668,9 +670,11 @@ http.onload = function() {
 
 
 
-                        chartvs.data.datasets[0].data = '';
-                        chartvs.data.datasets[1].data = '';
-                        chartvs.config.data.labels = '';
+                        chartvs.data.labels = [];
+
+                        chartvs.data.datasets.forEach(ds => {
+                        ds.data = [];
+                        });
                         chartvs.update();
 
                         chartprimary.data.datasets[0].data = '';
@@ -831,7 +835,7 @@ async function getchartprimary() {
                 document.getElementById('142box').style.display = 'none';
                 document.getElementById('142boxmobile').style.display = 'none';
             }
-            
+
             if (counts && counts.length > 0 && !source.includes('tm')) {
                 updateChartWithPrimaryAndPreferred(counts, venueid, evids);
             } else {
@@ -1430,7 +1434,7 @@ async function fetchViagogoTickets() {
   const eventId = match[1];
 
 if(lowerableview === false){
-  getchartvs(eventId);
+await getchartvs(eventId);
 }
   // ✅ New direct endpoint (no proxy, no POST pagination)
   const apiUrl = `https://ubikdata.wiki:3000/viagogo/${eventId}`;
@@ -1720,36 +1724,8 @@ function getDayOfWeek(dateString) {
 }
 const sleeps = (ms) => new Promise(res => setTimeout(res, ms));
 
-async function getchartvs(eventid) {
-  let venuecap = 0;
-  const selected = document.querySelector('#selectedevent');
-  const shid = selected?.getAttribute('stubhub-id');
 
-  const controller = new AbortController();
-  abortControllers.push(controller);
-
-  try {
-    const resp = await fetch(
-      `https://ubik.wiki/api/stubhub-data/?stubhub_id__iexact=${encodeURIComponent(eventid)}&limit=1000`,
-      {
-        method: 'GET',
-        headers: {
-          'Content-type': 'application/json; charset=utf-8',
-          'Authorization': `Bearer ${token}`
-        },
-        signal: controller.signal
-      }
-    );
-    if (!resp.ok) throw new Error('HTTP error! status: ' + resp.status);
-    const payload = await resp.json();
-
-    // results[]
-    const results = Array.isArray(payload)
-      ? payload
-      : (payload && Array.isArray(payload.results) ? payload.results : []);
-
-    // ---- robust date parsing for "M/D/YYYY, H:MM:SS AM/PM"
-    function parseUSDateTime(s) {
+  function parseUSDateTime(s) {
       if (!s) return null;
       // eg "8/18/2025, 3:07:11 AM"
       const m = String(s).match(
@@ -1772,125 +1748,65 @@ async function getchartvs(eventid) {
         label: dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' })
       };
     }
-    const parseDate = (typeof parseStubhubScrapeDate === 'function')
-      ? parseStubhubScrapeDate
-      : parseUSDateTime;
 
-    const toNum = (x) => {
-      const n = Number(x);
-      return Number.isFinite(n) ? n : null;
+
+
+  async function getchartvs(eventid) {
+  let venuecap = 0;
+  const controller = new AbortController();
+  abortControllers.push(controller);
+
+  try {
+    const resp = await fetch(
+      `https://ubik.wiki/api/stubhub-data/?stubhub_id__iexact=${encodeURIComponent(eventid)}&limit=1000`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Authorization': `Bearer ${token}`
+        },
+        signal: controller.signal
+      }
+    );
+    if (!resp.ok) throw new Error('HTTP error! status: ' + resp.status);
+
+    const payload = await resp.json();
+    const results = Array.isArray(payload)
+      ? payload
+      : (payload && Array.isArray(payload.results) ? payload.results : []);
+
+    const chart = window.chartvs;
+    if (!chart) return;
+
+    const sh = computeShSeries(results);
+
+    // merge labels + reindex preserving existing values (including TEVO if already loaded)
+    const newIndex = mergeLabelsAndReindexAllDatasets(chart, sh.labelTs);
+
+    // write SH values by label (aligned to merged labels)
+    setDatasetValuesByLabel(chart, "SH Totals", sh.totalsByLabel, newIndex);
+    setDatasetValuesByLabel(chart, "SH Min Price", sh.minByLabel, newIndex);
+
+    chart.update();
+
+    // (keep your UI show/hide if you want)
+    const show = (sel, disp) => {
+      const el = document.querySelector(sel);
+      if (el) el.style.display = disp;
     };
-    const parsePrice = (p) => {
-      if (p == null) return null;
-      const n = Number(String(p).replace(/[^\d.]/g, ''));
-      return Number.isFinite(n) ? n : null;
-    };
-
-    const coerceToSections = (item) => {
-      if (Array.isArray(item.tickets_by_sections)) return item.tickets_by_sections;
-      // fallback if not present
-      const amt = toNum(item.amount);
-      const lp  = parsePrice(item.price);
-      return (amt != null || lp != null) ? [{ amount: amt ?? 0, price: lp ?? null }] : [];
-    };
-
-    const points = [];
-    for (const item of results) {
-      const sections = coerceToSections(item);
-      if (sections.length === 0) continue;
-
-      const parsed = parseDate(item.scrape_date || item.date || item.created_on);
-      if (!parsed) continue;
-
-      let total = toNum(item.total_amount ?? item.total ?? item.total_tickets);
-      if (total == null) {
-        let sum = 0;
-        for (const s of sections) sum += toNum(s.amount) ?? 0;
-        total = sum;
-      }
-
-      let min2 = null;
-      for (const sec of sections) {
-        const amt = toNum(sec.amount);
-        const price = parsePrice(sec.price);
-        if (amt != null && amt >= 2 && price != null) {
-          if (min2 == null || price < min2) min2 = price;
-        }
-      }
-      if (min2 == null) {
-        for (const sec of sections) {
-          const price = parsePrice(sec.price);
-          if (price != null) { min2 = price; break; }
-        }
-      }
-
-      points.push({ ts: parsed.ts, label: parsed.label, total, min2 });
-    }
-
-    if (points.length === 0) {
-      console.warn("getchartvs: no valid points to chart.");
-      displayChartLoadingFailed?.();
-      return;
-    }
-
-    // sort & dedupe by label
-    points.sort((a, b) => a.ts - b.ts);
-    const byLabel = new Map();
-    for (const p of points) byLabel.set(p.label, p);
-    const series = Array.from(byLabel.values());
-
-    const labels   = series.map(p => p.label);
-    const barData  = series.map(p => p.total ?? 0);
-    const lineData = series.map(p => p.min2  ?? null);
-
-    // 3-day slope
-    const threeDaysAgoIndex = Math.max(0, barData.length - 4);
-    const todayIndex = Math.max(0, barData.length - 1);
-    const movingAverage = (barData[threeDaysAgoIndex] - barData[todayIndex]) / 3;
-
-    // KPIs from the *latest* sorted series
-    const latest = series[series.length - 1];
-    const lastTotal = latest?.total ?? 0;
-
-    const elResale = document.getElementById("venueresale");
-    if (elResale) elResale.textContent = venuecap ? Math.round((lastTotal / venuecap) * 100) + "%" : "—";
-    const elCap = document.getElementById("venuecap");
-    if (elCap) elCap.textContent = String(venuecap || "—");
-
-    const setTxt = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
-    setTxt("fwicontotal3day", "");
-    setTxt("total3daytext", "Total 3 Day:");
-    setTxt("total3dayamount", Number.isFinite(movingAverage) ? movingAverage.toFixed(2) : "—");
-
-    if (chartvs) {
-      chartvs.data.labels = labels;
-      if (chartvs.data.datasets[0]) chartvs.data.datasets[0].data = barData;
-      if (chartvs.data.datasets[1]) chartvs.data.datasets[1].data = lineData;
-      chartvs.update();
-    } else if (typeof Chart !== 'undefined') {
-      const ctx = document.getElementById('vivid-chart')?.getContext('2d');
-      if (ctx) {
-        chartvs = new Chart(ctx, {/* ...same config as before... */});
-      }
-    }
-
-    // success UI: show chart, hide spinners
-    const show = (sel, disp) => { const el = document.querySelector(sel); if (el) el.style.display = disp; };
     show("#chart2", "flex");
     show("#chartloading2", "none");
-    show("#loading2", "none");          // <-- hide spinner on success
+    show("#loading2", "none");
     show("#loadingfailed2", "none");
-
   } catch (error) {
     if (error.name === 'AbortError') {
       console.log('Fetch aborted');
     } else {
-      console.error('There was an error fetching the vivid chart data:', error);
+      console.error('There was an error fetching the chart data:', error);
       displayChartLoadingFailed?.();
     }
   }
 }
-
 
 
 // Helper function to process vivid chart data
@@ -2593,6 +2509,8 @@ document.querySelector('.closetevo').addEventListener('click',function(){
 
         const data = await response.json();
 
+
+
         // If no results
         if (!data.results || data.results.length === 0) {
             return null;
@@ -2682,11 +2600,13 @@ async function tevosections(venueid,performerid,eventdate,eventtime,venuename,pe
     // Get the tevoif from the attribute
     let tevoid = await FetchTEVOIDS(venueid, performerid,eventdate);
 
-
     if (!tevoid) {
     tevomissing(venueid,performerid,eventdate,eventtime,venuename,performername,site_event_id,eventname)
     return;
     }
+
+
+
 
     const csvUrl = `https://ubikdata.wiki:3000/tevolisting/${tevoid}?all=true`;
 
@@ -2721,10 +2641,335 @@ ticketsDetails.forEach(ticket => {
     });
 });
         tickets.sort((a, b) => a.price - b.price);
+        await tevochartdata(tevoid);
         processPreferredInfo3(tickets,eventDetails);
         document.querySelector('#sampleitem4').style.display = 'none';
         document.querySelector('#tevoclick').style.display = 'flex';
     } catch (error) {
         console.error("Error fetching data: ", error);
     }
+}
+
+function normalizeDayLabel(s) {
+  const p = (typeof parseStubhubScrapeDate === "function")
+    ? parseStubhubScrapeDate(s)
+    : parseUSDateTime(s);
+
+  return p?.label ?? null;
+}
+
+
+async function tevochartdata(tevoid) {
+  const chart = window.chartvs;
+  if (!chart) throw new Error("Chart not initialized: window.chartvs");
+
+  const url = `https://ubik.wiki/api/tevo-data/?event_id__iexact=${encodeURIComponent(tevoid)}`;
+  const res = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Authorization": `Bearer ${token}`
+    }
+  });
+  if (!res.ok) throw new Error(`TEVO fetch failed: ${res.status}`);
+
+  const json = await res.json();
+  const results = Array.isArray(json?.results) ? json.results : [];
+
+  const tevo = computeTevoSeries(results);
+
+  // merge labels + reindex preserving existing values (including SH)
+  const newIndex = mergeLabelsAndReindexAllDatasets(chart, tevo.labelTs);
+
+  // write TEVO values by label (aligned to merged labels)
+  setDatasetValuesByLabel(chart, "TEVO Totals", tevo.totalsByLabel, newIndex);
+  setDatasetValuesByLabel(chart, "TEVO Min Price", tevo.minByLabel, newIndex);
+
+  chart.update();
+}
+
+
+function computeTevoDailySeries(results, parseDate) {
+  const dailyTotals = new Map(); // Map of label -> summed ticket count
+  const dailyMin = new Map();    // Map of label -> minimum price
+
+  for (const r of (Array.isArray(results) ? results : [])) {
+    const parsed = parseDate?.(r?.scrape_date);
+    const dayLabel = parsed?.label;
+    if (!dayLabel) continue;  // skip if scrape_date missing or can't be parsed
+
+    const sections = Array.isArray(r?.tickets_by_sections) ? r.tickets_by_sections : [];
+
+    let totalTickets = 0;
+    let minPrice = null;
+    for (const s of sections) {
+      const amt = Number(s?.amount ?? 0);
+      const price = Number(s?.price);
+      if (Number.isFinite(amt)) {
+        totalTickets += amt;  // add up ticket counts
+      }
+      if (Number.isFinite(price)) {
+        // track the lowest price in this scrape result
+        minPrice = (minPrice === null) ? price : Math.min(minPrice, price);
+      }
+    }
+
+    // Aggregate results per day label (in case of multiple scrapes on the same date)
+    dailyTotals.set(dayLabel, (dailyTotals.get(dayLabel) ?? 0) + totalTickets);
+    if (minPrice !== null) {
+      const prevMin = dailyMin.get(dayLabel);
+      dailyMin.set(dayLabel, (prevMin == null) ? minPrice : Math.min(prevMin, minPrice));
+    }
+  }
+
+  return { dailyTotals, dailyMin };
+}
+function applyTevoToChart(chart, dailyTotals, dailyMin) {
+  const oldLabels = chart.data.labels || [];
+
+  // normalize existing labels
+  const normalizedOld = oldLabels.map(l => normalizeDayLabel(l)).filter(Boolean);
+
+  const oldIndex = new Map(
+    normalizedOld.map((l, i) => [l, i])
+  );
+
+  // --- STEP 1: merge normalized labels ---
+  const labelSet = new Set(normalizedOld);
+  for (const k of dailyTotals.keys()) {
+    labelSet.add(normalizeDayLabel(k));
+  }
+
+  const mergedLabels = Array.from(labelSet).sort((a, b) => {
+    const pa = parseUSDateTime(a);
+    const pb = parseUSDateTime(b);
+    return (pa?.ts ?? 0) - (pb?.ts ?? 0);
+  });
+
+  chart.data.labels = mergedLabels;
+  const newIndex = new Map(mergedLabels.map((l, i) => [l, i]));
+
+  // --- STEP 2: realign ALL datasets ---
+  chart.data.datasets.forEach(ds => {
+    const oldData = ds.data || [];
+    const newData = new Array(mergedLabels.length).fill(null);
+
+    for (const [label, oldIdx] of oldIndex.entries()) {
+      const newIdx = newIndex.get(label);
+      if (newIdx != null) {
+        newData[newIdx] = oldData[oldIdx] ?? null;
+      }
+    }
+
+    ds.data = newData;
+  });
+
+  // --- STEP 3: insert TEVO data (NOW IT MATCHES) ---
+  const tevoTotalsDs = chart.data.datasets.find(d => d.label === "TEVO Totals");
+  const tevoMinDs    = chart.data.datasets.find(d => d.label === "TEVO Min Price");
+
+  for (const [rawLabel, total] of dailyTotals.entries()) {
+    const label = normalizeDayLabel(rawLabel);
+    const idx = newIndex.get(label);
+    if (idx != null) tevoTotalsDs.data[idx] = total;
+  }
+
+  for (const [rawLabel, minP] of dailyMin.entries()) {
+    const label = normalizeDayLabel(rawLabel);
+    const idx = newIndex.get(label);
+    if (idx != null) tevoMinDs.data[idx] = minP;
+  }
+}
+
+
+// ------------------------------
+// Chart helpers (DO NOT reparse labels)
+// ------------------------------
+function getParseDateFn() {
+  return (typeof parseStubhubScrapeDate === "function")
+    ? parseStubhubScrapeDate
+    : parseUSDateTime;
+}
+
+function getOrInitLabelTs(chart) {
+  if (!chart.$labelTs) chart.$labelTs = new Map(); // label -> ts
+  return chart.$labelTs;
+}
+
+// Merge new labels into chart, sort by stored ts, and reindex all datasets preserving values
+function mergeLabelsAndReindexAllDatasets(chart, incomingLabelTs) {
+  const labelTs = getOrInitLabelTs(chart);
+
+  // capture old state
+  const oldLabels = Array.isArray(chart.data.labels) ? chart.data.labels.map(String) : [];
+  const oldIndex = new Map(oldLabels.map((l, i) => [l, i]));
+
+  // seed labelTs with existing labels if missing (best-effort: keep stable order)
+  // NOTE: We do NOT parse label strings like "Dec 15, 25" back into dates.
+  // If a label has no ts, it sorts to the end.
+  for (let i = 0; i < oldLabels.length; i++) {
+    const l = oldLabels[i];
+    if (!labelTs.has(l)) labelTs.set(l, Number.NaN);
+  }
+
+  // add incoming label timestamps
+  for (const [label, ts] of incomingLabelTs.entries()) {
+    if (!label || !Number.isFinite(ts)) continue;
+    labelTs.set(label, ts);
+  }
+
+  // merge labels
+  const merged = new Set(oldLabels);
+  for (const label of incomingLabelTs.keys()) merged.add(label);
+
+  const newLabels = Array.from(merged);
+
+  // sort using stored ts (never parse label strings)
+  newLabels.sort((a, b) => {
+    const ta = labelTs.get(a);
+    const tb = labelTs.get(b);
+    const fa = Number.isFinite(ta);
+    const fb = Number.isFinite(tb);
+    if (fa && fb) return ta - tb;
+    if (fa && !fb) return -1;
+    if (!fa && fb) return 1;
+    return 0; // keep relative order for unknown ts
+  });
+
+  chart.data.labels = newLabels;
+  const newIndex = new Map(newLabels.map((l, i) => [l, i]));
+
+  // reindex ALL datasets preserving existing values by label
+  for (const ds of chart.data.datasets) {
+    const oldData = Array.isArray(ds.data) ? ds.data : [];
+    const newData = new Array(newLabels.length).fill(null);
+
+    for (const [label, oi] of oldIndex.entries()) {
+      const ni = newIndex.get(label);
+      if (ni == null) continue;
+      newData[ni] = oldData[oi] ?? null;
+    }
+
+    ds.data = newData;
+  }
+
+  return newIndex;
+}
+
+function setDatasetValuesByLabel(chart, datasetLabel, valueByLabelMap, newIndex) {
+  const ds = chart.data.datasets.find(d => d.label === datasetLabel);
+  if (!ds) return;
+
+  for (const [label, value] of valueByLabelMap.entries()) {
+    const idx = newIndex.get(label);
+    if (idx == null) continue;
+    ds.data[idx] = value;
+  }
+}
+
+// ------------------------------
+// TEVO series computation (per result/day)
+// ------------------------------
+function computeTevoSeries(results) {
+  const parseDate = getParseDateFn();
+
+  const labelTs = new Map();         // label -> ts
+  const totalsByLabel = new Map();   // label -> total tickets
+  const minByLabel = new Map();      // label -> min price
+
+  for (const r of (Array.isArray(results) ? results : [])) {
+    const parsed = parseDate(r?.scrape_date);
+    if (!parsed?.label || !Number.isFinite(parsed.ts)) continue;
+
+    const label = parsed.label;
+    labelTs.set(label, parsed.ts);
+
+    const sections = Array.isArray(r?.tickets_by_sections) ? r.tickets_by_sections : [];
+
+    let totalTickets = 0;
+    let minPrice = null;
+
+    for (const s of sections) {
+      const amt = Number(s?.amount ?? 0);
+      const price = Number(s?.price);
+
+      if (Number.isFinite(amt)) totalTickets += amt;
+      if (Number.isFinite(price)) minPrice = (minPrice === null) ? price : Math.min(minPrice, price);
+    }
+
+    // TEVO scrape is once/day per your note; still safe if it isn’t
+    totalsByLabel.set(label, totalTickets);
+    if (minPrice !== null) minByLabel.set(label, minPrice);
+  }
+
+  return { labelTs, totalsByLabel, minByLabel };
+}
+
+// ------------------------------
+// StubHub series computation (per day)
+// ------------------------------
+function computeShSeries(results) {
+  const parseDate = getParseDateFn();
+
+  const points = [];
+  const toNum = (x) => {
+    const n = Number(x);
+    return Number.isFinite(n) ? n : null;
+  };
+  const parsePrice = (p) => {
+    if (p == null) return null;
+    const n = Number(String(p).replace(/[^\d.]/g, ''));
+    return Number.isFinite(n) ? n : null;
+  };
+  const coerceToSections = (item) => {
+    if (Array.isArray(item.tickets_by_sections)) return item.tickets_by_sections;
+    const amt = toNum(item.total_amount ?? item.total ?? item.total_tickets);
+    const lp  = parsePrice(item.price);
+    return (amt != null || lp != null) ? [{ amount: amt ?? 0, price: lp ?? null }] : [];
+  };
+
+  for (const item of (Array.isArray(results) ? results : [])) {
+    const sections = coerceToSections(item);
+    if (!sections.length) continue;
+
+    const parsed = parseDate(item.scrape_date || item.date || item.created_on);
+    if (!parsed?.label || !Number.isFinite(parsed.ts)) continue;
+
+    let total = toNum(item.total_amount ?? item.total ?? item.total_tickets);
+    if (total == null) {
+      let sum = 0;
+      for (const s of sections) sum += toNum(s.amount) ?? 0;
+      total = sum;
+    }
+
+    let min2 = null;
+    for (const sec of sections) {
+      const amt = toNum(sec.amount);
+      const price = parsePrice(sec.price);
+      if (amt != null && amt >= 2 && price != null) {
+        min2 = (min2 == null) ? price : Math.min(min2, price);
+      }
+    }
+    if (min2 == null) {
+      for (const sec of sections) {
+        const price = parsePrice(sec.price);
+        if (price != null) { min2 = price; break; }
+      }
+    }
+
+    points.push({ ts: parsed.ts, label: parsed.label, total, min2 });
+  }
+
+  // dedupe per day (last scrape wins)
+  points.sort((a, b) => a.ts - b.ts);
+  const byLabel = new Map();
+  for (const p of points) byLabel.set(p.label, p);
+
+  const series = Array.from(byLabel.values());
+
+  const labelTs = new Map(series.map(p => [p.label, p.ts]));
+  const totalsByLabel = new Map(series.map(p => [p.label, p.total ?? 0]));
+  const minByLabel = new Map(series.map(p => [p.label, p.min2 ?? null]));
+
+  return { labelTs, totalsByLabel, minByLabel };
 }
