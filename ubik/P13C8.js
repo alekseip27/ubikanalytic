@@ -644,6 +644,7 @@ http.onload = function() {
                     card.addEventListener('click', function() {
                         abortAllRequests();
                         abortAllRequests2();
+						onefourtwo = ''
                         document.querySelector('#vividclick').style.display = 'none';
                         document.querySelector('#stubhubclick').style.display = 'none';
                         document.querySelector('#tevoclick').style.display = 'none';
@@ -1595,6 +1596,36 @@ function processPreferredInfo2(tickets, seatchart) {
 }
 
 
+let prevRatio = null;
+
+
+function updateratio(){
+  document.getElementById('tevoratio').textContent = ''
+    document.querySelector('.tevo-shub').style.display = 'none'
+  const stubhubRaw = document.getElementById('vivid-tix2')?.textContent ?? '';
+  const tevoRaw    = document.getElementById('vivid-tix3')?.textContent ?? '';
+
+  const stubhub = Number(stubhubRaw.trim());
+  const tevo    = Number(tevoRaw.trim());
+
+  // wait until both are valid numbers
+  if (!Number.isFinite(stubhub) || !Number.isFinite(tevo) || stubhub === 0) {
+    return;
+  }
+
+  const ratio = Math.round((tevo / stubhub) * 100) / 100;
+
+  // only act when ratio changes
+  if (ratio !== prevRatio) {
+    prevRatio = ratio;
+    // example: update DOM
+    document.querySelector('.tevo-shub').style.display = 'flex'
+     document.getElementById('tevoratio').textContent = ratio.toFixed(2);
+  }
+
+  // OPTIONAL: stop once calculated
+  // clearInterval(ratioInterval);
+}
 
 
 function processPreferredInfo3(tickets,eventdata) {
@@ -1643,7 +1674,7 @@ function processPreferredInfo3(tickets,eventdata) {
     document.querySelector('#vividdate3').textContent = eventData.event.datetime.split('T')[0];
     document.querySelector('#vivid-dow3').textContent = getDayOfWeek(eventData.event.datetime.split('T')[0]);
     document.querySelector('#vividtime3').textContent = eventData.event.datetime.split('T')[1];
-
+	updateratio()
     let city = eventData.venue.city
     let evdate = eventData.event.datetime.split('T')[0];
     fetchWeatherData(city, evdate,"tevo");
