@@ -159,6 +159,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
  		document.querySelector('#closed').checked = events.closed
     document.querySelector('#paused').checked = events.paused
+    document.querySelector('#tmrestrict').checked = events.tm_restricted
     document.querySelector('#editid').value = events.id
     document.querySelector('#edit-email').value = events.email
     document.querySelector('#edit-fname').value = events.first_name
