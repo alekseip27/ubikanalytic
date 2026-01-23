@@ -94,6 +94,7 @@ document.querySelector('#search-button').addEventListener("click", () => {
     document.querySelector('#eventtime').textContent = '';
     document.querySelector('#eventlocation').textContent = '';
     document.querySelector('#shub').setAttribute('url', '');
+    onefourtwo = ''
     document.querySelector('#vseats').setAttribute('url', '');
     document.querySelector('#shubmobile').setAttribute('url', '');
     document.querySelector('#vseatsmobile').setAttribute('url', '');
@@ -759,7 +760,7 @@ http.onload = function() {
 function handleTicketmasterUrl(url) {
     document.getElementById('142box').style.display = 'flex';
     document.getElementById('142boxmobile').style.display = 'flex';
-    let onefourtwo = `http://142.93.115.105:8100/event/${url.split('/event/')[1]}/details/`;
+    onefourtwo = `http://142.93.115.105:8100/event/${url.split('/event/')[1]}/details/`;
 
     document.getElementById('142box').addEventListener('click', function() {
         window.open(onefourtwo, 'onefourtwo');
