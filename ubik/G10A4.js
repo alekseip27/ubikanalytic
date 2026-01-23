@@ -1,6 +1,7 @@
 let purcharray = []
 let abortControllers = [];
 
+
 const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&paused__iexact=false&tm_restricted__iexact=true';
 let headers;
 
@@ -962,7 +963,7 @@ intervalIds = setInterval(retryClickingSearchBar, 1000);
 
 function emailpart1() {
 let purchacc = document.querySelector('#purchaseaccounts').value
-const emailurl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&paused__iexact=false&email__iexact=' + purchacc;
+const emailurl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&paused__iexact=false&tm_restricted__iexact=true&email__iexact=' + purchacc;
 let http = new XMLHttpRequest();
 
 http.open("GET", emailurl, true);
