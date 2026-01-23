@@ -1,7 +1,7 @@
 let purcharray = []
 let abortControllers = [];
 
-const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&paused__iexact=false';
+const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&paused__iexact=false&tm_restricted__iexact=true';
 let headers;
 
 function initialize() {
