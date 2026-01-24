@@ -60,7 +60,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
     
     if (cb3) {
-    params.push('&tm_restricted=true');
+    params.push('&tm_restricted=True');
     }
 
       params.push('limit=100');
