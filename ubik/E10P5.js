@@ -33,7 +33,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     let cb2 = document.getElementById('paused-check').checked
     let cb3 = document.getElementById('tmrestricted-check').checked
     
-    )
+    
       let baseUrl = 'https://ubik.wiki/api/purchasing-accounts/?';
 
       let params = [];
