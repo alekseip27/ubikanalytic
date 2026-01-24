@@ -31,7 +31,9 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
     let cb1 = document.getElementById('closed-check').checked
     let cb2 = document.getElementById('paused-check').checked
-
+    let cb3 = document.getElementById('tmrestricted-check').checked
+    
+    )
       let baseUrl = 'https://ubik.wiki/api/purchasing-accounts/?';
 
       let params = [];
@@ -54,6 +56,11 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
     if (cb2) {
     params.push('&paused__iexact=true');
+    }
+
+    
+    if (cb3) {
+    params.push('&tm_restricted=true');
     }
 
       params.push('limit=100');
