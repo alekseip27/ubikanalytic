@@ -38,6 +38,7 @@ const backupone = events.backup_one;
 const backuptwo = events.backup_two;
 const contains = events.contains;
 const funct = events.function;
+const filename = events.file_name;
 
 
 const sourcecard = card.getElementsByClassName('main-text-sourcei')[0]
@@ -51,6 +52,9 @@ venueprefixcard.textContent = venueprefix
     
 const browsercard = card.getElementsByClassName('main-text-browser')[0]
 browsercard.textContent = browser
+
+const file_name = card.getElementsByClassName('main-text-filename')[0]
+file_name.textContent = filename
 
 const instructionscard = card.getElementsByClassName('main-text-instruction')[0]
 
@@ -93,6 +97,7 @@ card.addEventListener('click', function(){
     document.querySelector('#edit-backup2').value = ''
     document.querySelector('#edit-contains').value = ''
     document.querySelector('#edit-function').value = ''
+    document.querySelector('#edit-filename').value = ''
 
     if (event.target.closest('.main-text-delete')) {
     return;
@@ -111,6 +116,7 @@ card.addEventListener('click', function(){
     document.querySelector('#edit-backup2').value = backuptwo
     document.querySelector('#edit-contains').value = contains
     document.querySelector('#edit-function').value = funct
+    document.querySelector('#edit-filename').value = filename
     })
 
 
@@ -208,6 +214,7 @@ let backupone = document.querySelector('#edit-backup1').value
 let backuptwo = document.querySelector('#edit-backup2').value
 let contains = document.querySelector('#edit-contains').value
 let funct = document.querySelector('#edit-function').value
+let filename = document.querySelector('#edit-filename').value
 const endpointUrl = 'https://ubik.wiki/api/update/source-instructions/'
 
 const newRowData = {
@@ -220,7 +227,8 @@ instructions: instructions,
 backup_one: backupone,
 backup_two: backuptwo,
 contains: contains,
-function: funct
+function: funct,
+file_name: filename
 };
 
 
@@ -275,6 +283,7 @@ function createInstruction() {
     let backuptwo = document.querySelector('#add-backup2').value
     let contains = document.querySelector('#add-contains').value
     let funct = document.querySelector('#add-function').value
+    let filename = document.querySelector('#add-filename').value
 
     const newRowData = {
         source: source,
@@ -285,7 +294,8 @@ function createInstruction() {
         backup_one: backupone,
         backup_two: backuptwo,
         contains: contains,
-        function: funct
+        function: funct,
+        file_name: filename
     };
 
     fetch(endpointUrl, {
@@ -335,6 +345,7 @@ document.querySelector('#add-backup1').value = ''
 document.querySelector('#add-backup2').value = ''
 document.querySelector('#add-contains').value = ''
 document.querySelector('#add-function').value = ''
+document.querySelector('#add-filename').value = ''
 });
 
 
