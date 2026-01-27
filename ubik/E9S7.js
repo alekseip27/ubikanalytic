@@ -313,7 +313,20 @@ if (preonsales) {
             card.setAttribute('city', events.city);
             card.setAttribute('state', events.state);
             card.setAttribute('pendingid', events.site_event_id);
+            card.setAttribute('capacity', events.venue_capacity);
 
+
+
+const available = card.getElementsByClassName('main-text-available')[0];
+
+if(events.venue_capacity && events.app_142_primary_amount && !events.site_event_id.toLowerCase().startsWith('tm')){
+let cap = events.venue_capacity
+let primam = events.app_142_primary_amount
+
+let remainingPercent = (Number(primam)/Number(cap)) * 100;
+available.textContent = remainingPercent.toFixed(2) + '%';
+available.style.display = 'flex'
+}
 
 
 const eventsnomap = card.getElementsByClassName('main-text-nomap')[0];
@@ -372,7 +385,7 @@ eventsnomap.style.display = 'flex'
 
             const venuetags = card.getElementsByClassName('main-text-tags')[0]
             const venuetext = card.getElementsByClassName('tag-text')[0]
-				
+
 			if(events.venue_tags && events.venue_tags.length>0){
 			venuetext.textContent = events.venue_tags
 			} else {
@@ -958,7 +971,6 @@ document.querySelector('#tmurl').href = eventurl
 }
 });
 
-
 let count = events.counts
 let src = events.event_url
 if (count && count.length > 0 || (src.includes('ticketmaster') || src.includes('livenation')) && !src.includes('ticketmaster.com.mx') && !src.includes('ticketmaster.co.uk') && !src.includes('ticketmaster.de')) {
@@ -974,6 +986,7 @@ charticon.style.display = 'none'
             const primrem = card.getElementsByClassName('main-text-primary')[0]
             const dpd = card.getElementsByClassName('main-text-aday')[0]
 
+
         const scrapeurl = (eventid) => {
             const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid;
 
@@ -982,6 +995,7 @@ charticon.style.display = 'none'
             .then(data => {
                 if (typeof data.count === 'number' && data.count !== 0) {
                 primrem.textContent = data.count;
+
                 } else {
                 primrem.textContent = 'unknown'
                 }
@@ -1176,11 +1190,11 @@ card.setAttribute('scrapedate','1998-09-09')
 const scrapetime = card.getElementsByClassName('main-text-scrapetime')[0];
 
 if(events.app_142_scrape_time){
-scrapetime.textContent = events.app_142_scrape_time	
+scrapetime.textContent = events.app_142_scrape_time
 }
 
 
-	
+
 
 let estDate = moment().tz('America/New_York').format('YYYY/MM/DD');
 
