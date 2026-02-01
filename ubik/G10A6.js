@@ -3,6 +3,7 @@ let abortControllers = [];
 
 
 const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&paused__iexact=false&tm_restricted__iexact=false';
+
 let headers;
 
 function initialize() {
@@ -479,7 +480,10 @@ function erasedata(){
     document.getElementById('unlock2').textContent = ''
 
 
-
+    document.getElementById('proxy').textContent = ''
+    document.getElementById('ipaddress').textContent = ''
+    document.getElementById('ipaddress').setAttribute('data-id','')
+    
     document.querySelector('#purchaseaccounts').value = ''
     document.querySelector('#failedemail').value = ''
 
