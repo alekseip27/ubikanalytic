@@ -110,7 +110,9 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
     let capgte = document.querySelector('#capacity-greater').value
     let caplt = document.querySelector('#capacity-lower').value
-    let primlt = document.querySelector('#primarybelow').value
+		
+    let primgte = document.querySelector('#primary-greater').value
+    let primlt = document.querySelector('#primary-lower').value
 
 		
     let favoritecbox = document.getElementById('favorite').checked
@@ -211,6 +213,10 @@ if (capgte.length > 0) {
 
 if (caplt.length > 0) {
 params.push('venue_capacity__lt=' + caplt)
+}
+
+if (primgte.length > 0) {
+params.push('app_142_primary_amount__gte=' + primgte)
 }
 
 if (primlt.length > 0) {
