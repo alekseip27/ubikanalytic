@@ -107,6 +107,12 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     let keywords6 = document.querySelector('#sortby').value
     let keywords7 = encodeURIComponent(document.getElementById('searchbar3').value)
 
+
+    let capgte = document.querySelector('#capacity-greater').value
+    let caplt = document.querySelector('#capacity-lower').value
+    let primlt = document.querySelector('#primarybelow').value
+
+		
     let favoritecbox = document.getElementById('favorite').checked
     let hotlistcheckbox = document.getElementById('hotlisted').checked
     let preonsales = document.getElementById('preonsales').checked
@@ -199,6 +205,18 @@ if(keywords7.length>0){
 params.push('status__icontains=' + keywords7)
 }
 
+if (capgte.length > 0) {
+    params.push('venue_capacity__gte=' + capgte)
+}
+
+if (caplt.length > 0) {
+params.push('venue_capacity__lt=' + caplt)
+}
+
+if (primlt.length > 0) {
+params.push('app_142_primary_amount__lt=' + primlt)
+}
+		
 if (favoritecbox) {
     params.push('&favorites__iexact=true');
 }
