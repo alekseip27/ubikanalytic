@@ -114,6 +114,8 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     let primgte = document.querySelector('#primary-greater').value
     let primlt = document.querySelector('#primary-lower').value
 
+    let capacityfilter = document.querySelector('#capacityfilter').value
+
 		
     let favoritecbox = document.getElementById('favorite').checked
     let hotlistcheckbox = document.getElementById('hotlisted').checked
@@ -123,6 +125,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     let baseUrl = 'https://ubik.wiki/api/event-venue/?';
     params = [];
 
+		
     if (keywords1.length > 0) {
         params.push('event_name__icontains=' + keywords1)
     }
@@ -227,6 +230,9 @@ if (favoritecbox) {
     params.push('&favorites__iexact=true');
 }
 
+if (capacityfilter.length > 0) {
+params.push('amount_per_capacity__lte=' + capacityfilter)
+}
 
 if (hotlistcheckbox) {
     params.push('&hotlist__iexact=true');
