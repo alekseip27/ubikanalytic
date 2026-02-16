@@ -602,6 +602,8 @@ lastUpdated.textContent = updatedTime;
 
 
 function updateViewPrice(selectedcard,card, events) {
+let canadaevent = document.querySelector('.event-box.selected.canada')
+
 const viewPrice = card.querySelector('.main-text-vw');
 const listPrice = calculateSkyboxPrice(events.listPrice);
 const profitText = card.querySelector('.main-text-profit');
@@ -617,8 +619,11 @@ const profit = (events.listPrice * 0.9) - rawDticket;
         console.error('listPrice is not a number');
         return;
     }
-
+if (!canadaevent){
     viewPrice.textContent = listPrice;
+	} else {
+    viewPrice.textContent = events.listPrice
+	}
 }
 
 
