@@ -115,8 +115,6 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     let primlt = document.querySelector('#primary-lower').value
 
     let capacityfilters = document.querySelector('#capacityfilter').value
-
-		
     let favoritecbox = document.getElementById('favorite').checked
     let hotlistcheckbox = document.getElementById('hotlisted').checked
     let preonsales = document.getElementById('preonsales').checked
@@ -125,7 +123,6 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     let baseUrl = 'https://ubik.wiki/api/event-venue/?';
     params = [];
 
-		
     if (keywords1.length > 0) {
         params.push('event_name__icontains=' + keywords1)
     }
@@ -146,6 +143,11 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     params.push(`category__iexact=${keywords4}`);
 }
 
+if (capacityfilters.length > 0) {
+params.push('event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&amount_per_capacity__lte=' + capacityfilters)
+}
+
+		
 if (keywords5 === 'axs') {
     params.push(`event_url__icontains=${keywords5}`);
 }
@@ -230,9 +232,6 @@ if (favoritecbox) {
     params.push('&favorites__iexact=true');
 }
 
-if (capacityfilters.length > 0) {
-params.push('amount_per_capacity__lte=' + capacityfilters)
-}
 
 if (hotlistcheckbox) {
     params.push('&hotlist__iexact=true');
@@ -349,7 +348,7 @@ if (preonsales) {
 
 const available = card.getElementsByClassName('main-text-available')[0];
 
-if(events.venue_capacity && events.app_142_primary_amount){
+if(events.venue_capacity && events.app_142_primary_amount && !events.site_event_id.toLowerCase().startsWith('tm')){
 let cap = events.venue_capacity
 let primam = events.app_142_primary_amount
 
@@ -763,23 +762,6 @@ function normalizeDate(date) {
         }
 
 
-
-            function getLatestCount(counts) {
-                if(counts && counts.length>0){
-
-                counts.sort((a, b) => {
-                const dateA = new Date(a.scrape_date);
-                const dateB = new Date(b.scrape_date);
-                return dateB - dateA;
-                });
-
-                return counts[0].primary_amount;
-                } else {
-                return 0;
-                }
-            }
-
-
 function fetchTicketmasterData() {
     chart.update();
     let evidp = events.site_event_id.substring(2);
@@ -1019,13 +1001,151 @@ document.querySelector('#tmurl').href = eventurl
 });
 
 let count = events.counts
-src = events.event_url
-if (count && count.length > 0) {
+let src = events.event_url
+if (count && count.length > 0 || (src.includes('ticketmaster') || src.includes('livenation')) && !src.includes('ticketmaster.com.mx') && !src.includes('ticketmaster.co.uk') && !src.includes('ticketmaster.de')) {
 charticon.style.display = 'flex'
 } else {
 charticon.style.display = 'none'
 }
 
+            const timezone = card.getElementsByClassName('main-text-timezone')[0]
+            timezone.textContent = events.timezone
+            card.setAttribute('timezone',events.timezone)
+
+            const primrem = card.getElementsByClassName('main-text-primary')[0]
+            const dpd = card.getElementsByClassName('main-text-aday')[0]
+
+
+        const scrapeurl = (eventid) => {
+            const url = 'https://shibuy.co:8443/primaryurl?eventid=' + eventid;
+
+            const request = fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                if (typeof data.count === 'number' && data.count !== 0) {
+                primrem.textContent = data.count;
+
+                } else {
+                primrem.textContent = 'unknown'
+                }
+
+                if (typeof data.diffperday === 'number') {
+                dpd.textContent = parseInt(data.diffperday);
+                }
+            })
+            .catch(error => {
+                console.log('Error:', error);
+            });
+        };
+
+function updatedata(eventid){
+    const url = 'https://ubik.wiki/api/update/primary-events/'
+
+    const date1 = new Date();
+    let date2 =
+    date1.toLocaleString('en-US', {
+    timeZone: 'America/New_York',
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    })
+
+let currentdate = date2.replace(',','')
+
+    const options = {
+    method: 'PUT',
+    headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+    "site_event_id":eventid,
+    "status":"sold out",
+    "previous_status":currentdate
+    })
+    };
+
+    fetch(url, options)
+    .then(response => response.json())
+    .then(data => {
+        // Handle the response of the PUT request
+        console.log(data);
+    })
+    .catch(error => {
+        // Handle errors from the PUT request
+        console.error('Error:', error);
+    });
+
+
+}
+
+const scrapetm = (eventid) => {
+    const url = 'https://shibuy.co:8443/scrapeurl';
+    let eventidscrape = eventid
+    if(eventidscrape.startsWith('tm')){
+    let eventidscrape = eventid.substring(2)
+    }
+    const data = {
+    eventid: eventidscrape
+    };
+
+    const requestOptions = {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify(data) // Convert data to JSON format
+    };
+
+    const request = fetch(url, requestOptions)
+    .then(response => response.json())
+    .then(data => {
+        scrapeurl(eventid)
+        console.log(data);
+        const checktrue = data.amounts.some(item => item.amount === undefined || item.amount < 50);
+        if(checktrue){
+        updatedata(eventid)
+    }})
+    .catch(error => {
+        const searchText = 'No amounts available';
+        const includesText = Object.keys(data).some(key => key.includes(searchText));
+        if(includesText){
+        console.log(error)
+        primrem.textContent = 'unavailable';
+        }
+    });
+};
+
+            let rescrapebutton = card.getElementsByClassName('re-scrape-div')[0]
+            let topbox = card.getElementsByClassName('topbox')[0]
+            let scrapebutton = card.getElementsByClassName('scrape-div-fresh')[0]
+
+
+            scrapebutton.addEventListener('click',function(){
+            scrapetm(evid.substring(2))
+            primrem.textContent = ''
+            dpd.textContent = ''
+            })
+
+
+            rescrapebutton.addEventListener('click',function(){
+            primrem.textContent = ''
+            dpd.textContent = ''
+            scrapeurl(evid.substring(2))
+            })
+
+            if(!events.event_url.includes('ticketmaster.com.mx') && (events.event_url.includes('ticketmaster.com') || events.event_url.includes('livenation'))) {
+            topbox.style.display = 'flex'
+            rescrapebutton.style.display = 'flex'
+            scrapebutton.style.display = 'flex'
+            } else {
+            topbox.style.display = 'flex'
+            rescrapebutton.style.display = 'none'
+            scrapebutton.style.display = 'none'
+            }
 
             card.style.display = 'flex';
 
@@ -1049,6 +1169,8 @@ charticon.style.display = 'none'
             eventur.textContent = events.event_url
             countsarray = events.counts
 
+            //
+
             if(events.time){
                 let eventtime = card.getElementsByClassName('main-text-time')[0]
                 eventtime.textContent = events.time.slice(0, 8)
@@ -1067,28 +1189,51 @@ charticon.style.display = 'none'
                 capacity.textContent = events.venue_capacity
 
 
+            function getLatestCount(counts) {
+                if(counts && counts.length>0){
+
+                counts.sort((a, b) => {
+                const dateA = new Date(a.scrape_date);
+                const dateB = new Date(b.scrape_date);
+                return dateB - dateA;
+                });
+
+                return counts[0].primary_amount;
+                } else {
+                return 0;
+                }
+            }
+
+
+if(events.app_142_scrape_date && !events.event_url.includes('ticketmaster') && !events.event_url.includes('livenation')){
+let oldDate = events.app_142_scrape_date
 
 const scrapedate = card.getElementsByClassName('main-text-scrapedate')[0];
 scrapedate.textContent = events.app_142_scrape_date
 card.setAttribute('scrapedate',events.app_142_scrape_date)
 
+if(events.app_142_scrape_date.length<10){
+card.setAttribute('scrapedate','1998-09-09')
+}
+
 const scrapetime = card.getElementsByClassName('main-text-scrapetime')[0];
+
 if(events.app_142_scrape_time){
 scrapetime.textContent = events.app_142_scrape_time
 }
 
-//
-const primamount = card.getElementsByClassName('main-text-primary')[0];
-let primam = parseInt(events.app_142_primary_amount)
 
-if (count && count.length > 0 || (!src.includes('ticketmaster') || !src.includes('livenation')) && !src.includes('ticketmaster.com.mx') && !src.includes('ticketmaster.co.uk') && !src.includes('ticketmaster.de')) {
+
+
 let estDate = moment().tz('America/New_York').format('YYYY/MM/DD');
-let oldDate = events.app_142_scrape_date
+
 let mOldDate = moment(oldDate);
 let mEstDate = moment(estDate);
-let differenceInDays = mEstDate.diff(mOldDate, 'days');
-keyword6 = document.querySelector('#sortby').value
 
+let differenceInDays = mEstDate.diff(mOldDate, 'days');
+let primam = parseInt(events.app_142_primary_amount)
+keyword6 = document.querySelector('#sortby').value
+const primamount = card.getElementsByClassName('main-text-primary')[0];
 
 
 if(Number(getLatestCount(countsarray))){
@@ -1100,35 +1245,13 @@ if(Number(getLatestCount(countsarray))){
 }
 
 
-}
-        
-
-if(events.app_142_difference_per_day){
-const aday = card.getElementsByClassName('main-text-aday')[0]
-aday.textContent = events.app_142_difference_per_day
-card.setAttribute('perday',events.app_142_difference_per_day)
-}
-//
-
-
-if(primam && Number(primam)>0){
-    primamount.textContent = primam;
-    card.setAttribute('primaryamount', primam);
-} else {
-    primamount.textContent = '0';
-    card.setAttribute('primaryamount', '-1');
-}
-
-
 if(events.app_142_difference_per_day){
 const aday = card.getElementsByClassName('main-text-aday')[0]
 aday.textContent = events.app_142_difference_per_day
 card.setAttribute('perday',events.app_142_difference_per_day)
 }
 
-
-
-if(events.event_url.includes('ticketmaster') || events.event_url.includes('livenation')) {
+} if(events.event_url.includes('ticketmaster') || events.event_url.includes('livenation')) {
 
             txtsource.addEventListener('click',function(){
             window.open('http://142.93.115.105:8100/event/' + evid.substring(2) +'/details/', "142")
