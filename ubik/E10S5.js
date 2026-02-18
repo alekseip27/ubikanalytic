@@ -1002,7 +1002,7 @@ document.querySelector('#tmurl').href = eventurl
 
 let count = events.counts
 let src = events.event_url
-if (count && count.length > 0 || (src.includes('ticketmaster') || src.includes('livenation')) && !src.includes('ticketmaster.com.mx') && !src.includes('ticketmaster.co.uk') && !src.includes('ticketmaster.de')) {
+if (count && count.length > 0 || (src.includes('ticketmaster') || src.includes('livenation') || src.includes('ticketmaster.ca')) && !src.includes('ticketmaster.com.mx') && !src.includes('ticketmaster.co.uk') && !src.includes('ticketmaster.de')) {
 charticon.style.display = 'flex'
 } else {
 charticon.style.display = 'none'
@@ -1137,7 +1137,7 @@ const scrapetm = (eventid) => {
             scrapeurl(evid.substring(2))
             })
 
-            if(!events.event_url.includes('ticketmaster.com.mx') && (events.event_url.includes('ticketmaster.com') || events.event_url.includes('livenation'))) {
+            if(!events.event_url.includes('ticketmaster.com.mx') && (events.event_url.includes('ticketmaster.com')) || events.event_url.includes('livenation') || (events.event_url.includes('ticketmaster.ca'))) {
             topbox.style.display = 'flex'
             rescrapebutton.style.display = 'flex'
             scrapebutton.style.display = 'flex'
@@ -1251,7 +1251,7 @@ aday.textContent = events.app_142_difference_per_day
 card.setAttribute('perday',events.app_142_difference_per_day)
 }
 
-} if(events.event_url.includes('ticketmaster') || events.event_url.includes('livenation')) {
+} if(events.event_url.includes('ticketmaster') || events.event_url.includes('livenation') || events.event_url.includes('ticketmaster.ca')) {
 
             txtsource.addEventListener('click',function(){
             window.open('http://142.93.115.105:8100/event/' + evid.substring(2) +'/details/', "142")
