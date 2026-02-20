@@ -343,7 +343,8 @@ if (preonsales) {
             card.setAttribute('state', events.state);
             card.setAttribute('pendingid', events.site_event_id);
             card.setAttribute('capacity', events.venue_capacity);
-
+events.vivid_venue_id && card.setAttribute('vivid_venue_id', events.vivid_venue_id);
+events.tevo_venue_id && card.setAttribute('tevo_venue_id', events.tevo_venue_id);
 
 
 const available = card.getElementsByClassName('main-text-available')[0];
