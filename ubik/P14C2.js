@@ -2728,7 +2728,7 @@ async function tevochartdata(tevoid) {
   const chart = window.chartvs;
   if (!chart) throw new Error("Chart not initialized: window.chartvs");
 
-  const url = `https://ubik.wiki/api/tevo-data/?event_id__iexact=${encodeURIComponent(tevoid)}`;
+  const url = `https://ubik.wiki/api/tevo-data/?event_id__iexact=${encodeURIComponent(tevoid)}&limit=1000`;
   const res = await fetch(url, {
     method: "GET",
     headers: {
