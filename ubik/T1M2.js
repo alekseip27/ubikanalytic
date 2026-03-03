@@ -112,7 +112,7 @@ function getEvents(fetchurl) {
         card.removeAttribute('id');
 
         // Keep identifiers on the element
-        card.setAttribute('cardid', events.id);
+        card.setAttribute('cardid', events.site_event_id);
         card.setAttribute('email', events.email ?? '');
         // If you actually want DOM id, it must be unique:
         card.setAttribute('data-event-id', String(events.id));
@@ -141,16 +141,33 @@ function getEvents(fetchurl) {
 
     const performernamecard = card.getElementsByClassName('main-text-performername')[0]
     performernamecard.textContent = events.performer_name;
+    const checkedbox = card.getElementsByClassName('checkbox-missing-data')[0];
+    
+    checkedbox.checked = events.checked
+                let eventid = card.getAttribute('cardid');
 
 
-    const performeridcard = card.getElementsByClassName('main-text-vivid-performer-id')[0]
-    performeridcard.textContent = events.vivid_performer_id;
+               checkedbox.addEventListener('change', function (e) {
+    e.stopPropagation();
+    var newchecked = checkedbox.checked;
+    console.log('sending:', newchecked);
+
+    var http = new XMLHttpRequest();
+    var url = "https://ubik.wiki/api/update/tevo-missing/";
+    var params = JSON.stringify({
+        "site_event_id": eventid,
+        "checked": newchecked
+    });
+    http.open("PUT", url, true);
+    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    http.setRequestHeader('Authorization', `Bearer ${token}`);
+    http.send(params);
+});
 
 
 
         // Delete button: 2-click confirm
         const deletebutton = card.getElementsByClassName('main-edit-button')[0];
-        const cardid = card.getAttribute('cardid');
         let clickCount = 0;
 
         if (deletebutton) {
@@ -164,8 +181,8 @@ function getEvents(fetchurl) {
             // Second click
             document.querySelector('.edit-wrapper')?.style && (document.querySelector('.edit-wrapper').style.display = 'none');
 
-            const url = `https://ubik.wiki/api/delete/tevo-missing/`;
-            const bodyData = JSON.stringify({ id: cardid });
+            const url = `https://ubik.wiki/api/DELETE/tevo-missing/`;
+            const bodyData = JSON.stringify({ id: cardid, checked: true });
 
             fetch(url, {
               method: 'DELETE',
