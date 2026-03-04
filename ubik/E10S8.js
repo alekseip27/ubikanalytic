@@ -149,8 +149,8 @@ params.push('event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=
 
 
 
-if (keywords5 === 'tweb') {
-    params.push(`event_url__icontains=${tweb}`);
+if (keywords5 === 'ticketweb') {
+    params.push(`event_url__icontains=${keywords5}`);
 }
 if (keywords5 === 'axs') {
     params.push(`event_url__icontains=${keywords5}`);
