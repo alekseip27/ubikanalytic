@@ -180,8 +180,8 @@ if (keywords5 === 'nontmaxs') {
     params.push(`event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=axs`);
 }
 
-if (keywords5 === 'nonseeticketstmaxsgeek') {
-    params.push(`event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=axs&event_url__idoesnotcontains=seetickets&event_url__idoesnotcontains=eventim.us&event_url__idoesnotcontains=seatgeek`);
+if (keywords5 === 'nonseeticketstmaxsgeektweb') {
+    params.push(`event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=axs&event_url__idoesnotcontains=seetickets&event_url__idoesnotcontains=eventim.us&event_url__idoesnotcontains=seatgeek&event_url__idoesnotcontains=ticketweb`);
 }
 
 if (keywords6 === 'recentlyadded') {
