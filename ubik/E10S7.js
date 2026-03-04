@@ -147,7 +147,11 @@ if (capacityfilters.length > 0) {
 params.push('event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&amount_per_capacity__lte=' + capacityfilters)
 }
 
-		
+
+
+if (keywords5 === 'tweb') {
+    params.push(`event_url__icontains=${tweb}`);
+}
 if (keywords5 === 'axs') {
     params.push(`event_url__icontains=${keywords5}`);
 }
