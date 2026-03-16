@@ -142,7 +142,10 @@ function getEvents(fetchurl) {
     const performernamecard = card.getElementsByClassName('main-text-performername')[0]
     performernamecard.textContent = events.performer_name;
     const checkedbox = card.getElementsByClassName('checkbox-missing-data')[0];
-    
+
+    const performeridcard = card.getElementsByClassName('main-text-vivid-performer-id')[0]
+    performeridcard.textContent = events.vivid_performer_id;
+        
     checkedbox.checked = events.checked
                 let eventid = card.getAttribute('cardid');
 
