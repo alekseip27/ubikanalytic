@@ -2932,39 +2932,31 @@ function setDatasetValuesByLabel(chart, datasetLabel, valueByLabelMap, newIndex)
 // ------------------------------
 function computeTevoSeries(results) {
   const parseDate = getParseDateFn();
-
-  const labelTs = new Map();         // label -> ts
-  const totalsByLabel = new Map();   // label -> total tickets
-  const minByLabel = new Map();      // label -> min price
-
+  const labelTs = new Map();
+  const totalsByLabel = new Map();
+  const minByLabel = new Map();
   for (const r of (Array.isArray(results) ? results : [])) {
     const parsed = parseDate(r?.scrape_date);
     if (!parsed?.label || !Number.isFinite(parsed.ts)) continue;
-
     const label = parsed.label;
     labelTs.set(label, parsed.ts);
 
-	const raw = r?.tickets_by_sections;
-	const sections = Array.isArray(raw) ? raw : (raw && typeof raw === 'object' && raw.id) ? [raw] : [];
-	  
-    let totalTickets = 0;
+    const totalTickets = Number(r?.total_amount ?? 0);
+
+    const raw = r?.tickets_by_sections;
+    const sections = Array.isArray(raw) ? raw : (raw && typeof raw === 'object' && raw.id) ? [raw] : [];
     let minPrice = null;
-
     for (const s of sections) {
-      const amt = Number(s?.amount ?? 0);
       const price = Number(s?.price);
-
-      if (Number.isFinite(amt)) totalTickets += amt;
       if (Number.isFinite(price)) minPrice = (minPrice === null) ? price : Math.min(minPrice, price);
     }
 
-    // TEVO scrape is once/day per your note; still safe if it isn’t
     totalsByLabel.set(label, totalTickets);
     if (minPrice !== null) minByLabel.set(label, minPrice);
   }
-
   return { labelTs, totalsByLabel, minByLabel };
 }
+
 
 // ------------------------------
 // StubHub series computation (per day)
