@@ -2949,8 +2949,9 @@ function computeTevoSeries(results) {
     const label = parsed.label;
     labelTs.set(label, parsed.ts);
 
-    const sections = Array.isArray(r?.tickets_by_sections) ? r.tickets_by_sections : [];
-
+	const raw = r?.tickets_by_sections;
+	const sections = Array.isArray(raw) ? raw : (raw && typeof raw === 'object' && raw.id) ? [raw] : [];
+	  
     let totalTickets = 0;
     let minPrice = null;
 
