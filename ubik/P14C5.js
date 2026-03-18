@@ -2755,40 +2755,35 @@ async function tevochartdata(tevoid) {
 
 
 function computeTevoDailySeries(results, parseDate) {
-  const dailyTotals = new Map(); // Map of label -> summed ticket count
-  const dailyMin = new Map();    // Map of label -> minimum price
-
+  const dailyTotals = new Map();
+  const dailyMin = new Map();
   for (const r of (Array.isArray(results) ? results : [])) {
     const parsed = parseDate?.(r?.scrape_date);
     const dayLabel = parsed?.label;
-    if (!dayLabel) continue;  // skip if scrape_date missing or can't be parsed
+    if (!dayLabel) continue;
 
+    const totalTickets = Number(r?.total_amount ?? 0);
+    
     const sections = Array.isArray(r?.tickets_by_sections) ? r.tickets_by_sections : [];
-
-    let totalTickets = 0;
     let minPrice = null;
     for (const s of sections) {
-      const amt = Number(s?.amount ?? 0);
       const price = Number(s?.price);
-      if (Number.isFinite(amt)) {
-        totalTickets += amt;  // add up ticket counts
-      }
       if (Number.isFinite(price)) {
-        // track the lowest price in this scrape result
         minPrice = (minPrice === null) ? price : Math.min(minPrice, price);
       }
     }
 
-    // Aggregate results per day label (in case of multiple scrapes on the same date)
     dailyTotals.set(dayLabel, (dailyTotals.get(dayLabel) ?? 0) + totalTickets);
     if (minPrice !== null) {
       const prevMin = dailyMin.get(dayLabel);
       dailyMin.set(dayLabel, (prevMin == null) ? minPrice : Math.min(prevMin, minPrice));
     }
   }
-
   return { dailyTotals, dailyMin };
 }
+
+
+
 function applyTevoToChart(chart, dailyTotals, dailyMin) {
   const oldLabels = chart.data.labels || [];
 
