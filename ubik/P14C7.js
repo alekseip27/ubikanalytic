@@ -267,7 +267,7 @@ document.querySelector('.locked-content').style.display = 'none';
         const data = JSON.parse(this.response);
         const cardContainer = document.getElementById("Cards-Container2");
         const sampleStyle = document.getElementById('samplestyle2');
-        const isAuthorizedUser = ['aleksei@ubikanalytic.com', 'tim@ubikanalytic.com', 'arcel@ubikanalytic.com','franz@ubikanalytic.com','jj@ubikanalytic.com'].includes(userEmail);
+        const isAuthorizedUser = ['aleksei@ubikanalytic.com', 'tim@ubikanalytic.com','aa@ubikanalytic.com','jm@ubikanalytic.com', 'arcel@ubikanalytic.com','franz@ubikanalytic.com','jj@ubikanalytic.com'].includes(userEmail);
 
         document.querySelector('#lowerabletext').style.display = isAuthorizedUser ? 'flex' : 'none';
         containslowerable = false;
