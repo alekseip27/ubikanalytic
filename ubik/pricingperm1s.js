@@ -81,7 +81,7 @@ let checks = document.querySelector('#checks')
 
             
 
-if (email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com') {
+if (email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com'  || email === 'aa@ubikanalytic.com'  || email === 'jm@ubikanalytic.com') {
     document.querySelector('.totalcounts').style.display = 'flex';
     document.querySelector('#lowerbox').style.display = 'flex';
     document.querySelector('#lowerable').checked = false
@@ -98,7 +98,7 @@ if (email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com') {
 }
 
 
-    if(email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com'){
+    if(email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com'   || email === 'aa@ubikanalytic.com')  || email === 'jm@ubikanalytic.com'){
     document.querySelector('.totalcounts').style.display = 'flex'
     document.querySelector('#lowerbox').style.display = 'flex'
     } else {
