@@ -430,6 +430,7 @@ eventsnomap.style.display = 'flex'
 
             const tevprimam = card.getElementsByClassName('main-text-tevo-primary')[0]
             const tevscrapedate = card.getElementsByClassName('main-text-tevo-scrape-date')[0]
+            const tevscrapetime = card.getElementsByClassName('main-text-tevo-scrape-time')[0]
 
 
     if(events.tevo_primary_amount && events.tevo_primary_amount.length>0){
@@ -440,7 +441,8 @@ eventsnomap.style.display = 'flex'
 	}
 				
     if(events.tevo_scrape_date && events.tevo_scrape_date.length>0){
-	tevscrapedate.textContent = events.tevo_scrape_date + ' ' + events.tevo_scrape_time 
+	tevscrapedate.textContent = events.tevo_scrape_date
+	tevscrapetime.textContent = events.tevo_scrape_time
 	}
 				
 				
