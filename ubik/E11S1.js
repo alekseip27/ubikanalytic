@@ -428,6 +428,22 @@ eventsnomap.style.display = 'flex'
 
 
 
+            const tevprimam = card.getElementsByClassName('main-text-tevo-primary')[0]
+            const tevscrapedate = card.getElementsByClassName('main-text-tevo-scrape-date')[0]
+
+
+    if(events.tevo_primary_amount && events.tevo_primary_amount.length>0){
+	tevprimam.textContent = Number(events.tevo_primary_amount)
+    card.setAttribute('tevoprimary', Number(events.tevo_primary_amount));
+	} else {
+	    card.setAttribute('tevoprimary', Number(-1));	
+	}
+				
+    if(events.tevo_scrape_date && events.tevo_scrape_date.length>0){
+	tevscrapedate.textContent = events.tevo_scrape_date + ' ' + events.tevo_scrape_time 
+	}
+				
+				
     const purchasedamount = card.getElementsByClassName('main-text-purchased')[0];
 
     if ((events.purchased_amount) && (events.purchased_amount !== null || events.purchased_amount !== 0)) {
