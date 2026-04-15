@@ -249,13 +249,6 @@ if (email === 'aleksei@ubikanalytic.com' || email === 'tim@ubikanalytic.com') {
               let firstletter = name.substring(0, 1);
               $(".firstletter").html(firstletter);
 
-if (email === 'arcel@ubikanalytic.com' || email === 'franz@ubikanalytic.com'  || email === 'jj@ubikanalytic.com') {
-
-    document.querySelector('.pricing-section').style.display = 'none'
-document.querySelector('.pricing-flex').style.maxHeight = '100%';
-                
-}
-
                 
 if (email === 'ken@ubikanalytic.com' || email === 'jm@ubikanalytic.com') {
 
