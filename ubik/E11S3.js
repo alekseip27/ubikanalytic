@@ -20,6 +20,239 @@ const DEFAULT_SOURCE_DETAILS = {
 
   let sourceInstructionsMap = new Map();
 
+// ============================================================
+// Chart helpers — copied from tevochartpricing.js
+// Dependencies: window.chartvs, token  (already on this page)
+// ============================================================
+
+// --- date parsing ---------------------------------------------------
+function parseUSDateTime(s) {
+  if (!s) return null;
+  // eg "8/18/2025, 3:07:11 AM"
+  const m = String(s).match(
+    /^\s*(\d{1,2})\/(\d{1,2})\/(\d{4}),\s*(\d{1,2}):(\d{2}):(\d{2})\s*(AM|PM)\s*$/i
+  );
+  if (!m) {
+    const dt = new Date(s);
+    if (isNaN(dt)) return null;
+    return {
+      ts: dt.getTime(),
+      label: dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' })
+    };
+  }
+  let [, mm, dd, yyyy, hh, min, ss, ap] = m;
+  mm = +mm; dd = +dd; yyyy = +yyyy; hh = +hh; min = +min; ss = +ss;
+  if (/pm/i.test(ap) && hh < 12) hh += 12;
+  if (/am/i.test(ap) && hh === 12) hh = 0;
+  const dt = new Date(yyyy, mm - 1, dd, hh, min, ss);
+  if (isNaN(dt)) return null;
+  return {
+    ts: dt.getTime(),
+    label: dt.toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: '2-digit' })
+  };
+}
+
+function getParseDateFn() {
+  return (typeof parseStubhubScrapeDate === "function")
+    ? parseStubhubScrapeDate
+    : parseUSDateTime;
+}
+
+// --- chart label/dataset management --------------------------------
+function getOrInitLabelTs(chart) {
+  if (!chart.$labelTs) chart.$labelTs = new Map(); // label -> ts
+  return chart.$labelTs;
+}
+
+function mergeLabelsAndReindexAllDatasets(chart, incomingLabelTs) {
+  const labelTs = getOrInitLabelTs(chart);
+
+  const oldLabels = Array.isArray(chart.data.labels) ? chart.data.labels.map(String) : [];
+  const oldIndex = new Map(oldLabels.map((l, i) => [l, i]));
+
+  for (let i = 0; i < oldLabels.length; i++) {
+    const l = oldLabels[i];
+    if (!labelTs.has(l)) labelTs.set(l, Number.NaN);
+  }
+
+  for (const [label, ts] of incomingLabelTs.entries()) {
+    if (!label || !Number.isFinite(ts)) continue;
+    labelTs.set(label, ts);
+  }
+
+  const merged = new Set(oldLabels);
+  for (const label of incomingLabelTs.keys()) merged.add(label);
+
+  const newLabels = Array.from(merged);
+
+  newLabels.sort((a, b) => {
+    const ta = labelTs.get(a);
+    const tb = labelTs.get(b);
+    const fa = Number.isFinite(ta);
+    const fb = Number.isFinite(tb);
+    if (fa && fb) return ta - tb;
+    if (fa && !fb) return -1;
+    if (!fa && fb) return 1;
+    return 0;
+  });
+
+  chart.data.labels = newLabels;
+  const newIndex = new Map(newLabels.map((l, i) => [l, i]));
+
+  for (const ds of chart.data.datasets) {
+    const oldData = Array.isArray(ds.data) ? ds.data : [];
+    const newData = new Array(newLabels.length).fill(null);
+
+    for (const [label, oi] of oldIndex.entries()) {
+      const ni = newIndex.get(label);
+      if (ni == null) continue;
+      newData[ni] = oldData[oi] ?? null;
+    }
+
+    ds.data = newData;
+  }
+
+  return newIndex;
+}
+
+function setDatasetValuesByLabel(chart, datasetLabel, valueByLabelMap, newIndex) {
+  const ds = chart.data.datasets.find(d => d.label === datasetLabel);
+  if (!ds) return;
+
+  for (const [label, value] of valueByLabelMap.entries()) {
+    const idx = newIndex.get(label);
+    if (idx == null) continue;
+    ds.data[idx] = value;
+  }
+}
+
+// --- TEVO series computation ---------------------------------------
+function computeTevoSeries(results) {
+  const parseDate = getParseDateFn();
+  const labelTs = new Map();
+  const totalsByLabel = new Map();
+  const minByLabel = new Map();
+
+  for (const r of (Array.isArray(results) ? results : [])) {
+    const parsed = parseDate(r?.scrape_date);
+    if (!parsed?.label || !Number.isFinite(parsed.ts)) continue;
+    const label = parsed.label;
+    labelTs.set(label, parsed.ts);
+
+    const totalTickets = Number(r?.total_amount ?? 0);
+
+    const raw = r?.tickets_by_sections;
+    const sections = Array.isArray(raw)
+      ? raw
+      : (raw && typeof raw === 'object' && raw.id) ? [raw] : [];
+    let minPrice = null;
+    for (const s of sections) {
+      const price = Number(s?.price);
+      if (Number.isFinite(price)) minPrice = (minPrice === null) ? price : Math.min(minPrice, price);
+    }
+
+    totalsByLabel.set(label, totalTickets);
+    if (minPrice !== null) minByLabel.set(label, minPrice);
+  }
+  return { labelTs, totalsByLabel, minByLabel };
+}
+
+// --- StubHub series computation ------------------------------------
+function computeShSeries(results) {
+  const parseDate = getParseDateFn();
+
+  const points = [];
+  const toNum = (x) => {
+    const n = Number(x);
+    return Number.isFinite(n) ? n : null;
+  };
+  const parsePrice = (p) => {
+    if (p == null) return null;
+    const n = Number(String(p).replace(/[^\d.]/g, ''));
+    return Number.isFinite(n) ? n : null;
+  };
+  const coerceToSections = (item) => {
+    if (Array.isArray(item.tickets_by_sections)) return item.tickets_by_sections;
+    const amt = toNum(item.total_amount ?? item.total ?? item.total_tickets);
+    const lp  = parsePrice(item.price);
+    return (amt != null || lp != null) ? [{ amount: amt ?? 0, price: lp ?? null }] : [];
+  };
+
+  for (const item of (Array.isArray(results) ? results : [])) {
+    const sections = coerceToSections(item);
+    if (!sections.length) continue;
+
+    const parsed = parseDate(item.scrape_date || item.date || item.created_on);
+    if (!parsed?.label || !Number.isFinite(parsed.ts)) continue;
+
+    let total = toNum(item.total_amount ?? item.total ?? item.total_tickets);
+    if (total == null) {
+      let sum = 0;
+      for (const s of sections) sum += toNum(s.amount) ?? 0;
+      total = sum;
+    }
+
+    let min2 = null;
+    for (const sec of sections) {
+      const amt = toNum(sec.amount);
+      const price = parsePrice(sec.price);
+      if (amt != null && amt >= 2 && price != null) {
+        min2 = (min2 == null) ? price : Math.min(min2, price);
+      }
+    }
+    if (min2 == null) {
+      for (const sec of sections) {
+        const price = parsePrice(sec.price);
+        if (price != null) { min2 = price; break; }
+      }
+    }
+
+    points.push({ ts: parsed.ts, label: parsed.label, total, min2 });
+  }
+
+  // dedupe per day (last scrape wins)
+  points.sort((a, b) => a.ts - b.ts);
+  const byLabel = new Map();
+  for (const p of points) byLabel.set(p.label, p);
+
+  const series = Array.from(byLabel.values());
+
+  const labelTs        = new Map(series.map(p => [p.label, p.ts]));
+  const totalsByLabel  = new Map(series.map(p => [p.label, p.total ?? 0]));
+  const minByLabel     = new Map(series.map(p => [p.label, p.min2 ?? null]));
+
+  return { labelTs, totalsByLabel, minByLabel };
+}
+
+// --- TEVO fetch + chart write --------------------------------------
+async function tevochartdata(tevoid) {
+  const chart = window.chartvs;
+  if (!chart) throw new Error("Chart not initialized: window.chartvs");
+
+  const url = `https://ubik.wiki/api/tevo-data/?event_id__iexact=${encodeURIComponent(tevoid)}&limit=1000`;
+  const res = await fetch(url, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json; charset=utf-8",
+      "Authorization": `Bearer ${token}`
+    }
+  });
+  if (!res.ok) throw new Error(`TEVO fetch failed: ${res.status}`);
+
+  const json = await res.json();
+  const results = Array.isArray(json?.results) ? json.results : [];
+
+  const tevo = computeTevoSeries(results);
+
+  const newIndex = mergeLabelsAndReindexAllDatasets(chart, tevo.labelTs);
+
+  setDatasetValuesByLabel(chart, "TEVO Totals",    tevo.totalsByLabel, newIndex);
+  setDatasetValuesByLabel(chart, "TEVO Min Price", tevo.minByLabel,    newIndex);
+
+  chart.update();
+}
+
+// --- StubHub fetch + chart write -----------------------------------
 
  async function initializeSourceInstructions() {
     try {
@@ -110,7 +343,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
     let capgte = document.querySelector('#capacity-greater').value
     let caplt = document.querySelector('#capacity-lower').value
-		
+
     let primgte = document.querySelector('#primary-greater').value
     let primlt = document.querySelector('#primary-lower').value
 
@@ -231,7 +464,7 @@ params.push('app_142_primary_amount__gte=' + primgte)
 if (primlt.length > 0) {
 params.push('app_142_primary_amount__lt=' + primlt)
 }
-		
+
 if (favoritecbox) {
     params.push('&favorites__iexact=true');
 }
@@ -437,15 +670,15 @@ eventsnomap.style.display = 'flex'
 	tevprimam.textContent = Number(events.tevo_primary_amount)
     card.setAttribute('tevoprimary', Number(events.tevo_primary_amount));
 	} else {
-	    card.setAttribute('tevoprimary', Number(-1));	
+	    card.setAttribute('tevoprimary', Number(-1));
 	}
-				
+
     if(events.tevo_scrape_date && events.tevo_scrape_date.length>0){
 	tevscrapedate.textContent = events.tevo_scrape_date
 	tevscrapetime.textContent = events.tevo_scrape_time
 	}
-				
-				
+
+
     const purchasedamount = card.getElementsByClassName('main-text-purchased')[0];
 
     if ((events.purchased_amount) && (events.purchased_amount !== null || events.purchased_amount !== 0)) {
@@ -475,138 +708,32 @@ function getDayOfWeek(dateString) {
     return daysOfWeek[dayOfWeek];
 }
 
-function vschartdata(VDID) {
+async function vschartdata(stubhubid) {
+  const chart = window.chartvs;
+  if (!chart) throw new Error("Chart not initialized: window.chartvs");
 
-    chartvs.data.datasets[0].data = []
-    chartvs.data.datasets[1].data = []
-    chartvs.data.datasets[2].data = []
-    chartvs.data.datasets[3].data = []
-    chartvs.data.datasets[4].data = []
-    chartvs.data.datasets[5].data = []
-    chartvs.data.datasets[6].data = []
-    chartvs.data.datasets[7].data = []
-    chartvs.data.datasets[0].label = "Total"
-    chartvs.data.datasets[1].label = ""
-    chartvs.data.datasets[2].label = ""
-    chartvs.data.datasets[3].label = ""
-    chartvs.data.datasets[4].label = "Lowest Price"
-    chartvs.data.datasets[5].label = ""
-    chartvs.data.datasets[6].label = ""
-    chartvs.data.datasets[7].label = ""
-    chartvs.config.data.labels = []
-    chartvs.update();
-    document.querySelector('#vsloader').style.display = 'flex';
-    document.querySelector('#vserror').style.display = 'none';
-    document.querySelector('#vschart').style.display = 'none';
+  const url = `https://ubik.wiki/api/stubhub-data/?stubhub_id__iexact=${encodeURIComponent(stubhubid)}&limit=1000`;
+  const res = await fetch(url, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json; charset=utf-8',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  if (!res.ok) throw new Error(`StubHub fetch failed: ${res.status}`);
 
-const url = `https://ubik.wiki/api/vividseats/?vdid__iexact=${VDID}&format=json`;
+  const json = await res.json();
+  const results = Array.isArray(json?.results)
+    ? json.results
+    : (Array.isArray(json) ? json : []);
 
+  const sh = computeShSeries(results);
+  const newIndex = mergeLabelsAndReindexAllDatasets(chart, sh.labelTs);
 
-const headers = new Headers({
-'Authorization': `Bearer ${token}`,
-'Content-Type': 'application/json; charset=utf-8',
-});
+  setDatasetValuesByLabel(chart, 'SH Totals',    sh.totalsByLabel, newIndex);
+  setDatasetValuesByLabel(chart, 'SH Min Price', sh.minByLabel,    newIndex);
 
-// Create the request object
-const request = new Request(url, {
-method: 'GET',
-headers: headers
-});
-
-// Use the fetch API to make the GET request
-fetch(request)
-.then(response => {
-if (response.ok) {
-document.querySelector('#vsloader').style.display = 'none';
-document.querySelector('#vschart').style.display = 'flex';
-document.querySelector('#vserror').style.display = 'none';
-return response.json();
-} else {
-document.querySelector('#vsloader').style.display = 'none';
-document.querySelector('#vschart').style.display = 'none';
-document.querySelector('#vserror').style.display = 'flex';
-throw new Error("Failed to fetch data");
-}
-})
-.then(data => {
-
-const str = data.results[0].data_scrapes;
-
-if(str){
-
-const replacedStr = str.replace(/'/g, '"');
-
-const correctedData = replacedStr.replace(/:\s*None,/g, ':"None",');
-let datas;
-
-try {
-
-
-datas = JSON.parse(correctedData);
-console.log(datas[0])
-
-} catch (e) {
-// If parsing fails, log the error
-console.error("Parsing failed:", e);
-}
-
-// Extract chart labels and data from the fetched data
-const labels = datas.map(item => item.scrape_datetime).reverse();
-const totalCount = datas.map(item => item.total_count).reverse();
-const pref1Count = datas.map(item => item.pref1_count).reverse();
-const pref2Count = datas.map(item => item.pref2_count).reverse();
-const pref3Count = datas.map(item => item.pref3_count).reverse();
-const lowestprice = datas.map(item => item.lowest_price).reverse();
-const pref1lowest = datas.map(item => item.pref1_lowest).reverse();
-const pref2lowest = datas.map(item => item.pref2_lowest).reverse();
-const pref3lowest = datas.map(item => item.pref3_lowest).reverse();
-
-const p1name = datas[0].pref1_title
-const p2name = datas[0].pref2_title
-const p3name = datas[0].pref3_title
-
-
-// Update chart
-chartvs.data.labels = labels;
-chartvs.data.datasets[0].data = totalCount;
-chartvs.data.datasets[1].data = pref1Count;
-chartvs.data.datasets[2].data = pref2Count;
-chartvs.data.datasets[3].data = pref3Count;
-
-chartvs.data.datasets[4].data = lowestprice;
-
-chartvs.data.datasets[5].data = pref1lowest;
-chartvs.data.datasets[6].data = pref2lowest;
-chartvs.data.datasets[7].data = pref3lowest;
-
-chartvs.data.datasets[1].label = p1name
-chartvs.data.datasets[2].label = p2name
-chartvs.data.datasets[3].label = p3name
-
-chartvs.data.datasets[5].label = p1name + ' Lowest Price'
-chartvs.data.datasets[6].label = p2name + ' Lowest Price'
-chartvs.data.datasets[7].label = p3name + ' Lowest Price'
-
-chartvs.update();
-
-
-
-} else {
-    document.querySelector('#vsloader').style.display = 'none';
-    document.querySelector('#vschart').style.display = 'none';
-    document.querySelector('#vserror').style.display = 'flex';
-
-
-}
-
-
-})
-.catch(error => {
-console.error("Error:", error);
-document.querySelector('#vsloader').style.display = 'none';
-document.querySelector('#vschart').style.display = 'none';
-document.querySelector('#vserror').style.display = 'flex';
-});
+  chart.update();
 }
 
 
@@ -1005,7 +1132,43 @@ function processTicketmasterData(data) {
                     document.querySelector('#tmerror').style.display = 'none';
                     document.querySelector('#tmchart').style.display = 'none';
 
-            vschartdata(events.vdid)
+if (events.stubhub_id || events.tevo_event_id) {
+  // caller controls UI
+  document.querySelector('#vschart').style.display = 'none';
+  document.querySelector('#vsloader').style.display = 'flex';
+  document.querySelector('#vserror').style.display = 'none';
+
+  const tasks = [];
+  if (events.stubhub_id)    tasks.push(vschartdata(events.stubhub_id));
+  if (events.tevo_event_id) tasks.push(tevochartdata(events.tevo_event_id));
+
+  // allSettled waits for all, never short-circuits on one failure
+  Promise.allSettled(tasks).then((results) => {
+    const anySucceeded = results.some(r => r.status === 'fulfilled');
+
+    // log any that failed, for visibility
+    results.forEach((r, i) => {
+      if (r.status === 'rejected') console.error(`chart source ${i} failed:`, r.reason);
+    });
+
+    if (anySucceeded) {
+      document.querySelector('#vschart').style.display = 'flex';
+      document.querySelector('#vsloader').style.display = 'none';
+      document.querySelector('#vserror').style.display = 'none';
+    } else {
+      // both sources failed (or no sources were available, which we already filter out above)
+      document.querySelector('#vschart').style.display = 'none';
+      document.querySelector('#vsloader').style.display = 'none';
+      document.querySelector('#vserror').style.display = 'flex';
+    }
+  });
+} else {
+  // no ids at all for this event
+  document.querySelector('#vschart').style.display = 'none';
+  document.querySelector('#vsloader').style.display = 'none';
+  document.querySelector('#vserror').style.display = 'flex';
+}
+
             document.querySelector('#graph-overlay').style.display = 'flex';
             document.querySelector('#closecharts').style.display = 'flex'
 
@@ -1596,3 +1759,5 @@ function fetchWithXHR(url, token, signal) {
 
     return allResults;
 }
+
+
