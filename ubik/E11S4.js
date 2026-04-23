@@ -663,8 +663,6 @@ eventsnomap.style.display = 'flex'
 
             const tevprimam = card.getElementsByClassName('main-text-tevo-primary')[0]
             const tevscrapedate = card.getElementsByClassName('main-text-tevo-scrape-date')[0]
-            const tevscrapetime = card.getElementsByClassName('main-text-tevo-scrape-time')[0]
-
 
     if(events.tevo_primary_amount && events.tevo_primary_amount.length>0){
 	tevprimam.textContent = Number(events.tevo_primary_amount)
@@ -675,8 +673,27 @@ eventsnomap.style.display = 'flex'
 
     if(events.tevo_scrape_date && events.tevo_scrape_date.length>0){
 	tevscrapedate.textContent = events.tevo_scrape_date
-	tevscrapetime.textContent = events.tevo_scrape_time
 	}
+
+    const shubdate = card.getElementsByClassName('main-text-shub-scrape-date')[0]
+    if(events.stubhub_scrape_date && events.stubhub_scrape_date.length>0){
+	shubdate.textContent = events.stubhub_scrape_date
+	}
+
+    if (events.stubhub_primary_amount && events.stubhub_primary_amount.length>0){
+    const shubprim = card.getElementsByClassName('main-text-shub-primary')[0]
+    shubprim.textContent = events.stubhub_primary_amount
+ card.setAttribute('shubprimary', Number(events.stubhub_primary_amount));
+	} else {
+	    card.setAttribute('shubprimary', Number(-1));
+	}
+
+if (events.stubhub_min_price){
+const shubmin = card.getElementsByClassName('main-text-shub-minprice')[0]
+shubmin.textContent = events.stubhub_min_price
+}
+
+
 
 
     const purchasedamount = card.getElementsByClassName('main-text-purchased')[0];
@@ -1132,11 +1149,13 @@ function processTicketmasterData(data) {
                     document.querySelector('#tmerror').style.display = 'none';
                     document.querySelector('#tmchart').style.display = 'none';
 
+
 if (events.stubhub_id || events.tevo_event_id) {
   // caller controls UI
   document.querySelector('#vschart').style.display = 'none';
   document.querySelector('#vsloader').style.display = 'flex';
   document.querySelector('#vserror').style.display = 'none';
+
 
   const tasks = [];
   if (events.stubhub_id)    tasks.push(vschartdata(events.stubhub_id));
