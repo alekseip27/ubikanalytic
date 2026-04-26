@@ -662,8 +662,12 @@ eventsnomap.style.display = 'flex'
 
 
             const tevprimam = card.getElementsByClassName('main-text-tevo-primary')[0]
+            const tevshratio = card.getElementsByClassName('main-text-shub-ratio')[0]
             const tevscrapedate = card.getElementsByClassName('main-text-tevo-scrape-date')[0]
-
+            const shubprim = card.getElementsByClassName('main-text-shub-primary')[0]
+            const shubmin = card.getElementsByClassName('main-text-shub-price')[0]
+		    const shubdate = card.getElementsByClassName('main-text-shub-scrape-date')[0]
+				
     if(events.tevo_primary_amount && events.tevo_primary_amount.length>0){
 	tevprimam.textContent = Number(events.tevo_primary_amount)
     card.setAttribute('tevoprimary', Number(events.tevo_primary_amount));
@@ -674,25 +678,35 @@ eventsnomap.style.display = 'flex'
     if(events.tevo_scrape_date && events.tevo_scrape_date.length>0){
 	tevscrapedate.textContent = events.tevo_scrape_date
 	}
-
-    const shubdate = card.getElementsByClassName('main-text-shub-scrape-date')[0]
+				
     if(events.stubhub_scrape_date && events.stubhub_scrape_date.length>0){
 	shubdate.textContent = events.stubhub_scrape_date
 	}
 
     if (events.stubhub_primary_amount && events.stubhub_primary_amount.length>0){
-    const shubprim = card.getElementsByClassName('main-text-shub-primary')[0]
     shubprim.textContent = Number(events.stubhub_primary_amount)
- card.setAttribute('shubprimary', Number(events.stubhub_primary_amount));
+    card.setAttribute('shubprimary', Number(events.stubhub_primary_amount));
 	} else {
 	    card.setAttribute('shubprimary', Number(-1));
 	}
 
 if (events.stubhub_min_price){
-const shubmin = card.getElementsByClassName('main-text-shub-minprice')[0]
 shubmin.textContent = events.stubhub_min_price
-}
+}	
 
+if (events.tevo_primary_amount && events.tevo_primary_amount.length > 0 &&
+    events.stubhub_primary_amount && events.stubhub_primary_amount.length > 0) {
+
+  const tevoprimaryam = parseFloat(events.tevo_primary_amount);
+  const stubhubprimaryamo = parseFloat(events.stubhub_primary_amount);
+
+  if (Number.isFinite(tevoprimaryam) && Number.isFinite(stubhubprimaryamo) && stubhubprimaryamo > 0) {
+    const ratio = Math.round((tevoprimaryam / stubhubprimaryamo) * 100) / 100;
+    tevshratio.textContent = ratio;
+  } else {
+    tevshratio.textContent = '';
+  }
+}
 
 
 
