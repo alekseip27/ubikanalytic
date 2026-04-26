@@ -682,7 +682,7 @@ eventsnomap.style.display = 'flex'
 
     if (events.stubhub_primary_amount && events.stubhub_primary_amount.length>0){
     const shubprim = card.getElementsByClassName('main-text-shub-primary')[0]
-    shubprim.textContent = events.stubhub_primary_amount
+    shubprim.textContent = Number(events.stubhub_primary_amount)
  card.setAttribute('shubprimary', Number(events.stubhub_primary_amount));
 	} else {
 	    card.setAttribute('shubprimary', Number(-1));
