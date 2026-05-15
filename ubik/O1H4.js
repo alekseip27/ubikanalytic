@@ -289,6 +289,50 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     var jsonParamst = JSON.stringify(paramst);
     http.send(jsonParamst);
     })
+
+
+
+    var selector3 = sboxpendingcheck
+    selector3.addEventListener('change', function (event) {
+    const errorid = encodeURIComponent(events.id);
+    var http = new XMLHttpRequest();
+    var url = "https://ubik.wiki/api/update/order-history/"
+    
+        
+    var paramst = {
+    "id": errorid,
+    "skybox_pending": selector3.checked,
+    "one_ticket_id": events.one_ticket_id
+    };
+    
+    http.open("PUT", url, true);
+    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    http.setRequestHeader('Authorization', `Bearer ${token}`);
+    var jsonParamst = JSON.stringify(paramst);
+    http.send(jsonParamst);
+    })
+
+
+    var selector4 = checkboxcancelledrefunded
+    selector4.addEventListener('change', function (event) {
+    const errorid = encodeURIComponent(events.id);
+    var http = new XMLHttpRequest();
+    var url = "https://ubik.wiki/api/update/order-history/"
+    
+        
+    var paramst = {
+    "id": errorid,
+    "cancelled_or_refunded": selector4.checked,
+    "one_ticket_id": events.one_ticket_id
+    };
+    
+    http.open("PUT", url, true);
+    http.setRequestHeader("Content-type", "application/json; charset=utf-8");
+    http.setRequestHeader('Authorization', `Bearer ${token}`);
+    var jsonParamst = JSON.stringify(paramst);
+    http.send(jsonParamst);
+    })
+        
     //
     
     
