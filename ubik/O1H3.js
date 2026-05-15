@@ -43,7 +43,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
         let keywords7 = encodeURIComponent(document.getElementById('searchbar5').value);
 
         let keywords8 = encodeURIComponent(document.getElementById('pendingskybox').checked);
-        let keywords9 = encodeURIComponent(!document.getElementById('cancelledrefunded').checked);
+        let keywords9 = encodeURIComponent(document.getElementById('cancelledrefunded').checked);
 
     if (keywords1.length > 0) {
         params.push('event_name__icontains=' + keywords1.replaceAll("'", "''"));
