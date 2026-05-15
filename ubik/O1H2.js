@@ -42,6 +42,9 @@ document.getElementById('rightarrow').addEventListener('click', function() {
         let keywords6 = encodeURIComponent(document.getElementById('searchbar4').value);
         let keywords7 = encodeURIComponent(document.getElementById('searchbar5').value);
 
+        let keywords8 = encodeURIComponent(document.getElementById('pendingskybox').checked);
+        let keywords9 = encodeURIComponent(!document.getElementById('cancelledrefunded').checked);
+
     if (keywords1.length > 0) {
         params.push('event_name__icontains=' + keywords1.replaceAll("'", "''"));
         }
@@ -69,7 +72,15 @@ document.getElementById('rightarrow').addEventListener('click', function() {
         if (keywords7.length > 0) {
         params.push("purchase_email__icontains="+keywords7)
         }
-            
+
+        if (keywords8 === 'true') {
+        params.push("skybox_pending__iexact="+keywords8)
+        }
+
+        if (keywords9 === 'true') {
+        params.push("cancelled_or_refunded__iexact="+keywords9)
+        }
+        
         params.push('limit=100'); 
 
 
@@ -233,8 +244,12 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     
     let purchrequested = card.getElementsByClassName('main-text-event-date-requested')[0]
     purchrequested.textContent = events.purchase_requested
-    
-    
+
+    let sboxpendingcheck = card.getElementsByClassName('main-checkbox-pending-skybox')[0]
+    sboxpendingcheck.checked = events.skybox_pending
+
+    let checkboxcancelledrefunded = card.getElementsByClassName('main-checkbox-cancelled-refunded')[0]
+    checkboxcancelledrefunded.checked = events.cancelled_or_refunded
     //
     
     var selector = oneticket
