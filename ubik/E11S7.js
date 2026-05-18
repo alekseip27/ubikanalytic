@@ -20,6 +20,143 @@ const DEFAULT_SOURCE_DETAILS = {
 
   let sourceInstructionsMap = new Map();
 
+
+function formatDate(date) {
+  const mm = String(date.getMonth() + 1).padStart(2, '0');
+  const dd = String(date.getDate()).padStart(2, '0');
+  const yyyy = date.getFullYear();
+  return `${mm}/${dd}/${yyyy}`;
+}
+
+// Helper: convert "YYYY-MM-DD" -> "MM/DD/YYYY" (timezone-safe)
+function ymdToMdy(ymd) {
+  const [y, m, d] = ymd.split('-');
+  return `${m}/${d}/${y}`;
+}
+
+// Provided diff-per-day calculator
+const calculateChange = (counts) => {
+  if (!Array.isArray(counts) || counts.length === 0) {
+    return { scrapeDate: "0000-00-00", lastAmount: "0.00", differencePerDay: "0.00" };
+  }
+  counts.sort((a, b) => new Date(a.scrape_date) - new Date(b.scrape_date));
+  const latest = counts[counts.length - 1];
+  const secondLatest = counts.length > 1 ? counts[counts.length - 2] : null;
+  const lastAmount = parseFloat(latest.primary_amount || 0).toFixed(2);
+  const scrapeDate = formatDate(new Date(latest.scrape_date));
+  if (!secondLatest || !secondLatest.primary_amount) {
+    return { scrapeDate, lastAmount, differencePerDay: "0.00" };
+  }
+  const latestAmount = parseFloat(latest.primary_amount) || 0;
+  const secondLatestAmount = parseFloat(secondLatest.primary_amount) || 0;
+  const valueDifference = secondLatestAmount - latestAmount;
+  const date1 = new Date(secondLatest.scrape_date);
+  const date2 = new Date(latest.scrape_date);
+  const timeDifferenceMinutes = (date2 - date1) / (1000 * 60);
+  let differencePerDay = "0.00";
+  if (timeDifferenceMinutes > 0) {
+    differencePerDay = ((valueDifference / timeDifferenceMinutes) * 1440).toFixed(2);
+  }
+  return { scrapeDate, lastAmount, differencePerDay };
+};
+
+// Function 1: fetch the existing event-venue record
+async function fetchEventVenue(siteEventId) {
+  const res = await fetch(
+    `https://ubik.wiki/api/event-venue/?site_event_id__iexact=${siteEventId}`,
+    { method: 'GET', headers: { Authorization: `Bearer ${TOKEN}` } }
+  );
+  const data = await res.json();
+  if (Array.isArray(data)) return data[0];
+  if (Array.isArray(data.results)) return data.results[0];
+  return data;
+}
+
+// Function 2: trigger a new scrape, update DOM, merge counts, PUT the update
+async function scrapeAndUpdate(eventUrl, box) {
+  // Derive site_event_id from URL: .../689041 -> see689041
+  const numMatch = eventUrl.match(/\/(\d+)(?:[\/?#]|$)/);
+  if (!numMatch) {
+    console.error('No numeric ID in URL:', eventUrl);
+    return;
+  }
+  const siteEventId = `see${numMatch[1]}`;
+
+  // Step 1: GET existing record
+  const record = await fetchEventVenue(siteEventId);
+  if (!record) {
+    console.error('No event-venue record for', siteEventId);
+    return;
+  }
+
+  // Step 2: POST scrape
+  const scrapeRes = await fetch('https://ubik.wiki/api/scrape/', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      site_name: 'seetickets',
+      event_url: eventUrl,
+    }),
+  });
+  const scraped = await scrapeRes.json();
+  console.log('scrape response:', scraped);
+
+  // Update DOM inside this event-box
+  if (box) {
+    const dateEl = box.querySelector('.main-text-scrapedate');
+    const timeEl = box.querySelector('.main-text-scrapetime');
+    const primaryEl = box.querySelector('.main-text-primary');
+    if (dateEl) dateEl.textContent = scraped.scrape_date ?? '';
+    if (timeEl) timeEl.textContent = scraped.scrape_time ?? '';
+    if (primaryEl) primaryEl.textContent = scraped.primary_amount ?? '';
+  }
+
+  // Step 3: build new count entry in the existing counts format
+  const newCount = {
+    scrape_date: ymdToMdy(scraped.scrape_date),
+    scrape_time: scraped.scrape_time,
+    resale_amount: scraped.resale_amount ?? '',
+    primary_amount: scraped.primary_amount ?? '',
+    preferred_amount: scraped.preferred_amount ?? '',
+  };
+
+  // Keep all old counts, prepend the new one
+  const existingCounts = Array.isArray(record.counts) ? record.counts : [];
+  const updatedCounts = [newCount, ...existingCounts];
+
+  // diff per day (calculateChange sorts a copy)
+  const change = calculateChange([...updatedCounts]);
+
+  // Build PUT payload preserving the rest of the record
+  const payload = {
+    ...record,
+    counts: updatedCounts,
+    site_event_id: scraped.site_event_id || record.site_event_id,
+    app_142_scrape_date: scraped.scrape_date,       // "YYYY-MM-DD"
+    app_142_scrape_time: scraped.scrape_time,        // "HH:MM:SS AM/PM"
+    app_142_primary_amount: parseFloat(scraped.primary_amount || 0).toFixed(2),
+    app_142_difference_per_day: change.differencePerDay,
+  };
+
+  const putRes = await fetch('https://ubik.wiki/api/update/primary-events/', {
+    method: 'PUT',
+    headers: {
+      Authorization: `Bearer ${TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(payload),
+  });
+  const putData = await putRes.json();
+  console.log('update response:', putData);
+  return putData;
+}
+
+
+
+
 // ============================================================
 // Chart helpers — copied from tevochartpricing.js
 // Dependencies: window.chartvs, token  (already on this page)
@@ -618,6 +755,28 @@ if(events.no_map === true){
 eventsnomap.style.display = 'flex'
 }
 
+
+const url = events.event_url
+  if (!url || !url.includes('eventim.us')) return;
+
+  const btn = box.querySelector('.scrape-seetix');
+  if (!btn) return;
+
+  btn.style.display = 'flex';
+
+  btn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (btn.dataset.busy === '1') return;
+    btn.dataset.busy = '1';
+    try {
+      await scrapeAndUpdate(url, box);
+    } catch (err) {
+      console.error('scrape-seetix click error:', err);
+    } finally {
+      btn.dataset.busy = '0';
+    }
+				
 
 
         if(events.date){
