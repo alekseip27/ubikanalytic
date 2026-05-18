@@ -1,11 +1,11 @@
 
 let intervalIdx;
-
 function initsource() {
     if (token.length === 40) {
 		    initializeSourceInstructions()
     clearInterval(intervalIdx);
     initsource = true
+    TOKEN = token
     }}
 
 intervalIdx = setInterval(initsource, 1000);
@@ -19,8 +19,7 @@ const DEFAULT_SOURCE_DETAILS = {
   };
 
   let sourceInstructionsMap = new Map();
-
-
+// Helper: format Date -> "MM/DD/YYYY"
 function formatDate(date) {
   const mm = String(date.getMonth() + 1).padStart(2, '0');
   const dd = String(date.getDate()).padStart(2, '0');
@@ -73,7 +72,7 @@ async function fetchEventVenue(siteEventId) {
 }
 
 // Function 2: trigger a new scrape, update DOM, merge counts, PUT the update
-async function scrapeAndUpdate(eventUrl, box) {
+async function scrapeAndUpdate(eventUrl, card) {
   // Derive site_event_id from URL: .../689041 -> see689041
   const numMatch = eventUrl.match(/\/(\d+)(?:[\/?#]|$)/);
   if (!numMatch) {
@@ -104,11 +103,11 @@ async function scrapeAndUpdate(eventUrl, box) {
   const scraped = await scrapeRes.json();
   console.log('scrape response:', scraped);
 
-  // Update DOM inside this event-box
-  if (box) {
-    const dateEl = box.querySelector('.main-text-scrapedate');
-    const timeEl = box.querySelector('.main-text-scrapetime');
-    const primaryEl = box.querySelector('.main-text-primary');
+  // Update DOM inside this card
+  if (card) {
+    const dateEl = card.querySelector('.main-text-scrapedate');
+    const timeEl = card.querySelector('.main-text-scrapetime');
+    const primaryEl = card.querySelector('.main-text-primary');
     if (dateEl) dateEl.textContent = scraped.scrape_date ?? '';
     if (timeEl) timeEl.textContent = scraped.scrape_time ?? '';
     if (primaryEl) primaryEl.textContent = scraped.primary_amount ?? '';
@@ -130,13 +129,12 @@ async function scrapeAndUpdate(eventUrl, box) {
   // diff per day (calculateChange sorts a copy)
   const change = calculateChange([...updatedCounts]);
 
-  // Build PUT payload preserving the rest of the record
+  // Slim PUT payload — only the fields we want to change
   const payload = {
-    ...record,
-    counts: updatedCounts,
     site_event_id: scraped.site_event_id || record.site_event_id,
-    app_142_scrape_date: scraped.scrape_date,       // "YYYY-MM-DD"
-    app_142_scrape_time: scraped.scrape_time,        // "HH:MM:SS AM/PM"
+    counts: updatedCounts,
+    app_142_scrape_date: scraped.scrape_date,
+    app_142_scrape_time: scraped.scrape_time,
     app_142_primary_amount: parseFloat(scraped.primary_amount || 0).toFixed(2),
     app_142_difference_per_day: change.differencePerDay,
   };
@@ -153,7 +151,6 @@ async function scrapeAndUpdate(eventUrl, box) {
   console.log('update response:', putData);
   return putData;
 }
-
 
 
 
@@ -759,7 +756,7 @@ eventsnomap.style.display = 'flex'
 const url = events.event_url
   if (!url || !url.includes('eventim.us')) return;
 
-  const btn = box.querySelector('.scrape-seetix');
+  const btn = card.querySelector('.scrape-seetix');
   if (!btn) return;
 
   btn.style.display = 'flex';
@@ -770,13 +767,14 @@ const url = events.event_url
     if (btn.dataset.busy === '1') return;
     btn.dataset.busy = '1';
     try {
-      await scrapeAndUpdate(url, box);
+      await scrapeAndUpdate(url, card);
     } catch (err) {
       console.error('scrape-seetix click error:', err);
     } finally {
       btn.dataset.busy = '0';
     }
-				
+})
+
 
 
         if(events.date){
@@ -826,7 +824,7 @@ const url = events.event_url
             const shubprim = card.getElementsByClassName('main-text-shub-primary')[0]
             const shubmin = card.getElementsByClassName('main-text-shub-price')[0]
 		    const shubdate = card.getElementsByClassName('main-text-shub-scrape-date')[0]
-				
+
     if(events.tevo_primary_amount && events.tevo_primary_amount.length>0){
 	tevprimam.textContent = Number(events.tevo_primary_amount)
     card.setAttribute('tevoprimary', Number(events.tevo_primary_amount));
@@ -837,7 +835,7 @@ const url = events.event_url
     if(events.tevo_scrape_date && events.tevo_scrape_date.length>0){
 	tevscrapedate.textContent = events.tevo_scrape_date
 	}
-				
+
     if(events.stubhub_scrape_date && events.stubhub_scrape_date.length>0){
 	shubdate.textContent = events.stubhub_scrape_date
 	}
@@ -851,7 +849,7 @@ const url = events.event_url
 
 if (events.stubhub_min_price){
 shubmin.textContent = events.stubhub_min_price
-}	
+}
 
 if (events.tevo_primary_amount && events.tevo_primary_amount.length > 0 &&
     events.stubhub_primary_amount && events.stubhub_primary_amount.length > 0) {
