@@ -753,12 +753,10 @@ eventsnomap.style.display = 'flex'
 }
 
 
-const url = events.event_url
-  if (!url || !url.includes('eventim.us')) return;
+const url = events.event_url;
+const btn = card.querySelector('.scrape-seetix');
 
-  const btn = card.querySelector('.scrape-seetix');
-  if (!btn) return;
-
+if (btn && url && url.includes('eventim.us')) {
   btn.style.display = 'flex';
 
   btn.addEventListener('click', async (e) => {
@@ -773,7 +771,8 @@ const url = events.event_url
     } finally {
       btn.dataset.busy = '0';
     }
-})
+  });
+}
 
 
 
