@@ -159,8 +159,6 @@ if(emailsacc){
   $('#edithistory').css('display','flex');
 
   $('#142scraping').css('display','none');
-  $('#datalabeling').css('display','none');
-  $('#datacleaning').css('display','none');
   $('#ptool').css('display','none');
   }
 
@@ -170,8 +168,6 @@ if(emailsacc){
   $('#buying').css('display','flex');
   $('#queue').css('display','flex');
   $('#142scraping').css('display','none');
-  $('#datalabeling').css('display','none');
-  $('#datacleaning').css('display','none');
   $('#ptool').css('display','none')
   }
             
@@ -189,8 +185,6 @@ if(emailsacc){
   $('#errorlog').css('display','flex');
   
   $('#142scraping').css('display','none');
-  $('#datalabeling').css('display','none');
-  $('#datacleaning').css('display','none');
   $('#ptool').css('display','none');
   $('#scrapeurls').css('display','flex');
   $('#editevents').css('display','flex');
