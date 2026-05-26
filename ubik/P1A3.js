@@ -90,6 +90,7 @@ if(emailsacc){
   $('#emaildropdown').css('display','flex');
   $('#manage-emails').css('display','flex');  
 }
+            
 
             
   if(marcus === true){
