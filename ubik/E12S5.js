@@ -104,15 +104,6 @@ async function scrapeAndUpdate(eventUrl, card) {
   console.log('scrape response:', scraped);
 
   // Update DOM inside this card
-  if (card) {
-    const dateEl = card.querySelector('.main-text-scrapedate');
-    const timeEl = card.querySelector('.main-text-scrapetime');
-    const primaryEl = card.querySelector('.main-text-primary');
-    card.setAttribute('primaryamount', scraped.primary_amount);
-    if (dateEl) dateEl.textContent = scraped.scrape_date ?? '';
-    if (timeEl) timeEl.textContent = scraped.scrape_time ?? '';
-    if (primaryEl) primaryEl.textContent = scraped.primary_amount ?? '';
-  }
 
   // Step 3: build new count entry in the existing counts format
   const newCount = {
@@ -140,6 +131,21 @@ async function scrapeAndUpdate(eventUrl, card) {
     app_142_difference_per_day: change.differencePerDay,
   };
 
+
+  if (card) {
+    const dateEl = card.querySelector('.main-text-scrapedate');
+    const timeEl = card.querySelector('.main-text-scrapetime');
+    const primaryEl = card.querySelector('.main-text-primary');
+	const perDayEL = card.querySelector('.main-text-aday');
+    card.setAttribute('primaryamount', scraped.primary_amount);
+    if (dateEl) dateEl.textContent = scraped.scrape_date ?? '';
+    if (timeEl) timeEl.textContent = scraped.scrape_time ?? '';
+    if (primaryEl) primaryEl.textContent = parseFloat(scraped.primary_amount || 0).toFixed(2) ?? '';
+    if (perDayEL) perDayEL.textContent = change.differencePerDay ?? '';
+    card.setAttribute('perday', change.differencePerDay);
+
+  }
+	
   const putRes = await fetch('https://ubik.wiki/api/update/primary-events/', {
     method: 'PUT',
     headers: {
