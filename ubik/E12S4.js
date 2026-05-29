@@ -108,6 +108,7 @@ async function scrapeAndUpdate(eventUrl, card) {
     const dateEl = card.querySelector('.main-text-scrapedate');
     const timeEl = card.querySelector('.main-text-scrapetime');
     const primaryEl = card.querySelector('.main-text-primary');
+    card.setAttribute('primaryamount', scraped.primary_amount);
     if (dateEl) dateEl.textContent = scraped.scrape_date ?? '';
     if (timeEl) timeEl.textContent = scraped.scrape_time ?? '';
     if (primaryEl) primaryEl.textContent = scraped.primary_amount ?? '';
