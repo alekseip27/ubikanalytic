@@ -58,35 +58,13 @@ const calculateChange = (counts) => {
   }
   return { scrapeDate, lastAmount, differencePerDay };
 };
-
-// Function 1: fetch the existing event-venue record
-async function fetchEventVenue(siteEventId) {
-  const res = await fetch(
-    `https://ubik.wiki/api/event-venue/?site_event_id__iexact=${siteEventId}`,
-    { method: 'GET', headers: { Authorization: `Bearer ${TOKEN}` } }
-  );
-  const data = await res.json();
-  if (Array.isArray(data)) return data[0];
-  if (Array.isArray(data.results)) return data.results[0];
-  return data;
-}
-
-// Function 2: trigger a new scrape, update DOM, merge counts, PUT the update
 async function scrapeAndUpdate(eventUrl, card) {
-  // Derive site_event_id from URL: .../689041 -> see689041
   const numMatch = eventUrl.match(/\/(\d+)(?:[\/?#]|$)/);
   if (!numMatch) {
     console.error('No numeric ID in URL:', eventUrl);
     return;
   }
   const siteEventId = `see${numMatch[1]}`;
-
-  // Step 1: GET existing record
-  const record = await fetchEventVenue(siteEventId);
-  if (!record) {
-    console.error('No event-venue record for', siteEventId);
-    return;
-  }
 
   // Step 2: POST scrape
   const scrapeRes = await fetch('https://ubik.wiki/api/scrape/', {
@@ -103,60 +81,19 @@ async function scrapeAndUpdate(eventUrl, card) {
   const scraped = await scrapeRes.json();
   console.log('scrape response:', scraped);
 
-  // Update DOM inside this card
-
-  // Step 3: build new count entry in the existing counts format
-  const newCount = {
-    scrape_date: ymdToMdy(scraped.scrape_date),
-    scrape_time: scraped.scrape_time,
-    resale_amount: scraped.resale_amount ?? '',
-    primary_amount: scraped.primary_amount ?? '',
-    preferred_amount: scraped.preferred_amount ?? '',
-  };
-
-  // Keep all old counts, prepend the new one
-  const existingCounts = Array.isArray(record.counts) ? record.counts : [];
-  const updatedCounts = [newCount, ...existingCounts];
-
-  // diff per day (calculateChange sorts a copy)
-  const change = calculateChange([...updatedCounts]);
-
-  // Slim PUT payload — only the fields we want to change
-  const payload = {
-    site_event_id: scraped.site_event_id || record.site_event_id,
-    counts: updatedCounts,
-    app_142_scrape_date: scraped.scrape_date,
-    app_142_scrape_time: scraped.scrape_time,
-    app_142_primary_amount: parseFloat(scraped.primary_amount || 0).toFixed(2),
-    app_142_difference_per_day: change.differencePerDay,
-  };
-
-
+  // Step 3: update DOM
   if (card) {
     const dateEl = card.querySelector('.main-text-scrapedate');
     const timeEl = card.querySelector('.main-text-scrapetime');
     const primaryEl = card.querySelector('.main-text-primary');
-	const perDayEL = card.querySelector('.main-text-aday');
+    const perDayEL = card.querySelector('.main-text-aday');
     card.setAttribute('primaryamount', scraped.primary_amount);
     if (dateEl) dateEl.textContent = scraped.scrape_date ?? '';
     if (timeEl) timeEl.textContent = scraped.scrape_time ?? '';
     if (primaryEl) primaryEl.textContent = parseFloat(scraped.primary_amount || 0).toFixed(2) ?? '';
-    if (perDayEL) perDayEL.textContent = change.differencePerDay ?? '';
-    card.setAttribute('perday', change.differencePerDay);
-
   }
-	
-  const putRes = await fetch('https://ubik.wiki/api/update/primary-events/', {
-    method: 'PUT',
-    headers: {
-      Authorization: `Bearer ${TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(payload),
-  });
-  const putData = await putRes.json();
-  console.log('update response:', putData);
-  return putData;
+
+  return scraped;
 }
 
 
