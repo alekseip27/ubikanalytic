@@ -931,11 +931,32 @@ async function updateChartWithPrimaryAndPreferred() {
           chart.update();
 
           // Populate primary amounts and dates
-          counts.forEach(count => {
-              amountsPrimary.push(Math.round(count.primary_amount));
-              datesPrimary.push(normalizeDate(count.scrape_date)); // Normalize dates
-              combinedDates.add(normalizeDate(count.scrape_date));
-          });
+counts.sort((a, b) => {
+    const da = normalizeDate(a.scrape_date + (a.scrape_time ? ', ' + a.scrape_time : ''));
+    const db = normalizeDate(b.scrape_date + (b.scrape_time ? ', ' + b.scrape_time : ''));
+    return new Date(da) - new Date(db);
+});
+
+// Keep only latest scrape per calendar day
+const byDay = new Map();
+counts.forEach(count => {
+    const fullDate = normalizeDate(count.scrape_date + (count.scrape_time ? ', ' + count.scrape_time : ''));
+    const day = fullDate.slice(0, 10); // "YYYY-MM-DD"
+    byDay.set(day, { ...count, _normalized: fullDate });
+});
+counts = Array.from(byDay.values());
+
+// Drop consecutive same-amount entries
+counts = counts.filter((count, i, arr) => {
+    if (i === 0 || i === arr.length - 1) return true;
+    return Number(count.primary_amount) !== Number(arr[i - 1].primary_amount);
+});
+
+counts.forEach(count => {
+    amountsPrimary.push(Math.round(count.primary_amount));
+    datesPrimary.push(count._normalized);
+    combinedDates.add(count._normalized);
+});
 
           console.log("Primary data amounts:", amountsPrimary);
           console.log("Primary data dates:", datesPrimary);
