@@ -871,22 +871,57 @@ async function vschartdata(stubhubid) {
         const charticon = card.getElementsByClassName('main-text-chart')[0];
 
 function normalizeDate(date) {
+    // Handle "MM/DD/YYYY" and "MM/DD/YYYY, HH:MM:SS AM/PM" formats from counts
+    const mdyMatch = String(date).match(
+        /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:,\s*(\d{1,2}):(\d{2})(?::\d{2})?\s*(AM|PM)?)?/i
+    );
+    if (mdyMatch) {
+        const [, mm, dd, yyyy, hh, min, ap] = mdyMatch;
+        let hours = hh ? parseInt(hh) : 0;
+        const mins = min ? min : '00';
+        if (ap) {
+            if (/pm/i.test(ap) && hours < 12) hours += 12;
+            if (/am/i.test(ap) && hours === 12) hours = 0;
+        }
+        return `${yyyy}-${mm.padStart(2,'0')}-${dd.padStart(2,'0')} ${String(hours).padStart(2,'0')}:${mins}`;
+    }
+    // Fallback: ISO or other formats
     const d = new Date(date);
+    if (isNaN(d)) return String(date);
     const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const month = String(d.getMonth() + 1).padStart(2, '0');
     const day = String(d.getDate()).padStart(2, '0');
     const hours = String(d.getHours()).padStart(2, '0');
     const minutes = String(d.getMinutes()).padStart(2, '0');
     return `${year}-${month}-${day} ${hours}:${minutes}`;
 }
+				
+async function updateChartWithPrimaryAndPreferred() {
+    let amountsPrimary = [];
+    let datesPrimary = [];
+    let combinedDates = new Set();
+    let preferredData = [];
+    let venueid = events.site_venue_id;
 
-      function updateChartWithPrimaryAndPreferred() {
-          let amountsPrimary = [];
-          let datesPrimary = [];
-          let combinedDates = new Set();
-          let preferredData = [];
-          let counts = events.counts;
-          let venueid = events.site_venue_id;
+    // Fetch fresh counts from primary-events
+    let counts = [];
+    try {
+        const freshRes = await fetch(
+            `https://ubik.wiki/api/primary-events/?site_event_id__iexact=${encodeURIComponent(events.site_event_id)}&limit=1&format=json`,
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            }
+        );
+        const freshJson = await freshRes.json();
+        counts = freshJson.results?.[0]?.counts || [];
+    } catch (err) {
+        console.error('Failed to fetch fresh primary counts:', err);
+        displayLoadingFailed();
+        return;
+    }
 
           const detailstwo = getSourceDetails(events.event_url);
 
