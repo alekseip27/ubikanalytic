@@ -15,12 +15,13 @@ function updateBuyButtonVisibility() {
     const fld4 = document.getElementById('buyingurgency').value.trim() !== '';
     const fld5 = document.getElementById('purchaseaccs').value.trim() !== '';
     const fld6 = document.getElementById('assign').value.trim() !== '';
+    const fld7 = document.getElementById('signal-identifier').value.trim() !== '';
 
-    document.getElementById('buyfake').style.display = fld1 && fld2 && fld3 && fld4 && fld5 && fld6 ? 'none' : 'flex';
-    document.getElementById('buybtn').style.display = fld1 && fld2 && fld3 && fld4 && fld5 && fld6 ? 'flex' : 'none';
+    document.getElementById('buyfake').style.display = fld1 && fld2 && fld3 && fld4 && fld5 && fld6 && fld7 ? 'none' : 'flex';
+    document.getElementById('buybtn').style.display = fld1 && fld2 && fld3 && fld4 && fld5 && fld6 && fld7 ? 'flex' : 'none';
 }
 
-['purchasetotal', 'quantityper', 'section', 'buyingurgency','purchaseaccs','assign'].forEach(function(id) {
+['purchasetotal', 'quantityper', 'section', 'buyingurgency','signal-identifier','purchaseaccs','assign'].forEach(function(id) {
     document.getElementById(id).addEventListener('input', updateBuyButtonVisibility);
 });
 
@@ -155,6 +156,7 @@ event_source: document.getElementById('source').textContent,
 purchase_account: document.getElementById('purchaseaccs').value,
 credit_account: document.getElementById('purchaseaccs').value,
 assign: document.getElementById('assign').value,
+signal_identifier: document.getElementById('signal-identifier').value,
 tags: selected.join(',')
 };
 
