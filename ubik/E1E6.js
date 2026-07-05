@@ -53,6 +53,7 @@ function getevent() {
     document.querySelector('#presalecode').value       = events.presale_code;
     document.querySelector('#notes').value             = events.purchase_notes;
     document.querySelector('#assign').value            = events.assign;
+    document.querySelector('#signal-identifier').value = events.signal_identifier;
 
     // Insert your template (which contains <select id="tags">) into the DOM
     itemContainer.appendChild(item);
@@ -142,6 +143,7 @@ document.querySelector('#buybtn').addEventListener("click", () => {
   const creditacc     = document.querySelector('#creditaccount').value;
   const presale       = document.querySelector('#presalecode').value;
   const note          = document.querySelector('#notes').value;
+  const signal        = document.querySelector('#signal-identifier').value
 
   const params = JSON.stringify({
     id:               queueid,
@@ -154,7 +156,8 @@ document.querySelector('#buybtn').addEventListener("click", () => {
     purchase_notes:   note,
     added_timestamp:  dategoal,
     assign:           document.getElementById('assign').value,
-    tags:             selected.join(',')
+    tags:             selected.join(','),
+    signal_identifier: signal
   });
 
   fetch(urltwo, {
