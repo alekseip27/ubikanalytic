@@ -1,3 +1,4 @@
+
 document.getElementById('rightarrow').addEventListener('click', function () {
   if (nexturl) constructURL(nexturl);
 });
