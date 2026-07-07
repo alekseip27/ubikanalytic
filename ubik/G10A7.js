@@ -1,6 +1,6 @@
 let purcharray = []
 let abortControllers = [];
-
+let signalidentifier = ''
 
 const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&paused__iexact=false&tm_restricted__iexact=false';
 
@@ -547,6 +547,7 @@ const item = document.getElementById('samplestyle')
 
 thiseventid = eventdata.event_id
 credit_account = eventdata.credit_account
+signalidentifier = eventdata.signal_identifier
 
 const issuerElement = document.getElementById("issuer");
 
@@ -1179,7 +1180,8 @@ function part3(){
     "one_ticket_id":randomId,
     "details_match":dmatch,
     "did_not_select_wc":selectwc,
-    "purchase_urgency":purchurgency
+    "purchase_urgency":purchurgency,
+    signal_identifier:signalidentifier
     }
 
     const email_list = document.getElementById('purchaseaccounts').value;
