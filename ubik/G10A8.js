@@ -615,7 +615,8 @@ function (data) {
     let vename = data.results[0].venue_name;
     let evdate = data.results[0].date;
     let evtime = data.results[0].time;
-    let evurl = data.results[0].event_url
+    evurl = data.results[0].event_url
+    vdidurl = data.results[0].vivid_url
     states = data.results[0].state
     state = getStateName(states)
 
@@ -1181,7 +1182,9 @@ function part3(){
     "details_match":dmatch,
     "did_not_select_wc":selectwc,
     "purchase_urgency":purchurgency,
-    signal_identifier:signalidentifier
+    signal_identifier:signalidentifier,
+    primary_event_url:evurl,
+    vivid_event_url:vdidurl
     }
 
     const email_list = document.getElementById('purchaseaccounts').value;
