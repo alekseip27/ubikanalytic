@@ -96,7 +96,7 @@ dategoal = `${month}/${day}/${year}, ${formattedHours}:${minutes} ${amPm}`;
 
 
   estdates = `${month}/${day}/${year} ${hours}:${minutes}`;
-
+  vividurl = eventData.vivid_url;
 
         document.getElementById('url').textContent = eventData.event_url;
         document.getElementById('pref1rem').textContent = eventData.Event_Other_Master_Pref1_Remaining;
@@ -157,6 +157,7 @@ purchase_account: document.getElementById('purchaseaccs').value,
 credit_account: document.getElementById('purchaseaccs').value,
 assign: document.getElementById('assign').value,
 signal_identifier: document.getElementById('signal-identifier').value,
+vivid_venue_id: vividurl,
 tags: selected.join(',')
 };
 
