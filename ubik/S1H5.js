@@ -34,7 +34,7 @@ function constructURL(next) {
   const keywords4 = encodeURIComponent(searchbar4.value);
   const keywords5 = encodeURIComponent(searchbar5.value);
 
-  const baseUrl = 'https://ubik.wiki/api/skybox-sales-data/?invoice_date__sort=-1'
+  const baseUrl = 'https://ubik.wiki/api/skybox-sales-data/?invoice_date__sort=-1&limit=100'
   const params = [];
 
   if (keywords1.length > 0) params.push('performer__icontains=' + keywords1);
@@ -42,8 +42,6 @@ function constructURL(next) {
   if (keywords3.length > 0) params.push('invoice_date__icontains=' + keywords3);
   if (keywords4.length > 0) params.push('purchaser__icontains=' + keywords4);
   if (keywords5.length > 0) params.push('signal_identifier__icontains=' + keywords5);
-
-  params.push('limit=100');
 
   // hide existing boxes quickly
   $('.event-box').hide();
