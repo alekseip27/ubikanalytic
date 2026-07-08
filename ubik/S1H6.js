@@ -138,8 +138,16 @@ function getEvents(fetchurl) {
     const performernamecard = card.getElementsByClassName('main-text-performern')[0]
     performernamecard.textContent = events.performer;
 
+    if(performernamecard.textContent.length>10) {
+    performernamecard.textContent = events.performer.slice(0, 10)+'...'
+    }
+        
     const venuenamecard = card.getElementsByClassName('main-text-venuen')[0]
     venuenamecard.textContent = events.venue_name;
+
+    if(venuenamecard.textContent.length>10) {
+    venuenamecard.textContent = events.venue_name.slice(0, 10)+'...'
+    }
 
     const venuestatecard = card.getElementsByClassName('main-text-venue-state')[0]
     venuestatecard.textContent = events.venue_state;
