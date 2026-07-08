@@ -164,7 +164,7 @@ function getEvents(fetchurl) {
      const profitcard = card.getElementsByClassName('main-text-profitn')[0]
      profitcard.textContent = events.profit;
      const profitmargincard = card.getElementsByClassName('main-text-profitm')[0]
-     profitmargincard.textContent = events.profit_margin;
+     profitmargincard.textContent = events.profit_margin + '%'
 
 const vividseatsbtn = card.getElementsByClassName('vividseats-url-btn')[0];
 vividseatsbtn.addEventListener('click', () => {
