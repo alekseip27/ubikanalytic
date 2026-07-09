@@ -548,7 +548,7 @@ const item = document.getElementById('samplestyle')
 thiseventid = eventdata.event_id
 credit_account = eventdata.credit_account
 signalidentifier = eventdata.signal_identifier
-
+purchaser = eventdata.added_by
 const issuerElement = document.getElementById("issuer");
 
 if (![...issuerElement.options].some(opt => opt.value === credit_account)) {
@@ -1183,6 +1183,7 @@ function part3(){
     "did_not_select_wc":selectwc,
     "purchase_urgency":purchurgency,
     signal_identifier:signalidentifier,
+    purchaser:purchaser,
     primary_event_url:evurl,
     vivid_event_url:vdidurl
     }
