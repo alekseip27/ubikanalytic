@@ -33,6 +33,9 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     let cb2 = document.getElementById('paused-check').checked
     let cb3 = document.getElementById('tmrestricted-check').checked
     
+    let cb4 = document.getElementById('baps-check').checked
+    let cb5 = document.getElementById('kyc-check').checked
+    
     
       let baseUrl = 'https://ubik.wiki/api/purchasing-accounts/?';
 
@@ -61,6 +64,14 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     
     if (cb3) {
     params.push('&tm_restricted=True');
+    }
+
+    if (cb4) {
+    params.push('&kyc=True');
+    }
+
+    if (cb5) {
+    params.push('&baps=True');
     }
 
       params.push('limit=100');
@@ -146,8 +157,56 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     card.setAttribute('email', events.email);
     card.setAttribute('id', events.id);
 
-    card.addEventListener('click', function(){
 
+const eventid = events.id;
+
+const checkboxes = [
+  { element: card.getElementsByClassName('main-checkbox-closed')[0],     field: 'closed',        value: events.closed },
+  { element: card.getElementsByClassName('main-checkbox-restricted')[0], field: 'tm_restricted', value: events.tm_restricted },
+  { element: card.getElementsByClassName('main-checkbox-baps')[0],       field: 'baps',          value: events.baps },
+  { element: card.getElementsByClassName('main-checkbox-kyc')[0],        field: 'kyc',           value: events.kyc },
+];
+
+checkboxes.forEach(({ element, field, value }) => {
+  if (!element) return;
+  element.checked = Boolean(value);
+
+  // Prevent the parent card click listener
+  element.addEventListener("click", function (event) {
+    event.stopPropagation();
+  });
+
+  element.addEventListener("change", function (event) {
+    event.stopPropagation();
+    events[field] = this.checked; // keep the edit view in sync
+
+    const params = { id: eventid, [field]: this.checked };
+
+    const http = new XMLHttpRequest();
+    const url = "https://ubik.wiki/api/update/purchasing-accounts/";
+    http.open("PUT", url, true);
+    http.setRequestHeader("Content-Type", "application/json; charset=utf-8");
+    http.setRequestHeader("Authorization", `Bearer ${token}`);
+    http.onload = function () {
+      if (http.status < 200 || http.status >= 400) {
+        element.checked = !element.checked; // revert on failure
+        events[field] = element.checked;
+        console.error('Failed to update', field, http.status, http.responseText);
+      }
+    };
+    http.send(JSON.stringify(params));
+  });
+});
+
+    
+    card.addEventListener('click', function(event){
+
+    if (event.target.closest('.main-edit-button, .main-text-ip, .fwrefresh, input[type="checkbox"]')) {
+      return;
+    }
+
+
+      
     if (event.target.closest('.main-edit-button')) {
     return;
     }
@@ -167,6 +226,9 @@ document.getElementById('rightarrow').addEventListener('click', function() {
  		document.querySelector('#closed').checked = events.closed
     document.querySelector('#paused').checked = events.paused
     document.querySelector('#tmrestrict').checked = events.tm_restricted
+ 		document.querySelector('#baps').checked = events.baps
+ 		document.querySelector('#kyc').checked = events.kyc
+      
     document.querySelector('#editid').value = events.id
     document.querySelector('#edit-email').value = events.email
     document.querySelector('#edit-fname').value = events.first_name
@@ -187,6 +249,20 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
     card.style.display = 'flex';
 
+   const closedcard = card.getElementsByClassName('main-checkbox-closed')[0]
+   closedcard.checked = events.closed
+    
+   const restrictedcard = card.getElementsByClassName('main-checkbox-restricted')[0]
+    restrictedcard.checked = events.tm_restricted
+    
+   const baps_card = card.getElementsByClassName('main-checkbox-baps')[0]
+   baps_card.checked = events.baps
+   
+    const kyc_card = card.getElementsByClassName('main-checkbox-kyc')[0]
+    kyc_card.checked = events.kyc
+
+
+    
     const emailcard = card.getElementsByClassName('main-text-acc')[0]
     emailcard.textContent = events.email;
 
@@ -404,6 +480,8 @@ async function retrieveProxys() {
       updatedCount++;
     }
 
+
+    
     console.log(`Update complete. Updated: ${updatedCount}, Not found in DOM: ${notFoundCount}`);
     document.querySelectorAll(".event-box .fwrefresh").forEach(btn => {
   btn.addEventListener("click", () => {
