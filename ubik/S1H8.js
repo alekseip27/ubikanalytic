@@ -21,6 +21,7 @@ function constructURL(next) {
   const searchbar3 = document.getElementById('searchbar3');
   const searchbar4 = document.getElementById('searchbar4');
   const searchbar5 = document.getElementById('searchbar5');
+  const checkbox1 =  document.getElementById('linked-oh').checked
 
   searchbar1.value = searchbar1.value.trimEnd();
   searchbar2.value = searchbar2.value.trimEnd();
@@ -42,7 +43,7 @@ function constructURL(next) {
   if (keywords3.length > 0) params.push('invoice_date__icontains=' + keywords3);
   if (keywords4.length > 0) params.push('purchaser__icontains=' + keywords4);
   if (keywords5.length > 0) params.push('signal_identifier__icontains=' + keywords5);
-
+  if (checkbox1) { params.push('&purchaser__isblnak=false');    }
   // hide existing boxes quickly
   $('.event-box').hide();
 
