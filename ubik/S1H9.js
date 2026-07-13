@@ -179,6 +179,13 @@ vividseatsbtn.addEventListener('click', () => {
   if (w) w.focus();
 });
 
+
+const primaryurlbtn = card.getElementsByClassName('primary-url-btn')[0];
+primaryurlbtn.addEventListener('click', () => {
+  const w = window.open(events.primary_event_url, 'primaryurl');
+  if (w) w.focus();
+});
+        
 const stubhubbtn = card.getElementsByClassName('stubhub-url-button')[0];
 stubhubbtn.addEventListener('click', () => {
   const w = window.open(events.stubhub_url, 'stubhubmain');
