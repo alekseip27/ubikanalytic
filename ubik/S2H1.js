@@ -43,7 +43,7 @@ function constructURL(next) {
   if (keywords3.length > 0) params.push('invoice_date__icontains=' + keywords3);
   if (keywords4.length > 0) params.push('purchaser__icontains=' + keywords4);
   if (keywords5.length > 0) params.push('signal_identifier__icontains=' + keywords5);
-  if (checkbox1) { params.push('&purchaser__isblnak=false');    }
+  if (checkbox1) { params.push('&purchaser__isblank=false');    }
   // hide existing boxes quickly
   $('.event-box').hide();
 
