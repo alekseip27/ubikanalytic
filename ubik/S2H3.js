@@ -334,6 +334,7 @@ function getEvents(fetchurl) {
 
       // periodic cleanup of hidden boxes (your original idea, but safer)
       startCleanupInterval();
+      updateSummaryTotals();
 
     } else {
       console.error("Request failed:", request.status, request.responseText);
@@ -378,6 +379,28 @@ function startCleanupInterval() {
       }
     }
   }, 500);
+}
+
+
+function updateSummaryTotals() {
+  let qty = 0, total = 0, profit = 0;
+
+  document.querySelectorAll('.event-box').forEach(box => {
+    if (box.id === 'samplestyle' || box.style.display === 'none') return;
+
+    qty    += parseFloat(box.getElementsByClassName('main-text-quantityn')[0]?.textContent) || 0;
+    total  += parseFloat(box.getElementsByClassName('main-text-total')[0]?.textContent) || 0;
+    profit += parseFloat(box.getElementsByClassName('main-text-profitn')[0]?.textContent) || 0;
+  });
+
+  // profit margin = (profit / total) x 100 — computed from the sums,
+  // NOT averaged from the per-row margins
+  const margin = total !== 0 ? (profit / total) * 100 : 0;
+
+  document.querySelector('#sum-quantity').textContent = qty.toLocaleString('en-US');
+  document.querySelector('#sum-total').textContent = total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  document.querySelector('#sum-profit').textContent = profit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  document.querySelector('#sum-margin').textContent = margin.toFixed(2) + '%';
 }
 
 // Auto-run once token is ready (keeps your behavior)
