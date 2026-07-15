@@ -6,6 +6,11 @@ document.getElementById('leftarrow').addEventListener('click', function () {
   if (prevurl) constructURL(prevurl);
 });
 
+const rangePicker = flatpickr('#searchbar3', {
+  mode: 'range',
+  dateFormat: 'Y-m-d',
+});
+
 document.querySelector('#search-button').addEventListener("click", () => {
   constructURL();
 });
@@ -17,20 +22,17 @@ function constructURL(next) {
   // Trim trailing spaces (safer than trimEnd on the value only)
   const searchbar1 = document.getElementById('searchbar1');
   const searchbar2 = document.getElementById('searchbar2');
-  const searchbar3 = document.getElementById('searchbar3');
   const searchbar4 = document.getElementById('searchbar4');
   const searchbar5 = document.getElementById('searchbar5');
   const checkbox1 =  document.getElementById('linked-oh').checked
 
   searchbar1.value = searchbar1.value.trimEnd();
   searchbar2.value = searchbar2.value.trimEnd();
-  searchbar3.value = searchbar3.value.trimEnd();
   searchbar4.value = searchbar4.value.trimEnd();
   searchbar5.value = searchbar5.value.trimEnd();
 
   const keywords1 = encodeURIComponent(searchbar1.value);
   const keywords2 = encodeURIComponent(searchbar2.value);
-  const keywords3 = encodeURIComponent(searchbar3.value);
   const keywords4 = encodeURIComponent(searchbar4.value);
   const keywords5 = encodeURIComponent(searchbar5.value);
 
@@ -39,7 +41,14 @@ function constructURL(next) {
 
   if (keywords1.length > 0) params.push('performer__icontains=' + keywords1);
   if (keywords2.length > 0) params.push('venue_name__icontains=' + keywords2);
-  if (keywords3.length > 0) params.push('invoice_date__icontains=' + keywords3);
+  
+  const [datefrom, dateto] = rangePicker.selectedDates.map(d =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
+  );
+  
+  if (datefrom) params.push('invoice_date__gte=' + datefrom);
+  if (dateto)   params.push('invoice_date__lte=' + dateto);
+  
   if (keywords4.length > 0) params.push('purchaser__icontains=' + keywords4);
   if (keywords5.length > 0) params.push('signal_identifier__icontains=' + keywords5);
   if (checkbox1) { params.push('purchaser__isblank=false'); }
