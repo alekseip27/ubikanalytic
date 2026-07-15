@@ -162,10 +162,11 @@ const eventid = events.id;
 
 const checkboxes = [
   { element: card.getElementsByClassName('main-checkbox-closed')[0],     field: 'closed',        value: events.closed },
+  { element: card.getElementsByClassName('main-checkbox-paused')[0],     field: 'paused',        value: events.paused },
   { element: card.getElementsByClassName('main-checkbox-restricted')[0], field: 'tm_restricted', value: events.tm_restricted },
   { element: card.getElementsByClassName('main-checkbox-baps')[0],       field: 'baps',          value: events.baps },
   { element: card.getElementsByClassName('main-checkbox-kyc')[0],        field: 'kyc',           value: events.kyc },
-  { element: card.getElementsByClassName('main-checkbox-pendingclosing')[0],        field: 'kyc',           value: events.pending_closing },
+  { element: card.getElementsByClassName('main-checkbox-pendingclosing')[0],        field: 'pending_closing',           value: events.pending_closing },
 ];
 
 checkboxes.forEach(({ element, field, value }) => {
@@ -253,6 +254,11 @@ checkboxes.forEach(({ element, field, value }) => {
 
    const closedcard = card.getElementsByClassName('main-checkbox-closed')[0]
    closedcard.checked = events.closed
+
+    
+   const pausedcard = card.getElementsByClassName('main-checkbox-paused')[0]
+   pausedcard.checked = events.paused
+    
     
    const restrictedcard = card.getElementsByClassName('main-checkbox-restricted')[0]
     restrictedcard.checked = events.tm_restricted
