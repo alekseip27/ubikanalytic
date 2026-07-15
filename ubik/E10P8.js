@@ -165,6 +165,7 @@ const checkboxes = [
   { element: card.getElementsByClassName('main-checkbox-restricted')[0], field: 'tm_restricted', value: events.tm_restricted },
   { element: card.getElementsByClassName('main-checkbox-baps')[0],       field: 'baps',          value: events.baps },
   { element: card.getElementsByClassName('main-checkbox-kyc')[0],        field: 'kyc',           value: events.kyc },
+  { element: card.getElementsByClassName('main-checkbox-pendingclosing')[0],        field: 'kyc',           value: events.pending_closing },
 ];
 
 checkboxes.forEach(({ element, field, value }) => {
@@ -228,7 +229,8 @@ checkboxes.forEach(({ element, field, value }) => {
     document.querySelector('#tmrestrict').checked = events.tm_restricted
  		document.querySelector('#baps').checked = events.baps
  		document.querySelector('#kyc').checked = events.kyc
-      
+ 		document.querySelector('#pendingclose').checked = events.pending_closing
+    
     document.querySelector('#editid').value = events.id
     document.querySelector('#edit-email').value = events.email
     document.querySelector('#edit-fname').value = events.first_name
@@ -261,7 +263,9 @@ checkboxes.forEach(({ element, field, value }) => {
     const kyc_card = card.getElementsByClassName('main-checkbox-kyc')[0]
     kyc_card.checked = events.kyc
 
-
+    const pending_card = card.getElementsByClassName('main-checkbox-pendingclosing')[0]
+    pending_card.checked = events.pending_closing
+  
     
     const emailcard = card.getElementsByClassName('main-text-acc')[0]
     emailcard.textContent = events.email;
