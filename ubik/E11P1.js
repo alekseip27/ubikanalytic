@@ -36,6 +36,8 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     let cb4 = document.getElementById('baps-check').checked
     let cb5 = document.getElementById('kyc-check').checked
     
+    let cb6 = document.getElementById('no-issues-check').checked
+    
     
       let baseUrl = 'https://ubik.wiki/api/purchasing-accounts/?';
 
@@ -63,17 +65,21 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
     
     if (cb3) {
-    params.push('&tm_restricted=True');
+    params.push('&tm_restricted__iexact=true');
     }
 
     if (cb4) {
-    params.push('&kyc=True');
+    params.push('&kyc__iexact=true');
     }
 
     if (cb5) {
-    params.push('&baps=True');
+    params.push('&baps__iexact=true');
     }
 
+    if (cb6) {
+    params.push('&baps__iexact=false&kyc__iexact=false&tm_restricted__iexact=false&paused__iexact=false&closed__iexact=false');
+    }
+    
       params.push('limit=100');
 
 
