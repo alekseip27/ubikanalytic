@@ -2,7 +2,7 @@ let purcharray = []
 let abortControllers = [];
 let signalidentifier = ''
 
-const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&paused__iexact=false&tm_restricted__iexact=false';
+const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&paused__iexact=false&tm_restricted__iexact=false&baps__iexact=false&kyc__iexact=false';
 
 let headers;
 
