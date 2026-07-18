@@ -297,6 +297,10 @@ checkboxes.forEach(({ element, field, value }) => {
     const addresscard = card.getElementsByClassName('main-text-address')[0]
     addresscard.textContent = events.address;
 
+    const openpurchscard = card.getElementsByClassName('main-text-openpurchases')[0]
+    openpurchscard.textContent = events.open_purchases;
+
+
     if(addresscard.textContent.length>10) {
     addresscard.textContent = events.address.slice(0, 10)+'...'
     }
