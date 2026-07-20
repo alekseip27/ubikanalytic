@@ -254,6 +254,9 @@ checkboxes.forEach(({ element, field, value }) => {
     document.querySelector('#edit-zip').value = events.zip
     document.querySelector('#edit-cards').value = events.cards
     document.querySelector('#edit-created').value = events.created_date
+      
+    document.querySelector('#edit-twofa').value = events.two_fa_code
+    document.querySelector('#edit-backupemail').value = events.backup_email
     })
 
     card.style.display = 'flex';
@@ -297,8 +300,8 @@ checkboxes.forEach(({ element, field, value }) => {
     const addresscard = card.getElementsByClassName('main-text-address')[0]
     addresscard.textContent = events.address;
 
-    const openpurchscard = card.getElementsByClassName('main-text-openpurchases')[0]
-    openpurchscard.textContent = events.open_purchases;
+    const openpurchscard = card.getElementsByClassName('main-text-tm-open')[0]
+    openpurchscard.textContent = events.tm_open_purchases;
 
 
     if(addresscard.textContent.length>10) {
