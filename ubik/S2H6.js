@@ -37,8 +37,8 @@ function constructURL(next) {
   const keywords4 = encodeURIComponent(searchbar4.value);
   const keywords5 = encodeURIComponent(searchbar5.value);
 
-  const baseUrl = 'https://ubik.wiki/api/skybox-sales-data/?invoice_date__sort=-1&'
-  const params = ['limit=100'];
+  const baseUrl = 'https://ubik.wiki/api/skybox-sales-data/'
+  const params = ['limit=100&invoice_date__sort=-1'];
 
   if (keywords1.length > 0) params.push('performer__icontains=' + keywords1);
   if (keywords2.length > 0) params.push('venue_name__icontains=' + keywords2);
