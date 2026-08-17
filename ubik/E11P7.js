@@ -282,7 +282,7 @@ checkboxes.forEach(({ element, field, value }) => {
 
 
     const gmailblockcard = card.getElementsByClassName('main-checkbox-gmailblock')[0]
-    gmailblockcard.checked = events.gmailblock
+    gmailblockcard.checked = events.gmail_block
 
     
     const pending_card = card.getElementsByClassName('main-checkbox-pendingclosing')[0]
