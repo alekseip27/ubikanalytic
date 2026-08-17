@@ -292,6 +292,10 @@ checkboxes.forEach(({ element, field, value }) => {
     const emailcard = card.getElementsByClassName('main-text-acc')[0]
     emailcard.textContent = events.email;
 
+        if(emailcard.textContent.length>10) {
+    emailcard.textContent = events.email.slice(0, 10)+'...'
+    }
+
     const numbercard = card.getElementsByClassName('main-text-numbers')[0]
     numbercard.textContent = events.phone_number;
 
