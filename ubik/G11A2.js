@@ -2,19 +2,33 @@ let purcharray = []
 let abortControllers = [];
 let signalidentifier = ''
 
-const apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&paused__iexact=false&tm_restricted__iexact=false&baps__iexact=false&kyc__iexact=false';
-
-let headers;
+let headers, apiUrl;
 
 function initialize() {
+    const defsource = document.querySelector('#url').textContent;
+
+    if (
+        defsource.includes('ticketmaster.com') ||
+        defsource.includes('ticketmaster.ca') ||
+        defsource.includes('livenation.com') ||
+        defsource.includes('livenation.ca') ||
+        defsource.includes('axs.com') ||
+        defsource.includes('dice.fm')
+    ) {
+        apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&paused__iexact=false&tm_restricted__iexact=false&baps__iexact=false&kyc__iexact=false&gmail_block__iexact=false';
+    } else {
+        apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?gmail_block__iexact=false';
+    }
+
     headers = {
         'Authorization': `Bearer ${token}`,
         'Content-type': 'application/json; charset=utf-8'
     };
 }
 
+
 const tokenCheckInterval = setInterval(() => {
-    if (token && token.length === 40) {
+    if (token && token.length === 40 && document.querySelector('#url').textContent !== 'www') {
         clearInterval(tokenCheckInterval);
         initialize();
     }
@@ -32,10 +46,10 @@ const tokenCheckInterval = setInterval(() => {
 
 async function initializeStates(states, emails, account, prevBuyerEmail = "") {
         try {
-            const url = new URL(`${apiUrl}&limit=1000&`);
+            const url = new URL(`${apiUrl}&limit=1000`);
 
             if (account === 'slash') {
-                url.searchParams.append('cards__icontains', 'slash');
+
 fetch('https://shibuy.co:8443/sba', {
   method: 'POST',
   headers: {
@@ -113,7 +127,7 @@ window.__buyerStateHandler = () => {
     emailSelect.value = prevBuyerEmail;
   }
 };
-            
+
 buyerStateSelect.addEventListener('change', window.__buyerStateHandler);
 
 if (states && Array.from(buyerStateSelect.options).some(o => o.value === states)) {
@@ -167,10 +181,10 @@ function populateEmails(items, selectedState, emailsused, prevEmail = "") {
 
         return { email: item.email.trim(), count };
     });
-    
+
     const usedSet = new Set(emailsused.map(e => e.trim()));
     const filteredEmailOptions = emailOptions.filter(o => !usedSet.has(o.email) || o.email === cachedPrev);
-    
+
     filteredEmailOptions.sort((a, b) => a.count - b.count);
 
     const rendered = [];
@@ -186,7 +200,7 @@ if (cachedPrev && rendered.includes(cachedPrev)) {
     buyerEmailSelect.value = cachedPrev;
   }
   return rendered;
-    
+
 }
 
 function clearEmailsUIOnly() {
@@ -483,7 +497,7 @@ function erasedata(){
     document.getElementById('proxy').textContent = ''
     document.getElementById('ipaddress').textContent = ''
     document.getElementById('ipaddress').setAttribute('data-id','')
-    
+
     document.querySelector('#purchaseaccounts').value = ''
     document.querySelector('#failedemail').value = ''
 
@@ -1377,6 +1391,8 @@ function getsource(eventUrl) {
         break;
         case eventUrl.includes('seetickets'):
         return('SEETIX');
+        case eventUrl.includes('eventim'):
+        return('SEETIX');
         break;
         case eventUrl.includes('showclix'):
         return('SHOW');
@@ -1728,7 +1744,7 @@ document.getElementById("issuer").addEventListener("change", () => {
 
         abortAllRequests();
         erasedata();
-    
+
         const provider = document.getElementById("issuer")?.value || credit_account
         if (prevBuyerEmail) {
             retrievedatato(prevBuyerEmail, provider)
@@ -1736,6 +1752,6 @@ document.getElementById("issuer").addEventListener("change", () => {
             setvalue(prevBuyerEmail);
             fetchProxiesByCurrentEmail();
         }
-    
+
     initializeStates(selectedState, usedEmails, selectedIssuer, prevBuyerEmail);
 });
