@@ -77,7 +77,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     }
 
     if (cb6) {
-    params.push('&baps__iexact=false&kyc__iexact=false&tm_restricted__iexact=false&paused__iexact=false&closed__iexact=false');
+    params.push('&baps__iexact=false&kyc__iexact=false&tm_restricted__iexact=false&paused__iexact=false&closed__iexact=false&gmail_block__iexact=false');
     }
     
       params.push('limit=100');
@@ -173,6 +173,8 @@ const checkboxes = [
   { element: card.getElementsByClassName('main-checkbox-baps')[0],       field: 'baps',          value: events.baps },
   { element: card.getElementsByClassName('main-checkbox-kyc')[0],        field: 'kyc',           value: events.kyc },
   { element: card.getElementsByClassName('main-checkbox-pendingclosing')[0],        field: 'pending_closing',           value: events.pending_closing },
+  { element: card.getElementsByClassName('main-checkbox-gmailblock')[0],        field: 'gmail_block',           value: events.gmail_block },
+  
 ];
 
 checkboxes.forEach(({ element, field, value }) => {
@@ -237,7 +239,7 @@ checkboxes.forEach(({ element, field, value }) => {
  		document.querySelector('#baps').checked = events.baps
  		document.querySelector('#kyc').checked = events.kyc
  		document.querySelector('#pendingclose').checked = events.pending_closing
-    
+ 		document.querySelector('#edit-gmailblock').checked = events.gmail_block
     document.querySelector('#editid').value = events.id
     document.querySelector('#edit-email').value = events.email
     document.querySelector('#edit-fname').value = events.first_name
@@ -278,6 +280,11 @@ checkboxes.forEach(({ element, field, value }) => {
     const kyc_card = card.getElementsByClassName('main-checkbox-kyc')[0]
     kyc_card.checked = events.kyc
 
+
+    const gmailblockcard = card.getElementsByClassName('main-checkbox-gmailblock')[0]
+    gmailblockcard.checked = events.gmailblock
+
+    
     const pending_card = card.getElementsByClassName('main-checkbox-pendingclosing')[0]
     pending_card.checked = events.pending_closing
   
