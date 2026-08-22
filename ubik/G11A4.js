@@ -1010,32 +1010,71 @@ intervalIds = setInterval(retryClickingSearchBar, 1000);
 }
 
 function emailpart1() {
-let purchacc = document.querySelector('#purchaseaccounts').value
-const emailurl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&paused__iexact=false&tm_restricted__iexact=false&email__iexact=' + purchacc;
-let http = new XMLHttpRequest();
-
-http.open("GET", emailurl, true);
-http.setRequestHeader("Content-type", "application/json; charset=utf-8");
-http.setRequestHeader('Authorization', `Bearer ${token}`);
-
-http.onreadystatechange = function() {
-if (http.readyState == 4) {
-if (http.status == 200) {
-let data = JSON.parse(http.responseText);
-emailid = data.results[0].id;
-purcharray = data.results[0].purchases_tracking
-if(purcharray === null){
-purcharray = []
+    const purchacc = (document.querySelector('#purchaseaccounts').value || '').trim();
+ 
+    if (!purchacc) {
+        console.error('emailpart1: #purchaseaccounts is empty — no account to record the purchase against.');
+        return;
+    }
+ 
+    const baseUrl = 'https://ubik.wiki/api/purchasing-accounts/?email__iexact=' + encodeURIComponent(purchacc);
+    const filteredUrl = baseUrl + '&closed__iexact=false&paused__iexact=false&tm_restricted__iexact=false';
+ 
+    lookupAccount(filteredUrl, function (row) {
+        if (row) { applyAccountRow(row); return; }
+ 
+        // No eligible row. The account may have been flagged closed/paused/tm_restricted
+        // after it was selected, so retry by email only — the purchase still happened on
+        // this account and its tracking should be updated regardless of current status.
+        console.warn(`emailpart1: no active account matched "${purchacc}" — retrying without status filters.`);
+ 
+        lookupAccount(baseUrl, function (row2) {
+            if (row2) { applyAccountRow(row2); return; }
+            console.error(`emailpart1: no purchasing account found for "${purchacc}". Purchase tracking NOT updated.`);
+            // If the redirect to /buy-queue should still happen in this case, uncomment:
+            // emailchecked = true;
+        });
+    });
+ function applyAccountRow(row) {
+        emailid = row.id;
+        purcharray = row.purchases_tracking;
+        if (purcharray === null) {
+            purcharray = [];
+        }
+        email1 = true;
+        emailpart2();
+    }
+ 
+    function lookupAccount(url, callback) {
+        const http = new XMLHttpRequest();
+        http.open('GET', url, true);
+        http.setRequestHeader('Content-type', 'application/json; charset=utf-8');
+        http.setRequestHeader('Authorization', `Bearer ${token}`);
+ 
+        http.onreadystatechange = function () {
+            if (http.readyState !== 4) return;
+ 
+            if (http.status === 200) {
+                let data;
+                try {
+                    data = JSON.parse(http.responseText);
+                } catch (e) {
+                    console.error('emailpart1: could not parse response:', e);
+                    return callback(null);
+                }
+                const rows = Array.isArray(data) ? data : (data && data.results);
+                callback(Array.isArray(rows) && rows.length > 0 ? rows[0] : null);
+            } else {
+                console.error(`emailpart1: lookup failed with HTTP ${http.status} for ${url}`);
+                callback(null);
+            }
+        };
+ 
+        http.send();
+    }
 }
-email1 = true;
-emailpart2();
-}
-}
-};
 
-http.send();
-}
-
+    
 function emailpart2() {
     let keyToCheck = getsource(document.querySelector('#url').textContent);
     let date = document.getElementById('date').textContent.trim();
