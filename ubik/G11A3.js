@@ -27,10 +27,34 @@ function initialize() {
 }
 
 
-const tokenCheckInterval = setInterval(() => {
-    if (token && token.length === 40 && document.querySelector('#url').textContent !== 'www') {
-        clearInterval(tokenCheckInterval);
+function isTokenReady() {
+    return typeof token === 'string' && token.length === 40;
+}
+
+function ensureInitialized() {
+    if (apiUrl && headers) return true;
+
+    const urlEl = document.querySelector('#url');
+    if (isTokenReady() && urlEl && urlEl.textContent && urlEl.textContent !== 'www') {
         initialize();
+        return true;
+    }
+    return false;
+}
+
+async function waitForInitialization(timeoutMs = 15000, pollMs = 200) {
+    const start = Date.now();
+    while (!ensureInitialized()) {
+        if (Date.now() - start > timeoutMs) {
+            throw new Error('Initialization timed out: token or event URL not ready.');
+        }
+        await new Promise(resolve => setTimeout(resolve, pollMs));
+    }
+}
+
+const tokenCheckInterval = setInterval(() => {
+    if (ensureInitialized()) {
+        clearInterval(tokenCheckInterval);
     }
 }, 1000);
 
@@ -46,6 +70,8 @@ const tokenCheckInterval = setInterval(() => {
 
 async function initializeStates(states, emails, account, prevBuyerEmail = "") {
         try {
+            await waitForInitialization();
+
             const url = new URL(`${apiUrl}&limit=1000`);
 
             if (account === 'slash') {
@@ -213,6 +239,8 @@ function clearEmailsUIOnly() {
 
     async function displayBuyerData(buyerEmail) {
         try {
+            await waitForInitialization();
+
             const url = new URL(`${apiUrl}&email__iexact=${buyerEmail}`);
             const data = await fetchData(url);
 
@@ -539,7 +567,7 @@ $("#purchasequantity").attr({"min" : 0});
     emailchecked = false
 
 function retryClickingSearchBar() {
-if (token.length === 40) {
+if (isTokenReady()) {
 clearInterval(intervalIds);
 var eventid = document.location.href.split('https://www.ubikanalytic.com/buy-event?id=')[1];
 document.querySelector('#evids').value = eventid;
