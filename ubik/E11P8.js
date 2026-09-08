@@ -299,8 +299,7 @@ checkboxes.forEach(({ element, field, value }) => {
     const numbercard = card.getElementsByClassName('main-text-numbers')[0]
     numbercard.textContent = events.phone_number;
 
-    const tmnumbercard = card.getElementsByClassName('main-text-tmnum')[0]
-    tmnumbercard.textContent = events.tm_phone_number;
+
 
     const fname = card.getElementsByClassName('main-text-fname')[0]
     fname.textContent = events.first_name
@@ -322,15 +321,18 @@ checkboxes.forEach(({ element, field, value }) => {
     const statecard = card.getElementsByClassName('main-text-states')[0]
     statecard.textContent = events.state;
 
+    const tmonly = card.getElementsByClassName('main-text-tm-account')[0]
+    if(events.tmonly{
+    tmonly.textContent = events.tm_only;
+    }
+
+    const baptimer = card.getElementsByClassName('main-text-bap-timer')[0]
+    if(events.bap_timer{
+    baptimer.textContent = events.baptimer;
+    }
+    
     const zipcard = card.getElementsByClassName('main-text-zip')[0]
     zipcard.textContent = events.zip;
-
-    const countrycard = card.getElementsByClassName('main-text-countrys')[0]
-    countrycard.textContent = events.country;
-
-    const gendercard = card.getElementsByClassName('main-text-genders')[0]
-    gendercard.textContent = events.gender;
-
 
     const deletebutton = card.getElementsByClassName('main-edit-button')[0];
     const cardid = card.getAttribute('cardid');
