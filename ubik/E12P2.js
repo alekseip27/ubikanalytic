@@ -329,10 +329,7 @@ checkboxes.forEach(({ element, field, value }) => {
     const statecard = card.getElementsByClassName('main-text-states')[0]
     statecard.textContent = events.state;
 
-    const tmonly = card.getElementsByClassName('main-text-tm-account')[0]
-    if(events.tmonly){
-    tmonly.textContent = events.tm_only;
-    }
+
 
     const baptimer = card.getElementsByClassName('main-text-bap-timer')[0]
     if(events.bap_timer){
