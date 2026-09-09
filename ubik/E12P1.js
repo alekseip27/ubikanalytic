@@ -174,9 +174,11 @@ const checkboxes = [
   { element: card.getElementsByClassName('main-checkbox-kyc')[0],        field: 'kyc',           value: events.kyc },
   { element: card.getElementsByClassName('main-checkbox-pendingclosing')[0],        field: 'pending_closing',           value: events.pending_closing },
   { element: card.getElementsByClassName('main-checkbox-gmailblock')[0],        field: 'gmail_block',           value: events.gmail_block },
+  { element: card.getElementsByClassName('main-checkbox-tm-only')[0],        field: 'tm_only',           value: events.tm_only },
   
 ];
 
+    
 checkboxes.forEach(({ element, field, value }) => {
   if (!element) return;
   element.checked = Boolean(value);
@@ -240,6 +242,7 @@ checkboxes.forEach(({ element, field, value }) => {
  		document.querySelector('#kyc').checked = events.kyc
  		document.querySelector('#pendingclose').checked = events.pending_closing
  		document.querySelector('#edit-gmailblock').checked = events.gmail_block
+ 		document.querySelector('#edit-tmonly').checked = events.tm_only
     document.querySelector('#editid').value = events.id
     document.querySelector('#edit-email').value = events.email
     document.querySelector('#edit-fname').value = events.first_name
@@ -256,6 +259,7 @@ checkboxes.forEach(({ element, field, value }) => {
     document.querySelector('#edit-zip').value = events.zip
     document.querySelector('#edit-cards').value = events.cards
     document.querySelector('#edit-created').value = events.created_date
+    document.querySelector('#edit-simprovider').value = events.sim_provider
       
     document.querySelector('#edit-twofa').value = events.two_fa_code
     document.querySelector('#edit-backupemail').value = events.backup_email
@@ -280,6 +284,10 @@ checkboxes.forEach(({ element, field, value }) => {
     const kyc_card = card.getElementsByClassName('main-checkbox-kyc')[0]
     kyc_card.checked = events.kyc
 
+    const tmonly_card = card.getElementsByClassName('main-checkbox-tm-only')[0]
+    tmonly_card.checked = events.tm_only
+
+    
 
     const gmailblockcard = card.getElementsByClassName('main-checkbox-gmailblock')[0]
     gmailblockcard.checked = events.gmail_block
