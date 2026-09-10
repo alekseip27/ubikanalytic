@@ -165,20 +165,46 @@ document.getElementById('rightarrow').addEventListener('click', function() {
 
 
 const eventid = events.id;
+// --- BAP timer helpers ---
+function parseBapTimer(raw) {
+  const n = parseInt(String(raw ?? '').trim(), 10);
+  return Number.isFinite(n) && n > 0 ? n : 0; // 0 = blank
+}
 
+function formatBapTimer(raw) {
+  const ts = parseBapTimer(raw);
+  if (!ts) return '';
+
+  const elapsedSec = Math.max(0, Math.floor(Date.now() / 1000) - ts);
+  const days  = Math.floor(elapsedSec / 86400);
+  const hours = Math.floor((elapsedSec % 86400) / 3600);
+  const mins  = Math.floor((elapsedSec % 3600) / 60);
+
+  if (days > 0)  return `${days}d${hours}h`;
+  if (hours > 0) return `${hours}h`;
+  return `${mins}m`;
+}
+
+function renderBapTimer(card, events) {
+  const el = card.getElementsByClassName('main-text-bap-timer')[0];
+  if (el) el.textContent = formatBapTimer(events.bap_timer);
+}
+
+// --- checkboxes ---
 const checkboxes = [
-  { element: card.getElementsByClassName('main-checkbox-closed')[0],     field: 'closed',        value: events.closed },
-  { element: card.getElementsByClassName('main-checkbox-paused')[0],     field: 'paused',        value: events.paused },
-  { element: card.getElementsByClassName('main-checkbox-restricted')[0], field: 'tm_restricted', value: events.tm_restricted },
-  { element: card.getElementsByClassName('main-checkbox-baps')[0],       field: 'baps',          value: events.baps },
-  { element: card.getElementsByClassName('main-checkbox-kyc')[0],        field: 'kyc',           value: events.kyc },
-  { element: card.getElementsByClassName('main-checkbox-pendingclosing')[0],        field: 'pending_closing',           value: events.pending_closing },
-  { element: card.getElementsByClassName('main-checkbox-gmailblock')[0],        field: 'gmail_block',           value: events.gmail_block },
-  { element: card.getElementsByClassName('main-checkbox-tm-only')[0],        field: 'tm_only',           value: events.tm_only },
-  
+  { element: card.getElementsByClassName('main-checkbox-closed')[0],         field: 'closed',          value: events.closed },
+  { element: card.getElementsByClassName('main-checkbox-paused')[0],         field: 'paused',          value: events.paused },
+  { element: card.getElementsByClassName('main-checkbox-restricted')[0],     field: 'tm_restricted',   value: events.tm_restricted },
+  { element: card.getElementsByClassName('main-checkbox-baps')[0],           field: 'baps',            value: events.baps },
+  { element: card.getElementsByClassName('main-checkbox-kyc')[0],            field: 'kyc',             value: events.kyc },
+  { element: card.getElementsByClassName('main-checkbox-pendingclosing')[0], field: 'pending_closing', value: events.pending_closing },
+  { element: card.getElementsByClassName('main-checkbox-gmailblock')[0],     field: 'gmail_block',     value: events.gmail_block },
+  { element: card.getElementsByClassName('main-checkbox-tm-only')[0],        field: 'tm_only',         value: events.tm_only },
 ];
 
-    
+// initial render of the BAP timer from stored value
+renderBapTimer(card, events);
+
 checkboxes.forEach(({ element, field, value }) => {
   if (!element) return;
   element.checked = Boolean(value);
@@ -190,9 +216,20 @@ checkboxes.forEach(({ element, field, value }) => {
 
   element.addEventListener("change", function (event) {
     event.stopPropagation();
-    events[field] = this.checked; // keep the edit view in sync
 
+    const prevValue = events[field];
+    const prevBapTimer = events.bap_timer;
+
+    events[field] = this.checked; // keep the edit view in sync
     const params = { id: eventid, [field]: this.checked };
+
+    if (field === 'baps') {
+      // checked -> unix timestamp (seconds) as string; unchecked -> single space
+      const newTimer = this.checked ? String(Math.floor(Date.now() / 1000)) : " ";
+      params.bap_timer = newTimer;
+      events.bap_timer = newTimer;
+      renderBapTimer(card, events);
+    }
 
     const http = new XMLHttpRequest();
     const url = "https://ubik.wiki/api/update/purchasing-accounts/";
@@ -202,7 +239,11 @@ checkboxes.forEach(({ element, field, value }) => {
     http.onload = function () {
       if (http.status < 200 || http.status >= 400) {
         element.checked = !element.checked; // revert on failure
-        events[field] = element.checked;
+        events[field] = prevValue;
+        if (field === 'baps') {
+          events.bap_timer = prevBapTimer;
+          renderBapTimer(card, events);
+        }
         console.error('Failed to update', field, http.status, http.responseText);
       }
     };
@@ -331,11 +372,7 @@ checkboxes.forEach(({ element, field, value }) => {
 
 
 
-    const baptimer = card.getElementsByClassName('main-text-bap-timer')[0]
-    if(events.bap_timer){
-    baptimer.textContent = events.baptimer;
-    }
-    
+
     const zipcard = card.getElementsByClassName('main-text-zip')[0]
     zipcard.textContent = events.zip;
 
