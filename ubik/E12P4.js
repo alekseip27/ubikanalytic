@@ -32,12 +32,13 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     let cb1 = document.getElementById('closed-check').checked
     let cb2 = document.getElementById('paused-check').checked
     let cb3 = document.getElementById('tmrestricted-check').checked
-    
+     
     let cb4 = document.getElementById('baps-check').checked
     let cb5 = document.getElementById('kyc-check').checked
     
     let cb6 = document.getElementById('no-issues-check').checked
-    
+
+    let cb7 = document.getElementById('tm-only-check').checked 
     
       let baseUrl = 'https://ubik.wiki/api/purchasing-accounts/?';
 
@@ -79,6 +80,10 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     if (cb6) {
     params.push('&baps__iexact=false&kyc__iexact=false&tm_restricted__iexact=false&paused__iexact=false&closed__iexact=false&gmail_block__iexact=false');
     }
+
+    if (cb7) {
+    params.push('&tm_only__iexact=true');
+    }
     
       params.push('limit=100');
 
@@ -99,7 +104,7 @@ document.getElementById('rightarrow').addEventListener('click', function() {
     }
     getEvents(xanoUrl);
     }
-
+      
     document.querySelector('#search-button').addEventListener("click", () => {
     constructURL()
     })
