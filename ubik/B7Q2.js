@@ -6,7 +6,8 @@ const DEFAULT_SOURCE_DETAILS = {
     event_prefix: "other",
     venue_prefix: "other",
     url: ""
-  };
+};
+
 
   let sourceInstructionsMap = new Map();
 
