@@ -114,7 +114,7 @@ function bindChartIconClick(card, events) {
         if (eventurl.includes('ticketmaster') || eventurl.includes('livenation')) {
             document.querySelector('#eventicon').style.display = 'none';
             document.querySelector('#tmurl').style.display = 'block';
-            document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + eventidv + "/details/";
+            document.querySelector('#tmurl').href = 'http://142.93.115.105:8100/event/' + eventidv.substring(2) + "/details/";
             fetchTicketmasterData(eventidv.substring(2));
             vschartdata(vdid)
 
