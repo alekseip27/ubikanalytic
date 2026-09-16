@@ -15,7 +15,7 @@ function initialize() {
         defsource.includes('axs.com') ||
         defsource.includes('dice.fm')
     ) {
-        apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&paused__iexact=false&tm_restricted__iexact=false&baps__iexact=false&kyc__iexact=false&gmail_block__iexact=false';
+        apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?closed__iexact=false&paused__iexact=false&tm_restricted__iexact=false&baps__iexact=false&kyc__iexact=false&gmail_block__iexact=false&tm_only__iexact=true';
     } else {
         apiUrl = 'https://ubik.wiki/api/purchasing-accounts/?gmail_block__iexact=false';
     }
