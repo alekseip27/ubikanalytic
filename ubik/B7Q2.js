@@ -169,7 +169,8 @@ function getEvents() {
                 card.setAttribute('venue', events.event_venue);
                 card.setAttribute('url', events.event_url);
                	card.setAttribute('time', events.event_time);
-
+				card.setAttribute('postedby', events.signal_identifier ?? '');
+				
 		        card.setAttribute('checked','false')
                 card.style.display = 'flex';
                	card.setAttribute('eventid', events.event_id);
