@@ -79,6 +79,13 @@ function constructURL(next) {
   updateSummaryTotals(baseUrl, filterQuery);
 }
 
+function formatSignalName(identifier) {
+  if (!identifier) return '';
+  const name = String(identifier).split('@')[0].trim();
+  if (!name) return '';
+  return name.charAt(0).toUpperCase() + name.slice(1).toLowerCase();
+}
+
 function getEvents(fetchurl) {
   const request = new XMLHttpRequest();
   request.open('GET', fetchurl, true);
@@ -199,7 +206,7 @@ function getEvents(fetchurl) {
         purchasercard.textContent = events.purchaser;
 
         const signalcard = card.getElementsByClassName('main-text-signal-identifier')[0]
-        signalcard.textContent = events.signal_identifier;
+        signalcard.textContent = formatSignalName(events.signal_identifier);
 
         const vividseatsbtn = card.getElementsByClassName('vividseats-url-btn')[0];
         vividseatsbtn.addEventListener('click', () => {
