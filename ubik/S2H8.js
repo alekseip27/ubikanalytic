@@ -31,45 +31,52 @@ function constructURL(next) {
   searchbar4.value = searchbar4.value.trimEnd();
   searchbar5.value = searchbar5.value.trimEnd();
 
-  
+
   const keywords1 = encodeURIComponent(searchbar1.value);
   const keywords2 = encodeURIComponent(searchbar2.value);
   const keywords4 = encodeURIComponent(searchbar4.value);
   const keywords5 = encodeURIComponent(searchbar5.value);
 
   const baseUrl = 'https://ubik.wiki/api/skybox-sales-data/?'
-  const params = ['limit=100&invoice_date__sort=-1'];
+  // filter-only params (no limit/offset) — shared by the page request and the totals request
+  const params = ['invoice_date__sort=-1'];
 
   if (keywords1.length > 0) params.push('performer__icontains=' + keywords1);
   if (keywords2.length > 0) params.push('venue_name__icontains=' + keywords2);
-  
+
   const [datefrom, dateto] = rangePicker.selectedDates.map(d =>
     `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`
   );
-  
+
   if (datefrom) params.push('invoice_date__gte=' + datefrom);
   if (dateto)   params.push('invoice_date__lte=' + dateto);
-  
+
   if (keywords4.length > 0) params.push('purchaser__icontains=' + keywords4);
   if (keywords5.length > 0) params.push('signal_identifier__icontains=' + keywords5);
   if (checkbox1) { params.push('purchaser__isblank=false'); }
   // hide existing boxes quickly
   $('.event-box').hide();
 
+  const filterQuery = params.join('&');
   let xanoUrl = '';
 
   if (next) {
-    const nurl = new URL(next);
+    const nurl = new URL(normalizeApiUrl(next));
     const param = new URLSearchParams(nurl.search);
     const offset = param.get('offset');
-    if (offset) params.push('offset=' + offset);
+    const pageParams = ['limit=100', filterQuery];
+    if (offset) pageParams.push('offset=' + offset);
 
-    xanoUrl = nurl.origin + nurl.pathname + '?' + params.join('&');
+    xanoUrl = nurl.origin + nurl.pathname + '?' + pageParams.join('&');
   } else {
-    xanoUrl = baseUrl + params.join('&');
+    xanoUrl = baseUrl + 'limit=100&' + filterQuery;
   }
 
   getEvents(xanoUrl);
+
+  // Totals cover ALL pages of the current filter set, so they only need to be
+  // recalculated when the filters change (new search), not on page arrows.
+  updateSummaryTotals(baseUrl, filterQuery);
 }
 
 function getEvents(fetchurl) {
@@ -181,10 +188,10 @@ function getEvents(fetchurl) {
 
         const totalcard = card.getElementsByClassName('main-text-total')[0]
         totalcard.textContent = events.total;
-        
+
         const profitcard = card.getElementsByClassName('main-text-profitn')[0]
         profitcard.textContent = events.profit;
-        
+
         const profitmargincard = card.getElementsByClassName('main-text-profitm')[0]
         profitmargincard.textContent = events.profit_margin + '%'
 
@@ -344,7 +351,6 @@ function getEvents(fetchurl) {
 
       // periodic cleanup of hidden boxes (your original idea, but safer)
       startCleanupInterval();
-      updateSummaryTotals();
 
     } else {
       console.error("Request failed:", request.status, request.responseText);
@@ -392,25 +398,92 @@ function startCleanupInterval() {
 }
 
 
-function updateSummaryTotals() {
+// ---------------------------------------------------------------------------
+// Summary totals across ALL result pages (separate from the 100-row page view)
+// ---------------------------------------------------------------------------
+const TOTALS_PAGE_LIMIT = 1000;
+let totalsAbortController = null;
+let lastTotalsFilterQuery = null;
+
+// API "next" links can come back as http:// or with a missing "&" before offset
+// (e.g. "limit=1000offset=1000") — fix both so we can follow them safely.
+function normalizeApiUrl(url) {
+  if (!url) return url;
+  let fixed = url.replace(/(limit=\d+)(offset=)/, '$1&$2');
+  if (window.location.protocol === 'https:') fixed = fixed.replace(/^http:\/\//, 'https://');
+  return fixed;
+}
+
+function setSummaryText(qtyText, totalText, profitText, marginText) {
+  document.querySelector('#sum-quantity').textContent = qtyText;
+  document.querySelector('#sum-total').textContent = totalText;
+  document.querySelector('#sum-profit').textContent = profitText;
+  document.querySelector('#sum-margin').textContent = marginText;
+}
+
+async function updateSummaryTotals(baseUrl, filterQuery, force = false) {
+  // same filters as the last completed/in-flight run -> nothing to do
+  if (!force && filterQuery === lastTotalsFilterQuery) return;
+  lastTotalsFilterQuery = filterQuery;
+
+  // cancel a previous run still paging through results
+  if (totalsAbortController) totalsAbortController.abort();
+  const controller = new AbortController();
+  totalsAbortController = controller;
+
+  setSummaryText('…', '…', '…', '…');
+
   let qty = 0, total = 0, profit = 0;
+  let fetched = 0;
+  let url = `${baseUrl}limit=${TOTALS_PAGE_LIMIT}&${filterQuery}`;
 
-  document.querySelectorAll('.event-box').forEach(box => {
-    if (box.id === 'samplestyle' || box.style.display === 'none') return;
+  try {
+    while (url) {
+      const res = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json; charset=utf-8',
+          'Authorization': `Bearer ${token}`
+        },
+        signal: controller.signal
+      });
+      if (!res.ok) throw new Error(`Totals request failed: ${res.status}`);
 
-    qty    += parseFloat(box.getElementsByClassName('main-text-quantityn')[0]?.textContent) || 0;
-    total  += parseFloat(box.getElementsByClassName('main-text-total')[0]?.textContent) || 0;
-    profit += parseFloat(box.getElementsByClassName('main-text-profitn')[0]?.textContent) || 0;
-  });
+      const data = await res.json();
+      const results = data.results || [];
 
-  // profit margin = (profit / total) x 100 — computed from the sums,
-  // NOT averaged from the per-row margins
-  const margin = total !== 0 ? (profit / total) * 100 : 0;
+      for (const row of results) {
+        qty    += parseFloat(row.quantity) || 0;
+        total  += parseFloat(row.total) || 0;
+        profit += parseFloat(row.profit) || 0;
+      }
+      fetched += results.length;
 
-  document.querySelector('#sum-quantity').textContent = qty.toLocaleString('en-US');
-  document.querySelector('#sum-total').textContent = total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  document.querySelector('#sum-profit').textContent = profit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  document.querySelector('#sum-margin').textContent = margin.toFixed(2) + '%';
+      // stop if the API returns an empty page (guards against a looping "next")
+      url = results.length ? normalizeApiUrl(data.next) : null;
+    }
+
+    if (controller.signal.aborted) return;
+
+    // profit margin = (profit / total) x 100 — computed from the sums,
+    // NOT averaged from the per-row margins
+    const margin = total !== 0 ? (profit / total) * 100 : 0;
+
+    setSummaryText(
+      qty.toLocaleString('en-US'),
+      total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+      profit.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+      margin.toFixed(2) + '%'
+    );
+    console.log(`Summary totals computed from ${fetched} rows`);
+  } catch (e) {
+    if (e.name === 'AbortError') return; // superseded by a newer search
+    console.error(e);
+    lastTotalsFilterQuery = null;        // allow retry on next search
+    setSummaryText('—', '—', '—', '—');
+  } finally {
+    if (totalsAbortController === controller) totalsAbortController = null;
+  }
 }
 
 // Auto-run once token is ready (keeps your behavior)
@@ -581,7 +654,7 @@ function computeTevoDailySeries(results, parseDate) {
     if (!dayLabel) continue;
 
     const totalTickets = Number(r?.total_amount ?? 0);
-    
+
     const sections = Array.isArray(r?.tickets_by_sections) ? r.tickets_by_sections : [];
     let minPrice = null;
     for (const s of sections) {
