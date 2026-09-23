@@ -1309,38 +1309,33 @@ let currentdate = date2.replace(',','')
 
 }
 
-
 async function fetchEventVenueData() {
+    const eventBoxes = document.querySelectorAll('.event-box');
+    const validEventIds = [];
 
-const eventBoxes = document.querySelectorAll('.event-box');
-const validEventIds = [];
-
-eventBoxes.forEach(function(box) {
-    const eventUrl = box.getAttribute('url');
-    const eventId = box.getAttribute('eventid');
-    {
-        if (eventId) {
+    eventBoxes.forEach(function (box) {
+        const eventId = box.getAttribute('eventid');
+        if (eventId && !validEventIds.includes(eventId)) {
             validEventIds.push(eventId);
         }
-    }
-});
+    });
 
-    const baseUrl = 'https://ubik.wiki/api/event-venue/?site_event_id__iexact=';
+    const baseUrl = 'https://ubik.wiki/api/event-venue/?site_event_id__filters=';
+    const BATCH_SIZE = 50; // keeps URLs well under length limits
     const allResults = [];
 
     function fetchWithXHR(url, token) {
         return new Promise((resolve, reject) => {
             const request = new XMLHttpRequest();
             request.open('GET', url, true);
-            request.setRequestHeader("Content-type", "application/json; charset=utf-8");
+            request.setRequestHeader('Content-type', 'application/json; charset=utf-8');
             request.setRequestHeader('Authorization', `Bearer ${token}`);
 
             request.onreadystatechange = function () {
                 if (request.readyState === 4) {
                     if (request.status >= 200 && request.status < 300) {
                         try {
-                            const responseJson = JSON.parse(request.responseText);
-                            resolve(responseJson.results || []);
+                            resolve(JSON.parse(request.responseText));
                         } catch (e) {
                             reject(e);
                         }
@@ -1350,78 +1345,127 @@ eventBoxes.forEach(function(box) {
                 }
             };
 
+            request.onerror = () => reject(new Error('Network error'));
             request.send();
         });
     }
 
-    const fetchPromises = validEventIds.map(eventId => {
-        const fetchUrl = baseUrl + encodeURIComponent(eventId);
+    // Fetches a URL and follows DRF pagination until all pages are collected
+    async function fetchAllPages(url, token) {
+        const results = [];
+        let nextUrl = url;
+        while (nextUrl) {
+            const json = await fetchWithXHR(nextUrl, token);
+            if (Array.isArray(json)) {
+                results.push(...json);
+                break;
+            }
+            results.push(...(json.results || []));
+            nextUrl = json.next || null;
+        }
+        return results;
+    }
 
-        return fetchWithXHR(fetchUrl, token)
-            .then(results => {
-                allResults.push(...results);
+    function findBoxesForEventId(eventId) {
+        const els = [];
+        const byId = document.getElementById(eventId);
+        if (byId) els.push(byId);
+        document.querySelectorAll(`.event-box[eventid="${CSS.escape(eventId)}"]`).forEach(el => {
+            if (!els.includes(el)) els.push(el);
+        });
+        return els;
+    }
 
-                // Add attributes to the DOM element for each result
-             results.forEach(result => {
-    const normalizedId = eventId;
-    const selector = '#' + CSS.escape(normalizedId);
-    const el = document.querySelector(selector);
-
-    if (el) {
+    function applyResultToElement(el, result) {
         el.setAttribute('venueid', result.site_venue_id || '');
-        el.setAttribute('counts', result.counts || '');
         el.setAttribute('city', result.city || '');
         el.setAttribute('state', result.state || '');
         el.setAttribute('vdid', result.vdid || '');
-        el.setAttribute('counts', JSON.stringify(result.counts));
-        const primaryAmount = parseInt(result.app_142_primary_amount);
+        el.setAttribute('counts', result.counts != null ? JSON.stringify(result.counts) : '');
+
+        const primaryAmount = parseInt(result.app_142_primary_amount, 10);
         el.setAttribute('primaryamount', isNaN(primaryAmount) ? -2 : primaryAmount);
 
-        if(result.app_142_primary_amount > 0) {
-            el.querySelector('.re-box').style.display = 'flex';
-            el.querySelector('.main-text-chart').style.display = 'flex';
+        if (primaryAmount > 0) {
+            const reBox = el.querySelector('.re-box');
+            const chart = el.querySelector('.main-text-chart');
+            const primary = el.querySelector('.main-text-primary');
 
-            el.querySelector('.main-text-primary').style.display = 'flex';
-            el.querySelector('.main-text-primary').textContent = parseInt(result.app_142_primary_amount);
+            if (reBox) reBox.style.display = 'flex';
+            if (chart) chart.style.display = 'flex';
+            if (primary) {
+                primary.style.display = 'flex';
+                primary.textContent = primaryAmount;
+            }
         }
-    } else {
-        console.warn(`Element with ID ${normalizedId} not found`);
     }
-});
-})
+
+    // Split IDs into batches
+    const batches = [];
+    for (let i = 0; i < validEventIds.length; i += BATCH_SIZE) {
+        batches.push(validEventIds.slice(i, i + BATCH_SIZE));
+    }
+
+    const batchPromises = batches.map(batch => {
+        const fetchUrl = baseUrl + batch.map(id => encodeURIComponent(id)).join(',');
+
+        return fetchAllPages(fetchUrl, token)
+            .then(results => {
+                allResults.push(...results);
+
+                // Case-insensitive lookup, matching the old __iexact behaviour
+                const resultMap = new Map();
+                results.forEach(result => {
+                    if (result.site_event_id) {
+                        resultMap.set(String(result.site_event_id).toLowerCase(), result);
+                    }
+                });
+
+                batch.forEach(eventId => {
+                    const result = resultMap.get(eventId.toLowerCase());
+                    if (!result) {
+                        console.warn(`No venue data returned for event ID ${eventId}`);
+                        return;
+                    }
+
+                    const els = findBoxesForEventId(eventId);
+                    if (els.length === 0) {
+                        console.warn(`Element with ID ${eventId} not found`);
+                        return;
+                    }
+
+                    els.forEach(el => applyResultToElement(el, result));
+                });
+            })
             .catch(err => {
-                console.error(`Failed to fetch for event ID ${eventId}:`, err);
+                console.error(`Failed to fetch batch [${batch.join(',')}]:`, err);
             });
     });
 
-    await Promise.all(fetchPromises);
+    await Promise.all(batchPromises);
 
     console.log('All venue data added to DOM elements');
 
-const eventBoxesToBind = document.querySelectorAll('.event-box');
-eventBoxesToBind.forEach(box => {
-    const charticon = box.querySelector('.main-text-chart');
-    if (charticon && charticon.getAttribute('listener-bound') !== 'true') {
-        const mockEvent = {
-            event_id: box.getAttribute('eventid'),
-            event_url: box.getAttribute('url'),
-            vdid: box.getAttribute('vdid'),
-            site_venue_id: box.getAttribute('venueid'),
-            counts: box.getAttribute('counts'),
-            city: box.getAttribute('city'),
-            state: box.getAttribute('state'),
-            primary_amount: box.getAttribute('primaryamount'),
-        };
+    document.querySelectorAll('.event-box').forEach(box => {
+        const charticon = box.querySelector('.main-text-chart');
+        if (charticon && charticon.getAttribute('listener-bound') !== 'true') {
+            const mockEvent = {
+                event_id: box.getAttribute('eventid'),
+                event_url: box.getAttribute('url'),
+                vdid: box.getAttribute('vdid'),
+                site_venue_id: box.getAttribute('venueid'),
+                counts: box.getAttribute('counts'),
+                city: box.getAttribute('city'),
+                state: box.getAttribute('state'),
+                primary_amount: box.getAttribute('primaryamount'),
+            };
 
-        bindChartIconClick(box, mockEvent);
-    }
-});
-
-
+            bindChartIconClick(box, mockEvent);
+        }
+    });
 
     return allResults;
 }
-
 
 const intervalVenueReady = setInterval(() => {
     const sample = document.getElementById('samplestyle');
