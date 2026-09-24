@@ -8,18 +8,18 @@
     const API = 'https://ubik.wiki/api';
     const SEARCH_BASE_URL = `${API}/event-venue/?`;
     const PAGE_LIMIT = 100;
-    const PENDING_BATCH_SIZE = 50;
+    const PENDING_BATCH_SIZE = 100;
 
     // Faster first paint: the first N rows of a page are requested separately (in parallel
     // with the rest) and shown as soon as they arrive. Set to 0 to use a single request.
-    const FIRST_CHUNK_SIZE = 20;
+    const FIRST_CHUNK_SIZE = 100;
 
     // Last results for each search URL are kept so repeat searches, paging back and page
     // reloads show instantly, then refresh in the background. Set max age to 0 to disable.
     const CACHE_PREFIX = 'ubik-search:';
     const CACHE_INDEX_KEY = 'ubik-search-index';
-    const CACHE_MAX_AGE_MS = 30 * 60 * 1000;
-    const CACHE_MAX_ENTRIES = 5;
+    const CACHE_MAX_AGE_MS = 0
+    const CACHE_MAX_ENTRIES = 0;
 
     // Opacity of cached cards while fresh data is loading
     const STALE_OPACITY = '0.6';
@@ -1289,7 +1289,9 @@
         const maxPages = Math.max(1, Math.ceil((Number(count) || 0) / limit));
         const curPage = Math.min(maxPages, Math.floor(offset / limit) + 1);
 
-        pcount = maxPages;
+        // Old meaning kept for other scripts: whole pages beyond a partial one (floor),
+        // while the pager itself shows the real page count
+        pcount = Math.floor((Number(count) || 0) / limit);
         setText('#maxpages', maxPages);
         setText('#curpage', curPage);
     }
