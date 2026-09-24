@@ -1,6 +1,7 @@
 (function () {
     // Provided by other scripts on the page: token, chart, window.chartvs, $, moment.
-    // initsource / TOKEN / nexturl / prevurl / pcount / xanoUrl / savedevents / keyword6
+    // initsource / TOKEN / nexturl / prevurl / pcount / params / xanoUrl / savedevents /
+    // keyword6 / countsarray
     // are assigned without a declaration on purpose so other scripts can keep reading them.
     initsource = false;
 
@@ -8,6 +9,20 @@
     const SEARCH_BASE_URL = `${API}/event-venue/?`;
     const PAGE_LIMIT = 100;
     const PENDING_BATCH_SIZE = 50;
+
+    // Faster first paint: the first N rows of a page are requested separately (in parallel
+    // with the rest) and shown as soon as they arrive. Set to 0 to use a single request.
+    const FIRST_CHUNK_SIZE = 20;
+
+    // Last results for each search URL are kept so repeat searches, paging back and page
+    // reloads show instantly, then refresh in the background. Set max age to 0 to disable.
+    const CACHE_PREFIX = 'ubik-search:';
+    const CACHE_INDEX_KEY = 'ubik-search-index';
+    const CACHE_MAX_AGE_MS = 30 * 60 * 1000;
+    const CACHE_MAX_ENTRIES = 5;
+
+    // Opacity of cached cards while fresh data is loading
+    const STALE_OPACITY = '0.6';
 
     const DEFAULT_SOURCE_DETAILS = {
         source: 'OTHER',
@@ -27,8 +42,11 @@
     let sourceInstructionsMap = new Map();
     let sourceTokens = [];
     let searchController = null;
-    let pendingController = null;
     let chartController = null;
+    // Pending (remaining to buy) amounts: one run per search, plus last known values by event
+    let pendingRun = null;
+    const pendingCache = new Map();
+    let pendingDefaultText = null;
 
     // ============================================================
     // Generic helpers
@@ -298,8 +316,8 @@
         return { scrapeDate, lastAmount, differencePerDay };
     };
 
-    function getLatestCount(counts) {
-        if (!Array.isArray(counts) || counts.length === 0) return 0;
+    function findLatestCount(counts) {
+        if (!Array.isArray(counts) || counts.length === 0) return null;
         let latest = null;
         let latestKey = '';
         counts.forEach(count => {
@@ -309,6 +327,11 @@
                 latestKey = key;
             }
         });
+        return latest;
+    }
+
+    function getLatestCount(counts) {
+        const latest = findLatestCount(counts);
         return latest ? latest.primary_amount : 0;
     }
 
@@ -586,6 +609,7 @@
             });
 
             sourceInstructionsMap = map;
+            window.sourceInstructionsMap = map;
             // Longest token first so "ticketmaster.com.mx" wins over "ticketmaster"
             sourceTokens = Array.from(map.entries()).sort((a, b) => b[0].length - a[0].length);
 
@@ -620,19 +644,17 @@
     }
 
     async function bootSources() {
-        await waitFor(hasToken, 1000);
+        await waitFor(hasToken, 200);
         TOKEN = token;
 
-        const ok = await initializeSourceInstructions();
-        // Don't block other scripts waiting on initsource if the first attempt fails
+        // Signal ready as soon as the token exists so the first search isn't queued behind
+        // the source-instructions request; cards are relabeled once it arrives
         initsource = true;
 
-        if (!ok) {
-            while (!(await initializeSourceInstructions())) {
-                await sleep(5000);
-            }
-            relabelSources();
+        while (!(await initializeSourceInstructions())) {
+            await sleep(5000);
         }
+        relabelSources();
     }
 
     // ============================================================
@@ -1080,25 +1102,56 @@
     // Pending amounts from the buying queue (batched)
     // ============================================================
 
-    async function fetchEventVenueData() {
-        dropController(pendingController);
-        const controller = newController();
-        pendingController = controller;
-        const signal = controller.signal;
+    // One run per search: a new search cancels the previous run, and ids already
+    // requested in this run aren't fetched twice (e.g. cached cards, then fresh cards)
+    function startPendingRun() {
+        if (pendingRun) dropController(pendingRun.controller);
+        pendingRun = { controller: newController(), requested: new Set() };
+        return pendingRun;
+    }
 
-        const template = document.getElementById('samplestyle');
-        const boxesByKey = new Map();
+    function applyPendingToCard(el, key) {
+        const target = el.querySelector('.main-text-pending');
+        if (pendingCache.has(key)) {
+            const remaining = pendingCache.get(key);
+            el.setAttribute('pending', remaining);
+            setTextEl(target, Math.round(remaining));
+        } else if (el.hasAttribute('pending')) {
+            // Had a value earlier but the event no longer has open queue items
+            if (pendingDefaultText === null) {
+                const tpl = document.querySelector('#samplestyle .main-text-pending');
+                pendingDefaultText = tpl ? tpl.textContent : '';
+            }
+            el.removeAttribute('pending');
+            if (target) target.textContent = pendingDefaultText;
+        }
+    }
 
-        document.querySelectorAll('.event-box').forEach(box => {
-            if (box === template) return;
+    // Applied by key to whatever cards are on the page when the response lands,
+    // so values still reach cards that were re-rendered while the request was in flight
+    function applyPendingToDom(keys) {
+        const wanted = new Set(keys);
+        document.querySelectorAll('.event-box').forEach(el => {
+            if (el.id === 'samplestyle') return;
+            const id = el.getAttribute('pendingid');
+            if (id && wanted.has(id.toLowerCase())) applyPendingToCard(el, id.toLowerCase());
+        });
+    }
+
+    async function loadPendingFor(boxes, run) {
+        run = run || pendingRun || startPendingRun();
+        const signal = run.controller.signal;
+
+        const ids = [];
+        boxes.forEach(box => {
             const id = box.getAttribute('pendingid');
             if (!id) return;
             const key = id.toLowerCase();
-            if (!boxesByKey.has(key)) boxesByKey.set(key, { id, boxes: [] });
-            boxesByKey.get(key).boxes.push(box);
+            if (run.requested.has(key)) return;
+            run.requested.add(key);
+            ids.push(id);
         });
 
-        const ids = Array.from(boxesByKey.values()).map(entry => entry.id);
         const batches = [];
         for (let i = 0; i < ids.length; i += PENDING_BATCH_SIZE) {
             batches.push(ids.slice(i, i + PENDING_BATCH_SIZE));
@@ -1124,27 +1177,80 @@
                     remainingByKey.set(key, (remainingByKey.get(key) || 0) + (total - bought));
                 });
 
-                remainingByKey.forEach((remaining, key) => {
-                    const entry = boxesByKey.get(key);
-                    if (!entry) return;
-                    entry.boxes.forEach(el => {
-                        el.setAttribute('pending', remaining);
-                        setTextEl(el.querySelector('.main-text-pending'), Math.round(remaining));
-                    });
+                const keys = batch.map(id => id.toLowerCase());
+                keys.forEach(key => {
+                    if (remainingByKey.has(key)) pendingCache.set(key, remainingByKey.get(key));
+                    else pendingCache.delete(key);
                 });
+                applyPendingToDom(keys);
             } catch (err) {
                 if (isAbort(err)) return;
+                batch.forEach(id => run.requested.delete(id.toLowerCase()));
                 console.error(`Failed to fetch buying queue batch [${batch.join(',')}]:`, err);
             }
         }));
 
-        if (pendingController === controller) {
-            dropController(controller);
-            pendingController = null;
-        }
-
-        if (!signal.aborted) console.log('Pending amounts added to DOM elements');
         return allResults;
+    }
+
+    // Refreshes pending amounts for every card on the page
+    async function fetchEventVenueData() {
+        const boxes = Array.from(document.querySelectorAll('.event-box')).filter(box => box.id !== 'samplestyle');
+        const results = await loadPendingFor(boxes, startPendingRun());
+        console.log('Pending amounts added to DOM elements');
+        return results;
+    }
+
+    // ============================================================
+    // Search result cache
+    // ============================================================
+
+    // Cards only need to know whether counts exist and which one is latest, and the chart
+    // fetches fresh counts, so the cache keeps just the latest entry to stay small
+    function slimForCache(row) {
+        if (!row || !Array.isArray(row.counts) || row.counts.length <= 1) return row;
+        const latest = findLatestCount(row.counts);
+        return { ...row, counts: latest ? [latest] : [] };
+    }
+
+    function readSearchCache(url) {
+        if (!CACHE_MAX_AGE_MS) return null;
+        try {
+            const raw = localStorage.getItem(CACHE_PREFIX + url);
+            if (!raw) return null;
+            const entry = JSON.parse(raw);
+            if (!entry || !Array.isArray(entry.results) || Date.now() - entry.savedAt > CACHE_MAX_AGE_MS) {
+                return null;
+            }
+            return entry;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    function writeSearchCache(url, count, results) {
+        if (!CACHE_MAX_AGE_MS) return;
+        try {
+            let index = [];
+            try {
+                index = JSON.parse(localStorage.getItem(CACHE_INDEX_KEY)) || [];
+            } catch (e) {
+                index = [];
+            }
+            index = [url].concat(index.filter(u => u !== url));
+            index.slice(CACHE_MAX_ENTRIES).forEach(u => localStorage.removeItem(CACHE_PREFIX + u));
+            index = index.slice(0, CACHE_MAX_ENTRIES);
+
+            localStorage.setItem(CACHE_PREFIX + url, JSON.stringify({
+                savedAt: Date.now(),
+                count,
+                results: results.map(slimForCache)
+            }));
+            localStorage.setItem(CACHE_INDEX_KEY, JSON.stringify(index));
+        } catch (e) {
+            // Storage full or disabled: caching is optional
+            console.warn('Could not cache search results:', e);
+        }
     }
 
     // ============================================================
@@ -1157,7 +1263,7 @@
         });
     }
 
-    function updatePager(fetchurl, count) {
+    function readPaging(fetchurl) {
         let limit = PAGE_LIMIT;
         let offset = 0;
         try {
@@ -1167,13 +1273,87 @@
         } catch (e) {
             // keep defaults
         }
+        return { limit, offset };
+    }
 
+    function withPaging(fetchurl, offset, limit) {
+        const u = new URL(fetchurl);
+        if (offset > 0) u.searchParams.set('offset', String(offset));
+        else u.searchParams.delete('offset');
+        u.searchParams.set('limit', String(limit));
+        return u.toString();
+    }
+
+    function updatePager(fetchurl, count) {
+        const { limit, offset } = readPaging(fetchurl);
         const maxPages = Math.max(1, Math.ceil((Number(count) || 0) / limit));
         const curPage = Math.min(maxPages, Math.floor(offset / limit) + 1);
 
         pcount = maxPages;
         setText('#maxpages', maxPages);
         setText('#curpage', curPage);
+    }
+
+    // Page-level next/previous links (the chunk requests have their own, which don't apply)
+    function applyPaging(fetchurl, count) {
+        updatePager(fetchurl, count);
+        const { limit, offset } = readPaging(fetchurl);
+        const total = Number(count) || 0;
+        try {
+            nexturl = offset + limit < total ? withPaging(fetchurl, offset + limit, limit) : null;
+            prevurl = offset > 0 ? withPaging(fetchurl, Math.max(0, offset - limit), limit) : null;
+        } catch (e) {
+            nexturl = null;
+            prevurl = null;
+        }
+    }
+
+    function chunkUrls(fetchurl) {
+        const { limit, offset } = readPaging(fetchurl);
+        if (!FIRST_CHUNK_SIZE || limit <= FIRST_CHUNK_SIZE) return [fetchurl];
+        try {
+            return [
+                withPaging(fetchurl, offset, FIRST_CHUNK_SIZE),
+                withPaging(fetchurl, offset + FIRST_CHUNK_SIZE, limit - FIRST_CHUNK_SIZE)
+            ];
+        } catch (e) {
+            return [fetchurl];
+        }
+    }
+
+    function showResults() {
+        setDisplay('#loading', 'none');
+        setDisplay('#flexbox', 'flex');
+    }
+
+    function setStale(container, stale) {
+        if (!container) return;
+        container.style.transition = 'opacity 0.2s';
+        container.style.opacity = stale ? STALE_OPACITY : '';
+    }
+
+    function renderRows(rows, container, template, replace) {
+        if (replace) removeCards();
+
+        const fragment = document.createDocumentFragment();
+        const added = [];
+        rows.forEach(events => {
+            try {
+                const card = renderSearchCard(events, template);
+                fragment.appendChild(card);
+                added.push(card);
+            } catch (error) {
+                console.error('Failed to render event', events && events.site_event_id, error);
+            }
+        });
+        container.appendChild(fragment);
+
+        const sortby = document.querySelector('#sortby');
+        keyword6 = sortby ? sortby.value : '';
+
+        checkresults();
+        loadPendingFor(added);
+        return added;
     }
 
     function constructURL(next) {
@@ -1211,18 +1391,18 @@
 
         removeCards();
 
-        const params = [];
+        const query = [];
 
-        if (keywords1.length > 0) params.push('event_name__icontains=' + keywords1);
-        if (keywords2.length > 0) params.push('venue_name__icontains=' + keywords2);
+        if (keywords1.length > 0) query.push('event_name__icontains=' + keywords1);
+        if (keywords2.length > 0) query.push('venue_name__icontains=' + keywords2);
 
-        if (keywords3 === 'uscanada') params.push('country__icontains=US&country__icontains=Canada');
-        if (keywords3 === 'international') params.push('country__idoesnotcontains=US&country__idoesnotcontains=Canada');
+        if (keywords3 === 'uscanada') query.push('country__icontains=US&country__icontains=Canada');
+        if (keywords3 === 'international') query.push('country__idoesnotcontains=US&country__idoesnotcontains=Canada');
 
-        if (keywords4) params.push('category__iexact=' + encodeURIComponent(keywords4));
+        if (keywords4) query.push('category__iexact=' + encodeURIComponent(keywords4));
 
         if (capacityfilters.length > 0) {
-            params.push('event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&amount_per_capacity__lte=' + encodeURIComponent(capacityfilters));
+            query.push('event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&amount_per_capacity__lte=' + encodeURIComponent(capacityfilters));
         }
 
         const sourceParams = {
@@ -1236,7 +1416,7 @@
             'nontmaxs': 'event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=axs',
             'nonseeticketstmaxsgeektweb': 'event_url__idoesnotcontains=livenation&event_url__idoesnotcontains=ticketmaster&event_url__idoesnotcontains=axs&event_url__idoesnotcontains=seetickets&event_url__idoesnotcontains=eventim.us&event_url__idoesnotcontains=seatgeek&event_url__idoesnotcontains=ticketweb'
         };
-        if (sourceParams[keywords5]) params.push(sourceParams[keywords5]);
+        if (sourceParams[keywords5]) query.push(sourceParams[keywords5]);
 
         const sortParams = {
             'recentlyadded': 'date_created__sort=-1',
@@ -1246,22 +1426,22 @@
             'fast3': 'app_142_scrape_date__yte=3&app_142_difference_per_day__sort=-1',
             'before10': 'app_142_scrape_date__ote=10&app_142_difference_per_day__sort=-1'
         };
-        if (sortParams[keywords6]) params.push(sortParams[keywords6]);
+        if (sortParams[keywords6]) query.push(sortParams[keywords6]);
 
-        if (keywords6 === 'fastmovement' && keywords5 === 'seetickets') params.push('app_142_primary_amount__gt=0');
+        if (keywords6 === 'fastmovement' && keywords5 === 'seetickets') query.push('app_142_primary_amount__gt=0');
 
-        if (keywords7.length > 0) params.push('status__icontains=' + keywords7);
+        if (keywords7.length > 0) query.push('status__icontains=' + keywords7);
 
-        if (capgte.length > 0) params.push('venue_capacity__gte=' + encodeURIComponent(capgte));
-        if (caplt.length > 0) params.push('venue_capacity__lt=' + encodeURIComponent(caplt));
-        if (primgte.length > 0) params.push('app_142_primary_amount__gte=' + encodeURIComponent(primgte));
-        if (primlt.length > 0) params.push('app_142_primary_amount__lt=' + encodeURIComponent(primlt));
+        if (capgte.length > 0) query.push('venue_capacity__gte=' + encodeURIComponent(capgte));
+        if (caplt.length > 0) query.push('venue_capacity__lt=' + encodeURIComponent(caplt));
+        if (primgte.length > 0) query.push('app_142_primary_amount__gte=' + encodeURIComponent(primgte));
+        if (primlt.length > 0) query.push('app_142_primary_amount__lt=' + encodeURIComponent(primlt));
 
-        if (isChecked('favorite')) params.push('favorites__iexact=true');
-        if (isChecked('hotlisted')) params.push('hotlist__iexact=true');
-        if (isChecked('preonsales')) params.push('is_preonsale__iexact=true');
+        if (isChecked('favorite')) query.push('favorites__iexact=true');
+        if (isChecked('hotlisted')) query.push('hotlist__iexact=true');
+        if (isChecked('preonsales')) query.push('is_preonsale__iexact=true');
 
-        params.push('limit=' + PAGE_LIMIT);
+        query.push('limit=' + PAGE_LIMIT);
 
         if (next) {
             let offset = null;
@@ -1270,13 +1450,16 @@
             } catch (e) {
                 console.warn('Could not read offset from', next);
             }
-            // DRF drops offset from the first page's "previous" link, which just means 0
-            if (offset) params.push('offset=' + encodeURIComponent(offset));
+            // A missing or zero offset is page 1; leaving it out keeps one cache entry per page
+            const offsetNum = parseInt(offset, 10);
+            if (offsetNum > 0) query.push('offset=' + offsetNum);
         }
 
-        xanoUrl = SEARCH_BASE_URL + params.join('&');
+        // Same globals the old version leaked, for scripts (e.g. export) that read them
+        params = query;
+        xanoUrl = SEARCH_BASE_URL + query.join('&');
         console.log('Constructed URL:', xanoUrl);
-        return getEvents(xanoUrl);
+        return window.getEvents(xanoUrl);
     }
 
     function renderSearchCard(events, template) {
@@ -1288,6 +1471,7 @@
         const url = events.event_url || '';
         const isTM = url.includes('ticketmaster') || url.includes('livenation');
         const counts = Array.isArray(events.counts) ? events.counts : [];
+        countsarray = events.counts;
 
         card.removeAttribute('id');
         card.setAttribute('checked', 'false');
@@ -1552,52 +1736,111 @@
         bindFlag('main-checkbox-favorite', 'favorites');
         bindFlag('main-checkbox-hotlist', 'hotlist');
 
+        // Last known pending amount shows right away; the queue request refreshes it
+        const pendingKey = siteEventId.toLowerCase();
+        if (pendingKey && pendingCache.has(pendingKey)) applyPendingToCard(card, pendingKey);
+
         card.style.display = toBool(events.hidden) ? 'none' : 'flex';
         return card;
     }
 
+    function rowKey(row) {
+        return row && row.site_event_id != null ? String(row.site_event_id).toLowerCase() : null;
+    }
+
+    // With a cached copy of this search, it's shown instantly (dimmed) and swapped for fresh
+    // data in one go when that arrives. Without one, the first chunk of the page is shown as
+    // soon as it lands and the rest is appended after it.
     async function getEvents(fetchurl) {
         if (searchController) searchController.abort();
         const controller = new AbortController();
         searchController = controller;
+        const signal = controller.signal;
+        const isCurrent = () => controller === searchController && !signal.aborted;
+
+        const container = document.getElementById('Cards-Container');
+        const template = document.getElementById('samplestyle');
+        if (!container || !template) {
+            console.error('#Cards-Container or #samplestyle not found');
+            searchController = null;
+            showResults();
+            return;
+        }
+
+        startPendingRun();
+        setStale(container, false);
+
+        // All requests start before anything is rendered
+        const request = url => fetchJSON(url, { headers: authHeaders(), signal })
+            .then(data => ({ data }), error => ({ error }));
+        const chunks = chunkUrls(fetchurl).map(request);
+
+        const cached = readSearchCache(fetchurl);
+        if (cached) {
+            renderRows(cached.results, container, template, true);
+            applyPaging(fetchurl, cached.count);
+            setStale(container, true);
+            showResults();
+        }
+
+        const rows = [];
+        const seen = new Set();
+        let count = null;
 
         try {
-            const data = await fetchJSON(fetchurl, { headers: authHeaders(), signal: controller.signal });
-            if (controller !== searchController) return;
+            for (let i = 0; i < chunks.length; i++) {
+                const outcome = await chunks[i];
+                if (!isCurrent()) return;
+                if (outcome.error) throw outcome.error;
 
-            nexturl = data.next || null;
-            prevurl = data.previous || null;
-            updatePager(fetchurl, data.count);
+                const data = outcome.data || {};
+                if (count === null) count = data.count;
 
-            const container = document.getElementById('Cards-Container');
-            const template = document.getElementById('samplestyle');
-            if (!container || !template) throw new Error('#Cards-Container or #samplestyle not found');
+                // Skip rows an earlier chunk already returned (possible when the sort has ties)
+                const fresh = (Array.isArray(data.results) ? data.results : []).filter(row => {
+                    const key = rowKey(row);
+                    if (key === null) return true;
+                    if (seen.has(key)) return false;
+                    seen.add(key);
+                    return true;
+                });
+                rows.push(...fresh);
 
-            removeCards();
-
-            const fragment = document.createDocumentFragment();
-            (data.results || []).forEach(events => {
-                try {
-                    fragment.appendChild(renderSearchCard(events, template));
-                } catch (error) {
-                    console.error('Failed to render event', events && events.site_event_id, error);
+                if (!cached) {
+                    renderRows(fresh, container, template, i === 0);
+                    if (i === 0) {
+                        applyPaging(fetchurl, count);
+                        showResults();
+                    }
                 }
-            });
-            container.appendChild(fragment);
+            }
 
-            const sortby = document.querySelector('#sortby');
-            keyword6 = sortby ? sortby.value : '';
+            // If ties in the sort made the chunks miss rows, reload the page in one request
+            const { limit, offset } = readPaging(fetchurl);
+            const expected = Math.min(limit, Math.max(0, (Number(count) || 0) - offset));
+            if (chunks.length > 1 && rows.length < expected) {
+                console.warn(`Chunked load returned ${rows.length}/${expected} rows, reloading the page in one request`);
+                const full = await request(fetchurl);
+                if (!isCurrent()) return;
+                if (full.error) throw full.error;
+                rows.length = 0;
+                rows.push(...(Array.isArray(full.data.results) ? full.data.results : []));
+                count = full.data.count;
+                if (!cached) renderRows(rows, container, template, true);
+            }
 
-            checkresults();
-            fetchEventVenueData();
+            if (cached) renderRows(rows, container, template, true);
+            applyPaging(fetchurl, count);
+            writeSearchCache(fetchurl, count, rows);
         } catch (error) {
-            if (isAbort(error)) return;
+            if (isAbort(error) || !isCurrent()) return;
+            // Whatever is already on screen (cached or first chunk) stays
             console.error('searchfailed', error);
         } finally {
             if (controller === searchController) {
                 searchController = null;
-                setDisplay('#loading', 'none');
-                setDisplay('#flexbox', 'flex');
+                setStale(container, false);
+                showResults();
             }
         }
     }
@@ -1672,17 +1915,17 @@
         };
 
         on('#rightarrow', 'click', () => {
-            if (window.nexturl) constructURL(window.nexturl);
+            if (window.nexturl) window.constructURL(window.nexturl);
         });
 
         on('#leftarrow', 'click', () => {
-            if (window.prevurl) constructURL(window.prevurl);
+            if (window.prevurl) window.constructURL(window.prevurl);
         });
 
         on('#search-button', 'click', () => {
             savedevents = [];
             abortAll();
-            constructURL();
+            window.constructURL();
         });
 
         ['#searchbar1', '#searchbar2', '#searchbar3'].forEach(selector => {
@@ -1701,6 +1944,7 @@
         });
 
         const warningContinueBtn = document.querySelector('#warningcontinue');
+        window.globalWarningContinueBtn = warningContinueBtn;
         if (warningContinueBtn) {
             warningContinueBtn.addEventListener('click', () => {
                 const siteEventId = warningContinueBtn.dataset.siteEventId;
@@ -1727,6 +1971,8 @@
     // Functions other page scripts may call
     Object.assign(window, {
         abortControllers,
+        DEFAULT_SOURCE_DETAILS,
+        sourceInstructionsMap,
         formatDate,
         ymdToMdy,
         calculateChange,
