@@ -123,6 +123,12 @@
     let emailPromise = null;
     const boundChartIcons = new WeakSet();
 
+    // Venue data (primary amount, chart data) is kept in memory by event id so cards
+    // re-rendered on a refresh show it immediately instead of blanking until it reloads
+    const venueCache = new Map();
+    let venueRun = null;
+    let venueDefaults = null;
+
     // ============================================================
     // Generic helpers
     // ============================================================
@@ -916,87 +922,161 @@
     }
 
     // ============================================================
-    // Venue data (batched)
+    // Venue data (batched, loaded after the cards are on screen)
     // ============================================================
 
-    function applyVenueResult(el, result) {
+    // Parsed once per fetch, so re-applying to re-rendered cards is cheap
+    function toVenueEntry(result) {
         const counts = parseLooseJSON(result.counts);
-        const hasCounts = Array.isArray(counts) && counts.length > 0;
+        const primaryAmount = parseInt(result.app_142_primary_amount, 10);
+        return {
+            result,
+            countsJson: Array.isArray(counts) ? JSON.stringify(counts) : '',
+            hasCounts: Array.isArray(counts) && counts.length > 0,
+            primaryAmount: isNaN(primaryAmount) ? null : primaryAmount
+        };
+    }
+
+    // Template display values, used when a card no longer has a primary amount to show
+    function getVenueDefaults() {
+        if (!venueDefaults) {
+            const template = document.getElementById('samplestyle');
+            const read = cls => {
+                const el = template && template.querySelector('.' + cls);
+                return el ? el.style.display : '';
+            };
+            venueDefaults = { reBox: read('re-box'), primary: read('main-text-primary') };
+        }
+        return venueDefaults;
+    }
+
+    function applyVenueResult(el, entryOrResult) {
+        const entry = entryOrResult && entryOrResult.result ? entryOrResult : toVenueEntry(entryOrResult);
+        const result = entry.result;
+        const primaryAmount = entry.primaryAmount;
 
         el.setAttribute('venueid', result.site_venue_id || '');
         el.setAttribute('city', result.city || '');
         el.setAttribute('state', result.state || '');
         el.setAttribute('vdid', result.vdid || '');
-        el.setAttribute('counts', Array.isArray(counts) ? JSON.stringify(counts) : '');
+        el.setAttribute('counts', entry.countsJson);
+        el.setAttribute('primaryamount', primaryAmount === null ? -2 : primaryAmount);
 
-        const primaryAmount = parseInt(result.app_142_primary_amount, 10);
-        el.setAttribute('primaryamount', isNaN(primaryAmount) ? -2 : primaryAmount);
-
+        // Shown if the queue data already qualified it (set in renderCard) or venue data does
         const chartIcon = el.querySelector('.main-text-chart');
-        if (chartIcon && (primaryAmount > 0 || hasCounts)) {
-            chartIcon.style.display = 'flex';
-        }
+        showIf(chartIcon, el.dataset.chartBase === '1' || primaryAmount > 0 || entry.hasCounts);
 
+        const reBox = el.querySelector('.re-box');
+        const primary = el.querySelector('.main-text-primary');
         if (primaryAmount > 0) {
-            const reBox = el.querySelector('.re-box');
-            const primary = el.querySelector('.main-text-primary');
             if (reBox) reBox.style.display = 'flex';
             if (primary) {
                 primary.style.display = 'flex';
                 primary.textContent = primaryAmount;
             }
+        } else {
+            const defaults = getVenueDefaults();
+            if (reBox) reBox.style.display = defaults.reBox;
+            if (primary) primary.style.display = defaults.primary;
         }
     }
 
-    async function fetchEventVenueData() {
-        const template = document.getElementById('samplestyle');
-        const boxesByKey = new Map();
-
-        document.querySelectorAll('.event-box').forEach(box => {
-            if (box === template) return;
-            const id = box.getAttribute('eventid');
+    // Applied by key to whatever cards are on screen when a batch lands, so it works
+    // whether the batch arrives before or after the cards are rendered
+    function applyVenueToDom(keys) {
+        const wanted = keys ? new Set(keys) : null;
+        document.querySelectorAll('.event-box').forEach(el => {
+            if (el.id === 'samplestyle') return;
+            const id = el.getAttribute('eventid');
             if (!id) return;
             const key = id.toLowerCase();
-            if (!boxesByKey.has(key)) boxesByKey.set(key, { id, boxes: [] });
-            boxesByKey.get(key).boxes.push(box);
+            if (wanted && !wanted.has(key)) return;
+            const entry = venueCache.get(key);
+            if (entry) applyVenueResult(el, entry);
         });
+    }
 
-        const ids = Array.from(boxesByKey.values()).map(entry => entry.id);
-        const batches = [];
-        for (let i = 0; i < ids.length; i += VENUE_BATCH_SIZE) {
-            batches.push(ids.slice(i, i + VENUE_BATCH_SIZE));
+    // Loads venue data for priorityIds first, then laterIds. A new run cancels the previous one.
+    function startVenueRun(priorityIds, laterIds) {
+        if (venueRun) {
+            try {
+                venueRun.abort();
+            } catch (e) {
+                // ignore
+            }
         }
+        const controller = new AbortController();
+        venueRun = controller;
+        const signal = controller.signal;
+
+        const seenIds = new Set();
+        const dedupe = list => {
+            const out = [];
+            (list || []).forEach(id => {
+                if (!id) return;
+                const key = String(id).toLowerCase();
+                if (seenIds.has(key)) return;
+                seenIds.add(key);
+                out.push(String(id));
+            });
+            return out;
+        };
+        const first = dedupe(priorityIds);
+        const second = dedupe(laterIds);
 
         const allResults = [];
 
-        await Promise.all(batches.map(async batch => {
-            const url = `${API}/event-venue/?site_event_id__filters=` + batch.map(id => encodeURIComponent(id)).join(',');
-            try {
-                const results = await fetchAllPages(url, { headers: authHeaders() });
-                allResults.push(...results);
-
-                const resultByKey = new Map();
-                results.forEach(result => {
-                    if (result && result.site_event_id) {
-                        resultByKey.set(String(result.site_event_id).toLowerCase(), result);
-                    }
-                });
-
-                batch.forEach(id => {
-                    const key = id.toLowerCase();
-                    const result = resultByKey.get(key);
-                    if (!result) {
-                        console.warn(`No venue data returned for event ID ${id}`);
-                        return;
-                    }
-                    boxesByKey.get(key).boxes.forEach(el => applyVenueResult(el, result));
-                });
-            } catch (err) {
-                console.error(`Failed to fetch venue batch [${batch.join(',')}]:`, err);
+        const loadBatches = ids => {
+            const batches = [];
+            for (let i = 0; i < ids.length; i += VENUE_BATCH_SIZE) {
+                batches.push(ids.slice(i, i + VENUE_BATCH_SIZE));
             }
-        }));
 
-        console.log('All venue data added to DOM elements');
+            return Promise.all(batches.map(async batch => {
+                const url = `${API}/event-venue/?site_event_id__filters=` + batch.map(id => encodeURIComponent(id)).join(',');
+                try {
+                    const results = await fetchAllPages(url, { headers: authHeaders(), signal });
+                    if (signal.aborted) return;
+                    allResults.push(...results);
+
+                    const found = new Set();
+                    results.forEach(result => {
+                        if (!result || !result.site_event_id) return;
+                        const key = String(result.site_event_id).toLowerCase();
+                        venueCache.set(key, toVenueEntry(result));
+                        found.add(key);
+                    });
+
+                    batch.forEach(id => {
+                        if (!found.has(id.toLowerCase())) console.warn(`No venue data returned for event ID ${id}`);
+                    });
+
+                    applyVenueToDom(batch.map(id => id.toLowerCase()));
+                } catch (err) {
+                    if (isAbort(err)) return;
+                    console.error(`Failed to fetch venue batch [${batch.join(',')}]:`, err);
+                }
+            }));
+        };
+
+        return loadBatches(first)
+            .then(() => (signal.aborted ? null : loadBatches(second)))
+            .then(() => {
+                if (venueRun === controller) venueRun = null;
+                if (!signal.aborted) console.log('All venue data added to DOM elements');
+                return allResults;
+            });
+    }
+
+    // Reloads venue data for every card on the page
+    async function fetchEventVenueData() {
+        const template = document.getElementById('samplestyle');
+        const ids = [];
+        document.querySelectorAll('.event-box').forEach(box => {
+            if (box !== template && box.getAttribute('eventid')) ids.push(box.getAttribute('eventid'));
+        });
+
+        const results = await startVenueRun(ids);
 
         document.querySelectorAll('.event-box').forEach(box => {
             if (box === template) return;
@@ -1012,20 +1092,28 @@
             });
         });
 
-        return allResults;
+        return results;
     }
 
     // ============================================================
     // Queue cards
     // ============================================================
 
+    // Uses the #email element, or the signed-in Firebase user if that's known sooner
     function waitForUserEmail() {
         if (!emailPromise) {
             emailPromise = new Promise(resolve => {
                 const read = () => {
                     const el = document.getElementById('email');
                     const text = el ? el.textContent.trim().toLowerCase() : '';
-                    return text.includes('@') ? text : null;
+                    if (text.includes('@')) return text;
+                    try {
+                        const user = typeof firebase !== 'undefined' && firebase.auth && firebase.auth().currentUser;
+                        if (user && user.email) return String(user.email).trim().toLowerCase();
+                    } catch (e) {
+                        // Firebase not ready yet
+                    }
+                    return null;
                 };
                 const now = read();
                 if (now) return resolve(now);
@@ -1035,10 +1123,20 @@
                         clearInterval(id);
                         resolve(value);
                     }
-                }, 300);
+                }, 100);
             });
         }
         return emailPromise;
+    }
+
+    // Updates source labels on cards rendered before the source instructions arrived
+    function relabelSources() {
+        document.querySelectorAll('.event-box').forEach(card => {
+            if (card.id === 'samplestyle') return;
+            const details = getSourceDetails(card.getAttribute('url'));
+            card.setAttribute('source', details.source);
+            setTextEl(card.querySelector('.main-text-src'), details.source);
+        });
     }
 
     function canUserSee(assign, email) {
@@ -1122,7 +1220,9 @@
             !url.includes('ticketmaster.com.mx') &&
             !url.includes('ticketmaster.co.uk') &&
             !url.includes('ticketmaster.de');
-        showIf(charticon, (counts && counts.length > 0) || tmChartable);
+        const chartBase = !!((counts && counts.length > 0) || tmChartable);
+        card.dataset.chartBase = chartBase ? '1' : '0';
+        showIf(charticon, chartBase);
         bindChartIconClick(card, events);
 
         // Source
@@ -1255,6 +1355,10 @@
             });
         }
 
+        // Last known venue data shows right away; the background venue request refreshes it
+        const venueEntry = venueCache.get(String(eventId).toLowerCase());
+        if (venueEntry) applyVenueResult(card, venueEntry);
+
         card.style.display = canUserSee(events.assign, email) ? 'flex' : 'none';
         return card;
     }
@@ -1277,8 +1381,9 @@
             .forEach(el => container.appendChild(el));
     }
 
-    // Fetches the queue first, then swaps the cards in one go, so a failed request
-    // leaves the current cards on screen instead of an empty page
+    // Fetches the queue, then swaps the cards in one go, so a failed request leaves the
+    // current cards on screen. Venue data loads in the background afterwards: cards show
+    // as soon as the queue is in, and primary amounts / chart icons fill in per batch.
     function getEvents() {
         if (refreshInFlight) return refreshInFlight;
 
@@ -1293,6 +1398,15 @@
                 fetchAllPages(window.xanoUrl.toString(), { headers: authHeaders(), cache: 'no-store' }),
                 Promise.race([waitForUserEmail(), sleep(EMAIL_TIMEOUT_MS).then(() => null)])
             ]);
+
+            // Venue data for the cards this user can see is requested first
+            const visibleIds = [];
+            const hiddenIds = [];
+            results.forEach(events => {
+                if (!events || !events.event_id) return;
+                (canUserSee(events.assign, email) ? visibleIds : hiddenIds).push(events.event_id);
+            });
+            startVenueRun(visibleIds, hiddenIds);
 
             const fragment = document.createDocumentFragment();
             results.forEach(events => {
@@ -1309,9 +1423,9 @@
             container.appendChild(fragment);
             template.style.display = 'none';
 
-            await fetchEventVenueData();
             sortCards();
             searchcompleted = true;
+            return results;
         })().finally(() => {
             refreshInFlight = null;
         });
@@ -1343,9 +1457,14 @@
         return ids;
     }
 
-    async function refreshCycle() {
-        setDisplay('#loading', 'flex');
-        setDisplay('#flexbox', 'none');
+    // The loader is only shown for the first load; later refreshes swap the cards in
+    // place so the list never disappears while it updates
+    async function refreshCycle(showLoader) {
+        if (showLoader) {
+            setDisplay('#loading', 'flex');
+            setDisplay('#flexbox', 'none');
+        }
+        let ok = false;
         try {
             await getEvents();
 
@@ -1354,12 +1473,16 @@
             const hasNew = previousAsapIds !== null && Array.from(current).some(id => !previousAsapIds.has(id));
             previousAsapIds = current;
             if (hasNew) playAlert();
+            ok = true;
         } catch (error) {
             console.error('Queue refresh failed:', error);
         } finally {
-            setDisplay('#loading', 'none');
-            setDisplay('#flexbox', 'flex');
+            if (showLoader) {
+                setDisplay('#loading', 'none');
+                setDisplay('#flexbox', 'flex');
+            }
         }
+        return ok;
     }
 
     function applyAdminButtons() {
@@ -1383,18 +1506,28 @@
                     applyAdminButtons();
                 })
                 .catch(error => console.error('Admin check failed:', error));
-        }, 1000);
+        }, 250);
     }
 
     async function boot() {
-        await waitFor(hasToken, 500);
+        await waitFor(hasToken, 100);
 
-        while (!(await initializeSourceInstructions())) {
-            await sleep(5000);
+        // Source instructions load alongside the queue instead of before it; if the
+        // cards render first, their source labels are updated once this arrives
+        (async () => {
+            while (!(await initializeSourceInstructions())) {
+                await sleep(5000);
+            }
+            relabelSources();
+        })();
+
+        // If the first load fails, keep retrying every 10s instead of waiting 3 minutes
+        let ok = await refreshCycle(true);
+        while (!ok) {
+            await sleep(10000);
+            ok = await refreshCycle(false);
         }
-
-        await refreshCycle();
-        setInterval(refreshCycle, REFRESH_MS);
+        setInterval(() => refreshCycle(false), REFRESH_MS);
     }
 
     function docReady(fn) {
