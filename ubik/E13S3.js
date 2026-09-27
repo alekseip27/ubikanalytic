@@ -12,7 +12,7 @@
 
     // Faster first paint: the first N rows of a page are requested separately (in parallel
     // with the rest) and shown as soon as they arrive. Set to 0 to use a single request.
-    const FIRST_CHUNK_SIZE = 100;
+    const FIRST_CHUNK_SIZE = 20;
 
     // Last results for each search URL are kept so repeat searches, paging back and page
     // reloads show instantly, then refresh in the background. Set max age to 0 to disable.
