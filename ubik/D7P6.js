@@ -65,6 +65,8 @@ headers: {
         if(prefixes && prefixes.source.includes('TM')) {
             document.getElementById('url2x').textContent = 'http://142.93.115.105:8100/event/' + pkid + '/details/';
             document.getElementById('url2box').style.display = 'flex';
+            document.getElementById('organic-movement').style.display = 'flex';
+            document.getElementById('app-142-drop-estimate').style.display = 'flex';
         }
 
 
@@ -157,6 +159,13 @@ purchase_account: document.getElementById('purchaseaccs').value,
 credit_account: document.getElementById('purchaseaccs').value,
 assign: document.getElementById('assign').value,
 signal_identifier: document.getElementById('signal-identifier').value,
+signal_identifier_two: document.getElementById('signal-identifier-two').value,
+pricing_notes: document.getElementById('pricer-notes').value,
+purchase_scenario: document.getElementById('purchase-scenario').value,
+organic_movement: document.getElementById('organic-movement').value,
+app_142_estimate: document.getElementById('app-142-drop-estimate').value,
+
+    
 vivid_venue_id: vividurl,
 tags: selected.join(',')
 };
