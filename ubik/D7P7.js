@@ -65,8 +65,8 @@ headers: {
         if(prefixes && prefixes.source.includes('TM')) {
             document.getElementById('url2x').textContent = 'http://142.93.115.105:8100/event/' + pkid + '/details/';
             document.getElementById('url2box').style.display = 'flex';
-            document.getElementById('organic-movement').style.display = 'flex';
-            document.getElementById('app-142-drop-estimate').style.display = 'flex';
+            document.getElementById('organic-movement-box').style.display = 'flex';
+            document.getElementById('app-142-drop-estimate-box').style.display = 'flex';
         }
 
 
