@@ -7,7 +7,9 @@ initializeSourceInstructions()
 
 document.getElementById('purchasetotal').setAttribute('min', '0');
 document.getElementById('quantityper').setAttribute('min', '0');
-
+document.getElementById('organic-movement').disabled = true
+document.getElementById('app-142-drop-estimate').disabled = true
+        
 function updateBuyButtonVisibility() {
     const fld1 = document.getElementById('purchasetotal').value.trim() !== '';
     const fld2 = document.getElementById('quantityper').value.trim() !== '';
@@ -65,8 +67,8 @@ headers: {
         if(prefixes && prefixes.source.includes('TM')) {
             document.getElementById('url2x').textContent = 'http://142.93.115.105:8100/event/' + pkid + '/details/';
             document.getElementById('url2box').style.display = 'flex';
-            document.getElementById('organic-movement-box').style.display = 'flex';
-            document.getElementById('app-142-drop-estimate-box').style.display = 'flex';
+            document.getElementById('organic-movement').disabled = false
+            document.getElementById('app-142-drop-estimate').disabled = false
         }
 
 
