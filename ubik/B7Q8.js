@@ -1208,7 +1208,8 @@
         card.setAttribute('venue', events.event_venue || '');
         card.setAttribute('url', url);
         card.setAttribute('time', events.event_time || '');
-        card.setAttribute('postedby', events.signal_identifier ?? '');
+        const signalId = (events.signal_identifier ?? '').trim();
+        card.setAttribute('postedby', signalId.toLowerCase() === 'jan' ? 'JJ' : signalId);
         card.setAttribute('checked', 'false');
         card.removeAttribute('listener-bound');
 
@@ -1240,7 +1241,11 @@
         setTextEl(q('main-text-tl'), events.added_timestamp);
         card.setAttribute('dateposted', events.added_timestamp || '');
 
-        setTextEl(q('main-text-postedby'), events.added_by);
+const addedBy = (events.added_by || '').trim();
+setTextEl(
+  q('main-text-postedby'),
+  addedBy.toLowerCase() === 'jan' ? 'JJ' : addedBy
+);
 
         if (events.assign) {
             setTextEl(q('main-text-assign'), events.assign);
