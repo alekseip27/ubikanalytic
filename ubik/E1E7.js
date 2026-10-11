@@ -43,7 +43,13 @@ function getevent() {
       document.querySelector('#url2').textContent      =
         'http://142.93.115.105:8100/event/' + pkid + '/details/';
       document.querySelector('#url2box').style.display = "flex";
+      document.getElementById('organic-movement').disabled = false;
+      document.getElementById('app-142-drop-estimate').disabled = false;
+    } else {
+        document.getElementById('organic-movement').disabled = true;
+        document.getElementById('app-142-drop-estimate').disabled = true;
     }
+    
     document.querySelector('#url').textContent         = events.event_url;
     document.querySelector('#purchasetotal').value     = events.purchase_total;
     document.querySelector('#quantityper').value       = events.quantity_per;
@@ -54,6 +60,13 @@ function getevent() {
     document.querySelector('#notes').value             = events.purchase_notes;
     document.querySelector('#assign').value            = events.assign;
     document.querySelector('#signal-identifier').value = events.signal_identifier;
+    
+    document.querySelector('#signal-identifier-two').value = events.signal_identifier_two;
+    document.querySelector('#pricer-notes').value = events.pricing_notes;
+    document.querySelector('#purchase-scenario').value = events.purchase_scenario;
+    document.querySelector('#organic-movement').value = events.organic_movement;
+    document.querySelector('#app-142-drop-estimate').value = events.app_142_estimate;
+    
 
     // Insert your template (which contains <select id="tags">) into the DOM
     itemContainer.appendChild(item);
@@ -143,7 +156,12 @@ document.querySelector('#buybtn').addEventListener("click", () => {
   const creditacc     = document.querySelector('#creditaccount').value;
   const presale       = document.querySelector('#presalecode').value;
   const note          = document.querySelector('#notes').value;
-  const signal        = document.querySelector('#signal-identifier').value
+  const signal        = document.querySelector('#signal-identifier').value;
+  const signal_identifier_two = document.getElementById('signal-identifier-two').value;
+  const pricing_notes = document.getElementById('pricer-notes').value;
+  const purchase_scenario = document.getElementById('purchase-scenario').value;
+  const organic_movement = document.getElementById('organic-movement').value;
+  const app_142_estimate = document.getElementById('app-142-drop-estimate').value;
 
   const params = JSON.stringify({
     id:               queueid,
@@ -157,7 +175,12 @@ document.querySelector('#buybtn').addEventListener("click", () => {
     added_timestamp:  dategoal,
     assign:           document.getElementById('assign').value,
     tags:             selected.join(','),
-    signal_identifier: signal
+    signal_identifier: signal,
+    signal_identifier_two: signal_identifier_two,
+    pricing_notes: pricing_notes,
+    purchase_scenario: purchase_scenario,
+    organic_movement: organic_movement,
+    app_142_estimate: app_142_estimate
   });
 
   fetch(urltwo, {
