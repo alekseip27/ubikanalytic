@@ -590,8 +590,15 @@ const item = document.getElementById('samplestyle')
 thiseventid = eventdata.event_id
 credit_account = eventdata.credit_account
 signalidentifier = eventdata.signal_identifier
+
+
+    
 purchaser = eventdata.added_by
 const issuerElement = document.getElementById("issuer");
+
+if (purchaser.includes("Jan")) {
+  purchaser = "JJ";
+}
 
 if (![...issuerElement.options].some(opt => opt.value === credit_account)) {
     const newOption = document.createElement("option");
