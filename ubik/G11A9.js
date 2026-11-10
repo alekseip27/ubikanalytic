@@ -770,6 +770,7 @@ function applyQueueItem(q) {
   category           = q.category || '';
   purchaser          = q.added_by || '';
   if (purchaser.includes('Jan')) purchaser = 'JJ';
+  if (purchaser.includes('Jayvee')) purchaser = 'Jibs';
 
   // Issuer dropdown: make sure the event's card provider exists, then select it.
   const issuerEl = $id('issuer');
