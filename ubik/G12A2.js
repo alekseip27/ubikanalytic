@@ -89,6 +89,12 @@ let thiseventid        = '';   // primary event id (site_event_id)
 let encodedthiseventid = '';
 let credit_account     = '';   // 'ramp' | 'slash' | …
 let signalidentifier   = '';
+let signal_identifier_two   = '';
+let pricing_notes   = '';
+let purchase_scenario   = '';
+let organic_movement   = '';
+let app_142_estimate   = '';
+
 let purchaser          = '';
 let evurl              = '';
 let vdidurl            = '';
@@ -767,7 +773,7 @@ function applyQueueItem(q) {
   encodedthiseventid = encodeURIComponent(thiseventid);
   credit_account     = q.credit_account || '';
   signalidentifier   = q.signal_identifier || '';
-  signalidentifiertwo   = q.signal_identifier_two || '';
+  signal_identifier_two   = q.signal_identifier_two || '';
   pricing_notes   = q.pricing_notes || '';
   purchase_scenario   = q.purchase_scenario || '';
   organic_movement   = q.organic_movement || '';
@@ -1082,7 +1088,7 @@ async function createOrderHistory(job) {
     did_not_select_wc:        $id('willcall')?.checked ?? false,
     purchase_urgency:         getText('purchaseurgency'),
     signal_identifier:        signalidentifier,
-    signal_identifier_two:    signalidentifiertwo,
+    signal_identifier_two:    signalidentifier_two,
     purchase_scenario:        purchase_scenario,
     organic_movement:        organic_movement,
     app_142_estimate:        app_142_estimate,
